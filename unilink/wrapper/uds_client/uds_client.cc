@@ -40,6 +40,8 @@ namespace wrapper {
 
 struct UdsClient::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::string socket_path_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -249,6 +251,24 @@ struct UdsClient::Impl {
     }
   }
 
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    while (true) {
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (!channel_ || !channel_->is_connected()) return false;
+        if (!channel_->is_backpressure_active()) break;
+      }
+      bp_cv_.wait(bp_lock);
+    }
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    channel_->async_write_copy(
+        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    return true;
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
+
   void setup_internal_handlers() {
     if (!channel_) return;
 
@@ -336,6 +356,7 @@ struct UdsClient::Impl {
     });
 
     channel_->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
       auto alive = weak_alive.lock();
       if (!alive) return;
       std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -421,6 +442,10 @@ bool UdsClient::send_line(std::string_view line) {
   data += "\n";
   return send(data);
 }
+
+bool UdsClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+
+bool UdsClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 
 bool UdsClient::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);

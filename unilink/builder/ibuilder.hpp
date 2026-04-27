@@ -242,6 +242,16 @@ class BuilderInterface {
   }
 
  protected:
+  size_t get_effective_backpressure_threshold() const {
+    if (bp_threshold_set_) {
+      return bp_threshold_;
+    }
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      return 1024 * 1024;  // 1 MB for BestEffort (freshness first)
+    }
+    return 8 * 1024 * 1024;  // 8 MB for Reliable (default)
+  }
+
   std::function<std::unique_ptr<framer::IFramer>()> framer_factory_;
   std::function<void(const wrapper::MessageContext&)> on_data_;
   std::function<void(const wrapper::ConnectionContext&)> on_connect_;

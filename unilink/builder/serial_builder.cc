@@ -58,7 +58,7 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   serial->retry_interval(retry_interval_);
 
   if (bp_strategy_set_) serial->backpressure_strategy(bp_strategy_);
-  if (bp_threshold_set_) serial->backpressure_threshold(bp_threshold_);
+  serial->backpressure_threshold(get_effective_backpressure_threshold());
 
   if (framer_factory_) {
     serial->framer(framer_factory_());

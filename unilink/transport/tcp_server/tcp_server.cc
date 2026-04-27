@@ -475,11 +475,25 @@ bool TcpServer::is_connected() const {
   return impl->current_session_ && impl->current_session_->alive();
 }
 
+bool TcpServer::is_backpressure_active() const {
+  return false;
+}
+
+bool TcpServer::is_backpressure_active(ClientId client_id) const {
+  auto impl = get_impl();
+  std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+  auto it = impl->sessions_.find(client_id);
+  if (it != impl->sessions_.end() && it->second) {
+    return it->second->is_backpressure_active();
+  }
+  return false;
+}
+
 boost::asio::any_io_executor TcpServer::get_executor() { return impl_->ioc_.get_executor(); }
 
-void TcpServer::async_write_copy(memory::ConstByteSpan data) {
+bool TcpServer::async_write_copy(memory::ConstByteSpan data) {
   auto impl = get_impl();
-  if (impl->stopping_.load()) return;
+  if (impl->stopping_.load()) return false;
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -487,13 +501,14 @@ void TcpServer::async_write_copy(memory::ConstByteSpan data) {
   }
 
   if (session && session->alive()) {
-    session->async_write_copy(data);
+    return session->async_write_copy(data);
   }
+  return true;
 }
 
-void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
+bool TcpServer::async_write_move(std::vector<uint8_t>&& data) {
   auto impl = get_impl();
-  if (impl->stopping_.load()) return;
+  if (impl->stopping_.load()) return false;
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -501,13 +516,14 @@ void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
   }
 
   if (session && session->alive()) {
-    session->async_write_move(std::move(data));
+    return session->async_write_move(std::move(data));
   }
+  return true;
 }
 
-void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   auto impl = get_impl();
-  if (impl->stopping_.load() || !data) return;
+  if (impl->stopping_.load() || !data) return false;
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -515,8 +531,9 @@ void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   }
 
   if (session && session->alive()) {
-    session->async_write_shared(std::move(data));
+    return session->async_write_shared(std::move(data));
   }
+  return true;
 }
 
 void TcpServer::on_bytes(OnBytes cb) {

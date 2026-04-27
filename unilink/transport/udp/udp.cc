@@ -67,13 +67,13 @@ struct UdpChannel::Impl {
   std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<TxItem> tx_;
   bool writing_{false};
-  size_t queue_bytes_{0};
+  std::atomic<size_t> queue_bytes_{0};
   config::UdpConfig cfg_;
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
-  bool backpressure_active_{false};
+  std::atomic<bool> backpressure_active_{false};
 
   std::atomic<bool> stop_requested_{false};
   std::atomic<bool> stopping_{false};
@@ -617,30 +617,32 @@ void UdpChannel::stop() {
 }
 
 bool UdpChannel::is_connected() const { return get_impl()->connected_.load(); }
+bool UdpChannel::is_backpressure_active() const { return get_impl()->backpressure_active_.load(); }
 
-void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
+bool UdpChannel::async_write_copy(memory::ConstByteSpan data) {
   auto impl = get_impl();
-  if (data.empty()) return;
-  if (impl->stop_requested_.load()) return;
+  if (data.empty()) return false;
+  if (impl->stop_requested_.load()) return false;
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
+    return false;
 
   size_t size = data.size();
   if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("udp", "write", "Write size exceeds maximum allowed");
-    return;
+    return false;
   }
 
   if (impl->cfg_.enable_memory_pool && size <= 65536) {
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
       base::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
-      net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
+  if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
+  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
         auto impl = self->get_impl();
         if (!impl->enqueue_buffer(std::move(buf), size)) return;
         impl->do_write(self);
       });
-      return;
+      return true;
     }
   }
 
@@ -650,52 +652,55 @@ void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
     if (!impl->enqueue_buffer(std::move(buf), size)) return;
     impl->do_write(self);
   });
+  return true;
 }
 
-void UdpChannel::async_write_move(std::vector<uint8_t>&& data) {
+bool UdpChannel::async_write_move(std::vector<uint8_t>&& data) {
   auto impl = get_impl();
   auto size = data.size();
-  if (size == 0) return;
-  if (impl->stop_requested_.load()) return;
+  if (size == 0) return false;
+  if (impl->stop_requested_.load()) return false;
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
+    return false;
 
   if (size > impl->bp_limit_) {
     UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded by single write");
     impl->transition_to(LinkState::Error);
-    return;
+    return false;
   }
-
+  if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
     auto impl = self->get_impl();
     if (!impl->enqueue_buffer(std::move(buf), size)) return;
     impl->do_write(self);
   });
+  return true;
 }
 
-void UdpChannel::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool UdpChannel::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   auto impl = get_impl();
-  if (!data || data->empty()) return;
-  if (impl->stop_requested_.load()) return;
+  if (!data || data->empty()) return false;
+  if (impl->stop_requested_.load()) return false;
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
+    return false;
   if (!impl->remote_endpoint_) {
     UNILINK_LOG_WARNING("udp", "write", "Remote endpoint not set; dropping write request");
-    return;
+    return false;
   }
 
   auto size = data->size();
   if (size > impl->bp_limit_) {
     UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded by single write");
     impl->transition_to(LinkState::Error);
-    return;
+    return false;
   }
-
+  if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
     auto impl = self->get_impl();
     if (!impl->enqueue_buffer(std::move(buf), size)) return;
     impl->do_write(self);
   });
+  return true;
 }
 
 void UdpChannel::on_bytes(OnBytes cb) { impl_->on_bytes_ = std::move(cb); }
@@ -708,24 +713,25 @@ void UdpChannel::set_backpressure_strategy(base::constants::BackpressureStrategy
   net::post(impl_->strand_, [impl = impl_.get(), strategy]() { impl->bp_strategy_ = strategy; });
 }
 
-void UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination) {
+bool UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination) {
   auto impl = get_impl();
-  if (data.empty()) return;
-  if (impl->stop_requested_.load()) return;
+  if (data.empty()) return false;
+  if (impl->stop_requested_.load()) return false;
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
+    return false;
 
   size_t size = data.size();
   if (impl->cfg_.enable_memory_pool && size <= 65536) {
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
       base::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
-      net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size, destination]() mutable {
+  if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
+  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size, destination]() mutable {
         auto impl = self->get_impl();
         if (!impl->enqueue_buffer(std::move(buf), size, destination)) return;
         impl->do_write(self);
       });
-      return;
+      return true;
     }
   }
 
@@ -735,6 +741,7 @@ void UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::i
     if (!impl->enqueue_buffer(std::move(buf), size, destination)) return;
     impl->do_write(self);
   });
+  return true;
 }
 
 void UdpChannel::on_bytes_from(OnBytesFrom cb) { impl_->on_bytes_from_ = std::move(cb); }

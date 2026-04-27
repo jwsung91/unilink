@@ -54,7 +54,7 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   client->connection_timeout(connection_timeout_);
 
   if (bp_strategy_set_) client->backpressure_strategy(bp_strategy_);
-  if (bp_threshold_set_) client->backpressure_threshold(bp_threshold_);
+  client->backpressure_threshold(get_effective_backpressure_threshold());
 
   if (framer_factory_) {
     client->framer(framer_factory_());
@@ -129,7 +129,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   server->max_clients(max_clients_);
 
   if (bp_strategy_set_) server->backpressure_strategy(bp_strategy_);
-  if (bp_threshold_set_) server->backpressure_threshold(bp_threshold_);
+  server->backpressure_threshold(get_effective_backpressure_threshold());
 
   if (auto_start_) {
     server->auto_start(true);

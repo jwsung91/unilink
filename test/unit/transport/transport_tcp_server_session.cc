@@ -51,13 +51,13 @@ TEST(TransportTcpServerSessionTest, QueueLimitDropsMessage) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, session stays alive
+  // 20MB exceeds bp_limit (16MB): message rejected synchronously, backpressure DOES NOT fire as it's not queued
   std::vector<uint8_t> huge(20 * 1024 * 1024, 0xAA);
-  session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
+  EXPECT_FALSE(session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size())));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(backpressure_seen.load());
+  EXPECT_FALSE(backpressure_seen.load());
   EXPECT_TRUE(session->alive());
 }
 
@@ -75,13 +75,13 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, session stays alive
+  // 20MB exceeds bp_limit (16MB): message rejected synchronously, backpressure DOES NOT fire
   std::vector<uint8_t> huge(20 * 1024 * 1024, 0xBB);
-  session->async_write_move(std::move(huge));
+  EXPECT_FALSE(session->async_write_move(std::move(huge)));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(backpressure_seen.load());
+  EXPECT_FALSE(backpressure_seen.load());
   EXPECT_TRUE(session->alive());
 }
 
@@ -99,13 +99,13 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, session stays alive
+  // 20MB exceeds bp_limit (16MB): message rejected synchronously, backpressure DOES NOT fire
   auto huge = std::make_shared<const std::vector<uint8_t>>(20 * 1024 * 1024, 0xCC);
-  session->async_write_shared(huge);
+  EXPECT_FALSE(session->async_write_shared(huge));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(backpressure_seen.load());
+  EXPECT_FALSE(backpressure_seen.load());
   EXPECT_TRUE(session->alive());
 }
 

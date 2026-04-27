@@ -86,12 +86,12 @@ struct TcpClient::Impl {
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
-  size_t queue_bytes_ = 0;
+  std::atomic<size_t> queue_bytes_{0};
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
-  bool backpressure_active_ = false;
+  std::atomic<bool> backpressure_active_{false};
   unsigned first_retry_interval_ms_ = 100;
 
   OnBytes on_bytes_;
@@ -257,25 +257,26 @@ void TcpClient::stop() {
 }
 
 bool TcpClient::is_connected() const { return get_impl()->connected_.load(); }
+bool TcpClient::is_backpressure_active() const { return get_impl()->backpressure_active_.load(); }
 
 boost::asio::any_io_executor TcpClient::get_executor() { return impl_->socket_.get_executor(); }
 
-void TcpClient::async_write_copy(memory::ConstByteSpan data) {
+bool TcpClient::async_write_copy(memory::ConstByteSpan data) {
   if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
       impl_->state_.is_state(LinkState::Error) || !impl_->ioc_) {
-    return;
+    return false;
   }
 
   size_t size = data.size();
   if (size == 0) {
     UNILINK_LOG_WARNING("tcp_client", "async_write_copy", "Ignoring zero-length write");
-    return;
+    return false;
   }
 
   if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
                       "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
-    return;
+    return false;
   }
 
   if (size <= 65536) {
@@ -284,7 +285,8 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
       if (pooled_buffer.valid()) {
         base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
         const auto added = pooled_buffer.size();
-        net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
+  if (impl_->queue_bytes_ + added > impl_->bp_limit_) return false;
+  net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
           if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
               self->impl_->state_.is_state(LinkState::Error)) {
             return;
@@ -306,7 +308,7 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
           self->impl_->report_backpressure(self->impl_->queue_bytes_);
           if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
         });
-        return;
+        return true;
       }
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_client", "async_write_copy", "Failed to acquire pooled buffer: " + std::string(e.what()));
@@ -338,25 +340,27 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
     if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
   });
+  return true;
 }
 
-void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
+bool TcpClient::async_write_move(std::vector<uint8_t>&& data) {
   if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
       impl_->state_.is_state(LinkState::Error) || !impl_->ioc_) {
-    return;
+    return false;
   }
   const auto size = data.size();
   if (size == 0) {
     UNILINK_LOG_WARNING("tcp_client", "async_write_move", "Ignoring zero-length write");
-    return;
+    return false;
   }
   if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_client", "async_write_move",
                       "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
-    return;
+    return false;
   }
 
   const auto added = size;
+  if (impl_->queue_bytes_ + added > impl_->bp_limit_) return false;
   net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
         self->impl_->state_.is_state(LinkState::Error)) {
@@ -379,25 +383,27 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
     if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
   });
+  return true;
 }
 
-void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
       impl_->state_.is_state(LinkState::Error) || !impl_->ioc_) {
-    return;
+    return false;
   }
   if (!data || data->empty()) {
     UNILINK_LOG_WARNING("tcp_client", "async_write_shared", "Ignoring empty shared buffer");
-    return;
+    return false;
   }
   const auto size = data->size();
   if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_client", "async_write_shared",
                       "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
-    return;
+    return false;
   }
 
   const auto added = size;
+  if (impl_->queue_bytes_ + added > impl_->bp_limit_) return false;
   net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
         self->impl_->state_.is_state(LinkState::Error)) {
@@ -420,6 +426,7 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
     if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
   });
+  return true;
 }
 
 void TcpClient::on_bytes(OnBytes cb) {

@@ -46,6 +46,8 @@ std::string to_lower(std::string s) {
 
 struct Serial::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::string device;
   uint32_t baud_rate;
   std::shared_ptr<interface::Channel> channel;
@@ -231,6 +233,24 @@ struct Serial::Impl {
     if (framer) framer->reset();
   }
 
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    while (true) {
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (!channel || !channel->is_connected()) return false;
+        if (!channel->is_backpressure_active()) break;
+      }
+      bp_cv_.wait(bp_lock);
+    }
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    auto binary_view = base::safe_convert::string_to_bytes(data);
+    channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    return true;
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
+
   void setup_internal_handlers() {
     if (!channel) return;
 
@@ -270,6 +290,7 @@ struct Serial::Impl {
     });
 
     channel->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
       auto alive = weak_alive.lock();
       if (!alive) return;
       std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -415,6 +436,8 @@ bool Serial::send(std::string_view data) {
   return false;
 }
 bool Serial::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
+bool Serial::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+bool Serial::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool Serial::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->channel && impl_->channel->is_connected();

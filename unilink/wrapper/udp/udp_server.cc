@@ -65,6 +65,8 @@ struct UdpServer::Impl {
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
   mutable std::shared_mutex mutex;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::vector<std::promise<bool>> pending_promises;
   std::atomic<bool> started{false};
   std::atomic<bool> is_listening{false};
@@ -315,6 +317,7 @@ struct UdpServer::Impl {
     });
 
     channel->on_backpressure([this](size_t queued) {
+      bp_cv_.notify_all();
       std::shared_lock<std::shared_mutex> lock(mutex);
       if (bp_handler) bp_handler(queued);
     });
@@ -439,6 +442,25 @@ struct UdpServer::Impl {
     std::unique_lock<std::shared_mutex> lock(mutex);
     channel.reset();
   }
+
+  bool send_to_blocking(ClientId client_id, std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    while (true) {
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex);
+        if (!channel) return false;
+        if (!channel->is_backpressure_active()) break;
+      }
+      bp_cv_.wait(bp_lock);
+    }
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    auto it = sessions.find(client_id);
+    if (it == sessions.end()) return false;
+
+    auto bytes = base::safe_convert::string_to_bytes(data);
+    channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
+    return true;
+  }
 };
 
 UdpServer::UdpServer(uint16_t port) {
@@ -484,6 +506,10 @@ bool UdpServer::send_to(ClientId client_id, std::string_view data) {
   auto bytes = base::safe_convert::string_to_bytes(data);
   impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
   return true;
+}
+
+bool UdpServer::send_to_blocking(ClientId client_id, std::string_view data) {
+  return impl_->send_to_blocking(client_id, data);
 }
 
 ServerInterface& UdpServer::on_connect(ConnectionHandler h) {

@@ -62,10 +62,12 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   void start() override;
   void stop() override;
   bool is_connected() const override;
+  bool is_backpressure_active() const override;
+  bool is_backpressure_active(ClientId client_id) const;
   boost::asio::any_io_executor get_executor() override;
-  void async_write_copy(memory::ConstByteSpan data) override;
-  void async_write_move(std::vector<uint8_t>&& data) override;
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
+  bool async_write_copy(memory::ConstByteSpan data) override;
+  bool async_write_move(std::vector<uint8_t>&& data) override;
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;

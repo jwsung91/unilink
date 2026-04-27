@@ -40,6 +40,8 @@ namespace wrapper {
 
 struct TcpClient::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::string host_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
@@ -252,6 +254,21 @@ struct TcpClient::Impl {
     return false;
   }
 
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    while (true) {
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (!channel_ || !channel_->is_connected()) return false;
+        if (!channel_->is_backpressure_active()) break;
+      }
+      bp_cv_.wait(bp_lock);
+    }
+    return send(data);
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
+
   bool connected() const {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     return channel_ && channel_->is_connected();
@@ -339,6 +356,7 @@ struct TcpClient::Impl {
     });
 
     channel_->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
       auto alive = weak_alive.lock();
       if (!alive) return;
       std::function<void(size_t)> handler;
@@ -410,6 +428,8 @@ std::future<bool> TcpClient::start() { return impl_->start(); }
 void TcpClient::stop() { impl_->stop(); }
 bool TcpClient::send(std::string_view data) { return impl_->send(data); }
 bool TcpClient::send_line(std::string_view line) { return impl_->send(std::string(line) + "\n"); }
+bool TcpClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+bool TcpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool TcpClient::connected() const { return get_impl()->connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {

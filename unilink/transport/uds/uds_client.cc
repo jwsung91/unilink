@@ -68,12 +68,12 @@ struct UdsClient::Impl {
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
-  size_t queue_bytes_ = 0;
+  std::atomic<size_t> queue_bytes_{0};
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
-  bool backpressure_active_ = false;
+  std::atomic<bool> backpressure_active_{false};
 
   OnBytes on_bytes_;
   OnState on_state_;
@@ -240,15 +240,18 @@ void UdsClient::stop() {
 }
 
 bool UdsClient::is_connected() const { return impl_->connected_.load(); }
+bool UdsClient::is_backpressure_active() const { return impl_->backpressure_active_.load(); }
 
 boost::asio::any_io_executor UdsClient::get_executor() { return impl_->strand_; }
 
-void UdsClient::async_write_copy(memory::ConstByteSpan data) {
+bool UdsClient::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> vec(data.begin(), data.end());
   async_write_move(std::move(vec));
+  return true;
 }
 
-void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
+bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
+  if (impl_->queue_bytes_ + data.size() > impl_->bp_limit_) return false;
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data.size();
     impl_->maybe_flush_for_keep_latest(added);
@@ -265,9 +268,11 @@ void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
       impl_->do_write(self, impl_->current_seq_.load());
     }
   });
+  return true;
 }
 
-void UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (impl_->queue_bytes_ + data->size() > impl_->bp_limit_) return false;
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     size_t added = data->size();
     impl_->maybe_flush_for_keep_latest(added);
@@ -282,6 +287,7 @@ void UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     impl_->report_backpressure(impl_->queue_bytes_);
     if (!impl_->writing_) impl_->do_write(self, impl_->current_seq_.load());
   });
+  return true;
 }
 
 void UdsClient::on_bytes(OnBytes cb) {

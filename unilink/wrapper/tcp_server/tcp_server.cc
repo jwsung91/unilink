@@ -38,6 +38,8 @@ namespace wrapper {
 
 struct TcpServer::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -286,6 +288,22 @@ struct TcpServer::Impl {
     channel_.reset();
   }
 
+  bool send_to(ClientId client_id, std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    const auto& ts = transport_cache_;
+    return ts ? ts->send_to_client(client_id, data) : false;
+  }
+
+  bool send_to_blocking(ClientId client_id, std::string_view data) {
+    std::unique_lock<std::mutex> lock(bp_mutex_);
+    bp_cv_.wait(lock, [this, client_id]() {
+      std::shared_lock<std::shared_mutex> rlock(mutex_);
+      const auto& ts = transport_cache_;
+      return !ts || !ts->is_backpressure_active(client_id);
+    });
+    return send_to(client_id, data);
+  }
+
   void setup_internal_handlers() {
     if (!channel_) return;
 
@@ -377,6 +395,7 @@ struct TcpServer::Impl {
       });
 
       transport_server->on_backpressure([this, weak_alive](size_t queued) {
+        bp_cv_.notify_all();
         auto alive = weak_alive.lock();
         if (!alive) return;
         std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -430,9 +449,11 @@ bool TcpServer::broadcast(std::string_view data) {
 }
 
 bool TcpServer::send_to(ClientId client_id, std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  const auto& ts = impl_->transport_cache_;
-  return ts ? ts->send_to_client(client_id, data) : false;
+  return impl_->send_to(client_id, data);
+}
+
+bool TcpServer::send_to_blocking(ClientId client_id, std::string_view data) {
+  return impl_->send_to_blocking(client_id, data);
 }
 
 ServerInterface& TcpServer::on_connect(ConnectionHandler h) {

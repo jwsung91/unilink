@@ -77,6 +77,20 @@ class UNILINK_API ChannelInterface {
    */
   virtual bool send_line(std::string_view line) = 0;
 
+  /**
+   * @brief Send data blocking until backpressure is relieved.
+   * @return true Data was accepted.
+   * @return false Data was dropped.
+   */
+  virtual bool send_blocking(std::string_view data) = 0;
+
+  /**
+   * @brief Send a line blocking until backpressure is relieved.
+   * @return true Data was accepted.
+   * @return false Data was dropped.
+   */
+  virtual bool send_line_blocking(std::string_view line) = 0;
+
   // Event handlers
   virtual ChannelInterface& on_data(MessageHandler handler) = 0;
 

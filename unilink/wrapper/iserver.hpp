@@ -62,6 +62,7 @@ class UNILINK_API ServerInterface {
   // Transmission
   virtual bool broadcast(std::string_view data) = 0;
   virtual bool send_to(ClientId client_id, std::string_view data) = 0;
+  virtual bool send_to_blocking(ClientId client_id, std::string_view data) = 0;
 
   // Event handlers
   virtual ServerInterface& on_connect(ConnectionHandler handler) = 0;

@@ -240,24 +240,37 @@ void UdsServer::stop() {
 }
 
 bool UdsServer::is_connected() const { return impl_->state_.state() == base::LinkState::Listening; }
+bool UdsServer::is_backpressure_active() const { return false; }
+
+bool UdsServer::is_backpressure_active(ClientId client_id) const {
+  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  auto it = impl_->sessions_.find(client_id);
+  if (it != impl_->sessions_.end() && it->second) {
+    return it->second->is_backpressure_active();
+  }
+  return false;
+}
 
 boost::asio::any_io_executor UdsServer::get_executor() { return impl_->ioc_->get_executor(); }
 
-void UdsServer::async_write_copy(memory::ConstByteSpan data) {
+bool UdsServer::async_write_copy(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
   async_write_shared(shared_data);
+  return true;
 }
 
-void UdsServer::async_write_move(std::vector<uint8_t>&& data) {
+bool UdsServer::async_write_move(std::vector<uint8_t>&& data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(std::move(data));
   async_write_shared(shared_data);
+  return true;
 }
 
-void UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   for (auto& pair : impl_->sessions_) {
     pair.second->async_write_shared(data);
   }
+  return true;
 }
 
 void UdsServer::on_bytes(OnBytes cb) {

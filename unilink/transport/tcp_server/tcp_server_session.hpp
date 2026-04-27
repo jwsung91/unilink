@@ -65,13 +65,14 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
                    base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::Reliable);
 
   void start();
-  void async_write_copy(memory::ConstByteSpan data);
-  void async_write_move(std::vector<uint8_t>&& data);
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
+  bool async_write_copy(memory::ConstByteSpan data);
+  bool async_write_move(std::vector<uint8_t>&& data);
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
   void on_bytes(OnBytes cb);
   void on_backpressure(OnBackpressure cb);
   void on_close(OnClose cb);
   bool alive() const;
+  bool is_backpressure_active() const { return backpressure_active_.load(); }
   void stop();
   void cancel();
 
@@ -92,12 +93,12 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
-  size_t queue_bytes_ = 0;
+  std::atomic<size_t> queue_bytes_{0};
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;   // Configurable backpressure threshold
   size_t bp_limit_;  // Hard cap for queued bytes
   size_t bp_low_;    // Backpressure relief threshold
-  bool backpressure_active_ = false;
+  std::atomic<bool> backpressure_active_{false};
   int idle_timeout_ms_ = 0;
 
   OnBytes on_bytes_;

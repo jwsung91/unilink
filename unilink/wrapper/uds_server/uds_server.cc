@@ -22,6 +22,8 @@ struct UdsServer::Impl {
   bool manage_external_context_{false};
 
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::shared_ptr<interface::Channel> server_;
   std::vector<std::promise<bool>> pending_promises_;
   std::thread external_thread_;
@@ -111,6 +113,18 @@ struct UdsServer::Impl {
     if (batch_timer_) {
       batch_timer_->cancel();
     }
+  }
+
+  bool send_to_blocking(ClientId client_id, std::string_view data) {
+    std::unique_lock<std::mutex> lock(bp_mutex_);
+    bp_cv_.wait(lock, [this, client_id]() {
+      std::shared_lock<std::shared_mutex> rlock(mutex_);
+      auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
+      return !ts || !ts->is_backpressure_active(client_id);
+    });
+    std::shared_lock<std::shared_mutex> rlock(mutex_);
+    auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
+    return ts ? ts->send_to_client(client_id, data) : false;
   }
 
   void schedule_batch_timer() {
@@ -283,6 +297,7 @@ struct UdsServer::Impl {
       });
 
       transport_server->on_backpressure([this, weak_alive](size_t queued) {
+        bp_cv_.notify_all();
         auto alive = weak_alive.lock();
         if (!alive) return;
         std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -375,6 +390,11 @@ bool UdsServer::send_to(ClientId client_id, std::string_view data) {
   return ts ? ts->send_to_client(client_id, data) : false;
 }
 
+bool UdsServer::send_to_blocking(ClientId client_id, std::string_view data) {
+  return impl_->send_to_blocking(client_id, data);
+}
+
+
 ServerInterface& UdsServer::on_connect(ConnectionHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_connect_handler_ = std::move(handler);
@@ -443,6 +463,9 @@ std::vector<ClientId> UdsServer::connected_clients() const {
 
 UdsServer& UdsServer::auto_start(bool manage) {
   impl_->auto_start_.store(manage);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) {
+    start();
+  }
   return *this;
 }
 

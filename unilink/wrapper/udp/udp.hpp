@@ -64,6 +64,8 @@ class UNILINK_API UdpClient : public ChannelInterface {
   void stop() override;
   bool send(std::string_view data) override;
   bool send_line(std::string_view line) override;
+  bool send_blocking(std::string_view data) override;
+  bool send_line_blocking(std::string_view line) override;
   bool connected() const override;
 
   ChannelInterface& on_data(MessageHandler handler) override;
