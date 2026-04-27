@@ -60,11 +60,59 @@ class UNILINK_API ServerInterface {
   virtual bool listening() const = 0;
 
   // Transmission
-  virtual bool broadcast(std::string_view data) = 0;
+  //
+  // Strategy-aware API (recommended):
+  //
+  //   send_to() / broadcast()
+  //     Behaviour depends on the configured backpressure strategy:
+  //       BestEffort — non-blocking; drops data when the target client's queue is full.
+  //       Reliable   — blocks the calling thread until queue pressure is relieved,
+  //                    then enqueues. For broadcast(), each client is waited on
+  //                    sequentially.
+  //
+  // Explicit API (escape hatch):
+  //
+  //   try_send_to() / try_broadcast()
+  //     Always non-blocking and always drops on full queue, regardless of strategy.
+  //
+  //   send_to_blocking()
+  //     Always blocks until queue pressure is relieved, regardless of strategy.
+
+  /**
+   * @brief Send to a specific client, honouring the backpressure strategy.
+   *
+   * BestEffort: non-blocking, drops if the client's send queue is full.
+   * Reliable:   blocks until queue pressure is relieved, then enqueues.
+   *
+   * @return true Data was accepted. @return false Dropped or client not found.
+   */
   virtual bool send_to(ClientId client_id, std::string_view data) = 0;
+
+  /**
+   * @brief Send to all connected clients, honouring the backpressure strategy.
+   * @return true At least one client accepted the data.
+   */
+  virtual bool broadcast(std::string_view data) = 0;
+
+  /**
+   * @brief Block until queue pressure is relieved, then send to a client. Ignores strategy.
+   * @return true Data was accepted. @return false Server stopped while waiting.
+   */
   virtual bool send_to_blocking(ClientId client_id, std::string_view data) = 0;
 
+  /**
+   * @brief Non-blocking send_to that always drops on a full queue, ignoring strategy.
+   *
+   * Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.
+   *
+   * @return true Data was accepted. @return false Dropped or client not found.
+   */
   virtual bool try_send_to(ClientId client_id, std::string_view data) = 0;
+
+  /**
+   * @brief Non-blocking broadcast that always drops on full queues, ignoring strategy.
+   * @return true At least one client accepted the data.
+   */
   virtual bool try_broadcast(std::string_view data) = 0;
 
   // Event handlers

@@ -60,38 +60,71 @@ class UNILINK_API ChannelInterface {
   virtual bool connected() const = 0;
 
   // Transmission
+  //
+  // Strategy-aware API (recommended):
+  //
+  //   send() / send_line()
+  //     Behaviour depends on the configured backpressure strategy:
+  //       BestEffort — non-blocking; drops data when the send queue is full.
+  //       Reliable   — blocks the calling thread until queue pressure is relieved,
+  //                    then enqueues. Never drops due to backpressure alone.
+  //
+  // Explicit API (escape hatch):
+  //
+  //   try_send() / try_send_line()
+  //     Always non-blocking and always drops on full queue, regardless of strategy.
+  //     Use when you need BestEffort behaviour on a Reliable channel for a specific
+  //     call (e.g. fire-and-forget heartbeat).
+  //
+  //   send_blocking() / send_line_blocking()
+  //     Always blocks until queue pressure is relieved, regardless of strategy.
+
   /**
-   * @brief Enqueue data for transmission.
-   * @return true  Data was accepted into the send queue.
-   * @return false Data was dropped — channel not connected or backpressure limit reached.
+   * @brief Enqueue data for transmission, honouring the backpressure strategy.
    *
-   * The call is non-blocking. Delivery is not guaranteed even when true is returned;
-   * network errors are reported via on_error().
+   * BestEffort: non-blocking, drops if the send queue is full.
+   * Reliable:   blocks until queue pressure is relieved, then enqueues.
+   *
+   * @return true  Data was accepted into the send queue.
+   * @return false Data was dropped (not connected, or BestEffort queue full).
    */
   virtual bool send(std::string_view data) = 0;
 
   /**
-   * @brief Enqueue a line (data + "\n") for transmission.
-   * @return true  Data was accepted into the send queue.
-   * @return false Data was dropped — channel not connected or backpressure limit reached.
+   * @brief Enqueue a line (data + "\n") for transmission, honouring the backpressure strategy.
+   * @return true  Data was accepted. @return false Data was dropped.
    */
   virtual bool send_line(std::string_view line) = 0;
 
   /**
-   * @brief Send data blocking until backpressure is relieved.
-   * @return true Data was accepted.
-   * @return false Data was dropped.
+   * @brief Block the calling thread until queue pressure is relieved, then enqueue.
+   *
+   * Ignores the configured strategy — always blocks. Prefer send() unless you need
+   * to override BestEffort behaviour for a specific call.
+   *
+   * @return true Data was accepted. @return false Channel stopped while waiting.
    */
   virtual bool send_blocking(std::string_view data) = 0;
 
   /**
-   * @brief Send a line blocking until backpressure is relieved.
-   * @return true Data was accepted.
-   * @return false Data was dropped.
+   * @brief Blocking variant of send_line(). Always blocks regardless of strategy.
+   * @return true Data was accepted. @return false Channel stopped while waiting.
    */
   virtual bool send_line_blocking(std::string_view line) = 0;
 
+  /**
+   * @brief Non-blocking send that always drops on a full queue, ignoring strategy.
+   *
+   * Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.
+   *
+   * @return true Data was accepted. @return false Dropped (not connected or queue full).
+   */
   virtual bool try_send(std::string_view data) = 0;
+
+  /**
+   * @brief Non-blocking send_line that always drops on a full queue, ignoring strategy.
+   * @return true Data was accepted. @return false Dropped.
+   */
   virtual bool try_send_line(std::string_view line) = 0;
 
   // Event handlers
