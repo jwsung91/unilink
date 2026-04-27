@@ -129,12 +129,12 @@ if __name__ == "__main__":
     print("=" * 70)
     print("Unilink UDP Robust Chaos Benchmark")
     print("=" * 70)
-    r_all = run_bench("KeepAll (2MB) + Flow Control", unilink.BackpressureStrategy.KeepAll, 2048, True)
+    r_all = run_bench("Reliable (2MB) + Flow Control", unilink.BackpressureStrategy.Reliable, 2048, True)
     time.sleep(2)
-    r_lat = run_bench("KeepLatest (256KB) NO Flow Control", unilink.BackpressureStrategy.KeepLatest, 256, False)
+    r_lat = run_bench("BestEffort (256KB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 256, False)
 
     print("\n" + "=" * 70)
-    print(f"{'Metric':30s} {'KeepAll+FC':>15s} {'KeepLatest+NoFC':>18s}")
+    print(f"{'Metric':30s} {'Reliable+FC':>15s} {'BestEffort+NoFC':>18s}")
     print("-" * 70)
     def row(name, a, b, fmt=".2f"):
         print(f"{name:30s} {a:>15{fmt}} {b:>18{fmt}}")

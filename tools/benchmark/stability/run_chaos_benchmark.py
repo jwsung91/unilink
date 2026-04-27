@@ -1,7 +1,7 @@
 """
 Unilink BackpressureStrategy Real-World Chaos Benchmark
 =========================================================
-Compares KeepAll with Flow Control vs KeepLatest without Flow Control 
+Compares Reliable with Flow Control vs BestEffort without Flow Control 
 under LV3-equivalent chaos conditions (64 KB, 10 μs sleep, 7s chaos interval).
 """
 
@@ -64,7 +64,7 @@ def run_bench(label: str, strategy, threshold_mb: float, port: int, use_flow_con
         # threshold_mb * 1024 * 1024
         limit = int(threshold_mb * 1024 * 1024)
         
-        # KeepLatest flushes to 0. KeepAll might hover around limit.
+        # BestEffort flushes to 0. Reliable might hover around limit.
         # High watermark
         if queued > limit // 2:
             bp_events += 1
@@ -143,14 +143,14 @@ if __name__ == "__main__":
     print(f"Chaos: {CHAOS_INTERVAL}s interval, {DOWN_TIME}s down time")
     print("=" * W)
 
-    r_all = run_bench("KeepAll (16 MB) + Flow Control", unilink.BackpressureStrategy.KeepAll, 16, PORT_BASE, True)
-    r_lat = run_bench("KeepLatest (0.5 MB) NO Flow Control", unilink.BackpressureStrategy.KeepLatest, 0.5, PORT_BASE + 1, False)
+    r_all = run_bench("Reliable (16 MB) + Flow Control", unilink.BackpressureStrategy.Reliable, 16, PORT_BASE, True)
+    r_lat = run_bench("BestEffort (0.5 MB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 0.5, PORT_BASE + 1, False)
 
     print("\n" + "=" * W)
     print("Summary")
     print("=" * W)
 
-    hdr = f"{'Metric':30s} {'KeepAll+FC':>14s} {'KeepLatest+NoFC':>16s}"
+    hdr = f"{'Metric':30s} {'Reliable+FC':>14s} {'BestEffort+NoFC':>16s}"
     print(hdr)
     print("-" * W)
 

@@ -129,32 +129,32 @@ Unilink provides two strategies for handling full queues:
 
 | Strategy | Behavior | Best For |
 |:---|:---|:---|
-| `KeepAll` (Default) | Retains all data until a hard limit (64MB) is reached. | Reliable data (files, logs, commands). |
-| `KeepLatest` | Drops oldest data when a threshold is reached. | Real-time sensors (LiDAR, Video, Telemetry). |
+| `Reliable` (Default) | Retains all data until a hard limit (64MB) is reached. | Reliable data (files, logs, commands). |
+| `BestEffort` | Drops oldest data when a threshold is reached. | Real-time sensors (LiDAR, Video, Telemetry). |
 
 ### 2. High-Throughput Sensors (LiDAR/Camera)
 
-For robotics perception, processing stale data is often worse than skipping frames. Use `KeepLatest` with a low threshold to prevent **Bufferbloat**.
+For robotics perception, processing stale data is often worse than skipping frames. Use `BestEffort` with a low threshold to prevent **Bufferbloat**.
 
 ```cpp
 // 🤖 Best configuration for robotics sensors
 auto lidar = unilink::tcp_client("192.168.1.10", 2368)
-    .backpressure_strategy(unilink::base::constants::BackpressureStrategy::KeepLatest)
+    .backpressure_strategy(unilink::base::constants::BackpressureStrategy::BestEffort)
     .backpressure_threshold(1024 * 512)  // 0.5 MB threshold
     .build();
 
 // In Python
-client.backpressure_strategy = unilink.BackpressureStrategy.KeepLatest
+client.backpressure_strategy = unilink.BackpressureStrategy.BestEffort
 client.backpressure_threshold = 1024 * 512
 ```
 
 **Benchmarking Insights:**
-*   In Python, using `KeepLatest` without Flow Control can increase throughput by **up to 3x** (e.g., 133 MB/s → 414 MB/s) by preventing GIL contention caused by blocked sender threads.
+*   In Python, using `BestEffort` without Flow Control can increase throughput by **up to 3x** (e.g., 133 MB/s → 414 MB/s) by preventing GIL contention caused by blocked sender threads.
 *   Aggressive flushing during network disconnects ensures that once reconnection occurs, the receiver instantly gets the **most recent frame** instead of waiting for a multi-gigabyte backlog to drain.
 
 ### 3. Critical Reliable Data
 
-For data that must not be lost, use `KeepAll` combined with **Flow Control** in your application.
+For data that must not be lost, use `Reliable` combined with **Flow Control** in your application.
 
 ```cpp
 bool paused = false;

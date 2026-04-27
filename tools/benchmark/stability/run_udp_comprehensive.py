@@ -3,8 +3,8 @@ Unilink UDP Comprehensive Stability Benchmark
 =========================================================
 Compares:
 1. Python Raw UDP Sockets
-2. Unilink UDP KeepAll + Flow Control
-3. Unilink UDP KeepLatest (No Flow Control)
+2. Unilink UDP Reliable + Flow Control
+3. Unilink UDP BestEffort (No Flow Control)
 
 Under LV3 Load: 64KB payloads, 10us sleep, 7s chaos.
 """
@@ -159,14 +159,14 @@ if __name__ == "__main__":
     # 1. Raw UDP
     raw_res = run_raw_udp()
     
-    # 2. KeepAll + FC
-    all_res = run_unilink_udp("KeepAll+FC", unilink.BackpressureStrategy.KeepAll, 8, True)
+    # 2. Reliable + FC
+    all_res = run_unilink_udp("Reliable+FC", unilink.BackpressureStrategy.Reliable, 8, True)
     
-    # 3. KeepLatest (No FC)
-    lat_res = run_unilink_udp("KeepLatest (No FC)", unilink.BackpressureStrategy.KeepLatest, 0.5, False)
+    # 3. BestEffort (No FC)
+    lat_res = run_unilink_udp("BestEffort (No FC)", unilink.BackpressureStrategy.BestEffort, 0.5, False)
 
     print("\n" + "=" * 70)
-    print(f"{'Metric':30s} {'Raw UDP':>12s} {'KeepAll+FC':>12s} {'KeepLatest':>12s}")
+    print(f"{'Metric':30s} {'Raw UDP':>12s} {'Reliable+FC':>12s} {'BestEffort':>12s}")
     print("-" * 70)
     print(f"{'Delivery Rate (%)':30s} {raw_res[0]:>12.2f} {all_res[0]:>12.2f} {lat_res[0]:>12.2f}")
     print(f"{'Throughput Avg (MB/s)':30s} {raw_res[1]:>12.2f} {all_res[1]:>12.2f} {lat_res[1]:>12.2f}")

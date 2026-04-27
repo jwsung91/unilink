@@ -1,7 +1,7 @@
 """
 Unilink UDS BackpressureStrategy Chaos Benchmark
 =========================================================
-Compares KeepAll with Flow Control vs KeepLatest without Flow Control 
+Compares Reliable with Flow Control vs BestEffort without Flow Control 
 under UDS (Unix Domain Sockets) local IPC chaos conditions.
 """
 
@@ -122,12 +122,12 @@ if __name__ == "__main__":
     print("Unilink UDS Local IPC Chaos Benchmark")
     print("=" * 75)
 
-    r_all = run_bench("KeepAll (16MB) + Flow Control", unilink.BackpressureStrategy.KeepAll, 16, True)
+    r_all = run_bench("Reliable (16MB) + Flow Control", unilink.BackpressureStrategy.Reliable, 16, True)
     time.sleep(1)
-    r_lat = run_bench("KeepLatest (1MB) NO Flow Control", unilink.BackpressureStrategy.KeepLatest, 1, False)
+    r_lat = run_bench("BestEffort (1MB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 1, False)
 
     print("\n" + "=" * 75)
-    print(f"{'Metric':30s} {'KeepAll+FC':>18s} {'KeepLatest+NoFC':>20s}")
+    print(f"{'Metric':30s} {'Reliable+FC':>18s} {'BestEffort+NoFC':>20s}")
     print("-" * 75)
     def row(name, a, b, fmt=".2f"):
         print(f"{name:30s} {a:>18{fmt}} {b:>20{fmt}}")

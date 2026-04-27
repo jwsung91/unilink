@@ -75,7 +75,7 @@ struct UdsClient::Impl {
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
   size_t backpressure_threshold_ = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
-  base::constants::BackpressureStrategy backpressure_strategy_ = base::constants::BackpressureStrategy::KeepAll;
+  base::constants::BackpressureStrategy backpressure_strategy_ = base::constants::BackpressureStrategy::Reliable;
 
   explicit Impl(const std::string& socket_path) : socket_path_(socket_path), started_(false) {}
 

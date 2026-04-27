@@ -142,12 +142,12 @@ if __name__ == "__main__":
     print("Unilink UDP Robust Chaos Benchmark (V3)")
     print("=" * 70)
     # Use smaller thresholds to trigger BP easier on local loopback
-    r_all = run_bench("KeepAll (128KB) + Flow Control", unilink.BackpressureStrategy.KeepAll, 128, True)
+    r_all = run_bench("Reliable (128KB) + Flow Control", unilink.BackpressureStrategy.Reliable, 128, True)
     time.sleep(1)
-    r_lat = run_bench("KeepLatest (128KB) NO Flow Control", unilink.BackpressureStrategy.KeepLatest, 128, False)
+    r_lat = run_bench("BestEffort (128KB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 128, False)
 
     print("\n" + "=" * 70)
-    print(f"{'Metric':30s} {'KeepAll+FC':>15s} {'KeepLatest+NoFC':>18s}")
+    print(f"{'Metric':30s} {'Reliable+FC':>15s} {'BestEffort+NoFC':>18s}")
     print("-" * 70)
     def row(name, a, b, fmt=".2f"):
         print(f"{name:30s} {a:>15{fmt}} {b:>18{fmt}}")

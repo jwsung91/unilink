@@ -1,11 +1,11 @@
 # BackpressureStrategy Multi-Transport Benchmark — 2026-04-27
 
 ## Objective
-Evaluate and compare `BackpressureStrategy` implementations (`KeepAll` vs `KeepLatest`) across **TCP and UDP** transports under chaotic network environments (LV3/LV4 equivalent).
+Evaluate and compare `BackpressureStrategy` implementations (`Reliable` vs `BestEffort`) across **TCP and UDP** transports under chaotic network environments (LV3/LV4 equivalent).
 
 This benchmark validates that:
-1.  **KeepAll** (with Flow Control) ensures 100% data reliability for critical commands/logs.
-2.  **KeepLatest** (without Flow Control) ensures minimum latency and maximum freshness for sensor data (LiDAR/Video).
+1.  **Reliable** (with Flow Control) ensures 100% data reliability for critical commands/logs.
+2.  **BestEffort** (without Flow Control) ensures minimum latency and maximum freshness for sensor data (LiDAR/Video).
 3.  **New API**: All interfaces (TCP Server/Client, UDP, Serial, UDS) now expose these configuration properties.
 
 ---
@@ -13,26 +13,26 @@ This benchmark validates that:
 ## 1. TCP Stability Results (LV3 Chaos)
 *Workload: 64KB payloads, 10µs sleep, 7s chaos interval.*
 
-| Metric | Py Unilink (`KeepAll`) | **Py Unilink (`KeepLatest`)** | Py Raw Sockets | C++ Unilink (`KeepAll`) |
+| Metric | Py Unilink (`Reliable`) | **Py Unilink (`BestEffort`)** | Py Raw Sockets | C++ Unilink (`Reliable`) |
 |:---|:---:|:---:|:---:|:---:|
 | **Throughput Avg** | 133.5 MB/s | **414.5 MB/s** | 563.5 MB/s | 1,420.4 MB/s |
 | **Delivery Rate** | 99.4% | **33.9% (Intentional)** | 99.9% | 99.9% |
 | **Efficiency (vs Raw)**| 23.7% | **73.5%** | 100% | N/A |
 
-**Key Finding:** `KeepLatest` increases Python TCP throughput by **3.1x**, reaching **73.5%** of raw socket performance by removing sender-side blocking.
+**Key Finding:** `BestEffort` increases Python TCP throughput by **3.1x**, reaching **73.5%** of raw socket performance by removing sender-side blocking.
 
 ---
 
 ## 2. UDP Stress Results (LV4 Extreme)
 *Workload: 4KB payloads, 10µs sleep, 2s network "mute" simulation, 16KB tiny threshold.*
 
-| Metric | **UDP KeepAll + FC** | **UDP KeepLatest (No FC)** | Performance Gain |
+| Metric | **UDP Reliable + FC** | **UDP BestEffort (No FC)** | Performance Gain |
 |:---|:---:|:---:|:---:|
 | **Sent Data** | 4.83 MB | **441.11 MB** | **91.3x** |
 | **BP Events** | 2 | **70** | Aggressive Flushing |
 | **Behavior** | Paused after 16KB | Flushed & Continued | Real-time Priority |
 
-**Key Finding:** In high-load UDP scenarios, `KeepLatest` prevents application-level stalling, allowing the data pipeline to stay "live" even during temporary network congestion.
+**Key Finding:** In high-load UDP scenarios, `BestEffort` prevents application-level stalling, allowing the data pipeline to stay "live" even during temporary network congestion.
 
 ---
 
@@ -44,8 +44,8 @@ All wrappers now support the following properties in Python:
 # Available for: TcpClient, TcpServer, UdpClient, UdpServer, Serial, UdsClient, UdsServer
 client = unilink.TcpClient("127.0.0.1", 10001)
 
-# Set strategy (KeepAll is default)
-client.backpressure_strategy = unilink.BackpressureStrategy.KeepLatest
+# Set strategy (Reliable is default)
+client.backpressure_strategy = unilink.BackpressureStrategy.BestEffort
 
 # Set threshold (Default 16MB)
 client.backpressure_threshold = 1024 * 512  # 0.5 MB for sensors
@@ -55,10 +55,10 @@ client.backpressure_threshold = 1024 * 512  # 0.5 MB for sensors
 
 | Workload Type | Transport | Strategy | Threshold | Flow Control |
 |:---|:---|:---|:---|:---|
-| **Perception (LiDAR/Cam)** | TCP/UDS | `KeepLatest` | 0.5 - 1.0 MB | **OFF** |
-| **Telemetry/Status** | UDP | `KeepLatest` | 128 - 256 KB | **OFF** |
-| **Commands/Files** | TCP/UDS | `KeepAll` | 16 - 64 MB | **ON** |
-| **MCU Control** | Serial | `KeepLatest` | 4 - 16 KB | **OFF** |
+| **Perception (LiDAR/Cam)** | TCP/UDS | `BestEffort` | 0.5 - 1.0 MB | **OFF** |
+| **Telemetry/Status** | UDP | `BestEffort` | 128 - 256 KB | **OFF** |
+| **Commands/Files** | TCP/UDS | `Reliable` | 16 - 64 MB | **ON** |
+| **MCU Control** | Serial | `BestEffort` | 4 - 16 KB | **OFF** |
 
 ---
 

@@ -76,7 +76,7 @@ struct TcpClient::Impl {
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
   size_t backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
-  base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::Reliable};
 
   Impl(const std::string& host, uint16_t port) : host_(host), port_(port), started_(false) {}
 

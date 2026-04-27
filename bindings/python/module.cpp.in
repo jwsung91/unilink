@@ -17,8 +17,8 @@ PYBIND11_MODULE(unilink_py, m) {
 
   // BackpressureStrategy enum
   py::enum_<base::constants::BackpressureStrategy>(m, "BackpressureStrategy")
-      .value("KeepAll", base::constants::BackpressureStrategy::KeepAll)
-      .value("KeepLatest", base::constants::BackpressureStrategy::KeepLatest)
+      .value("Reliable", base::constants::BackpressureStrategy::Reliable)
+      .value("BestEffort", base::constants::BackpressureStrategy::BestEffort)
       .export_values();
 
   // ErrorCode enum

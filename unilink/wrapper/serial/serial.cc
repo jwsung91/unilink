@@ -86,7 +86,7 @@ struct Serial::Impl {
   std::string flow_control = "none";
   std::chrono::milliseconds retry_interval{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
-  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::KeepAll;
+  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
 
   Impl(const std::string& dev, uint32_t baud) : device(dev), baud_rate(baud) {}
   Impl(const std::string& dev, uint32_t baud, std::shared_ptr<boost::asio::io_context> ioc)

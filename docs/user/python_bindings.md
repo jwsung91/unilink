@@ -263,11 +263,11 @@ client = unilink.TcpClient("127.0.0.1", 8080)
 # Set queue limit (default 16MB)
 client.backpressure_threshold = 1024 * 1024 # 1MB
 
-# KeepAll (Default): Retains all data until hard limit
-client.backpressure_strategy = unilink.BackpressureStrategy.KeepAll
+# Reliable (Default): Retains all data until hard limit
+client.backpressure_strategy = unilink.BackpressureStrategy.Reliable
 
-# KeepLatest: Drops oldest data when threshold is reached (Best for LiDAR/Video)
-client.backpressure_strategy = unilink.BackpressureStrategy.KeepLatest
+# BestEffort: Drops oldest data when threshold is reached (Best for LiDAR/Video)
+client.backpressure_strategy = unilink.BackpressureStrategy.BestEffort
 
 # Optional: Monitor drops or trigger custom flow control
 def on_bp(queued_bytes):

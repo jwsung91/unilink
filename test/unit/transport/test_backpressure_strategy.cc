@@ -42,27 +42,27 @@ using namespace unilink::base::constants;
 using namespace std::chrono_literals;
 namespace net = boost::asio;
 
-// ─── KeepAll: default strategy preserves data until hard limit ────────────────
+// ─── Reliable: default strategy preserves data until hard limit ────────────────
 
-TEST(BackpressureStrategyTest, KeepAllIsDefaultInConfig) {
+TEST(BackpressureStrategyTest, ReliableIsDefaultInConfig) {
   config::TcpClientConfig cfg;
-  EXPECT_EQ(cfg.backpressure_strategy, BackpressureStrategy::KeepAll);
+  EXPECT_EQ(cfg.backpressure_strategy, BackpressureStrategy::Reliable);
 }
 
-TEST(BackpressureStrategyTest, KeepLatestRoundtripsInConfig) {
+TEST(BackpressureStrategyTest, BestEffortRoundtripsInConfig) {
   config::TcpClientConfig cfg;
-  cfg.backpressure_strategy = BackpressureStrategy::KeepLatest;
-  EXPECT_EQ(cfg.backpressure_strategy, BackpressureStrategy::KeepLatest);
+  cfg.backpressure_strategy = BackpressureStrategy::BestEffort;
+  EXPECT_EQ(cfg.backpressure_strategy, BackpressureStrategy::BestEffort);
 }
 
-TEST(BackpressureStrategyTest, TcpServerConfigDefaultIsKeepAll) {
+TEST(BackpressureStrategyTest, TcpServerConfigDefaultIsReliable) {
   config::TcpServerConfig cfg;
-  EXPECT_EQ(cfg.backpressure_strategy, BackpressureStrategy::KeepAll);
+  EXPECT_EQ(cfg.backpressure_strategy, BackpressureStrategy::Reliable);
 }
 
-// ─── KeepLatest: queue is cleared when threshold is exceeded ──────────────────
+// ─── BestEffort: queue is cleared when threshold is exceeded ──────────────────
 
-TEST(BackpressureStrategyTest, KeepLatest_BackpressureCallbackFiredAndQueueCleared) {
+TEST(BackpressureStrategyTest, BestEffort_BackpressureCallbackFiredAndQueueCleared) {
   // Stand up a real loopback server + client pair to exercise the write path.
   constexpr uint16_t kPort = 19801;
   constexpr size_t kThreshold = 1024;  // 1 KB
@@ -77,12 +77,12 @@ TEST(BackpressureStrategyTest, KeepLatest_BackpressureCallbackFiredAndQueueClear
   auto server = TcpServer::create(srv_cfg);
   server->start();
 
-  // Client with KeepLatest strategy and small threshold
+  // Client with BestEffort strategy and small threshold
   config::TcpClientConfig cli_cfg;
   cli_cfg.host = "127.0.0.1";
   cli_cfg.port = kPort;
   cli_cfg.backpressure_threshold = kThreshold;
-  cli_cfg.backpressure_strategy = BackpressureStrategy::KeepLatest;
+  cli_cfg.backpressure_strategy = BackpressureStrategy::BestEffort;
 
   auto client = TcpClient::create(cli_cfg, ioc);
 
@@ -109,7 +109,7 @@ TEST(BackpressureStrategyTest, KeepLatest_BackpressureCallbackFiredAndQueueClear
   ioc.stop();
   io_thread.join();
 
-  // With KeepLatest, backpressure must have fired at least once (queue was
+  // With BestEffort, backpressure must have fired at least once (queue was
   // flushed each time the threshold was exceeded).
   EXPECT_GE(bp_count.load(), 1);
 }
@@ -120,7 +120,7 @@ TEST(BackpressureStrategyTest, SetBackpressureStrategyChangesMode) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = 19802;
-  cfg.backpressure_strategy = BackpressureStrategy::KeepAll;
+  cfg.backpressure_strategy = BackpressureStrategy::Reliable;
 
   net::io_context ioc;
   auto work = net::make_work_guard(ioc);
@@ -128,8 +128,8 @@ TEST(BackpressureStrategyTest, SetBackpressureStrategyChangesMode) {
 
   auto client = TcpClient::create(cfg, ioc);
 
-  // Switch to KeepLatest at runtime — must not crash
-  client->set_backpressure_strategy(BackpressureStrategy::KeepLatest);
+  // Switch to BestEffort at runtime — must not crash
+  client->set_backpressure_strategy(BackpressureStrategy::BestEffort);
 
   // Basic smoke: queuing without a connection should not crash
   std::vector<uint8_t> data(512, 0xFF);
@@ -158,7 +158,7 @@ TEST(BackpressureStrategyTest, UdsClient_ReportBackpressureHysteresis) {
   config::UdsClientConfig cli_cfg;
   cli_cfg.socket_path = tmp_path;
   cli_cfg.backpressure_threshold = kThreshold;
-  cli_cfg.backpressure_strategy = BackpressureStrategy::KeepLatest;
+  cli_cfg.backpressure_strategy = BackpressureStrategy::BestEffort;
 
   auto client = transport::UdsClient::create(cli_cfg);
 
@@ -182,7 +182,7 @@ TEST(BackpressureStrategyTest, UdsClient_ReportBackpressureHysteresis) {
   client->stop();
   server->stop();
 
-  // Hysteresis: with KeepLatest and flooding, must fire at least once
+  // Hysteresis: with BestEffort and flooding, must fire at least once
   std::lock_guard<std::mutex> lock(bp_mtx);
   EXPECT_GE(bp_events.size(), 1u);
 }
@@ -191,7 +191,7 @@ TEST(BackpressureStrategyTest, UdsClient_ReportBackpressureHysteresis) {
 
 TEST(BackpressureStrategyTest, BuilderFluentBackpressureStrategy) {
   auto client = builder::TcpClientBuilder("127.0.0.1", 19810)
-                    .backpressure_strategy(BackpressureStrategy::KeepLatest)
+                    .backpressure_strategy(BackpressureStrategy::BestEffort)
                     .backpressure_threshold(512 * 1024)
                     .build();
   ASSERT_NE(client, nullptr);
@@ -200,7 +200,7 @@ TEST(BackpressureStrategyTest, BuilderFluentBackpressureStrategy) {
 TEST(BackpressureStrategyTest, UdsBuilderFluentBackpressureStrategy) {
   auto tmp_path = std::string("/tmp/unilink_bp_builder_") + std::to_string(getpid()) + ".sock";
   auto client = builder::UdsClientBuilder(tmp_path)
-                    .backpressure_strategy(BackpressureStrategy::KeepLatest)
+                    .backpressure_strategy(BackpressureStrategy::BestEffort)
                     .backpressure_threshold(256 * 1024)
                     .build();
   ASSERT_NE(client, nullptr);
@@ -208,7 +208,7 @@ TEST(BackpressureStrategyTest, UdsBuilderFluentBackpressureStrategy) {
 
 TEST(BackpressureStrategyTest, UdpBuilderFluentBackpressureStrategy) {
   auto udp = builder::UdpClientBuilder(0)
-                 .backpressure_strategy(BackpressureStrategy::KeepLatest)
+                 .backpressure_strategy(BackpressureStrategy::BestEffort)
                  .backpressure_threshold(128 * 1024)
                  .build();
   ASSERT_NE(udp, nullptr);
@@ -223,6 +223,6 @@ TEST(BackpressureStrategyTest, UdpChannel_SetBackpressureStrategyRuntime) {
   ASSERT_NE(channel, nullptr);
 
   // Must not crash when called before start
-  channel->set_backpressure_strategy(BackpressureStrategy::KeepLatest);
-  channel->set_backpressure_strategy(BackpressureStrategy::KeepAll);
+  channel->set_backpressure_strategy(BackpressureStrategy::BestEffort);
+  channel->set_backpressure_strategy(BackpressureStrategy::Reliable);
 }

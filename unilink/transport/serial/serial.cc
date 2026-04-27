@@ -73,7 +73,7 @@ struct Serial::Impl {
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_limit_;
   size_t bp_low_;
@@ -497,7 +497,7 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
       net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {
         auto impl = self->get_impl();
         const auto added = buf.size();
-        if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+        if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
             (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
           impl->tx_.clear();
           impl->queued_bytes_ = 0;
@@ -525,7 +525,7 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     auto impl = self->get_impl();
     const auto added = buf.size();
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
@@ -554,7 +554,7 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
   const auto added = data.size();
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
@@ -584,7 +584,7 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
   const auto added = data->size();
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;

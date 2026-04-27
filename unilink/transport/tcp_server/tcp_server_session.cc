@@ -337,7 +337,7 @@ void TcpServerSession::do_close() {
 }
 
 void TcpServerSession::maybe_flush_for_keep_latest(size_t added) {
-  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
     tx_.clear();
     queue_bytes_ = 0;

@@ -69,7 +69,7 @@ struct UdpChannel::Impl {
   bool writing_{false};
   size_t queue_bytes_{0};
   config::UdpConfig cfg_;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
@@ -421,7 +421,7 @@ struct UdpChannel::Impl {
       return false;
     }
 
-    if (bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (backpressure_active_ || queue_bytes_ + size > bp_high_)) {
       tx_.clear();
       queue_bytes_ = 0;

@@ -1,7 +1,7 @@
 """
 Unilink UDP BackpressureStrategy Chaos Benchmark
 =========================================================
-Compares KeepAll with Flow Control vs KeepLatest without Flow Control 
+Compares Reliable with Flow Control vs BestEffort without Flow Control 
 under UDP load conditions.
 """
 
@@ -157,14 +157,14 @@ if __name__ == "__main__":
     print(f"Chaos: {CHAOS_INTERVAL}s interval, {DOWN_TIME}s down time (Receiver Stop)")
     print("=" * W)
 
-    r_all = run_bench("KeepAll (8 MB) + Flow Control", unilink.BackpressureStrategy.KeepAll, 8, True)
-    r_lat = run_bench("KeepLatest (0.5 MB) NO Flow Control", unilink.BackpressureStrategy.KeepLatest, 0.5, False)
+    r_all = run_bench("Reliable (8 MB) + Flow Control", unilink.BackpressureStrategy.Reliable, 8, True)
+    r_lat = run_bench("BestEffort (0.5 MB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 0.5, False)
 
     print("\n" + "=" * W)
     print("Summary")
     print("=" * W)
 
-    hdr = f"{'Metric':30s} {'KeepAll+FC':>14s} {'KeepLatest+NoFC':>16s}"
+    hdr = f"{'Metric':30s} {'Reliable+FC':>14s} {'BestEffort+NoFC':>16s}"
     print(hdr)
     print("-" * W)
 

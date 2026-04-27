@@ -37,7 +37,7 @@ struct UdsServer::Impl {
   std::atomic<size_t> max_clients_{1000000};
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
-      base::constants::BackpressureStrategy::KeepAll};
+      base::constants::BackpressureStrategy::Reliable};
 
   ConnectionHandler client_connect_handler_{nullptr};
   ConnectionHandler client_disconnect_handler_{nullptr};

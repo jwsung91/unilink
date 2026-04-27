@@ -108,14 +108,14 @@ if __name__ == "__main__":
     print(f"Unilink UDP LV4 Extreme Benchmark (Duration: {DURATION}s)")
     print("=" * 75)
     
-    # 1. KeepAll + Flow Control
-    all_res = run_unilink_udp("KeepAll + FC", unilink.BackpressureStrategy.KeepAll, True)
+    # 1. Reliable + Flow Control
+    all_res = run_unilink_udp("Reliable + FC", unilink.BackpressureStrategy.Reliable, True)
     
-    # 2. KeepLatest (No Flow Control)
-    lat_res = run_unilink_udp("KeepLatest (No FC)", unilink.BackpressureStrategy.KeepLatest, False)
+    # 2. BestEffort (No Flow Control)
+    lat_res = run_unilink_udp("BestEffort (No FC)", unilink.BackpressureStrategy.BestEffort, False)
 
     print("\n" + "=" * 75)
-    print(f"{'Metric':30s} {'KeepAll + FC':>18s} {'KeepLatest':>20s}")
+    print(f"{'Metric':30s} {'Reliable + FC':>18s} {'BestEffort':>20s}")
     print("-" * 75)
     print(f"{'Delivery Rate (%)':30s} {all_res[0]:>18.2f} {lat_res[0]:>20.2f}")
     print(f"{'Throughput Avg (MB/s)':30s} {all_res[1]:>18.2f} {lat_res[1]:>20.2f}")

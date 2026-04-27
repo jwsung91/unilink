@@ -57,12 +57,12 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   UdsServerSession(net::io_context& ioc, uds::socket sock,
                    size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
                    int idle_timeout_ms = 0,
-                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::KeepAll);
+                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::Reliable);
 
   UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
                    size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
                    int idle_timeout_ms = 0,
-                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::KeepAll);
+                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::Reliable);
 
   void start();
   void async_write_copy(memory::ConstByteSpan data);
@@ -92,7 +92,7 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;

@@ -89,5 +89,5 @@ if __name__ == "__main__":
     print("=" * 70)
     print("Unilink UDP Backpressure Verification (LV4 Load)")
     print("=" * 70)
-    run_bench("KeepAll + Flow Control", unilink.BackpressureStrategy.KeepAll, True)
-    run_bench("KeepLatest (No Flow Control)", unilink.BackpressureStrategy.KeepLatest, False)
+    run_bench("Reliable + Flow Control", unilink.BackpressureStrategy.Reliable, True)
+    run_bench("BestEffort (No Flow Control)", unilink.BackpressureStrategy.BestEffort, False)

@@ -69,7 +69,7 @@ struct UdsClient::Impl {
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
@@ -482,7 +482,7 @@ void UdsClient::Impl::recalculate_backpressure_bounds() {
 }
 
 void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
-  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
     tx_.clear();
     queue_bytes_ = 0;

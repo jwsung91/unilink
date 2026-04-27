@@ -249,7 +249,7 @@ class BuilderInterface {
   std::function<void(const wrapper::ErrorContext&)> on_error_;
   std::function<void(const wrapper::MessageContext&)> on_message_;
 
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   bool bp_strategy_set_{false};
   bool bp_threshold_set_{false};

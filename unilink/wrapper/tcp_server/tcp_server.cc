@@ -61,7 +61,7 @@ struct TcpServer::Impl {
   std::atomic<size_t> max_clients_{0};
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
-      base::constants::BackpressureStrategy::KeepAll};
+      base::constants::BackpressureStrategy::Reliable};
 
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_disconnect_{nullptr};
@@ -96,7 +96,7 @@ struct TcpServer::Impl {
         client_limit_enabled_(false),
         max_clients_(0),
         backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-        backpressure_strategy_(base::constants::BackpressureStrategy::KeepAll) {}
+        backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
@@ -113,7 +113,7 @@ struct TcpServer::Impl {
         client_limit_enabled_(false),
         max_clients_(0),
         backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-        backpressure_strategy_(base::constants::BackpressureStrategy::KeepAll) {}
+        backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {}
 
   explicit Impl(std::shared_ptr<interface::Channel> channel)
       : port_(0),
@@ -128,7 +128,7 @@ struct TcpServer::Impl {
         client_limit_enabled_(false),
         max_clients_(0),
         backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-        backpressure_strategy_(base::constants::BackpressureStrategy::KeepAll) {
+        backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {
     setup_internal_handlers();
   }
 
