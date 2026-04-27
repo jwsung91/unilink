@@ -87,6 +87,7 @@ struct UdpServer::Impl {
   MessageHandler on_data{nullptr};
   BatchMessageHandler on_data_batch_{nullptr};
   ErrorHandler on_error{nullptr};
+  std::function<void(size_t)> bp_handler{nullptr};
   FramerFactory framer_factory{nullptr};
   MessageHandler on_message{nullptr};
   BatchMessageHandler on_message_batch_{nullptr};
@@ -311,6 +312,11 @@ struct UdpServer::Impl {
       if (target_framer) {
         target_framer->push_bytes(data);
       }
+    });
+
+    channel->on_backpressure([this](size_t queued) {
+      std::shared_lock<std::shared_mutex> lock(mutex);
+      if (bp_handler) bp_handler(queued);
     });
 
     channel->on_state([this](base::LinkState state) {
@@ -557,6 +563,12 @@ UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
   return *this;
 }
 
+UdpServer& UdpServer::on_backpressure(std::function<void(size_t)> handler) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->bp_handler = std::move(handler);
+  return *this;
+}
+
 UdpServer& UdpServer::backpressure_threshold(size_t threshold) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->cfg.backpressure_threshold = threshold;
@@ -566,6 +578,9 @@ UdpServer& UdpServer::backpressure_threshold(size_t threshold) {
 UdpServer& UdpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->cfg.backpressure_strategy = strategy;
+  if (impl_->channel) {
+    impl_->channel->set_backpressure_strategy(strategy);
+  }
   return *this;
 }
 

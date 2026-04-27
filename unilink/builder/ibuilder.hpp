@@ -22,6 +22,7 @@
 #include <string_view>
 #include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/framer/iframer.hpp"
 #include "unilink/framer/line_framer.hpp"
@@ -222,6 +223,24 @@ class BuilderInterface {
     return on_message([obj, method](const wrapper::MessageContext& ctx) { (obj->*method)(ctx); });
   }
 
+  /**
+   * @brief Set the backpressure strategy
+   */
+  Derived& backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+    bp_strategy_ = strategy;
+    bp_strategy_set_ = true;
+    return static_cast<Derived&>(*this);
+  }
+
+  /**
+   * @brief Set the backpressure threshold in bytes
+   */
+  Derived& backpressure_threshold(size_t threshold) {
+    bp_threshold_ = threshold;
+    bp_threshold_set_ = true;
+    return static_cast<Derived&>(*this);
+  }
+
  protected:
   std::function<std::unique_ptr<framer::IFramer>()> framer_factory_;
   std::function<void(const wrapper::MessageContext&)> on_data_;
@@ -229,6 +248,11 @@ class BuilderInterface {
   std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
   std::function<void(const wrapper::ErrorContext&)> on_error_;
   std::function<void(const wrapper::MessageContext&)> on_message_;
+
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  size_t bp_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
+  bool bp_strategy_set_{false};
+  bool bp_threshold_set_{false};
 };
 
 }  // namespace builder

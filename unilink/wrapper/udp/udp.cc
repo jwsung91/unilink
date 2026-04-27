@@ -445,6 +445,11 @@ UdpClient& UdpClient::backpressure_threshold(size_t threshold) {
 UdpClient& UdpClient::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->cfg.backpressure_strategy = strategy;
+  if (impl_->channel) {
+    if (auto* uc = dynamic_cast<transport::UdpChannel*>(impl_->channel.get())) {
+      uc->set_backpressure_strategy(strategy);
+    }
+  }
   return *this;
 }
 

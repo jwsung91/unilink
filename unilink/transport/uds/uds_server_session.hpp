@@ -94,6 +94,7 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   size_t queue_bytes_ = 0;
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
   size_t bp_high_;
+  size_t bp_low_;
   size_t bp_limit_;
   bool backpressure_active_ = false;
   int idle_timeout_ms_ = 0;

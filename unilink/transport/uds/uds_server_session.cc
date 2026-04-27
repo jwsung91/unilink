@@ -29,6 +29,7 @@ UdsServerSession::UdsServerSession(net::io_context& ioc, uds::socket sock, size_
       socket_(std::make_unique<BoostUdsSocket>(std::move(sock))),
       bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
+      bp_low_(backpressure_threshold > 1 ? backpressure_threshold / 2 : backpressure_threshold),
       bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                          base::constants::MAX_BUFFER_SIZE)),
       idle_timeout_ms_(idle_timeout_ms) {}
@@ -42,6 +43,7 @@ UdsServerSession::UdsServerSession(net::io_context& ioc, std::unique_ptr<interfa
       socket_(std::move(socket)),
       bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
+      bp_low_(backpressure_threshold > 1 ? backpressure_threshold / 2 : backpressure_threshold),
       bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                          base::constants::MAX_BUFFER_SIZE)),
       idle_timeout_ms_(idle_timeout_ms) {}
@@ -192,7 +194,21 @@ void UdsServerSession::maybe_flush_for_keep_latest(size_t added) {
 
 void UdsServerSession::report_backpressure(size_t queued_bytes) {
   if (closing_ || !alive_) return;
-  if (on_bp_) on_bp_(queued_bytes);
+  if (!on_bp_) return;
+
+  if (!backpressure_active_ && queued_bytes >= bp_high_) {
+    backpressure_active_ = true;
+    try {
+      on_bp_(queued_bytes);
+    } catch (...) {
+    }
+  } else if (backpressure_active_ && queued_bytes <= bp_low_) {
+    backpressure_active_ = false;
+    try {
+      on_bp_(queued_bytes);
+    } catch (...) {
+    }
+  }
 }
 
 void UdsServerSession::reset_idle_timer() {

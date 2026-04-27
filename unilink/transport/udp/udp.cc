@@ -704,6 +704,10 @@ void UdpChannel::on_state(OnState cb) { impl_->on_state_ = std::move(cb); }
 
 void UdpChannel::on_backpressure(OnBackpressure cb) { impl_->on_bp_ = std::move(cb); }
 
+void UdpChannel::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  net::post(impl_->strand_, [impl = impl_.get(), strategy]() { impl->bp_strategy_ = strategy; });
+}
+
 void UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination) {
   auto impl = get_impl();
   if (data.empty()) return;

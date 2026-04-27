@@ -831,6 +831,14 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
+      .def("on_backpressure",
+           [](UdpServer& self, std::function<void(size_t)> h) {
+             self.on_backpressure([h](size_t queued) {
+               py::gil_scoped_acquire gil;
+               h(queued);
+             });
+             return &self;
+           })
       .def_property("backpressure_threshold", nullptr,
                     [](UdpServer& self, size_t v) { self.backpressure_threshold(v); })
       .def_property("backpressure_strategy", nullptr,

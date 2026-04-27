@@ -471,7 +471,15 @@ void UdsClient::Impl::close_socket() {
   socket_->close(ec);
 }
 
-void UdsClient::Impl::recalculate_backpressure_bounds() { bp_limit_ = cfg_.backpressure_threshold * 2; }
+void UdsClient::Impl::recalculate_backpressure_bounds() {
+  bp_high_ = cfg_.backpressure_threshold;
+  bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
+  if (bp_low_ == 0) bp_low_ = 1;
+  bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       base::constants::MAX_BUFFER_SIZE);
+  if (bp_limit_ < bp_high_) bp_limit_ = bp_high_;
+  backpressure_active_ = false;
+}
 
 void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
   if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
@@ -482,12 +490,36 @@ void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
 }
 
 void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
-  OnBackpressure cb;
+  if (stop_requested_.load() || stopping_.load()) return;
+
+  OnBackpressure on_bp;
   {
     std::lock_guard<std::mutex> lock(callback_mtx_);
-    cb = on_bp_;
+    on_bp = on_bp_;
   }
-  if (cb) cb(queued_bytes);
+  if (!on_bp) return;
+
+  if (!backpressure_active_ && queued_bytes >= bp_high_) {
+    backpressure_active_ = true;
+    try {
+      on_bp(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                        "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
+    }
+  } else if (backpressure_active_ && queued_bytes <= bp_low_) {
+    backpressure_active_ = false;
+    try {
+      on_bp(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                        "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
+    }
+  }
 }
 
 void UdsClient::Impl::record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat,

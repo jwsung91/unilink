@@ -25,8 +25,16 @@
 #include "unilink/base/constants.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/builder/tcp_client_builder.hpp"
+#include "unilink/builder/udp_builder.hpp"
+#include "unilink/builder/uds_builder.hpp"
+#include "unilink/config/uds_config.hpp"
+#include "unilink/config/udp_config.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
+#include "unilink/transport/udp/udp.hpp"
+#include "unilink/transport/uds/uds_client.hpp"
+#include "unilink/transport/uds/uds_server.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
@@ -131,4 +139,90 @@ TEST(BackpressureStrategyTest, SetBackpressureStrategyChangesMode) {
   work.reset();
   ioc.stop();
   io_thread.join();
+}
+
+// ─── UdsClient: report_backpressure uses hysteresis (ON/OFF transitions only) ─
+
+TEST(BackpressureStrategyTest, UdsClient_ReportBackpressureHysteresis) {
+  constexpr size_t kThreshold = 1024;
+  auto tmp_path = std::string("/tmp/unilink_bp_hysteresis_") + std::to_string(getpid()) + ".sock";
+
+  // Start a UDS server to accept the connection (manages its own ioc)
+  config::UdsServerConfig srv_cfg;
+  srv_cfg.socket_path = tmp_path;
+  auto server = transport::UdsServer::create(srv_cfg);
+  server->start();
+  std::this_thread::sleep_for(50ms);
+
+  // Client with small threshold (manages its own ioc)
+  config::UdsClientConfig cli_cfg;
+  cli_cfg.socket_path = tmp_path;
+  cli_cfg.backpressure_threshold = kThreshold;
+  cli_cfg.backpressure_strategy = BackpressureStrategy::KeepLatest;
+
+  auto client = transport::UdsClient::create(cli_cfg);
+
+  std::vector<size_t> bp_events;
+  std::mutex bp_mtx;
+  client->on_backpressure([&](size_t queued) {
+    std::lock_guard<std::mutex> lock(bp_mtx);
+    bp_events.push_back(queued);
+  });
+
+  client->start();
+  std::this_thread::sleep_for(100ms);
+
+  // Flood to trigger ON transition
+  std::vector<uint8_t> big(kThreshold * 2, 0xAB);
+  for (int i = 0; i < 5; ++i) {
+    client->async_write_copy(memory::ConstByteSpan(big.data(), big.size()));
+  }
+  std::this_thread::sleep_for(100ms);
+
+  client->stop();
+  server->stop();
+
+  // Hysteresis: with KeepLatest and flooding, must fire at least once
+  std::lock_guard<std::mutex> lock(bp_mtx);
+  EXPECT_GE(bp_events.size(), 1u);
+}
+
+// ─── Builder: backpressure_strategy/threshold fluent API ──────────────────────
+
+TEST(BackpressureStrategyTest, BuilderFluentBackpressureStrategy) {
+  auto client = builder::TcpClientBuilder("127.0.0.1", 19810)
+                    .backpressure_strategy(BackpressureStrategy::KeepLatest)
+                    .backpressure_threshold(512 * 1024)
+                    .build();
+  ASSERT_NE(client, nullptr);
+}
+
+TEST(BackpressureStrategyTest, UdsBuilderFluentBackpressureStrategy) {
+  auto tmp_path = std::string("/tmp/unilink_bp_builder_") + std::to_string(getpid()) + ".sock";
+  auto client = builder::UdsClientBuilder(tmp_path)
+                    .backpressure_strategy(BackpressureStrategy::KeepLatest)
+                    .backpressure_threshold(256 * 1024)
+                    .build();
+  ASSERT_NE(client, nullptr);
+}
+
+TEST(BackpressureStrategyTest, UdpBuilderFluentBackpressureStrategy) {
+  auto udp = builder::UdpClientBuilder(0)
+                 .backpressure_strategy(BackpressureStrategy::KeepLatest)
+                 .backpressure_threshold(128 * 1024)
+                 .build();
+  ASSERT_NE(udp, nullptr);
+}
+
+// ─── UdpChannel: set_backpressure_strategy runtime setter ────────────────────
+
+TEST(BackpressureStrategyTest, UdpChannel_SetBackpressureStrategyRuntime) {
+  config::UdpConfig cfg;
+  cfg.local_port = 0;
+  auto channel = transport::UdpChannel::create(cfg);
+  ASSERT_NE(channel, nullptr);
+
+  // Must not crash when called before start
+  channel->set_backpressure_strategy(BackpressureStrategy::KeepLatest);
+  channel->set_backpressure_strategy(BackpressureStrategy::KeepAll);
 }
