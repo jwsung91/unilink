@@ -254,7 +254,6 @@ struct TcpClient::Impl {
     return false;
   }
 
-
   bool send(std::string_view data) {
     if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
     return try_send(data);

@@ -115,7 +115,6 @@ struct UdsServer::Impl {
     }
   }
 
-
   bool try_send_to(ClientId client_id, std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
@@ -129,14 +128,23 @@ struct UdsServer::Impl {
   }
 
   bool send_to(ClientId client_id, std::string_view data) {
-    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) return send_to_blocking(client_id, data);
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable)
+      return send_to_blocking(client_id, data);
     return try_send_to(client_id, data);
   }
 
   bool broadcast(std::string_view data) {
     if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) {
-      std::vector<ClientId> clients; { std::shared_lock<std::shared_mutex> lock(mutex_); auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_); if (ts) clients = ts->connected_clients(); }
-      bool any_sent = false; for (auto id : clients) { if (send_to_blocking(id, data)) any_sent = true; }
+      std::vector<ClientId> clients;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
+        if (ts) clients = ts->connected_clients();
+      }
+      bool any_sent = false;
+      for (auto id : clients) {
+        if (send_to_blocking(id, data)) any_sent = true;
+      }
       return any_sent;
     }
     return try_broadcast(data);

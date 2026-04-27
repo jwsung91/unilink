@@ -225,7 +225,6 @@ struct UdpClient::Impl {
     }
   }
 
-
   bool send(std::string_view data) {
     if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
     return try_send(data);

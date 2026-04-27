@@ -234,7 +234,6 @@ struct Serial::Impl {
     if (framer) framer->reset();
   }
 
-
   bool try_send(std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
