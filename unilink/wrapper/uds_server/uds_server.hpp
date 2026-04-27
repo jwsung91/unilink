@@ -75,6 +75,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_data_batch(BatchMessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
+  ServerInterface& on_backpressure(std::function<void(size_t)> handler) override;
 
   ServerInterface& framer(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;

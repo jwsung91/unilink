@@ -117,4 +117,55 @@ sudo sysctl -w net.core.rmem_max=16777216  # 16 MB
 sudo sysctl -w net.core.wmem_max=16777216  # 16 MB
 ```
 
+---
+
+## Backpressure Management {#backpressure-management}
+
+When the data generation rate exceeds the network's transmission capacity, Unilink's internal send queues grow. Managing this "backpressure" is critical for stability and latency.
+
+### 1. Choosing a Strategy
+
+Unilink provides two strategies for handling full queues:
+
+| Strategy | Behavior | Best For |
+|:---|:---|:---|
+| `KeepAll` (Default) | Retains all data until a hard limit (64MB) is reached. | Reliable data (files, logs, commands). |
+| `KeepLatest` | Drops oldest data when a threshold is reached. | Real-time sensors (LiDAR, Video, Telemetry). |
+
+### 2. High-Throughput Sensors (LiDAR/Camera)
+
+For robotics perception, processing stale data is often worse than skipping frames. Use `KeepLatest` with a low threshold to prevent **Bufferbloat**.
+
+```cpp
+// 🤖 Best configuration for robotics sensors
+auto lidar = unilink::tcp_client("192.168.1.10", 2368)
+    .backpressure_strategy(unilink::base::constants::BackpressureStrategy::KeepLatest)
+    .backpressure_threshold(1024 * 512)  // 0.5 MB threshold
+    .build();
+
+// In Python
+client.backpressure_strategy = unilink.BackpressureStrategy.KeepLatest
+client.backpressure_threshold = 1024 * 512
+```
+
+**Benchmarking Insights:**
+*   In Python, using `KeepLatest` without Flow Control can increase throughput by **up to 3x** (e.g., 133 MB/s → 414 MB/s) by preventing GIL contention caused by blocked sender threads.
+*   Aggressive flushing during network disconnects ensures that once reconnection occurs, the receiver instantly gets the **most recent frame** instead of waiting for a multi-gigabyte backlog to drain.
+
+### 3. Critical Reliable Data
+
+For data that must not be lost, use `KeepAll` combined with **Flow Control** in your application.
+
+```cpp
+bool paused = false;
+client->on_backpressure([&paused](size_t queued) {
+    // If queue exceeds 12MB, pause sending; resume when below 4MB
+    if (queued > 12 * 1024 * 1024) paused = true;
+    else if (queued < 4 * 1024 * 1024) paused = false;
+});
+
+// In your sender loop
+if (!paused) client->send(critical_data);
+```
+
 

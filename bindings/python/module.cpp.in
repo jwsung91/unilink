@@ -282,6 +282,14 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
+      .def("on_backpressure",
+           [](TcpServer& self, std::function<void(size_t)> h) {
+             self.on_backpressure([h](size_t queued) {
+               py::gil_scoped_acquire gil;
+               h(queued);
+             });
+             return &self;
+           })
       .def_property("backpressure_threshold", nullptr,
                     [](TcpServer& self, size_t v) { self.backpressure_threshold(v); })
       .def_property("backpressure_strategy", nullptr,
@@ -383,6 +391,14 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
+      .def("on_backpressure",
+           [](Serial& self, std::function<void(size_t)> h) {
+             self.on_backpressure([h](size_t queued) {
+               py::gil_scoped_acquire gil;
+               h(queued);
+             });
+             return &self;
+           })
       .def_property("backpressure_threshold", nullptr, [](Serial& self, size_t v) { self.backpressure_threshold(v); })
       .def_property("backpressure_strategy", nullptr,
                     [](Serial& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); });
@@ -477,6 +493,14 @@ PYBIND11_MODULE(unilink_py, m) {
              self.on_error([h](const ErrorContext& ctx) {
                py::gil_scoped_acquire gil;
                h(ctx);
+             });
+             return &self;
+           })
+      .def("on_backpressure",
+           [](UdsClient& self, std::function<void(size_t)> h) {
+             self.on_backpressure([h](size_t queued) {
+               py::gil_scoped_acquire gil;
+               h(queued);
              });
              return &self;
            })
@@ -578,6 +602,14 @@ PYBIND11_MODULE(unilink_py, m) {
              self.on_error([h](const ErrorContext& ctx) {
                py::gil_scoped_acquire gil;
                h(ctx);
+             });
+             return &self;
+           })
+      .def("on_backpressure",
+           [](UdsServer& self, std::function<void(size_t)> h) {
+             self.on_backpressure([h](size_t queued) {
+               py::gil_scoped_acquire gil;
+               h(queued);
              });
              return &self;
            })

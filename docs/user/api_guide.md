@@ -42,6 +42,9 @@ auto channel = unilink::{type}(params)
 | `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None     |
 | `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None     |
 | `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None     |
+| `.on_backpressure(callback)`     | Handle queue threshold events (`void(size_t bytes)`)              | None     |
+| `.backpressure_threshold(bytes)` | Set queue limit for strategy or flow control                      | 16 MB    |
+| `.backpressure_strategy(enum)`   | Set behavior when threshold is reached (`KeepAll`, `KeepLatest`)  | `KeepAll`|
 | `.auto_start(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
 | `.independent_context(bool)`     | Create and run a dedicated `io_context` thread managed by unilink | `false`  |
 | `.use_line_framer(...)`          | Split incoming bytes into delimiter-based messages                | Disabled |

@@ -68,6 +68,7 @@ struct TcpServer::Impl {
   MessageHandler on_data_{nullptr};
   BatchMessageHandler data_batch_handler_{nullptr};
   ErrorHandler on_error_{nullptr};
+  std::function<void(size_t)> on_backpressure_{nullptr};
   FramerFactory framer_factory_{nullptr};
   MessageHandler on_message_{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
@@ -374,6 +375,13 @@ struct TcpServer::Impl {
         }
         if (handler) handler(ConnectionContext(id));
       });
+
+      transport_server->on_backpressure([this, weak_alive](size_t queued) {
+        auto alive = weak_alive.lock();
+        if (!alive) return;
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (on_backpressure_) on_backpressure_(queued);
+      });
     }
     channel_->on_state([this, weak_alive](base::LinkState state) {
       auto alive = weak_alive.lock();
@@ -450,6 +458,12 @@ ServerInterface& TcpServer::on_data_batch(BatchMessageHandler h) {
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
+  return *this;
+}
+
+ServerInterface& TcpServer::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->on_backpressure_ = std::move(h);
   return *this;
 }
 

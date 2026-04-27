@@ -74,6 +74,15 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_error(ErrorHandler handler) = 0;
 
   /**
+   * @brief Register a callback to be notified when send queue congestion changes.
+   * @param handler Callback receiving the current number of queued bytes.
+   */
+  virtual ServerInterface& on_backpressure(std::function<void(size_t)> handler) {
+    (void)handler;
+    return *this;
+  }
+
+  /**
    * @brief Set a factory function to create a new framer for each client connection.
    * @param factory Function that returns a unique_ptr to a new framer.
    */

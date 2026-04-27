@@ -65,6 +65,7 @@ struct Serial::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
+  std::function<void(size_t)> bp_handler{nullptr};
   MessageHandler message_handler{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -268,6 +269,13 @@ struct Serial::Impl {
       }
     });
 
+    channel->on_backpressure([this, weak_alive](size_t queued) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (bp_handler) bp_handler(queued);
+    });
+
     channel->on_state([this, weak_alive](base::LinkState state) {
       auto alive = weak_alive.lock();
       if (!alive) return;
@@ -435,6 +443,12 @@ ChannelInterface& Serial::on_disconnect(ConnectionHandler h) {
 ChannelInterface& Serial::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler = std::move(h);
+  return *this;
+}
+
+ChannelInterface& Serial::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler = std::move(h);
   return *this;
 }
 

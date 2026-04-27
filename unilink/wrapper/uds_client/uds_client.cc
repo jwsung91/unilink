@@ -57,6 +57,7 @@ struct UdsClient::Impl {
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
+  std::function<void(size_t)> bp_handler_{nullptr};
   MessageHandler message_handler_{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -333,6 +334,13 @@ struct UdsClient::Impl {
         framer_->push_bytes(data);
       }
     });
+
+    channel_->on_backpressure([this, weak_alive](size_t queued) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (bp_handler_) bp_handler_(queued);
+    });
   }
 
   // Attach the stored message_handler_ or message_batch_handler_ to framer_->on_message().
@@ -443,9 +451,15 @@ ChannelInterface& UdsClient::on_disconnect(ConnectionHandler handler) {
   return *this;
 }
 
-ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
+ChannelInterface& UdsClient::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->error_handler_ = std::move(handler);
+  impl_->error_handler_ = std::move(h);
+  return *this;
+}
+
+ChannelInterface& UdsClient::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler_ = std::move(h);
   return *this;
 }
 
