@@ -23,6 +23,7 @@
 #include <string>
 #include <string_view>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/wrapper/ichannel.hpp"
@@ -70,6 +71,7 @@ class UNILINK_API UdpClient : public ChannelInterface {
   ChannelInterface& on_connect(ConnectionHandler handler) override;
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
+  ChannelInterface& on_backpressure(std::function<void(size_t)> handler) override;
 
   ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;
@@ -77,6 +79,8 @@ class UNILINK_API UdpClient : public ChannelInterface {
 
   ChannelInterface& auto_start(bool manage = true) override;
 
+  UdpClient& backpressure_threshold(size_t threshold);
+  UdpClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdpClient& manage_external_context(bool manage);
 
  private:

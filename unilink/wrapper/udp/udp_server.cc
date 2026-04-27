@@ -557,6 +557,18 @@ UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
   return *this;
 }
 
+UdpServer& UdpServer::backpressure_threshold(size_t threshold) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.backpressure_threshold = threshold;
+  return *this;
+}
+
+UdpServer& UdpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.backpressure_strategy = strategy;
+  return *this;
+}
+
 UdpServer& UdpServer::manage_external_context(bool m) {
   impl_->manage_external_context.store(m);
   return *this;

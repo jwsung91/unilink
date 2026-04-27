@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/wrapper/iserver.hpp"
@@ -77,6 +78,8 @@ class UNILINK_API UdpServer : public ServerInterface {
   // UDP specific
   UdpServer& auto_start(bool manage = true) override;
   UdpServer& session_timeout(std::chrono::milliseconds timeout);
+  UdpServer& backpressure_threshold(size_t threshold);
+  UdpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdpServer& manage_external_context(bool manage);
 
  private:

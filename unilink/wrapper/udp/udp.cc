@@ -56,6 +56,7 @@ struct UdpClient::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
+  std::function<void(size_t)> bp_handler{nullptr};
   MessageHandler message_handler{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -259,6 +260,13 @@ struct UdpClient::Impl {
       }
     });
 
+    channel->on_backpressure([this, weak_alive](size_t queued) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (bp_handler) bp_handler(queued);
+    });
+
     channel->on_state([this, weak_alive](base::LinkState state) {
       auto alive = weak_alive.lock();
       if (!alive) return;
@@ -402,6 +410,12 @@ ChannelInterface& UdpClient::on_error(ErrorHandler h) {
   return *this;
 }
 
+ChannelInterface& UdpClient::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler = std::move(h);
+  return *this;
+}
+
 ChannelInterface& UdpClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
@@ -422,9 +436,21 @@ ChannelInterface& UdpClient::auto_start(bool m) {
   return *this;
 }
 
-UdpClient& UdpClient::manage_external_context(bool manage) {
+UdpClient& UdpClient::backpressure_threshold(size_t threshold) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->manage_external_context = manage;
+  impl_->cfg.backpressure_threshold = threshold;
+  return *this;
+}
+
+UdpClient& UdpClient::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->cfg.backpressure_strategy = strategy;
+  return *this;
+}
+
+UdpClient& UdpClient::manage_external_context(bool m) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->manage_external_context = m;
   return *this;
 }
 
