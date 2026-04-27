@@ -7,6 +7,7 @@ var structunilink_1_1config_1_1TcpClientConfig =
     [ "operator=", "structunilink_1_1config_1_1TcpClientConfig.html#a51d48c955ea5693c594f4510f225ff68", null ],
     [ "operator=", "structunilink_1_1config_1_1TcpClientConfig.html#a128e310004a6b29e09c2fea76b1dec54", null ],
     [ "validate_and_clamp", "structunilink_1_1config_1_1TcpClientConfig.html#a22649b231a9f1bca90b461d378d0ce96", null ],
+    [ "backpressure_strategy", "structunilink_1_1config_1_1TcpClientConfig.html#a5af91d34fd8b384fe5471ebe8c6ae49a", null ],
     [ "backpressure_threshold", "structunilink_1_1config_1_1TcpClientConfig.html#a8bbb9f6a516d635eb4742f8234ce3c17", null ],
     [ "connection_timeout_ms", "structunilink_1_1config_1_1TcpClientConfig.html#a80c0b70306072d8ab86307fb634303fe", null ],
     [ "enable_memory_pool", "structunilink_1_1config_1_1TcpClientConfig.html#aab3e4cdc50552881d6f55fce271fd8f5", null ],

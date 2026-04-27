@@ -12,6 +12,7 @@ var structunilink_1_1config_1_1SerialConfig =
     ] ],
     [ "is_valid", "structunilink_1_1config_1_1SerialConfig.html#a369d2ba7701a1d0900da15933bba736c", null ],
     [ "validate_and_clamp", "structunilink_1_1config_1_1SerialConfig.html#a1199a6c938896ea632aad1cb719af356", null ],
+    [ "backpressure_strategy", "structunilink_1_1config_1_1SerialConfig.html#a6af740e27534da8f2575346787250fb8", null ],
     [ "backpressure_threshold", "structunilink_1_1config_1_1SerialConfig.html#ab809d4a5d5c68cee486757c900eb80c8", null ],
     [ "baud_rate", "structunilink_1_1config_1_1SerialConfig.html#afce9cf7f09c90afddb18fcc6eaa5fb28", null ],
     [ "char_size", "structunilink_1_1config_1_1SerialConfig.html#a417cbb35de0bacf99b3d89f5c1d8309b", null ],

@@ -173,6 +173,7 @@ Table of Contents</h1>
 <li>Error Handling</li>
 <li>Logging System</li>
 <li>Configuration Management</li>
+<li>Backpressure Strategy</li>
 <li>Security</li>
 </ol>
 <hr  />
@@ -1098,8 +1099,94 @@ Performance Tips</h1>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00546">logger.cc:546</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md540"></a>
-Security</h1>
+Backpressure Strategy</h1>
+<p>When a sender produces data faster than the network can deliver it, messages accumulate in the send queue. The <code>BackpressureStrategy</code> enum controls what happens when the queue approaches its threshold — trading off <b>completeness</b> against <b>freshness</b>.</p>
 <h2><a class="anchor" id="autotoc_md541"></a>
+Strategies</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Strategy   </th><th class="markdownTableHeadNone">Behaviour at threshold   </th><th class="markdownTableHeadNone">Use when…    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>KeepAll</code>   </td><td class="markdownTableBodyNone">Keep queuing until the hard cap is reached   </td><td class="markdownTableBodyNone">Every message must arrive — files, commands, logs    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>KeepLatest</code>   </td><td class="markdownTableBodyNone">Drop the entire queue; keep sending fresh data   </td><td class="markdownTableBodyNone">Latency matters more than completeness — sensor streams, robot state, video telemetry   </td></tr>
+</table>
+<p><code>KeepAll</code> is the default for all transports. It is the safe choice: no data is silently discarded.</p>
+<p><code>KeepLatest</code> is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The <code>on_backpressure</code> callback fires each time the queue is flushed so callers can observe drops.</p>
+<h2><a class="anchor" id="autotoc_md542"></a>
+When to use each</h2>
+<p><b>Use <code>KeepAll</code> (default) when:</b></p><ul>
+<li>Reliability is critical: file transfers, command sequences, logs, financial data</li>
+<li>Your consumer is expected to keep up, or your backpressure threshold is generously sized</li>
+<li>A silent drop is a bug, not an acceptable trade-off</li>
+</ul>
+<p><b>Use <code>KeepLatest</code> when:</b></p><ul>
+<li>You publish high-frequency sensor readings and the consumer only cares about the current state</li>
+<li>You are streaming robot joint angles, camera frames, or GNSS positions over a slow link</li>
+<li>A stale value is worse than a dropped value</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md543"></a>
+C++ Usage</h2>
+<p>Set the strategy via the transport config before starting:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="constants_8hpp.html">unilink/base/constants.hpp</a>&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">using </span><a class="code hl_enumeration" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">unilink::base::constants::BackpressureStrategy</a>;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// TCP client — real-time sensor stream</span></div>
+<div class="line"><a class="code hl_struct" href="structunilink_1_1config_1_1TcpClientConfig.html">config::TcpClientConfig</a> cfg;</div>
+<div class="line">cfg.<a class="code hl_variable" href="structunilink_1_1config_1_1TcpClientConfig.html#aecccc8d45e82211ae924cae8b3d16540">host</a> = <span class="stringliteral">&quot;192.168.1.10&quot;</span>;</div>
+<div class="line">cfg.<a class="code hl_variable" href="structunilink_1_1config_1_1TcpClientConfig.html#acba30b670711d398bb87ba94c3eb56f3">port</a> = 8080;</div>
+<div class="line">cfg.<a class="code hl_variable" href="structunilink_1_1config_1_1TcpClientConfig.html#a8bbb9f6a516d635eb4742f8234ce3c17">backpressure_threshold</a> = 512 * 1024;            <span class="comment">// 512 KB flush threshold</span></div>
+<div class="line">cfg.<a class="code hl_variable" href="structunilink_1_1config_1_1TcpClientConfig.html#a5af91d34fd8b384fe5471ebe8c6ae49a">backpressure_strategy</a>  = BackpressureStrategy::KeepLatest;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> client = TcpClient::create(cfg, ioc);</div>
+<div class="line">client-&gt;on_backpressure([](<span class="keywordtype">size_t</span> <span class="comment">/* dropped_bytes */</span>) {</div>
+<div class="line">    <span class="comment">// queue was flushed — stale data discarded</span></div>
+<div class="line">});</div>
+<div class="ttc" id="aconstants_8hpp_html"><div class="ttname"><a href="constants_8hpp.html">constants.hpp</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_1_1constants_html_af1e6ca56552bcb7c548ec6091a4d2e0a"><div class="ttname"><a href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">unilink::base::constants::BackpressureStrategy</a></div><div class="ttdeci">BackpressureStrategy</div><div class="ttdef"><b>Definition</b> <a href="constants_8hpp_source.html#l00029">constants.hpp:29</a></div></div>
+<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html">unilink::config::TcpClientConfig</a></div><div class="ttdef"><b>Definition</b> <a href="tcp__client__config_8hpp_source.html#l00028">tcp_client_config.hpp:28</a></div></div>
+<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html_a5af91d34fd8b384fe5471ebe8c6ae49a"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html#a5af91d34fd8b384fe5471ebe8c6ae49a">unilink::config::TcpClientConfig::backpressure_strategy</a></div><div class="ttdeci">base::constants::BackpressureStrategy backpressure_strategy</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__config_8hpp_source.html#l00035">tcp_client_config.hpp:35</a></div></div>
+<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html_a8bbb9f6a516d635eb4742f8234ce3c17"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html#a8bbb9f6a516d635eb4742f8234ce3c17">unilink::config::TcpClientConfig::backpressure_threshold</a></div><div class="ttdeci">size_t backpressure_threshold</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__config_8hpp_source.html#l00034">tcp_client_config.hpp:34</a></div></div>
+<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html_acba30b670711d398bb87ba94c3eb56f3"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html#acba30b670711d398bb87ba94c3eb56f3">unilink::config::TcpClientConfig::port</a></div><div class="ttdeci">uint16_t port</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__config_8hpp_source.html#l00030">tcp_client_config.hpp:30</a></div></div>
+<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html_aecccc8d45e82211ae924cae8b3d16540"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html#aecccc8d45e82211ae924cae8b3d16540">unilink::config::TcpClientConfig::host</a></div><div class="ttdeci">std::string host</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__config_8hpp_source.html#l00029">tcp_client_config.hpp:29</a></div></div>
+</div><!-- fragment --><p>Or via the wrapper builder (fluent API):</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;192.168.1.10&quot;</span>, 8080)</div>
+<div class="line">    .backpressure_threshold(512 * 1024)</div>
+<div class="line">    .backpressure_strategy(<a class="code hl_enumvalue" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa52d9feaeecbc94316bf7566c71717a63">unilink::base::constants::BackpressureStrategy::KeepLatest</a>)</div>
+<div class="line">    .on_backpressure([](<span class="keywordtype">size_t</span>) { <span class="comment">/* queue flushed */</span> })</div>
+<div class="line">    .build();</div>
+<div class="ttc" id="anamespaceunilink_1_1base_1_1constants_html_af1e6ca56552bcb7c548ec6091a4d2e0aa52d9feaeecbc94316bf7566c71717a63"><div class="ttname"><a href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa52d9feaeecbc94316bf7566c71717a63">unilink::base::constants::BackpressureStrategy::KeepLatest</a></div><div class="ttdeci">@ KeepLatest</div></div>
+</div><!-- fragment --><p>The strategy can also be changed at runtime on a running transport:</p>
+<div class="fragment"><div class="line"><span class="comment">// Switch strategy dynamically (e.g. entering a high-rate burst mode)</span></div>
+<div class="line">client-&gt;set_backpressure_strategy(BackpressureStrategy::KeepLatest);</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md544"></a>
+Python Usage</h2>
+<div class="fragment"><div class="line"><span class="keyword">import</span> unilink_py <span class="keyword">as</span> unilink</div>
+<div class="line"> </div>
+<div class="line">client = <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpClient.html">unilink.TcpClient</a>(<span class="stringliteral">&quot;192.168.1.10&quot;</span>, 8080)</div>
+<div class="line">client.backpressure_threshold = 512 * 1024</div>
+<div class="line">client.backpressure_strategy  = unilink.BackpressureStrategy.KeepLatest</div>
+<div class="line">client.start()</div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdoc">Modernized TCP Client Wrapper.</div><div class="ttdef"><b>Definition</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00047">tcp_client.hpp:47</a></div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md545"></a>
+Thresholds</h2>
+<p>The <code>backpressure_threshold</code> (default 4 MB) is the queue size at which <code>KeepLatest</code> starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (<code>bp_limit_</code>, at least 16 MB) prevents unbounded memory use regardless of strategy.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Parameter   </th><th class="markdownTableHeadNone">Default   </th><th class="markdownTableHeadNone">Notes    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>backpressure_threshold</code>   </td><td class="markdownTableBodyNone">4 MB   </td><td class="markdownTableBodyNone">Flush threshold for <code>KeepLatest</code>; high-water mark for <code>KeepAll</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Hard cap (<code>bp_limit_</code>)   </td><td class="markdownTableBodyNone">≥ 16 MB   </td><td class="markdownTableBodyNone">Per-message reject limit; never drops below the threshold × 4   </td></tr>
+</table>
+<hr  />
+<h1><a class="anchor" id="autotoc_md547"></a>
+Security</h1>
+<h2><a class="anchor" id="autotoc_md548"></a>
 Validate All Input</h2>
 <p>Always validate data received from the network before processing it.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
@@ -1113,7 +1200,7 @@ Validate All Input</h2>
 <div class="line">    }</div>
 <div class="line">    process_message(msg);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md542"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md549"></a>
 Rate Limiting</h2>
 <p>Protect your server from abuse by limiting requests per client.</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>RateLimiter {</div>
@@ -1135,7 +1222,7 @@ Rate Limiting</h2>
 <div class="line">    <span class="keywordflow">if</span> (!limiter.is_allowed(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>())) <span class="keywordflow">return</span>;</div>
 <div class="line">    process_data(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>(), std::string(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>()));</div>
 <div class="line">});</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md543"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md550"></a>
 Connection Limits</h2>
 <p>Use <code>.multi_client(N)</code> to cap simultaneous connections, or enforce limits manually:</p>
 <div class="fragment"><div class="line"><span class="comment">// Built-in limit via builder</span></div>
@@ -1149,7 +1236,7 @@ Connection Limits</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

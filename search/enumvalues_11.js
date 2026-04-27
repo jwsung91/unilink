@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xlarge_0',['XLARGE',['../classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410dad9e31a9937ae0b6563e00146bab25e01',1,'unilink::memory::MemoryPool']]]
+  ['warning_0',['warning',['../namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b',1,'unilink::diagnostics::WARNING'],['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b',1,'unilink::diagnostics::WARNING']]]
 ];

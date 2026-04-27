@@ -242,21 +242,22 @@ $(document).ready(function(){initNavTree('transport_2tcp__client_2tcp__client_8h
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  std::optional&lt;diagnostics::ErrorInfo&gt; last_error_info() const;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="comment">// Dynamic configuration methods</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">void</span> set_retry_interval(<span class="keywordtype">unsigned</span> interval_ms);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">void</span> set_reconnect_policy(<a class="code hl_typedef" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> policy);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> private:</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  explicit <a class="code hl_class" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a>(const <a class="code hl_struct" href="structunilink_1_1config_1_1TcpClientConfig.html">TcpClientConfig</a>&amp; cfg);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  explicit <a class="code hl_class" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a>(const <a class="code hl_struct" href="structunilink_1_1config_1_1TcpClientConfig.html">TcpClientConfig</a>&amp; cfg, <a class="code hl_namespace" href="namespaceboost.html">boost</a>::asio::io_context&amp; ioc);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  struct <a class="code hl_struct" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html">Impl</a>;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  const <a class="code hl_struct" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html">Impl</a>* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  std::unique_ptr&lt;Impl&gt; impl_;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">void</span> set_backpressure_strategy(base::constants::BackpressureStrategy strategy);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">void</span> set_retry_interval(<span class="keywordtype">unsigned</span> interval_ms);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">void</span> set_reconnect_policy(<a class="code hl_typedef" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> policy);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> private:</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  explicit <a class="code hl_class" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a>(const <a class="code hl_struct" href="structunilink_1_1config_1_1TcpClientConfig.html">TcpClientConfig</a>&amp; cfg);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  explicit <a class="code hl_class" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a>(const <a class="code hl_struct" href="structunilink_1_1config_1_1TcpClientConfig.html">TcpClientConfig</a>&amp; cfg, <a class="code hl_namespace" href="namespaceboost.html">boost</a>::asio::io_context&amp; ioc);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  struct <a class="code hl_struct" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html">Impl</a>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  const <a class="code hl_struct" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html">Impl</a>* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  std::unique_ptr&lt;Impl&gt; impl_;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>};</div>
 </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel_8hpp_html"><div class="ttname"><a href="channel_8hpp.html">channel.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00029">channel.hpp:29</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
@@ -285,7 +286,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__client_2tcp__client_8h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_5945cecc8885b190726a3218a193f147.html">tcp_client</a></li><li class="navelem"><a class="el" href="transport_2tcp__client_2tcp__client_8hpp.html">tcp_client.hpp</a></li>
-    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md748',1,'']]],
+  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md755',1,'']]],
   ['generate_20coverage_20report_1',['Generate Coverage Report',['../contrib_testing.html#autotoc_md431',1,'']]],
   ['generate_5fpattern_2',['generate_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ae260c99bd3684af69d879e6562f42712',1,'unilink::memory::MemoryPatternGenerator']]],
   ['generate_5frandom_5fpattern_3',['generate_random_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ad2f76b498219fc9678158f8b0f46ec34',1,'unilink::memory::MemoryPatternGenerator']]],
@@ -24,11 +24,11 @@ var searchData=
   ['get_5ftimestamp_21',['get_timestamp',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a0391ba348eeaca83ab51e33e66a9411f',1,'unilink::diagnostics::Logger::Impl']]],
   ['get_5ftype_22',['get_type',['../classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496',1,'unilink::config::ConfigManager::get_type()'],['../classunilink_1_1config_1_1ConfigManagerInterface.html#aaf440e21d6f0c46dc2b65b533e4d633c',1,'unilink::config::ConfigManagerInterface::get_type()']]],
   ['get_5fuptime_23',['get_uptime',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#a21c46e51e58b6a95af4f69fb19a34a6b',1,'unilink::diagnostics::AsyncLogStats']]],
-  ['getting_20help_24',['Getting Help',['../user_troubleshooting.html#autotoc_md752',1,'']]],
-  ['getting_20started_25',['getting started',['../user_python_bindings.html#autotoc_md595',1,'🚀 Getting Started'],['../user_index.html#autotoc_md552',1,'Getting Started']]],
+  ['getting_20help_24',['Getting Help',['../user_troubleshooting.html#autotoc_md759',1,'']]],
+  ['getting_20started_25',['getting started',['../user_python_bindings.html#autotoc_md602',1,'🚀 Getting Started'],['../user_index.html#autotoc_md559',1,'Getting Started']]],
   ['getting_20started_20with_20unilink_26',['Getting Started with Unilink',['../tutorial_01.html',1,'user_tutorials']]],
-  ['gil_27',['Threading &amp; GIL',['../user_python_bindings.html#autotoc_md615',1,'']]],
-  ['git_20submodule_20integration_28',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md572',1,'']]],
+  ['gil_27',['Threading &amp; GIL',['../user_python_bindings.html#autotoc_md622',1,'']]],
+  ['git_20submodule_20integration_28',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md579',1,'']]],
   ['github_20actions_20integration_29',['GitHub Actions Integration',['../contrib_testing.html#autotoc_md398',1,'']]],
   ['globalmemorypool_30',['globalmemorypool',['../classunilink_1_1memory_1_1GlobalMemoryPool.html#af805a5c371db16d7dd56923e3c74b41e',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool(const GlobalMemoryPool &amp;)=delete'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#a0068d4d81382e7001f2a0cd530840b44',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool()=delete'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html',1,'unilink::memory::GlobalMemoryPool']]],
   ['goals_31',['Design Goals',['../index.html#autotoc_md98',1,'']]],
@@ -36,5 +36,5 @@ var searchData=
   ['graceful_20shutdown_33',['3. Graceful Shutdown',['../contrib_arch_runtime.html#autotoc_md205',1,'']]],
   ['guarantees_34',['guarantees',['../contrib_arch_memory.html#autotoc_md10',1,'Memory Safety Guarantees'],['../index.html#autotoc_md123',1,'Thread Safety Guarantees']]],
   ['guide_35',['guide',['../contrib_build.html',1,'Build Guide'],['../contrib_index.html',1,'Contributor Guide'],['../user_installation.html',1,'Installation Guide'],['../user_performance.html',1,'Performance Guide'],['../user_python_bindings.html',1,'Python Bindings Guide'],['../contrib_testing.html',1,'Testing Guide'],['../user_troubleshooting.html',1,'Troubleshooting Guide'],['../user_api_guide.html',1,'Unilink API Guide'],['../user_quickstart.html',1,'Unilink Quick Start Guide'],['../user_index.html',1,'User Guide']]],
-  ['guides_36',['Guides',['../user_index.html#autotoc_md558',1,'']]]
+  ['guides_36',['Guides',['../user_index.html#autotoc_md565',1,'']]]
 ];

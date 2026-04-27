@@ -1,6 +1,10 @@
 var namespaceunilink_1_1base =
 [
     [ "constants", "namespaceunilink_1_1base_1_1constants.html", [
+      [ "BackpressureStrategy", "namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a", [
+        [ "KeepAll", "namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f", null ],
+        [ "KeepLatest", "namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa52d9feaeecbc94316bf7566c71717a63", null ]
+      ] ],
       [ "DEFAULT_BACKPRESSURE_THRESHOLD", "namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81", null ],
       [ "DEFAULT_BUFFER_SIZE", "namespaceunilink_1_1base_1_1constants.html#a4a4ffa14c446f51d9b713a5d7715e191", null ],
       [ "DEFAULT_CLEANUP_INTERVAL_MS", "namespaceunilink_1_1base_1_1constants.html#ae79c5bc25aa48b13babdd1ad381ad959", null ],

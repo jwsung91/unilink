@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('tutorial_05.html',''); initResizable()
  <b>Difficulty</b>: Beginner to Intermediate <br  />
  <b>Prerequisites</b>: <a class="el" href="01__getting__started_8md.html">Getting Started</a></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md815"></a>
+<h1><a class="anchor" id="autotoc_md822"></a>
 What You'll Build</h1>
 <p>A two-process UDP setup:</p>
 <ol type="1">
@@ -173,7 +173,7 @@ What You'll Build</h1>
 <li>simple message exchange between the two</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md817"></a>
+<h1><a class="anchor" id="autotoc_md824"></a>
 Step 1: Create A Receiver</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
@@ -206,7 +206,7 @@ Step 1: Create A Receiver</h1>
 <div class="ttc" id="anamespaceunilink_html_ae5558f59454b560328ecb7852f6b35a1"><div class="ttname"><a href="namespaceunilink.html#ae5558f59454b560328ecb7852f6b35a1">unilink::udp_client</a></div><div class="ttdeci">builder::UdpClientBuilder udp_client(uint16_t local_port)</div><div class="ttdoc">Create a UDP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00129">unilink.hpp:129</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md819"></a>
+<h1><a class="anchor" id="autotoc_md826"></a>
 Step 2: Create A Sender</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -239,13 +239,13 @@ Step 2: Create A Sender</h1>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_a5aab8070a6807f659ca8c826cfbacd1d"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#a5aab8070a6807f659ca8c826cfbacd1d">unilink::builder::UdpClientBuilder::remote</a></div><div class="ttdeci">UdpClientBuilder &amp; remote(const std::string &amp;address, uint16_t port)</div><div class="ttdef"><b>Definition</b> <a href="udp__builder_8cc_source.html#l00073">udp_builder.cc:73</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00072">context.hpp:72</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md821"></a>
+<h1><a class="anchor" id="autotoc_md828"></a>
 Step 3: Build The Two Programs</h1>
 <p>If you saved the snippets as <code>udp_receiver.cpp</code> and <code>udp_sender.cpp</code>:</p>
 <div class="fragment"><div class="line">g++ -std=c++17 udp_receiver.cpp -o udp_receiver -lunilink -lboost_system -pthread</div>
 <div class="line">g++ -std=c++17 udp_sender.cpp -o udp_sender -lunilink -lboost_system -pthread</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md823"></a>
+<h1><a class="anchor" id="autotoc_md830"></a>
 Step 4: Run Both Programs</h1>
 <p><b>Terminal 1</b></p>
 <div class="fragment"><div class="line">./udp_receiver</div>
@@ -253,7 +253,7 @@ Step 4: Run Both Programs</h1>
 <div class="fragment"><div class="line">./udp_sender</div>
 </div><!-- fragment --><p>Type messages in the sender terminal and verify that the receiver prints them.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md825"></a>
+<h1><a class="anchor" id="autotoc_md832"></a>
 What Is Different About UDP</h1>
 <p>Unlike TCP:</p>
 <ul>
@@ -264,7 +264,7 @@ What Is Different About UDP</h1>
 </ul>
 <p>For simple local tests, UDP is useful when you want low overhead and can tolerate datagram semantics.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md827"></a>
+<h1><a class="anchor" id="autotoc_md834"></a>
 Practical Notes</h1>
 <ul>
 <li><code>unilink::udp_client(0)</code> uses an ephemeral local port for the sender.</li>
@@ -273,7 +273,7 @@ Practical Notes</h1>
 <li>If you need more operational examples, the protocol-specific examples are richer than this tutorial.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md829"></a>
+<h1><a class="anchor" id="autotoc_md836"></a>
 Use The Full Examples For Repeated Testing</h1>
 <p>For ready-to-run maintained examples, use:</p>
 <ul>
@@ -283,7 +283,7 @@ Use The Full Examples For Repeated Testing</h1>
 </ul>
 <p>Those examples intentionally stay minimal too: one receiver bound to <code>9000</code> and one sender targeting <code>127.0.0.1:9000</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md831"></a>
+<h1><a class="anchor" id="autotoc_md838"></a>
 Next Steps</h1>
 <ul>
 <li><a href="../api_guide.md#udp-communication">API Reference</a></li>
@@ -298,7 +298,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

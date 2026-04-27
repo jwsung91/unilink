@@ -17,6 +17,7 @@ var classunilink_1_1transport_1_1Serial =
     [ "on_state", "classunilink_1_1transport_1_1Serial.html#aa3ffc472c2115bcf2250279baab0f194", null ],
     [ "operator=", "classunilink_1_1transport_1_1Serial.html#a19853b1651dce7042ea6414a22003f48", null ],
     [ "operator=", "classunilink_1_1transport_1_1Serial.html#a15584e33e48ee80b84816adeedb892ab", null ],
+    [ "set_backpressure_strategy", "classunilink_1_1transport_1_1Serial.html#a1e29547dd6ad858fbfab1b180300c905", null ],
     [ "set_retry_interval", "classunilink_1_1transport_1_1Serial.html#a607b934b615ba645def9e7ab27f455f8", null ],
     [ "start", "classunilink_1_1transport_1_1Serial.html#adff0562ceac86c1ee4a1848c1f100f97", null ],
     [ "stop", "classunilink_1_1transport_1_1Serial.html#ad914ece98201a7bc0ce8464e4ab01e7d", null ]

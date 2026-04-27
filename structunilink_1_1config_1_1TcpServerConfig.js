@@ -2,6 +2,7 @@ var structunilink_1_1config_1_1TcpServerConfig =
 [
     [ "is_valid", "structunilink_1_1config_1_1TcpServerConfig.html#ad59b4f5ee2f62a2acfe1c42b56491364", null ],
     [ "validate_and_clamp", "structunilink_1_1config_1_1TcpServerConfig.html#ab242836a2fe4b36e19e1bed85d18a9c0", null ],
+    [ "backpressure_strategy", "structunilink_1_1config_1_1TcpServerConfig.html#a62ca458a62fb51b8c37b405a04b7a4bd", null ],
     [ "backpressure_threshold", "structunilink_1_1config_1_1TcpServerConfig.html#ac14f4e2fbe1bea99a2b9ed92925d6039", null ],
     [ "bind_address", "structunilink_1_1config_1_1TcpServerConfig.html#a7a819cfcff975a72837abd403392a0db", null ],
     [ "enable_memory_pool", "structunilink_1_1config_1_1TcpServerConfig.html#ac981875926780f6b58f9893fc2b1b406", null ],

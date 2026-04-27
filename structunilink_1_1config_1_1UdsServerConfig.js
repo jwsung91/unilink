@@ -2,6 +2,7 @@ var structunilink_1_1config_1_1UdsServerConfig =
 [
     [ "is_valid", "structunilink_1_1config_1_1UdsServerConfig.html#a18a7f1ade382f5c4bd87eb062b7193fe", null ],
     [ "validate_and_clamp", "structunilink_1_1config_1_1UdsServerConfig.html#a80e63c010750daf958318bdd55636abc", null ],
+    [ "backpressure_strategy", "structunilink_1_1config_1_1UdsServerConfig.html#a0db19187652981ca18de80ca05398f9b", null ],
     [ "backpressure_threshold", "structunilink_1_1config_1_1UdsServerConfig.html#ad05c1e28263d85c9055d0881de2cc4ea", null ],
     [ "enable_memory_pool", "structunilink_1_1config_1_1UdsServerConfig.html#a3288158bb2815d1e93c162683b8b6771", null ],
     [ "idle_timeout_ms", "structunilink_1_1config_1_1UdsServerConfig.html#a43946368f288b6e08e20adf4f5fceb25", null ],

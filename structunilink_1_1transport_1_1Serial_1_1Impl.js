@@ -17,6 +17,7 @@ var structunilink_1_1transport_1_1Serial_1_1Impl =
     [ "bp_high_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a56f17fe0a66020800566a09731be1b61", null ],
     [ "bp_limit_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#acfe2f23c0629828e38ec121ea5bb7ef6", null ],
     [ "bp_low_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a742bd4150abb83defcfa5d05076169c2", null ],
+    [ "bp_strategy_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#aa8d8eb4a3d7faf9f953aac8f30c6fc8c", null ],
     [ "cfg_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a0a7ca0ffee83e0aa678812e7edc9ef5c", null ],
     [ "current_write_buffer_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a718701d3df14f9cea59f1ade4744f5ba", null ],
     [ "ioc_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a4eb135e782278dc0d614a54fe14fc7f4", null ],

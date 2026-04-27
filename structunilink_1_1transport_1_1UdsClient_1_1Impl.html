@@ -193,6 +193,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a405688ea64c396f211bb95acf254d2ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa644859c7138a6784c64529c8306f389" id="r_aa644859c7138a6784c64529c8306f389"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aa644859c7138a6784c64529c8306f389">recalculate_backpressure_bounds</a> ()</td></tr>
 <tr class="separator:aa644859c7138a6784c64529c8306f389"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc0f2b564e8b6679cb5fda7805a3d879" id="r_afc0f2b564e8b6679cb5fda7805a3d879"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#afc0f2b564e8b6679cb5fda7805a3d879">maybe_flush_for_keep_latest</a> (size_t added)</td></tr>
+<tr class="separator:afc0f2b564e8b6679cb5fda7805a3d879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8345c8edc8a2f947f6b19f0961dcff4c" id="r_a8345c8edc8a2f947f6b19f0961dcff4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a8345c8edc8a2f947f6b19f0961dcff4c">report_backpressure</a> (size_t queued_bytes)</td></tr>
 <tr class="separator:a8345c8edc8a2f947f6b19f0961dcff4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b8f7f85468b1fbe589f0728b95375b6" id="r_a4b8f7f85468b1fbe589f0728b95375b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">record_error</a> (<a class="el" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="el" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat, std::string_view operation, const boost::system::error_code &amp;ec, std::string_view msg, bool retryable, uint32_t retry_count)</td></tr>
@@ -238,6 +240,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3938666c0317851d18a3395d7a898e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9325688efafd6032d488a58032d3f69" id="r_ae9325688efafd6032d488a58032d3f69"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ae9325688efafd6032d488a58032d3f69">queue_bytes_</a> = 0</td></tr>
 <tr class="separator:ae9325688efafd6032d488a58032d3f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad19fbe1a499e579e1ed483e0ac1f5ea9" id="r_ad19fbe1a499e579e1ed483e0ac1f5ea9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ad19fbe1a499e579e1ed483e0ac1f5ea9">bp_strategy_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a>}</td></tr>
+<tr class="separator:ad19fbe1a499e579e1ed483e0ac1f5ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a0b8d7570b0a2a714a488b8a900b1a" id="r_ad3a0b8d7570b0a2a714a488b8a900b1a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ad3a0b8d7570b0a2a714a488b8a900b1a">bp_high_</a></td></tr>
 <tr class="separator:ad3a0b8d7570b0a2a714a488b8a900b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21816ff6d12349c0127e50a0da3d5403" id="r_a21816ff6d12349c0127e50a0da3d5403"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a21816ff6d12349c0127e50a0da3d5403">bp_low_</a></td></tr>
@@ -313,7 +317,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00090">90</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00091">91</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -347,7 +351,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00127">127</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00130">130</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -374,7 +378,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00460">460</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00469">469</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -411,7 +415,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00307">307</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00316">316</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -448,7 +452,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00401">401</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00410">410</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -484,7 +488,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00437">437</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00446">446</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -511,7 +515,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00107">107</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00109">109</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -526,6 +530,26 @@ Public Attributes</h2></td></tr>
 <div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdsClient_1_1Impl_aef1ae6a00a18b455428034f113164489_icgraph.svg" width="384" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a id="afc0f2b564e8b6679cb5fda7805a3d879" name="afc0f2b564e8b6679cb5fda7805a3d879"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc0f2b564e8b6679cb5fda7805a3d879">&#9670;&#160;</a></span>maybe_flush_for_keep_latest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::transport::UdsClient::Impl::maybe_flush_for_keep_latest </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>added</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00476">476</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -544,7 +568,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00465">465</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00474">474</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
@@ -611,7 +635,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00476">476</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00493">493</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -631,7 +655,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00467">467</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00484">484</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -661,7 +685,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00362">362</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00371">371</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -691,7 +715,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00382">382</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00391">391</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -721,7 +745,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00450">450</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00459">459</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -738,7 +762,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00075">75</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00076">76</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -754,7 +778,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00072">72</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00073">73</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -770,7 +794,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00074">74</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00075">75</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -786,7 +810,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00073">73</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00074">74</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="ad19fbe1a499e579e1ed483e0ac1f5ea9" name="ad19fbe1a499e579e1ed483e0ac1f5ea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad19fbe1a499e579e1ed483e0ac1f5ea9">&#9670;&#160;</a></span>bp_strategy_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> unilink::transport::UdsClient::Impl::bp_strategy_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00072">72</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -810,7 +850,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00080">80</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00081">81</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -858,7 +898,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00081">81</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00082">82</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -946,7 +986,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00087">87</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00088">88</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -962,7 +1002,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00088">88</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00089">89</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -978,7 +1018,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00079">79</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00080">80</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -994,7 +1034,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00077">77</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00078">78</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1050,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00078">78</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00079">79</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1074,7 +1114,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00084">84</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00085">85</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1090,7 +1130,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00085">85</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00086">86</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1106,7 +1146,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00083">83</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00084">84</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1170,7 +1210,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00082">82</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00083">83</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1279,7 +1319,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -170,7 +170,7 @@ $(document).ready(function(){initNavTree('structunilink_1_1config_1_1TcpServerCo
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1config_1_1TcpServerConfig__coll__graph.svg" width="195" height="271"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1config_1_1TcpServerConfig__coll__graph.svg" width="195" height="291"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -188,6 +188,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:adce24401c84899b16320f528185f6636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac14f4e2fbe1bea99a2b9ed92925d6039" id="r_ac14f4e2fbe1bea99a2b9ed92925d6039"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1TcpServerConfig.html#ac14f4e2fbe1bea99a2b9ed92925d6039">backpressure_threshold</a> = <a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a></td></tr>
 <tr class="separator:ac14f4e2fbe1bea99a2b9ed92925d6039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62ca458a62fb51b8c37b405a04b7a4bd" id="r_a62ca458a62fb51b8c37b405a04b7a4bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1TcpServerConfig.html#a62ca458a62fb51b8c37b405a04b7a4bd">backpressure_strategy</a> = <a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a></td></tr>
+<tr class="separator:a62ca458a62fb51b8c37b405a04b7a4bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac981875926780f6b58f9893fc2b1b406" id="r_ac981875926780f6b58f9893fc2b1b406"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1TcpServerConfig.html#ac981875926780f6b58f9893fc2b1b406">enable_memory_pool</a> = true</td></tr>
 <tr class="separator:ac981875926780f6b58f9893fc2b1b406"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75280deac4d67c2ac3bb32d7e282b680" id="r_a75280deac4d67c2ac3bb32d7e282b680"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1TcpServerConfig.html#a75280deac4d67c2ac3bb32d7e282b680">max_connections</a> = 100</td></tr>
@@ -228,7 +230,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00043">43</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00044">44</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -262,11 +264,27 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00051">51</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00052">52</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a62ca458a62fb51b8c37b405a04b7a4bd" name="a62ca458a62fb51b8c37b405a04b7a4bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62ca458a62fb51b8c37b405a04b7a4bd">&#9670;&#160;</a></span>backpressure_strategy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> unilink::config::TcpServerConfig::backpressure_strategy = <a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00032">32</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ac14f4e2fbe1bea99a2b9ed92925d6039" name="ac14f4e2fbe1bea99a2b9ed92925d6039"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac14f4e2fbe1bea99a2b9ed92925d6039">&#9670;&#160;</a></span>backpressure_threshold</h2>
 
@@ -311,7 +329,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00032">32</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00033">33</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -327,7 +345,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00036">36</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00037">37</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -343,7 +361,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00040">40</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00041">41</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -359,7 +377,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00033">33</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00034">34</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -375,7 +393,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00037">37</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00038">38</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -407,7 +425,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00038">38</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__config_8hpp_source.html#l00039">39</a> of file <a class="el" href="tcp__server__config_8hpp_source.html">tcp_server_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -420,7 +438,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1config.html">config</a></li><li class="navelem"><a class="el" href="structunilink_1_1config_1_1TcpServerConfig.html">TcpServerConfig</a></li>
-    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

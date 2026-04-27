@@ -22,6 +22,7 @@ var structunilink_1_1transport_1_1UdpChannel_1_1Impl =
     [ "bp_high_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#af468df31649a56b957ca996ab187ab16", null ],
     [ "bp_limit_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a00f183f1c6fb72cb39b36dd644d35e8d", null ],
     [ "bp_low_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a92ee9493db85c530576d8c563b76a458", null ],
+    [ "bp_strategy_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aed0ef869088c4b2ae9200a5ab969c624", null ],
     [ "cfg_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a64bd41ab90af98dfeee7e91ab43eaae7", null ],
     [ "connected_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ab8ae9d048e315ae971d993379ed4e6b9", null ],
     [ "ioc_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ace362ad1a6d9267218b900e19aea86e0", null ],

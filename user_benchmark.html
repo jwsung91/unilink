@@ -160,9 +160,9 @@ $(document).ready(function(){initNavTree('user_benchmark.html',''); initResizabl
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Latest benchmark results for Unilink v1.1 (Stability Patch applied). Tested on: Ubuntu 24.04, Python 3.12, pybind11 2.13.6.</p>
-<h1><a class="anchor" id="autotoc_md544"></a>
+<h1><a class="anchor" id="autotoc_md551"></a>
 1. TCP Performance (RTT &amp; Throughput)</h1>
-<h2><a class="anchor" id="autotoc_md545"></a>
+<h2><a class="anchor" id="autotoc_md552"></a>
 Ping-Pong (Latency)</h2>
 <p>Measured as round-trip time (RTT) for small messages.</p>
 <table class="markdownTable">
@@ -176,7 +176,7 @@ Ping-Pong (Latency)</h2>
 <td class="markdownTableBodyLeft">1000   </td><td class="markdownTableBodyLeft">0.030s   </td><td class="markdownTableBodyLeft">0.058s   </td><td class="markdownTableBodyLeft">0.004s   </td></tr>
 </table>
 <p><em>Note: Python overhead is primarily due to GIL acquisition and async dispatch (~50µs per call).</em></p>
-<h2><a class="anchor" id="autotoc_md546"></a>
+<h2><a class="anchor" id="autotoc_md553"></a>
 Throughput (1KB Chunks)</h2>
 <p>Streaming data performance.</p>
 <table class="markdownTable">
@@ -190,9 +190,9 @@ Throughput (1KB Chunks)</h2>
 <td class="markdownTableBodyLeft">10000   </td><td class="markdownTableBodyLeft">0.0127s   </td><td class="markdownTableBodyLeft">0.0381s   </td><td class="markdownTableBodyLeft">0.0186s   </td></tr>
 </table>
 <p><em>Stability Note: With the v1.1 patch, Unilink handles 10,000+ chunks without connection drops by using intelligent backpressure message dropping.</em></p>
-<h1><a class="anchor" id="autotoc_md547"></a>
+<h1><a class="anchor" id="autotoc_md554"></a>
 2. UDP &amp; UDS Performance</h1>
-<h2><a class="anchor" id="autotoc_md548"></a>
+<h2><a class="anchor" id="autotoc_md555"></a>
 UDP Latency (Zero-Copy)</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -200,7 +200,7 @@ UDP Latency (Zero-Copy)</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft">1000   </td><td class="markdownTableBodyLeft">0.031s   </td><td class="markdownTableBodyLeft">0.062s   </td><td class="markdownTableBodyLeft">0.060s   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md549"></a>
+<h2><a class="anchor" id="autotoc_md556"></a>
 UDS Throughput</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -208,7 +208,7 @@ UDS Throughput</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyLeft">1000   </td><td class="markdownTableBodyLeft">0.056s   </td><td class="markdownTableBodyLeft">0.054s   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md550"></a>
+<h1><a class="anchor" id="autotoc_md557"></a>
 3. Optimization Recommendations</h1>
 <ol type="1">
 <li><b>Batching</b>: Use <code>batch_size()</code> and <code>batch_latency()</code> for streaming small data.</li>
@@ -221,7 +221,7 @@ UDS Throughput</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
