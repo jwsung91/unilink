@@ -210,6 +210,7 @@ struct UdsClient::Impl {
       return;
     }
     started_.store(false);
+    bp_cv_.notify_all();
 
     if (batch_timer_) {
       batch_timer_->cancel();
@@ -253,18 +254,20 @@ struct UdsClient::Impl {
 
   bool send_blocking(std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-    while (true) {
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (!channel_ || !channel_->is_connected()) return false;
-        if (!channel_->is_backpressure_active()) break;
-      }
-      bp_cv_.wait(bp_lock);
-    }
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
+    });
+    return send(data);
+  }
+
+  bool send(std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
-    channel_->async_write_copy(
-        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
-    return true;
+    if (channel_ && channel_->is_connected()) {
+      return channel_->async_write_copy(
+          memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    }
+    return false;
   }
 
   bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
@@ -427,15 +430,7 @@ std::future<bool> UdsClient::start() { return impl_->start(); }
 
 void UdsClient::stop() { impl_->stop(); }
 
-bool UdsClient::send(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  if (impl_->channel_ && impl_->channel_->is_connected()) {
-    impl_->channel_->async_write_copy(
-        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
-    return true;
-  }
-  return false;
-}
+bool UdsClient::send(std::string_view data) { return impl_->send(data); }
 
 bool UdsClient::send_line(std::string_view line) {
   std::string data(line);

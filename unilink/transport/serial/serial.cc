@@ -495,8 +495,8 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
     memory::PooledBuffer pooled(n);
     if (pooled.valid()) {
       base::safe_memory::safe_memcpy(pooled.data(), data.data(), n);
-  if (impl->queued_bytes_ + n > impl->bp_limit_) return false;
-  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {
+      if (impl->queued_bytes_ + n > impl->bp_limit_) return false;
+      net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {
         auto impl = self->get_impl();
         const auto added = buf.size();
         if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&

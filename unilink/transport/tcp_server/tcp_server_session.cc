@@ -88,8 +88,8 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
       base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
-  if (queue_bytes_ + size > bp_limit_) return false;
-  net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
+      if (queue_bytes_ + size > bp_limit_) return false;
+      net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
         const auto added = buf.size();
         self->maybe_flush_for_keep_latest(added);

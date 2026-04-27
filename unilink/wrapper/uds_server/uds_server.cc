@@ -120,7 +120,7 @@ struct UdsServer::Impl {
     bp_cv_.wait(lock, [this, client_id]() {
       std::shared_lock<std::shared_mutex> rlock(mutex_);
       auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
-      return !ts || !ts->is_backpressure_active(client_id);
+      return !started_.load() || !ts || !ts->is_backpressure_active(client_id);
     });
     std::shared_lock<std::shared_mutex> rlock(mutex_);
     auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
@@ -186,10 +186,12 @@ struct UdsServer::Impl {
     {
       std::unique_lock<std::shared_mutex> lock(mutex_);
       if (!started_.exchange(false)) {
+        bp_cv_.notify_all();
         is_listening_.store(false);
         fulfill_all_locked(false);
         return;
       }
+      bp_cv_.notify_all();
 
       if (batch_timer_) {
         batch_timer_->cancel();
@@ -393,7 +395,6 @@ bool UdsServer::send_to(ClientId client_id, std::string_view data) {
 bool UdsServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);
 }
-
 
 ServerInterface& UdsServer::on_connect(ConnectionHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);

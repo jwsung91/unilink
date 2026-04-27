@@ -398,6 +398,7 @@ struct UdpServer::Impl {
         fulfill_all_locked(false);
         return;
       }
+      bp_cv_.notify_all();
 
       if (reaper_timer) {
         reaper_timer->cancel();
@@ -445,21 +446,20 @@ struct UdpServer::Impl {
 
   bool send_to_blocking(ClientId client_id, std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-    while (true) {
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex);
-        if (!channel) return false;
-        if (!channel->is_backpressure_active()) break;
-      }
-      bp_cv_.wait(bp_lock);
-    }
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex);
+      return !started.load() || !channel || !channel->is_backpressure_active();
+    });
+    return send_to_client_impl(client_id, data);
+  }
+
+  bool send_to_client_impl(ClientId client_id, std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex);
     auto it = sessions.find(client_id);
-    if (it == sessions.end()) return false;
+    if (it == sessions.end() || !channel) return false;
 
     auto bytes = base::safe_convert::string_to_bytes(data);
-    channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
-    return true;
+    return channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
   }
 };
 
@@ -489,23 +489,16 @@ bool UdpServer::broadcast(std::string_view data) {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
 
+  bool sent = false;
   auto bytes = base::safe_convert::string_to_bytes(data);
   for (const auto& [id, entry] : impl_->sessions) {
-    impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
+    sent |= impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
   }
-  return true;
+  return sent;
 }
 
 bool UdpServer::send_to(ClientId client_id, std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex);
-  if (!impl_->channel) return false;
-
-  auto it = impl_->sessions.find(client_id);
-  if (it == impl_->sessions.end()) return false;
-
-  auto bytes = base::safe_convert::string_to_bytes(data);
-  impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
-  return true;
+  return impl_->send_to_client_impl(client_id, data);
 }
 
 bool UdpServer::send_to_blocking(ClientId client_id, std::string_view data) {

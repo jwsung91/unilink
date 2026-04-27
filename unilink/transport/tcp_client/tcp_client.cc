@@ -285,8 +285,8 @@ bool TcpClient::async_write_copy(memory::ConstByteSpan data) {
       if (pooled_buffer.valid()) {
         base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
         const auto added = pooled_buffer.size();
-  if (impl_->queue_bytes_ + added > impl_->bp_limit_) return false;
-  net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
+        if (impl_->queue_bytes_ + added > impl_->bp_limit_) return false;
+        net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
           if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
               self->impl_->state_.is_state(LinkState::Error)) {
             return;

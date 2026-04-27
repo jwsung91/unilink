@@ -211,6 +211,7 @@ struct TcpClient::Impl {
         return;
       }
       started_.store(false);
+      bp_cv_.notify_all();
       alive_marker_.reset();
       if (batch_timer_) {
         batch_timer_->cancel();
@@ -248,22 +249,17 @@ struct TcpClient::Impl {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
-      channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-      return true;
+      return channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
     return false;
   }
 
   bool send_blocking(std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-    while (true) {
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (!channel_ || !channel_->is_connected()) return false;
-        if (!channel_->is_backpressure_active()) break;
-      }
-      bp_cv_.wait(bp_lock);
-    }
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
+    });
     return send(data);
   }
 

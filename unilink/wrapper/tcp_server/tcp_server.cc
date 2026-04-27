@@ -253,6 +253,7 @@ struct TcpServer::Impl {
         fulfill_all_locked(false);
         return;
       }
+      bp_cv_.notify_all();
       if (batch_timer_) {
         batch_timer_->cancel();
         batch_timer_.reset();
@@ -299,7 +300,7 @@ struct TcpServer::Impl {
     bp_cv_.wait(lock, [this, client_id]() {
       std::shared_lock<std::shared_mutex> rlock(mutex_);
       const auto& ts = transport_cache_;
-      return !ts || !ts->is_backpressure_active(client_id);
+      return !started_.load() || !ts || !ts->is_backpressure_active(client_id);
     });
     return send_to(client_id, data);
   }
@@ -448,9 +449,7 @@ bool TcpServer::broadcast(std::string_view data) {
   return ts ? ts->broadcast(data) : false;
 }
 
-bool TcpServer::send_to(ClientId client_id, std::string_view data) {
-  return impl_->send_to(client_id, data);
-}
+bool TcpServer::send_to(ClientId client_id, std::string_view data) { return impl_->send_to(client_id, data); }
 
 bool TcpServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);

@@ -186,6 +186,7 @@ struct UdpClient::Impl {
       return;
     }
     started_.store(false);
+    bp_cv_.notify_all();
 
     if (batch_timer_) {
       batch_timer_->cancel();
@@ -226,18 +227,20 @@ struct UdpClient::Impl {
 
   bool send_blocking(std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-    while (true) {
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (!channel || !channel->is_connected()) return false;
-        if (!channel->is_backpressure_active()) break;
-      }
-      bp_cv_.wait(bp_lock);
-    }
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
+    });
+    return send(data);
+  }
+
+  bool send(std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
-    auto binary_view = base::safe_convert::string_to_bytes(data);
-    channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-    return true;
+    if (channel && channel->is_connected()) {
+      auto binary_view = base::safe_convert::string_to_bytes(data);
+      return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    }
+    return false;
   }
 
   bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
@@ -390,15 +393,7 @@ UdpClient& UdpClient::operator=(UdpClient&&) noexcept = default;
 
 std::future<bool> UdpClient::start() { return impl_->start(); }
 void UdpClient::stop() { impl_->stop(); }
-bool UdpClient::send(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  if (impl_->channel && impl_->channel->is_connected()) {
-    auto binary_view = base::safe_convert::string_to_bytes(data);
-    impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-    return true;
-  }
-  return false;
-}
+bool UdpClient::send(std::string_view data) { return impl_->send(data); }
 bool UdpClient::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
 bool UdpClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
 bool UdpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }

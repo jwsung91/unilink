@@ -292,14 +292,12 @@ bool UdsServer::broadcast(std::string_view message) {
   auto data =
       std::make_shared<const std::vector<uint8_t>>(reinterpret_cast<const uint8_t*>(message.data()),
                                                    reinterpret_cast<const uint8_t*>(message.data()) + message.size());
-  async_write_shared(data);
-  return true;
+  return async_write_shared(data);
 }
 
 bool UdsServer::broadcast(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
-  async_write_shared(shared_data);
-  return true;
+  return async_write_shared(shared_data);
 }
 
 bool UdsServer::send_to_client(ClientId client_id, std::string_view message) {
@@ -315,8 +313,7 @@ bool UdsServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
     if (it != impl_->sessions_.end()) session = it->second;
   }
   if (session) {
-    session->async_write_copy(data);
-    return true;
+    return session->async_write_copy(data);
   }
   return false;
 }

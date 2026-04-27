@@ -199,6 +199,7 @@ struct Serial::Impl {
       return;
     }
     started_.store(false);
+    bp_cv_.notify_all();
 
     if (batch_timer_) {
       batch_timer_->cancel();
@@ -238,7 +239,7 @@ struct Serial::Impl {
     while (true) {
       {
         std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (!channel || !channel->is_connected()) return false;
+        if (!started_.load() || !channel || !channel->is_connected()) return false;
         if (!channel->is_backpressure_active()) break;
       }
       bp_cv_.wait(bp_lock);
@@ -430,8 +431,7 @@ bool Serial::send(std::string_view data) {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   if (impl_->channel && impl_->channel->is_connected()) {
     auto binary_view = base::safe_convert::string_to_bytes(data);
-    impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-    return true;
+    return impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
   return false;
 }

@@ -475,9 +475,7 @@ bool TcpServer::is_connected() const {
   return impl->current_session_ && impl->current_session_->alive();
 }
 
-bool TcpServer::is_backpressure_active() const {
-  return false;
-}
+bool TcpServer::is_backpressure_active() const { return false; }
 
 bool TcpServer::is_backpressure_active(ClientId client_id) const {
   auto impl = get_impl();
@@ -567,7 +565,7 @@ bool TcpServer::broadcast(std::string_view message) {
   for (auto& entry : impl->sessions_) {
     auto& session = entry.second;
     if (session && session->alive()) {
-      session->async_write_shared(shared_data);
+      if (session->async_write_shared(shared_data)) sent = true;
       sent = true;
     }
   }
@@ -582,7 +580,7 @@ bool TcpServer::broadcast(memory::ConstByteSpan data) {
   for (auto& entry : impl->sessions_) {
     auto& session = entry.second;
     if (session && session->alive()) {
-      session->async_write_shared(shared_data);
+      if (session->async_write_shared(shared_data)) sent = true;
       sent = true;
     }
   }
@@ -599,8 +597,7 @@ bool TcpServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   auto it = impl->sessions_.find(client_id);
   if (it != impl->sessions_.end() && it->second && it->second->alive()) {
-    it->second->async_write_copy(data);
-    return true;
+    return it->second->async_write_copy(data);
   }
   return false;
 }

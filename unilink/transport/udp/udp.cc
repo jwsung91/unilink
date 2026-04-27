@@ -636,8 +636,8 @@ bool UdpChannel::async_write_copy(memory::ConstByteSpan data) {
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
       base::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
-  if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
-  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
+      if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
+      net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
         auto impl = self->get_impl();
         if (!impl->enqueue_buffer(std::move(buf), size)) return;
         impl->do_write(self);
@@ -725,8 +725,8 @@ bool UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::i
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
       base::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
-  if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
-  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size, destination]() mutable {
+      if (impl->queue_bytes_ + size > impl->bp_limit_) return false;
+      net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size, destination]() mutable {
         auto impl = self->get_impl();
         if (!impl->enqueue_buffer(std::move(buf), size, destination)) return;
         impl->do_write(self);
