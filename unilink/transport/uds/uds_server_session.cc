@@ -189,13 +189,17 @@ void UdsServerSession::do_close() {
   }
 }
 
-void UdsServerSession::maybe_flush_for_keep_latest(size_t added) {
+void UdsServerSession::Impl::maybe_flush_for_keep_latest(size_t added) {
   if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
-    tx_.clear();
-    queue_bytes_ = 0;
+    while (!tx_.empty() && (queue_bytes_ + added > bp_high_)) {
+      size_t oldest_size = tx_.front().size();
+      queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
+      tx_.pop_front();
+    }
   }
 }
+
 
 void UdsServerSession::report_backpressure(size_t queued_bytes) {
   if (closing_ || !alive_) return;
