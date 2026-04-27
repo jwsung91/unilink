@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">305</td>
-            <td class="headerCovTableEntry">400</td>
-            <td class="headerCovTableEntryMed">76.2 %</td>
+            <td class="headerCovTableEntry">273</td>
+            <td class="headerCovTableEntry">407</td>
+            <td class="headerCovTableEntryLo">67.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-27 01:14:26</td>
+            <td class="headerValue">2026-04-27 11:57:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntry">54</td>
-            <td class="headerCovTableEntryMed">85.2 %</td>
+            <td class="headerCovTableEntry">44</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntryMed">80.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">268</td>
-            <td class="headerCovTableEntry">634</td>
-            <td class="headerCovTableEntryLo">42.3 %</td>
+            <td class="headerCovTableEntry">262</td>
+            <td class="headerCovTableEntry">654</td>
+            <td class="headerCovTableEntryLo">40.1 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -150,12 +150,12 @@
 <a name="72"><span class="lineNum">      72 </span>                :            :   std::deque&lt;BufferVariant&gt; tx_;</a>
 <a name="73"><span class="lineNum">      73 </span>                :            :   std::optional&lt;BufferVariant&gt; current_write_buffer_;</a>
 <a name="74"><span class="lineNum">      74 </span>                :            :   bool writing_ = false;</a>
-<a name="75"><span class="lineNum">      75 </span>                :            :   size_t queued_bytes_ = 0;</a>
-<a name="76"><span class="lineNum">      76 </span>                :            :   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};</a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   std::atomic&lt;size_t&gt; queued_bytes_{0};</a>
+<a name="76"><span class="lineNum">      76 </span>                :            :   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};</a>
 <a name="77"><span class="lineNum">      77 </span>                :            :   size_t bp_high_;</a>
 <a name="78"><span class="lineNum">      78 </span>                :            :   size_t bp_limit_;</a>
 <a name="79"><span class="lineNum">      79 </span>                :            :   size_t bp_low_;</a>
-<a name="80"><span class="lineNum">      80 </span>                :            :   bool backpressure_active_ = false;</a>
+<a name="80"><span class="lineNum">      80 </span>                :            :   std::atomic&lt;bool&gt; backpressure_active_{false};</a>
 <a name="81"><span class="lineNum">      81 </span>                :            : </a>
 <a name="82"><span class="lineNum">      82 </span>                :            :   OnBytes on_bytes_;</a>
 <a name="83"><span class="lineNum">      83 </span>                :            :   OnState on_state_;</a>
@@ -415,35 +415,35 @@
 <a name="312"><span class="lineNum">     312 </span>                :<span class="lineNoCov">          0 :     }</span></a>
 <a name="313"><span class="lineNum">     313 </span>                :<span class="lineCov">         45 :   }</span></a>
 <a name="314"><span class="lineNum">     314 </span>                :            : </a>
-<a name="315"><span class="lineNum">     315 </span>                :<span class="lineCov">         27 :   void handle_error(std::shared_ptr&lt;Serial&gt; self, const char* where, const boost::system::error_code&amp; ec) {</span></a>
-<a name="316"><span class="lineNum">     316 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 27 times"> + </span>]:<span class="lineCov">         27 :     if (ec == boost::asio::error::eof) {</span></a>
+<a name="315"><span class="lineNum">     315 </span>                :<span class="lineCov">         24 :   void handle_error(std::shared_ptr&lt;Serial&gt; self, const char* where, const boost::system::error_code&amp; ec) {</span></a>
+<a name="316"><span class="lineNum">     316 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 24 times"> + </span>]:<span class="lineCov">         24 :     if (ec == boost::asio::error::eof) {</span></a>
 <a name="317"><span class="lineNum">     317 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :       if (self) start_read(self);</span></a>
 <a name="318"><span class="lineNum">     318 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
 <a name="319"><span class="lineNum">     319 </span>                :            :     }</a>
 <a name="320"><span class="lineNum">     320 </span>                :            : </a>
-<a name="321"><span class="lineNum">     321 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 24 times"> + </span>]:<span class="lineCov">         27 :     if (stopping_.load()) {</span></a>
-<a name="322"><span class="lineNum">     322 </span>                :<span class="lineCov">          3 :       perform_cleanup();</span></a>
-<a name="323"><span class="lineNum">     323 </span>                :<span class="lineCov">          3 :       return;</span></a>
+<a name="321"><span class="lineNum">     321 </span>        [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 18 times"> + </span>]:<span class="lineCov">         24 :     if (stopping_.load()) {</span></a>
+<a name="322"><span class="lineNum">     322 </span>                :<span class="lineCov">          6 :       perform_cleanup();</span></a>
+<a name="323"><span class="lineNum">     323 </span>                :<span class="lineCov">          6 :       return;</span></a>
 <a name="324"><span class="lineNum">     324 </span>                :            :     }</a>
 <a name="325"><span class="lineNum">     325 </span>                :            : </a>
-<a name="326"><span class="lineNum">     326 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 21 times"> + </span>]:<span class="lineCov">         24 :     if (ec == boost::asio::error::operation_aborted) {</span></a>
-<a name="327"><span class="lineNum">     327 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 3 times"> + </span>]:<span class="lineCov">          3 :       if (state_.is_state(LinkState::Error)) return;</span></a>
-<a name="328"><span class="lineNum">     328 </span>                :<span class="lineCov">          3 :       perform_cleanup();</span></a>
-<a name="329"><span class="lineNum">     329 </span>                :<span class="lineCov">          3 :       return;</span></a>
+<a name="326"><span class="lineNum">     326 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 18 times"> + </span>]:<span class="lineCov">         18 :     if (ec == boost::asio::error::operation_aborted) {</span></a>
+<a name="327"><span class="lineNum">     327 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :       if (state_.is_state(LinkState::Error)) return;</span></a>
+<a name="328"><span class="lineNum">     328 </span>                :<span class="lineNoCov">          0 :       perform_cleanup();</span></a>
+<a name="329"><span class="lineNum">     329 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
 <a name="330"><span class="lineNum">     330 </span>                :            :     }</a>
 <a name="331"><span class="lineNum">     331 </span>                :            : </a>
-<a name="332"><span class="lineNum">     332 </span>                :<span class="lineCov">         21 :     bool retryable = cfg_.reopen_on_error;</span></a>
-<a name="333"><span class="lineNum">     333 </span>        [<span class="branchCov" title="Branch 0 was taken 21 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         21 :     diagnostics::error_reporting::report_connection_error(&quot;serial&quot;, where, ec, retryable);</span></a>
+<a name="332"><span class="lineNum">     332 </span>                :<span class="lineCov">         18 :     bool retryable = cfg_.reopen_on_error;</span></a>
+<a name="333"><span class="lineNum">     333 </span>        [<span class="branchCov" title="Branch 0 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         18 :     diagnostics::error_reporting::report_connection_error(&quot;serial&quot;, where, ec, retryable);</span></a>
 <a name="334"><span class="lineNum">     334 </span>                :            : </a>
-<a name="335"><span class="lineNum">     335 </span>  [<span class="branchCov" title="Branch 0 was taken 21 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 21 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         21 :     UNILINK_LOG_ERROR(&quot;serial&quot;, where, &quot;Error: &quot; + ec.message());</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 21 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="335"><span class="lineNum">     335 </span>  [<span class="branchCov" title="Branch 0 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         18 :     UNILINK_LOG_ERROR(&quot;serial&quot;, where, &quot;Error: &quot; + ec.message());</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="336"><span class="lineNum">     336 </span>                :            : </a>
-<a name="337"><span class="lineNum">     337 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         21 :     if (cfg_.reopen_on_error) {</span></a>
-<a name="338"><span class="lineNum">     338 </span>                :<span class="lineCov">         20 :       opened_.store(false);</span></a>
-<a name="339"><span class="lineNum">     339 </span>                :<span class="lineCov">         20 :       close_port();</span></a>
-<a name="340"><span class="lineNum">     340 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :       state_.set_state(LinkState::Connecting);</span></a>
-<a name="341"><span class="lineNum">     341 </span>                :<span class="lineCov">         20 :       notify_state();</span></a>
-<a name="342"><span class="lineNum">     342 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         20 :       if (self) schedule_retry(self, where, ec);</span></a>
+<a name="337"><span class="lineNum">     337 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">         18 :     if (cfg_.reopen_on_error) {</span></a>
+<a name="338"><span class="lineNum">     338 </span>                :<span class="lineCov">         17 :       opened_.store(false);</span></a>
+<a name="339"><span class="lineNum">     339 </span>                :<span class="lineCov">         17 :       close_port();</span></a>
+<a name="340"><span class="lineNum">     340 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :       state_.set_state(LinkState::Connecting);</span></a>
+<a name="341"><span class="lineNum">     341 </span>                :<span class="lineCov">         17 :       notify_state();</span></a>
+<a name="342"><span class="lineNum">     342 </span>  [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         17 :       if (self) schedule_retry(self, where, ec);</span></a>
 <a name="343"><span class="lineNum">     343 </span>                :            :     } else {</a>
 <a name="344"><span class="lineNum">     344 </span>                :<span class="lineCov">          1 :       opened_.store(false);</span></a>
 <a name="345"><span class="lineNum">     345 </span>                :<span class="lineCov">          1 :       close_port();</span></a>
@@ -452,47 +452,49 @@
 <a name="348"><span class="lineNum">     348 </span>                :            :     }</a>
 <a name="349"><span class="lineNum">     349 </span>                :            :   }</a>
 <a name="350"><span class="lineNum">     350 </span>                :            : </a>
-<a name="351"><span class="lineNum">     351 </span>                :<span class="lineCov">         20 :   void schedule_retry(std::shared_ptr&lt;Serial&gt; self, const char* where, const boost::system::error_code&amp; ec) {</span></a>
+<a name="351"><span class="lineNum">     351 </span>                :<span class="lineCov">         17 :   void schedule_retry(std::shared_ptr&lt;Serial&gt; self, const char* where, const boost::system::error_code&amp; ec) {</span></a>
 <a name="352"><span class="lineNum">     352 </span>                :            :     (void)ec;</a>
-<a name="353"><span class="lineNum">     353 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :     UNILINK_LOG_INFO(&quot;serial&quot;, &quot;retry&quot;, &quot;Scheduling retry at &quot; + std::string(where));</span></a>
-<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
-<a name="354"><span class="lineNum">     354 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 20 times"> + </span>]:<span class="lineCov">         20 :     if (stopping_.load()) return;</span></a>
-<a name="355"><span class="lineNum">     355 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         20 :     retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));</span></a>
-<a name="356"><span class="lineNum">     356 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     retry_timer_.async_wait([self](auto e) {</span></a>
-<a name="357"><span class="lineNum">     357 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 12 times"> + </span><span class="branchCov" title="Branch 2 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :       if (!e &amp;&amp; self &amp;&amp; !self-&gt;get_impl()-&gt;stopping_.load()) self-&gt;get_impl()-&gt;open_and_configure(self);</span></a>
-<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 7 times"> + </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span><span class="branchCov" title="Branch 6 was taken 7 times"> + </span><span class="branchCov" title="Branch 7 was taken 13 times"> + </span><span class="branchCov" title="Branch 8 was taken 7 times"> + </span> 
+<a name="353"><span class="lineNum">     353 </span>  [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         17 :     UNILINK_LOG_INFO(&quot;serial&quot;, &quot;retry&quot;, &quot;Scheduling retry at &quot; + std::string(where));</span></a>
+<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
+<a name="354"><span class="lineNum">     354 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">         17 :     if (stopping_.load()) return;</span></a>
+<a name="355"><span class="lineNum">     355 </span>  [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         17 :     retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));</span></a>
+<a name="356"><span class="lineNum">     356 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :     retry_timer_.async_wait([self](auto e) {</span></a>
+<a name="357"><span class="lineNum">     357 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span><span class="branchCov" title="Branch 2 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         17 :       if (!e &amp;&amp; self &amp;&amp; !self-&gt;get_impl()-&gt;stopping_.load()) self-&gt;get_impl()-&gt;open_and_configure(self);</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 7 times"> + </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span><span class="branchCov" title="Branch 6 was taken 7 times"> + </span><span class="branchCov" title="Branch 7 was taken 10 times"> + </span><span class="branchCov" title="Branch 8 was taken 7 times"> + </span> 
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
-<a name="358"><span class="lineNum">     358 </span>                :<span class="lineCov">         20 :     });</span></a>
+<a name="358"><span class="lineNum">     358 </span>                :<span class="lineCov">         17 :     });</span></a>
 <a name="359"><span class="lineNum">     359 </span>                :            :   }</a>
 <a name="360"><span class="lineNum">     360 </span>                :            : </a>
-<a name="361"><span class="lineNum">     361 </span>                :<span class="lineCov">         67 :   void close_port() {</span></a>
-<a name="362"><span class="lineNum">     362 </span>                :<span class="lineCov">         67 :     boost::system::error_code ec;</span></a>
-<a name="363"><span class="lineNum">     363 </span>  [<span class="branchCov" title="Branch 0 was taken 67 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 67 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         67 :     if (port_ &amp;&amp; port_-&gt;is_open()) {</span></a>
-<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 8 times"> + </span><span class="branchCov" title="Branch 5 was taken 59 times"> + </span><span class="branchCov" title="Branch 6 was taken 8 times"> + </span><span class="branchCov" title="Branch 7 was taken 59 times"> + </span>]
+<a name="361"><span class="lineNum">     361 </span>                :<span class="lineCov">         64 :   void close_port() {</span></a>
+<a name="362"><span class="lineNum">     362 </span>                :<span class="lineCov">         64 :     boost::system::error_code ec;</span></a>
+<a name="363"><span class="lineNum">     363 </span>  [<span class="branchCov" title="Branch 0 was taken 64 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 64 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         64 :     if (port_ &amp;&amp; port_-&gt;is_open()) {</span></a>
+<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 8 times"> + </span><span class="branchCov" title="Branch 5 was taken 56 times"> + </span><span class="branchCov" title="Branch 6 was taken 8 times"> + </span><span class="branchCov" title="Branch 7 was taken 56 times"> + </span>]
 <a name="364"><span class="lineNum">     364 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          8 :       port_-&gt;close(ec);</span></a>
 <a name="365"><span class="lineNum">     365 </span>                :            :     }</a>
-<a name="366"><span class="lineNum">     366 </span>                :<span class="lineCov">         67 :   }</span></a>
+<a name="366"><span class="lineNum">     366 </span>                :<span class="lineCov">         64 :   }</span></a>
 <a name="367"><span class="lineNum">     367 </span>                :            : </a>
-<a name="368"><span class="lineNum">     368 </span>                :<span class="lineCov">         94 :   void notify_state() {</span></a>
-<a name="369"><span class="lineNum">     369 </span>  [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchCov" title="Branch 1 was taken 42 times"> + </span><span class="branchCov" title="Branch 2 was taken 8 times"> + </span><span class="branchCov" title="Branch 3 was taken 44 times"> + </span> :<span class="lineCov">         94 :     if (stopping_.load() || !on_state_) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 50 times"> + </span><span class="branchCov" title="Branch 5 was taken 44 times"> + </span>]
+<a name="368"><span class="lineNum">     368 </span>                :<span class="lineCov">         88 :   void notify_state() {</span></a>
+<a name="369"><span class="lineNum">     369 </span>  [<span class="branchCov" title="Branch 0 was taken 43 times"> + </span><span class="branchCov" title="Branch 1 was taken 45 times"> + </span><span class="branchCov" title="Branch 2 was taken 8 times"> + </span><span class="branchCov" title="Branch 3 was taken 35 times"> + </span> :<span class="lineCov">         88 :     if (stopping_.load() || !on_state_) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 53 times"> + </span><span class="branchCov" title="Branch 5 was taken 35 times"> + </span>]
 <a name="370"><span class="lineNum">     370 </span>                :            :     try {</a>
-<a name="371"><span class="lineNum">     371 </span>  [<span class="branchCov" title="Branch 0 was taken 44 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 44 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         44 :       on_state_(state_.state());</span></a>
+<a name="371"><span class="lineNum">     371 </span>  [<span class="branchCov" title="Branch 0 was taken 35 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 35 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         35 :       on_state_(state_.state());</span></a>
 <a name="372"><span class="lineNum">     372 </span>                :<span class="lineNoCov">          0 :     } catch (...) {</span></a>
 <a name="373"><span class="lineNum">     373 </span>                :<span class="lineNoCov">          0 :     }</span></a>
 <a name="374"><span class="lineNum">     374 </span>                :            :   }</a>
 <a name="375"><span class="lineNum">     375 </span>                :            : </a>
-<a name="376"><span class="lineNum">     376 </span>                :<span class="lineCov">         54 :   void report_backpressure(size_t qb) {</span></a>
-<a name="377"><span class="lineNum">     377 </span>  [<span class="branchCov" title="Branch 0 was taken 12 times"> + </span><span class="branchCov" title="Branch 1 was taken 42 times"> + </span><span class="branchCov" title="Branch 2 was taken 6 times"> + </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span> :<span class="lineCov">         54 :     if (stopping_.load() || !on_bp_) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 48 times"> + </span><span class="branchCov" title="Branch 5 was taken 6 times"> + </span>]
+<a name="376"><span class="lineNum">     376 </span>                :<span class="lineCov">         51 :   void report_backpressure(size_t qb) {</span></a>
+<a name="377"><span class="lineNum">     377 </span>  [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 45 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span> :<span class="lineCov">         51 :     if (stopping_.load() || !on_bp_) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 45 times"> + </span><span class="branchCov" title="Branch 5 was taken 6 times"> + </span>]
 <a name="378"><span class="lineNum">     378 </span>                :            : </a>
-<a name="379"><span class="lineNum">     379 </span>  [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 2 times"> + </span>]:<span class="lineCov">          6 :     if (!backpressure_active_ &amp;&amp; qb &gt;= bp_high_) {</span></a>
+<a name="379"><span class="lineNum">     379 </span>  [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 2 times"> + </span> :<span class="lineCov">          6 :     if (!backpressure_active_ &amp;&amp; qb &gt;= bp_high_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchCov" title="Branch 5 was taken 4 times"> + </span>]
 <a name="380"><span class="lineNum">     380 </span>                :<span class="lineCov">          2 :       backpressure_active_ = true;</span></a>
-<a name="381"><span class="lineNum">     381 </span>                :<span class="lineCov">          2 :       try {</span></a>
+<a name="381"><span class="lineNum">     381 </span>                :            :       try {</a>
 <a name="382"><span class="lineNum">     382 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :         on_bp_(qb);</span></a>
 <a name="383"><span class="lineNum">     383 </span>                :<span class="lineNoCov">          0 :       } catch (...) {</span></a>
 <a name="384"><span class="lineNum">     384 </span>                :<span class="lineNoCov">          0 :       }</span></a>
-<a name="385"><span class="lineNum">     385 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">          4 :     } else if (backpressure_active_ &amp;&amp; qb &lt;= bp_low_) {</span></a>
+<a name="385"><span class="lineNum">     385 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">          4 :     } else if (backpressure_active_ &amp;&amp; qb &lt;= bp_low_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchCov" title="Branch 5 was taken 3 times"> + </span>]
 <a name="386"><span class="lineNum">     386 </span>                :<span class="lineCov">          1 :       backpressure_active_ = false;</span></a>
 <a name="387"><span class="lineNum">     387 </span>                :            :       try {</a>
 <a name="388"><span class="lineNum">     388 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         on_bp_(qb);</span></a>
@@ -594,157 +596,169 @@
 <a name="476"><span class="lineNum">     476 </span>                :<span class="lineCov">         19 : }</span></a>
 <a name="477"><span class="lineNum">     477 </span>                :            : </a>
 <a name="478"><span class="lineNum">     478 </span>                :<span class="lineCov">          8 : bool Serial::is_connected() const { return get_impl()-&gt;opened_.load(); }</span></a>
-<a name="479"><span class="lineNum">     479 </span>                :            : </a>
-<a name="480"><span class="lineNum">     480 </span>        [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         10 : boost::asio::any_io_executor Serial::get_executor() { return impl_-&gt;strand_; }</span></a>
-<a name="481"><span class="lineNum">     481 </span>                :            : </a>
-<a name="482"><span class="lineNum">     482 </span>                :<span class="lineCov">          4 : void Serial::async_write_copy(memory::ConstByteSpan data) {</span></a>
-<a name="483"><span class="lineNum">     483 </span>                :<span class="lineCov">          4 :   auto impl = get_impl();</span></a>
-<a name="484"><span class="lineNum">     484 </span>  [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          4 :   if (impl-&gt;stopping_.load() || impl-&gt;state_.is_state(LinkState::Closed) || impl-&gt;state_.is_state(LinkState::Error))</span></a>
+<a name="479"><span class="lineNum">     479 </span>                :<span class="lineNoCov">          0 : bool Serial::is_backpressure_active() const { return get_impl()-&gt;backpressure_active_.load(); }</span></a>
+<a name="480"><span class="lineNum">     480 </span>                :            : </a>
+<a name="481"><span class="lineNum">     481 </span>        [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         10 : boost::asio::any_io_executor Serial::get_executor() { return impl_-&gt;strand_; }</span></a>
+<a name="482"><span class="lineNum">     482 </span>                :            : </a>
+<a name="483"><span class="lineNum">     483 </span>                :<span class="lineCov">          4 : bool Serial::async_write_copy(memory::ConstByteSpan data) {</span></a>
+<a name="484"><span class="lineNum">     484 </span>                :<span class="lineCov">          4 :   auto impl = get_impl();</span></a>
+<a name="485"><span class="lineNum">     485 </span>  [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          4 :   if (impl-&gt;stopping_.load() || impl-&gt;state_.is_state(LinkState::Closed) || impl-&gt;state_.is_state(LinkState::Error))</span></a>
 <span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">         </span>      <span class="branchCov" title="Branch 9 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 10 was not taken"> - </span><span class="branchCov" title="Branch 11 was taken 4 times"> + </span>]
-<a name="485"><span class="lineNum">     485 </span>                :<span class="lineCov">          2 :     return;</span></a>
-<a name="486"><span class="lineNum">     486 </span>                :            : </a>
-<a name="487"><span class="lineNum">     487 </span>                :<span class="lineCov">          4 :   size_t n = data.size();</span></a>
-<a name="488"><span class="lineNum">     488 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">          4 :   if (n &gt; base::constants::MAX_BUFFER_SIZE) {</span></a>
-<a name="489"><span class="lineNum">     489 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;serial&quot;, &quot;write&quot;, &quot;Write size exceeds maximum&quot;);</span></a>
+<a name="486"><span class="lineNum">     486 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
+<a name="487"><span class="lineNum">     487 </span>                :            : </a>
+<a name="488"><span class="lineNum">     488 </span>                :<span class="lineCov">          4 :   size_t n = data.size();</span></a>
+<a name="489"><span class="lineNum">     489 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">          4 :   if (n &gt; base::constants::MAX_BUFFER_SIZE) {</span></a>
+<a name="490"><span class="lineNum">     490 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;serial&quot;, &quot;write&quot;, &quot;Write size exceeds maximum&quot;);</span></a>
 <span class="lineNum">         </span><span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span><span class="branchNoExec" title="Branch 6 was not executed"> # </span><span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span> 
 <span class="lineNum">         </span>            <span class="branchNoExec" title="Branch 9 was not executed"> # </span>]
-<a name="490"><span class="lineNum">     490 </span>                :<span class="lineNoCov">          0 :     return;</span></a>
-<a name="491"><span class="lineNum">     491 </span>                :            :   }</a>
-<a name="492"><span class="lineNum">     492 </span>                :            : </a>
-<a name="493"><span class="lineNum">     493 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          4 :   if (n &lt;= 65536) {</span></a>
-<a name="494"><span class="lineNum">     494 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :     memory::PooledBuffer pooled(n);</span></a>
-<a name="495"><span class="lineNum">     495 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :     if (pooled.valid()) {</span></a>
-<a name="496"><span class="lineNum">     496 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       base::safe_memory::safe_memcpy(pooled.data(), data.data(), n);</span></a>
-<a name="497"><span class="lineNum">     497 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {</span></a>
-<a name="498"><span class="lineNum">     498 </span>                :<span class="lineCov">          2 :         auto impl = self-&gt;get_impl();</span></a>
-<a name="499"><span class="lineNum">     499 </span>                :<span class="lineCov">          2 :         const auto added = buf.size();</span></a>
-<a name="500"><span class="lineNum">     500 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :         if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &amp;&amp;</span></a>
-<a name="501"><span class="lineNum">     501 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :             (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
-<a name="502"><span class="lineNum">     502 </span>                :<span class="lineNoCov">          0 :           impl-&gt;tx_.clear();</span></a>
-<a name="503"><span class="lineNum">     503 </span>                :<span class="lineNoCov">          0 :           impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="504"><span class="lineNum">     504 </span>                :            :         }</a>
-<a name="505"><span class="lineNum">     505 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :         if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
-<a name="506"><span class="lineNum">     506 </span>                :<span class="lineNoCov">          0 :           impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
-<a name="507"><span class="lineNum">     507 </span>                :<span class="lineNoCov">          0 :           impl-&gt;tx_.clear();</span></a>
-<a name="508"><span class="lineNum">     508 </span>                :<span class="lineNoCov">          0 :           impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="509"><span class="lineNum">     509 </span>                :<span class="lineNoCov">          0 :           impl-&gt;writing_ = false;</span></a>
-<a name="510"><span class="lineNum">     510 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           impl-&gt;state_.set_state(LinkState::Error);</span></a>
-<a name="511"><span class="lineNum">     511 </span>                :<span class="lineNoCov">          0 :           impl-&gt;notify_state();</span></a>
-<a name="512"><span class="lineNum">     512 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
-<a name="513"><span class="lineNum">     513 </span>                :<span class="lineNoCov">          0 :           return;</span></a>
-<a name="514"><span class="lineNum">     514 </span>                :            :         }</a>
-<a name="515"><span class="lineNum">     515 </span>                :<span class="lineCov">          2 :         impl-&gt;queued_bytes_ += added;</span></a>
-<a name="516"><span class="lineNum">     516 </span>                :<span class="lineCov">          2 :         impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
-<a name="517"><span class="lineNum">     517 </span>                :<span class="lineCov">          2 :         impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
-<a name="518"><span class="lineNum">     518 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :         if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
-<a name="519"><span class="lineNum">     519 </span>                :            :       });</a>
-<a name="520"><span class="lineNum">     520 </span>                :<span class="lineCov">          2 :       return;</span></a>
-<a name="521"><span class="lineNum">     521 </span>                :            :     }</a>
-<a name="522"><span class="lineNum">     522 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :   }</span></a>
-<a name="523"><span class="lineNum">     523 </span>                :            : </a>
-<a name="524"><span class="lineNum">     524 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   std::vector&lt;uint8_t&gt; fallback(data.begin(), data.end());</span></a>
-<a name="525"><span class="lineNum">     525 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :   net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {</span></a>
-<a name="526"><span class="lineNum">     526 </span>                :<span class="lineCov">          2 :     auto impl = self-&gt;get_impl();</span></a>
-<a name="527"><span class="lineNum">     527 </span>                :<span class="lineCov">          2 :     const auto added = buf.size();</span></a>
-<a name="528"><span class="lineNum">     528 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :     if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &amp;&amp;</span></a>
-<a name="529"><span class="lineNum">     529 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :         (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
-<a name="530"><span class="lineNum">     530 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
-<a name="531"><span class="lineNum">     531 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="532"><span class="lineNum">     532 </span>                :            :     }</a>
-<a name="533"><span class="lineNum">     533 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          2 :     if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
-<a name="534"><span class="lineNum">     534 </span>                :<span class="lineCov">          1 :       impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
-<a name="535"><span class="lineNum">     535 </span>                :<span class="lineCov">          1 :       impl-&gt;tx_.clear();</span></a>
-<a name="536"><span class="lineNum">     536 </span>                :<span class="lineCov">          1 :       impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="537"><span class="lineNum">     537 </span>                :<span class="lineCov">          1 :       impl-&gt;writing_ = false;</span></a>
-<a name="538"><span class="lineNum">     538 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       impl-&gt;state_.set_state(LinkState::Error);</span></a>
-<a name="539"><span class="lineNum">     539 </span>                :<span class="lineCov">          1 :       impl-&gt;notify_state();</span></a>
-<a name="540"><span class="lineNum">     540 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
-<a name="541"><span class="lineNum">     541 </span>                :<span class="lineCov">          1 :       return;</span></a>
-<a name="542"><span class="lineNum">     542 </span>                :            :     }</a>
-<a name="543"><span class="lineNum">     543 </span>                :<span class="lineCov">          1 :     impl-&gt;queued_bytes_ += added;</span></a>
-<a name="544"><span class="lineNum">     544 </span>                :<span class="lineCov">          1 :     impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
-<a name="545"><span class="lineNum">     545 </span>                :<span class="lineCov">          1 :     impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
-<a name="546"><span class="lineNum">     546 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :     if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
-<a name="547"><span class="lineNum">     547 </span>                :            :   });</a>
-<a name="548"><span class="lineNum">     548 </span>                :<span class="lineCov">          2 : }</span></a>
-<a name="549"><span class="lineNum">     549 </span>                :            : </a>
-<a name="550"><span class="lineNum">     550 </span>                :<span class="lineCov">          1 : void Serial::async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) {</span></a>
-<a name="551"><span class="lineNum">     551 </span>                :<span class="lineCov">          1 :   auto impl = get_impl();</span></a>
-<a name="552"><span class="lineNum">     552 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl-&gt;stopping_.load() || impl-&gt;state_.is_state(LinkState::Closed) || impl-&gt;state_.is_state(LinkState::Error))</span></a>
-<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
-<span class="lineNum">         </span>      <span class="branchCov" title="Branch 9 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 10 was not taken"> - </span><span class="branchCov" title="Branch 11 was taken 1 time"> + </span>]
-<a name="553"><span class="lineNum">     553 </span>                :<span class="lineNoCov">          0 :     return;</span></a>
-<a name="554"><span class="lineNum">     554 </span>                :<span class="lineCov">          1 :   const auto added = data.size();</span></a>
-<a name="555"><span class="lineNum">     555 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {</span></a>
-<a name="556"><span class="lineNum">     556 </span>                :<span class="lineCov">          1 :     auto impl = self-&gt;get_impl();</span></a>
-<a name="557"><span class="lineNum">     557 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          1 :     if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &amp;&amp;</span></a>
-<a name="558"><span class="lineNum">     558 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :         (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
-<a name="559"><span class="lineNum">     559 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
-<a name="560"><span class="lineNum">     560 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="561"><span class="lineNum">     561 </span>                :            :     }</a>
-<a name="562"><span class="lineNum">     562 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
-<a name="563"><span class="lineNum">     563 </span>                :<span class="lineCov">          1 :       impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
-<a name="564"><span class="lineNum">     564 </span>                :<span class="lineCov">          1 :       impl-&gt;tx_.clear();</span></a>
-<a name="565"><span class="lineNum">     565 </span>                :<span class="lineCov">          1 :       impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="566"><span class="lineNum">     566 </span>                :<span class="lineCov">          1 :       impl-&gt;writing_ = false;</span></a>
-<a name="567"><span class="lineNum">     567 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       impl-&gt;state_.set_state(LinkState::Error);</span></a>
-<a name="568"><span class="lineNum">     568 </span>                :<span class="lineCov">          1 :       impl-&gt;notify_state();</span></a>
-<a name="569"><span class="lineNum">     569 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
-<a name="570"><span class="lineNum">     570 </span>                :<span class="lineCov">          1 :       return;</span></a>
-<a name="571"><span class="lineNum">     571 </span>                :            :     }</a>
-<a name="572"><span class="lineNum">     572 </span>                :<span class="lineNoCov">          0 :     impl-&gt;queued_bytes_ += added;</span></a>
-<a name="573"><span class="lineNum">     573 </span>                :<span class="lineNoCov">          0 :     impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
-<a name="574"><span class="lineNum">     574 </span>                :<span class="lineNoCov">          0 :     impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
-<a name="575"><span class="lineNum">     575 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
-<a name="576"><span class="lineNum">     576 </span>                :            :   });</a>
-<a name="577"><span class="lineNum">     577 </span>                :            : }</a>
-<a name="578"><span class="lineNum">     578 </span>                :            : </a>
-<a name="579"><span class="lineNum">     579 </span>                :<span class="lineCov">          1 : void Serial::async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) {</span></a>
-<a name="580"><span class="lineNum">     580 </span>                :<span class="lineCov">          1 :   auto impl = get_impl();</span></a>
-<a name="581"><span class="lineNum">     581 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl-&gt;stopping_.load() || impl-&gt;state_.is_state(LinkState::Closed) || impl-&gt;state_.is_state(LinkState::Error))</span></a>
-<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
-<span class="lineNum">         </span>      <span class="branchCov" title="Branch 9 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 10 was not taken"> - </span><span class="branchCov" title="Branch 11 was taken 1 time"> + </span>]
-<a name="582"><span class="lineNum">     582 </span>                :<span class="lineNoCov">          0 :     return;</span></a>
-<a name="583"><span class="lineNum">     583 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">          1 :   if (!data || data-&gt;empty()) return;</span></a>
+<a name="491"><span class="lineNum">     491 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
+<a name="492"><span class="lineNum">     492 </span>                :            :   }</a>
+<a name="493"><span class="lineNum">     493 </span>                :            : </a>
+<a name="494"><span class="lineNum">     494 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          4 :   if (n &lt;= 65536) {</span></a>
+<a name="495"><span class="lineNum">     495 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :     memory::PooledBuffer pooled(n);</span></a>
+<a name="496"><span class="lineNum">     496 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :     if (pooled.valid()) {</span></a>
+<a name="497"><span class="lineNum">     497 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       base::safe_memory::safe_memcpy(pooled.data(), data.data(), n);</span></a>
+<a name="498"><span class="lineNum">     498 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :       if (impl-&gt;queued_bytes_ + n &gt; impl-&gt;bp_limit_) return false;</span></a>
+<a name="499"><span class="lineNum">     499 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {</span></a>
+<a name="500"><span class="lineNum">     500 </span>                :<span class="lineCov">          2 :         auto impl = self-&gt;get_impl();</span></a>
+<a name="501"><span class="lineNum">     501 </span>                :<span class="lineCov">          2 :         const auto added = buf.size();</span></a>
+<a name="502"><span class="lineNum">     502 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          2 :         if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &amp;&amp;</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 2 times"> + </span>]
+<a name="503"><span class="lineNum">     503 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
+<a name="504"><span class="lineNum">     504 </span>                :<span class="lineNoCov">          0 :           impl-&gt;tx_.clear();</span></a>
+<a name="505"><span class="lineNum">     505 </span>                :<span class="lineNoCov">          0 :           impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="506"><span class="lineNum">     506 </span>                :            :         }</a>
+<a name="507"><span class="lineNum">     507 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :         if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
+<a name="508"><span class="lineNum">     508 </span>                :<span class="lineNoCov">          0 :           impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
+<a name="509"><span class="lineNum">     509 </span>                :<span class="lineNoCov">          0 :           impl-&gt;tx_.clear();</span></a>
+<a name="510"><span class="lineNum">     510 </span>                :<span class="lineNoCov">          0 :           impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="511"><span class="lineNum">     511 </span>                :<span class="lineNoCov">          0 :           impl-&gt;writing_ = false;</span></a>
+<a name="512"><span class="lineNum">     512 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           impl-&gt;state_.set_state(LinkState::Error);</span></a>
+<a name="513"><span class="lineNum">     513 </span>                :<span class="lineNoCov">          0 :           impl-&gt;notify_state();</span></a>
+<a name="514"><span class="lineNum">     514 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
+<a name="515"><span class="lineNum">     515 </span>                :<span class="lineNoCov">          0 :           return;</span></a>
+<a name="516"><span class="lineNum">     516 </span>                :            :         }</a>
+<a name="517"><span class="lineNum">     517 </span>                :<span class="lineCov">          2 :         impl-&gt;queued_bytes_ += added;</span></a>
+<a name="518"><span class="lineNum">     518 </span>                :<span class="lineCov">          2 :         impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
+<a name="519"><span class="lineNum">     519 </span>                :<span class="lineCov">          2 :         impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
+<a name="520"><span class="lineNum">     520 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :         if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
+<a name="521"><span class="lineNum">     521 </span>                :            :       });</a>
+<a name="522"><span class="lineNum">     522 </span>                :<span class="lineCov">          2 :       return true;</span></a>
+<a name="523"><span class="lineNum">     523 </span>                :            :     }</a>
+<a name="524"><span class="lineNum">     524 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :   }</span></a>
+<a name="525"><span class="lineNum">     525 </span>                :            : </a>
+<a name="526"><span class="lineNum">     526 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          2 :   if (impl-&gt;queued_bytes_ + n &gt; impl-&gt;bp_limit_) return false;</span></a>
+<a name="527"><span class="lineNum">     527 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   std::vector&lt;uint8_t&gt; fallback(data.begin(), data.end());</span></a>
+<a name="528"><span class="lineNum">     528 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :   net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {</span></a>
+<a name="529"><span class="lineNum">     529 </span>                :<span class="lineCov">          1 :     auto impl = self-&gt;get_impl();</span></a>
+<a name="530"><span class="lineNum">     530 </span>                :<span class="lineCov">          1 :     const auto added = buf.size();</span></a>
+<a name="531"><span class="lineNum">     531 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :     if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &amp;&amp;</span></a>
 <span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span>]
-<a name="584"><span class="lineNum">     584 </span>                :<span class="lineCov">          1 :   const auto added = data-&gt;size();</span></a>
-<a name="585"><span class="lineNum">     585 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {</span></a>
-<a name="586"><span class="lineNum">     586 </span>                :<span class="lineCov">          1 :     auto impl = self-&gt;get_impl();</span></a>
-<a name="587"><span class="lineNum">     587 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          1 :     if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &amp;&amp;</span></a>
-<a name="588"><span class="lineNum">     588 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :         (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
-<a name="589"><span class="lineNum">     589 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
-<a name="590"><span class="lineNum">     590 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="591"><span class="lineNum">     591 </span>                :            :     }</a>
-<a name="592"><span class="lineNum">     592 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
-<a name="593"><span class="lineNum">     593 </span>                :<span class="lineCov">          1 :       impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
-<a name="594"><span class="lineNum">     594 </span>                :<span class="lineCov">          1 :       impl-&gt;tx_.clear();</span></a>
-<a name="595"><span class="lineNum">     595 </span>                :<span class="lineCov">          1 :       impl-&gt;queued_bytes_ = 0;</span></a>
-<a name="596"><span class="lineNum">     596 </span>                :<span class="lineCov">          1 :       impl-&gt;writing_ = false;</span></a>
-<a name="597"><span class="lineNum">     597 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       impl-&gt;state_.set_state(LinkState::Error);</span></a>
-<a name="598"><span class="lineNum">     598 </span>                :<span class="lineCov">          1 :       impl-&gt;notify_state();</span></a>
-<a name="599"><span class="lineNum">     599 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
-<a name="600"><span class="lineNum">     600 </span>                :<span class="lineCov">          1 :       return;</span></a>
-<a name="601"><span class="lineNum">     601 </span>                :            :     }</a>
-<a name="602"><span class="lineNum">     602 </span>                :<span class="lineNoCov">          0 :     impl-&gt;queued_bytes_ += added;</span></a>
-<a name="603"><span class="lineNum">     603 </span>                :<span class="lineNoCov">          0 :     impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
-<a name="604"><span class="lineNum">     604 </span>                :<span class="lineNoCov">          0 :     impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
-<a name="605"><span class="lineNum">     605 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
-<a name="606"><span class="lineNum">     606 </span>                :            :   });</a>
-<a name="607"><span class="lineNum">     607 </span>                :            : }</a>
-<a name="608"><span class="lineNum">     608 </span>                :            : </a>
-<a name="609"><span class="lineNum">     609 </span>                :<span class="lineCov">         21 : void Serial::on_bytes(OnBytes cb) { impl_-&gt;on_bytes_ = std::move(cb); }</span></a>
-<a name="610"><span class="lineNum">     610 </span>                :<span class="lineCov">         26 : void Serial::on_state(OnState cb) { impl_-&gt;on_state_ = std::move(cb); }</span></a>
-<a name="611"><span class="lineNum">     611 </span>                :<span class="lineCov">          4 : void Serial::on_backpressure(OnBackpressure cb) { impl_-&gt;on_bp_ = std::move(cb); }</span></a>
-<a name="612"><span class="lineNum">     612 </span>                :            : </a>
-<a name="613"><span class="lineNum">     613 </span>                :<span class="lineNoCov">          0 : void Serial::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {</span></a>
-<a name="614"><span class="lineNum">     614 </span>                :<span class="lineNoCov">          0 :   get_impl()-&gt;bp_strategy_ = strategy;</span></a>
-<a name="615"><span class="lineNum">     615 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="532"><span class="lineNum">     532 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
+<a name="533"><span class="lineNum">     533 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
+<a name="534"><span class="lineNum">     534 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="535"><span class="lineNum">     535 </span>                :            :     }</a>
+<a name="536"><span class="lineNum">     536 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          1 :     if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
+<a name="537"><span class="lineNum">     537 </span>                :<span class="lineNoCov">          0 :       impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
+<a name="538"><span class="lineNum">     538 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
+<a name="539"><span class="lineNum">     539 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="540"><span class="lineNum">     540 </span>                :<span class="lineNoCov">          0 :       impl-&gt;writing_ = false;</span></a>
+<a name="541"><span class="lineNum">     541 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       impl-&gt;state_.set_state(LinkState::Error);</span></a>
+<a name="542"><span class="lineNum">     542 </span>                :<span class="lineNoCov">          0 :       impl-&gt;notify_state();</span></a>
+<a name="543"><span class="lineNum">     543 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
+<a name="544"><span class="lineNum">     544 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
+<a name="545"><span class="lineNum">     545 </span>                :            :     }</a>
+<a name="546"><span class="lineNum">     546 </span>                :<span class="lineCov">          1 :     impl-&gt;queued_bytes_ += added;</span></a>
+<a name="547"><span class="lineNum">     547 </span>                :<span class="lineCov">          1 :     impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
+<a name="548"><span class="lineNum">     548 </span>                :<span class="lineCov">          1 :     impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
+<a name="549"><span class="lineNum">     549 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :     if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
+<a name="550"><span class="lineNum">     550 </span>                :            :   });</a>
+<a name="551"><span class="lineNum">     551 </span>                :<span class="lineCov">          1 :   return true;</span></a>
+<a name="552"><span class="lineNum">     552 </span>                :<span class="lineCov">          1 : }</span></a>
+<a name="553"><span class="lineNum">     553 </span>                :            : </a>
+<a name="554"><span class="lineNum">     554 </span>                :<span class="lineCov">          1 : bool Serial::async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) {</span></a>
+<a name="555"><span class="lineNum">     555 </span>                :<span class="lineCov">          1 :   auto impl = get_impl();</span></a>
+<a name="556"><span class="lineNum">     556 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl-&gt;stopping_.load() || impl-&gt;state_.is_state(LinkState::Closed) || impl-&gt;state_.is_state(LinkState::Error))</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
+<span class="lineNum">         </span>      <span class="branchCov" title="Branch 9 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 10 was not taken"> - </span><span class="branchCov" title="Branch 11 was taken 1 time"> + </span>]
+<a name="557"><span class="lineNum">     557 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
+<a name="558"><span class="lineNum">     558 </span>                :<span class="lineCov">          1 :   const auto added = data.size();</span></a>
+<a name="559"><span class="lineNum">     559 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) return false;</span></a>
+<a name="560"><span class="lineNum">     560 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {</span></a>
+<a name="561"><span class="lineNum">     561 </span>                :<span class="lineNoCov">          0 :     auto impl = self-&gt;get_impl();</span></a>
+<a name="562"><span class="lineNum">     562 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &amp;&amp;</span></a>
+<span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
+<a name="563"><span class="lineNum">     563 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
+<a name="564"><span class="lineNum">     564 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
+<a name="565"><span class="lineNum">     565 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="566"><span class="lineNum">     566 </span>                :            :     }</a>
+<a name="567"><span class="lineNum">     567 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
+<a name="568"><span class="lineNum">     568 </span>                :<span class="lineNoCov">          0 :       impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
+<a name="569"><span class="lineNum">     569 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
+<a name="570"><span class="lineNum">     570 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="571"><span class="lineNum">     571 </span>                :<span class="lineNoCov">          0 :       impl-&gt;writing_ = false;</span></a>
+<a name="572"><span class="lineNum">     572 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       impl-&gt;state_.set_state(LinkState::Error);</span></a>
+<a name="573"><span class="lineNum">     573 </span>                :<span class="lineNoCov">          0 :       impl-&gt;notify_state();</span></a>
+<a name="574"><span class="lineNum">     574 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
+<a name="575"><span class="lineNum">     575 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
+<a name="576"><span class="lineNum">     576 </span>                :            :     }</a>
+<a name="577"><span class="lineNum">     577 </span>                :<span class="lineNoCov">          0 :     impl-&gt;queued_bytes_ += added;</span></a>
+<a name="578"><span class="lineNum">     578 </span>                :<span class="lineNoCov">          0 :     impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
+<a name="579"><span class="lineNum">     579 </span>                :<span class="lineNoCov">          0 :     impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
+<a name="580"><span class="lineNum">     580 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
+<a name="581"><span class="lineNum">     581 </span>                :            :   });</a>
+<a name="582"><span class="lineNum">     582 </span>                :<span class="lineNoCov">          0 :   return true;</span></a>
+<a name="583"><span class="lineNum">     583 </span>                :            : }</a>
+<a name="584"><span class="lineNum">     584 </span>                :            : </a>
+<a name="585"><span class="lineNum">     585 </span>                :<span class="lineCov">          1 : bool Serial::async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) {</span></a>
+<a name="586"><span class="lineNum">     586 </span>                :<span class="lineCov">          1 :   auto impl = get_impl();</span></a>
+<a name="587"><span class="lineNum">     587 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl-&gt;stopping_.load() || impl-&gt;state_.is_state(LinkState::Closed) || impl-&gt;state_.is_state(LinkState::Error))</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
+<span class="lineNum">         </span>      <span class="branchCov" title="Branch 9 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 10 was not taken"> - </span><span class="branchCov" title="Branch 11 was taken 1 time"> + </span>]
+<a name="588"><span class="lineNum">     588 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
+<a name="589"><span class="lineNum">     589 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">          1 :   if (!data || data-&gt;empty()) return false;</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span>]
+<a name="590"><span class="lineNum">     590 </span>                :<span class="lineCov">          1 :   const auto added = data-&gt;size();</span></a>
+<a name="591"><span class="lineNum">     591 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) return false;</span></a>
+<a name="592"><span class="lineNum">     592 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {</span></a>
+<a name="593"><span class="lineNum">     593 </span>                :<span class="lineNoCov">          0 :     auto impl = self-&gt;get_impl();</span></a>
+<a name="594"><span class="lineNum">     594 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     if (impl-&gt;bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &amp;&amp;</span></a>
+<span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
+<a name="595"><span class="lineNum">     595 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         (impl-&gt;backpressure_active_ || impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_high_)) {</span></a>
+<a name="596"><span class="lineNum">     596 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
+<a name="597"><span class="lineNum">     597 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="598"><span class="lineNum">     598 </span>                :            :     }</a>
+<a name="599"><span class="lineNum">     599 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</span></a>
+<a name="600"><span class="lineNum">     600 </span>                :<span class="lineNoCov">          0 :       impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</span></a>
+<a name="601"><span class="lineNum">     601 </span>                :<span class="lineNoCov">          0 :       impl-&gt;tx_.clear();</span></a>
+<a name="602"><span class="lineNum">     602 </span>                :<span class="lineNoCov">          0 :       impl-&gt;queued_bytes_ = 0;</span></a>
+<a name="603"><span class="lineNum">     603 </span>                :<span class="lineNoCov">          0 :       impl-&gt;writing_ = false;</span></a>
+<a name="604"><span class="lineNum">     604 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       impl-&gt;state_.set_state(LinkState::Error);</span></a>
+<a name="605"><span class="lineNum">     605 </span>                :<span class="lineNoCov">          0 :       impl-&gt;notify_state();</span></a>
+<a name="606"><span class="lineNum">     606 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       impl-&gt;handle_error(self, &quot;write_queue_overflow&quot;, make_error_code(boost::system::errc::no_buffer_space));</span></a>
+<a name="607"><span class="lineNum">     607 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
+<a name="608"><span class="lineNum">     608 </span>                :            :     }</a>
+<a name="609"><span class="lineNum">     609 </span>                :<span class="lineNoCov">          0 :     impl-&gt;queued_bytes_ += added;</span></a>
+<a name="610"><span class="lineNum">     610 </span>                :<span class="lineNoCov">          0 :     impl-&gt;tx_.emplace_back(std::move(buf));</span></a>
+<a name="611"><span class="lineNum">     611 </span>                :<span class="lineNoCov">          0 :     impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</span></a>
+<a name="612"><span class="lineNum">     612 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (!impl-&gt;writing_) impl-&gt;do_write(self);</span></a>
+<a name="613"><span class="lineNum">     613 </span>                :            :   });</a>
+<a name="614"><span class="lineNum">     614 </span>                :<span class="lineNoCov">          0 :   return true;</span></a>
+<a name="615"><span class="lineNum">     615 </span>                :            : }</a>
 <a name="616"><span class="lineNum">     616 </span>                :            : </a>
-<a name="617"><span class="lineNum">     617 </span>                :<span class="lineNoCov">          0 : void Serial::set_retry_interval(unsigned interval_ms) { get_impl()-&gt;cfg_.retry_interval_ms = interval_ms; }</span></a>
-<a name="618"><span class="lineNum">     618 </span>                :            : </a>
-<a name="619"><span class="lineNum">     619 </span>                :            : }  // namespace transport</a>
-<a name="620"><span class="lineNum">     620 </span>                :            : }  // namespace unilink</a>
+<a name="617"><span class="lineNum">     617 </span>                :<span class="lineCov">         21 : void Serial::on_bytes(OnBytes cb) { impl_-&gt;on_bytes_ = std::move(cb); }</span></a>
+<a name="618"><span class="lineNum">     618 </span>                :<span class="lineCov">         26 : void Serial::on_state(OnState cb) { impl_-&gt;on_state_ = std::move(cb); }</span></a>
+<a name="619"><span class="lineNum">     619 </span>                :<span class="lineCov">         14 : void Serial::on_backpressure(OnBackpressure cb) { impl_-&gt;on_bp_ = std::move(cb); }</span></a>
+<a name="620"><span class="lineNum">     620 </span>                :            : </a>
+<a name="621"><span class="lineNum">     621 </span>                :<span class="lineNoCov">          0 : void Serial::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {</span></a>
+<a name="622"><span class="lineNum">     622 </span>                :<span class="lineNoCov">          0 :   get_impl()-&gt;bp_strategy_ = strategy;</span></a>
+<a name="623"><span class="lineNum">     623 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="624"><span class="lineNum">     624 </span>                :            : </a>
+<a name="625"><span class="lineNum">     625 </span>                :<span class="lineNoCov">          0 : void Serial::set_retry_interval(unsigned interval_ms) { get_impl()-&gt;cfg_.retry_interval_ms = interval_ms; }</span></a>
+<a name="626"><span class="lineNum">     626 </span>                :            : </a>
+<a name="627"><span class="lineNum">     627 </span>                :            : }  // namespace transport</a>
+<a name="628"><span class="lineNum">     628 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

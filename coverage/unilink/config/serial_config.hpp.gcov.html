@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-27 01:14:26</td>
+            <td class="headerValue">2026-04-27 11:57:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -116,7 +116,7 @@
 <a name="38"><span class="lineNum">      38 </span>                :            :   size_t read_chunk = base::constants::DEFAULT_READ_BUFFER_SIZE;</a>
 <a name="39"><span class="lineNum">      39 </span>                :            :   bool reopen_on_error = true;  // Attempt to reopen on device disconnection/error</a>
 <a name="40"><span class="lineNum">      40 </span>                :            :   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;</a>
-<a name="41"><span class="lineNum">      41 </span>                :            :   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::KeepAll;</a>
+<a name="41"><span class="lineNum">      41 </span>                :            :   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;</a>
 <a name="42"><span class="lineNum">      42 </span>                :            :   bool enable_memory_pool = true;</a>
 <a name="43"><span class="lineNum">      43 </span>                :            :   // Controls whether callback exceptions halt the link (true) or trigger the normal retry flow (false)</a>
 <a name="44"><span class="lineNum">      44 </span>                :            :   bool stop_on_callback_exception = false;</a>

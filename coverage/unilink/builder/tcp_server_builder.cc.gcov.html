@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">63</td>
-            <td class="headerCovTableEntry">68</td>
-            <td class="headerCovTableEntryHi">92.6 %</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntryHi">92.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-27 01:14:26</td>
+            <td class="headerValue">2026-04-27 11:57:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">43</td>
-            <td class="headerCovTableEntry">86</td>
-            <td class="headerCovTableEntryLo">50.0 %</td>
+            <td class="headerCovTableEntry">45</td>
+            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntryLo">48.9 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -147,74 +147,77 @@
 <a name="63"><span class="lineNum">      63 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;on_message(on_message_);</span></a>
 <a name="64"><span class="lineNum">      64 </span>                :            :   }</a>
 <a name="65"><span class="lineNum">      65 </span>                :            : </a>
-<a name="66"><span class="lineNum">      66 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 76 times"> + </span>]:<span class="lineCov">         79 :   if (enable_port_retry_) {</span></a>
-<a name="67"><span class="lineNum">      67 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     server-&gt;port_retry(true, max_port_retries_, port_retry_interval_ms_);</span></a>
-<a name="68"><span class="lineNum">      68 </span>                :            :   }</a>
-<a name="69"><span class="lineNum">      69 </span>                :            : </a>
-<a name="70"><span class="lineNum">      70 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 78 times"> + </span>]:<span class="lineCov">         79 :   if (idle_timeout_.count() &gt; 0) {</span></a>
-<a name="71"><span class="lineNum">      71 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     server-&gt;idle_timeout(idle_timeout_);</span></a>
-<a name="72"><span class="lineNum">      72 </span>                :            :   }</a>
-<a name="73"><span class="lineNum">      73 </span>                :            : </a>
-<a name="74"><span class="lineNum">      74 </span>        [<span class="branchCov" title="Branch 0 was taken 60 times"> + </span><span class="branchCov" title="Branch 1 was taken 19 times"> + </span>]:<span class="lineCov">         79 :   if (client_limit_set_) {</span></a>
-<a name="75"><span class="lineNum">      75 </span>        [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>]:<span class="lineCov">         60 :     if (max_clients_ == 0)</span></a>
-<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         52 :       server-&gt;unlimited_clients();</span></a>
-<a name="77"><span class="lineNum">      77 </span>                :            :     else</a>
-<a name="78"><span class="lineNum">      78 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          8 :       server-&gt;max_clients(max_clients_);</span></a>
-<a name="79"><span class="lineNum">      79 </span>                :            :   }</a>
-<a name="80"><span class="lineNum">      80 </span>                :            : </a>
-<a name="81"><span class="lineNum">      81 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 78 times"> + </span>]:<span class="lineCov">         79 :   if (auto_start_) {</span></a>
-<a name="82"><span class="lineNum">      82 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     server-&gt;auto_start(true);</span></a>
-<a name="83"><span class="lineNum">      83 </span>                :            :   }</a>
-<a name="84"><span class="lineNum">      84 </span>                :            : </a>
-<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">         79 :   return server;</span></a>
-<a name="86"><span class="lineNum">      86 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="66"><span class="lineNum">      66 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 79 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         79 :   if (bp_strategy_set_) server-&gt;backpressure_strategy(bp_strategy_);</span></a>
+<a name="67"><span class="lineNum">      67 </span>        [<span class="branchCov" title="Branch 0 was taken 79 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         79 :   server-&gt;backpressure_threshold(get_effective_backpressure_threshold());</span></a>
+<a name="68"><span class="lineNum">      68 </span>                :            : </a>
+<a name="69"><span class="lineNum">      69 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 76 times"> + </span>]:<span class="lineCov">         79 :   if (enable_port_retry_) {</span></a>
+<a name="70"><span class="lineNum">      70 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     server-&gt;port_retry(true, max_port_retries_, port_retry_interval_ms_);</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :            :   }</a>
+<a name="72"><span class="lineNum">      72 </span>                :            : </a>
+<a name="73"><span class="lineNum">      73 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 78 times"> + </span>]:<span class="lineCov">         79 :   if (idle_timeout_.count() &gt; 0) {</span></a>
+<a name="74"><span class="lineNum">      74 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     server-&gt;idle_timeout(idle_timeout_);</span></a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   }</a>
+<a name="76"><span class="lineNum">      76 </span>                :            : </a>
+<a name="77"><span class="lineNum">      77 </span>        [<span class="branchCov" title="Branch 0 was taken 60 times"> + </span><span class="branchCov" title="Branch 1 was taken 19 times"> + </span>]:<span class="lineCov">         79 :   if (client_limit_set_) {</span></a>
+<a name="78"><span class="lineNum">      78 </span>        [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>]:<span class="lineCov">         60 :     if (max_clients_ == 0)</span></a>
+<a name="79"><span class="lineNum">      79 </span>        [<span class="branchCov" title="Branch 0 was taken 52 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         52 :       server-&gt;unlimited_clients();</span></a>
+<a name="80"><span class="lineNum">      80 </span>                :            :     else</a>
+<a name="81"><span class="lineNum">      81 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          8 :       server-&gt;max_clients(max_clients_);</span></a>
+<a name="82"><span class="lineNum">      82 </span>                :            :   }</a>
+<a name="83"><span class="lineNum">      83 </span>                :            : </a>
+<a name="84"><span class="lineNum">      84 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 78 times"> + </span>]:<span class="lineCov">         79 :   if (auto_start_) {</span></a>
+<a name="85"><span class="lineNum">      85 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     server-&gt;auto_start(true);</span></a>
+<a name="86"><span class="lineNum">      86 </span>                :            :   }</a>
 <a name="87"><span class="lineNum">      87 </span>                :            : </a>
-<a name="88"><span class="lineNum">      88 </span>                :<span class="lineCov">          2 : TcpServerBuilder&amp; TcpServerBuilder::auto_start(bool auto_start) {</span></a>
-<a name="89"><span class="lineNum">      89 </span>                :<span class="lineCov">          2 :   auto_start_ = auto_start;</span></a>
-<a name="90"><span class="lineNum">      90 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="91"><span class="lineNum">      91 </span>                :            : }</a>
-<a name="92"><span class="lineNum">      92 </span>                :            : </a>
-<a name="93"><span class="lineNum">      93 </span>                :<span class="lineCov">          1 : TcpServerBuilder&amp; TcpServerBuilder::independent_context(bool use_independent) {</span></a>
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">          1 :   independent_context_ = use_independent;</span></a>
-<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
-<a name="96"><span class="lineNum">      96 </span>                :            : }</a>
-<a name="97"><span class="lineNum">      97 </span>                :            : </a>
-<a name="98"><span class="lineNum">      98 </span>                :<span class="lineCov">          3 : TcpServerBuilder&amp; TcpServerBuilder::port_retry(bool enable, int max_retries, int retry_interval_ms) {</span></a>
-<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">          3 :   enable_port_retry_ = enable;</span></a>
-<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">          3 :   max_port_retries_ = max_retries;</span></a>
-<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">          3 :   port_retry_interval_ms_ = retry_interval_ms;</span></a>
-<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
-<a name="103"><span class="lineNum">     103 </span>                :            : }</a>
-<a name="104"><span class="lineNum">     104 </span>                :            : </a>
-<a name="105"><span class="lineNum">     105 </span>                :<span class="lineCov">          1 : TcpServerBuilder&amp; TcpServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {</span></a>
-<a name="106"><span class="lineNum">     106 </span>                :<span class="lineCov">          1 :   idle_timeout_ = timeout;</span></a>
-<a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
-<a name="108"><span class="lineNum">     108 </span>                :            : }</a>
-<a name="109"><span class="lineNum">     109 </span>                :            : </a>
-<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">          6 : TcpServerBuilder&amp; TcpServerBuilder::max_clients(size_t max) {</span></a>
-<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          6 :   if (max == 0) throw std::invalid_argument(&quot;Client limit cannot be 0&quot;);</span></a>
-<a name="112"><span class="lineNum">     112 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          4 :   if (max == 1) throw std::invalid_argument(&quot;Use single_client() for 1 client limit&quot;);</span></a>
-<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">          4 :   max_clients_ = max;</span></a>
-<a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">          4 :   client_limit_set_ = true;</span></a>
-<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
-<a name="116"><span class="lineNum">     116 </span>                :            : }</a>
-<a name="117"><span class="lineNum">     117 </span>                :            : </a>
-<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">          4 : TcpServerBuilder&amp; TcpServerBuilder::single_client() {</span></a>
-<a name="119"><span class="lineNum">     119 </span>                :<span class="lineCov">          4 :   max_clients_ = 1;  // Simplified: actually handled by TcpServer's set_client_limit(1)</span></a>
-<a name="120"><span class="lineNum">     120 </span>                :<span class="lineCov">          4 :   client_limit_set_ = true;</span></a>
-<a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
-<a name="122"><span class="lineNum">     122 </span>                :            : }</a>
-<a name="123"><span class="lineNum">     123 </span>                :            : </a>
-<a name="124"><span class="lineNum">     124 </span>                :<span class="lineCov">          5 : TcpServerBuilder&amp; TcpServerBuilder::multi_client(size_t max) { return max_clients(max); }</span></a>
-<a name="125"><span class="lineNum">     125 </span>                :            : </a>
-<a name="126"><span class="lineNum">     126 </span>                :<span class="lineCov">         51 : TcpServerBuilder&amp; TcpServerBuilder::unlimited_clients() {</span></a>
-<a name="127"><span class="lineNum">     127 </span>                :<span class="lineCov">         51 :   max_clients_ = 0;</span></a>
-<a name="128"><span class="lineNum">     128 </span>                :<span class="lineCov">         51 :   client_limit_set_ = true;</span></a>
-<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">         51 :   return *this;</span></a>
-<a name="130"><span class="lineNum">     130 </span>                :            : }</a>
-<a name="131"><span class="lineNum">     131 </span>                :            : </a>
-<a name="132"><span class="lineNum">     132 </span>                :            : }  // namespace builder</a>
-<a name="133"><span class="lineNum">     133 </span>                :            : }  // namespace unilink</a>
+<a name="88"><span class="lineNum">      88 </span>                :<span class="lineCov">         79 :   return server;</span></a>
+<a name="89"><span class="lineNum">      89 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="90"><span class="lineNum">      90 </span>                :            : </a>
+<a name="91"><span class="lineNum">      91 </span>                :<span class="lineCov">          2 : TcpServerBuilder&amp; TcpServerBuilder::auto_start(bool auto_start) {</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">          2 :   auto_start_ = auto_start;</span></a>
+<a name="93"><span class="lineNum">      93 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="94"><span class="lineNum">      94 </span>                :            : }</a>
+<a name="95"><span class="lineNum">      95 </span>                :            : </a>
+<a name="96"><span class="lineNum">      96 </span>                :<span class="lineCov">          1 : TcpServerBuilder&amp; TcpServerBuilder::independent_context(bool use_independent) {</span></a>
+<a name="97"><span class="lineNum">      97 </span>                :<span class="lineCov">          1 :   independent_context_ = use_independent;</span></a>
+<a name="98"><span class="lineNum">      98 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
+<a name="99"><span class="lineNum">      99 </span>                :            : }</a>
+<a name="100"><span class="lineNum">     100 </span>                :            : </a>
+<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">          3 : TcpServerBuilder&amp; TcpServerBuilder::port_retry(bool enable, int max_retries, int retry_interval_ms) {</span></a>
+<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">          3 :   enable_port_retry_ = enable;</span></a>
+<a name="103"><span class="lineNum">     103 </span>                :<span class="lineCov">          3 :   max_port_retries_ = max_retries;</span></a>
+<a name="104"><span class="lineNum">     104 </span>                :<span class="lineCov">          3 :   port_retry_interval_ms_ = retry_interval_ms;</span></a>
+<a name="105"><span class="lineNum">     105 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
+<a name="106"><span class="lineNum">     106 </span>                :            : }</a>
+<a name="107"><span class="lineNum">     107 </span>                :            : </a>
+<a name="108"><span class="lineNum">     108 </span>                :<span class="lineCov">          1 : TcpServerBuilder&amp; TcpServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {</span></a>
+<a name="109"><span class="lineNum">     109 </span>                :<span class="lineCov">          1 :   idle_timeout_ = timeout;</span></a>
+<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
+<a name="111"><span class="lineNum">     111 </span>                :            : }</a>
+<a name="112"><span class="lineNum">     112 </span>                :            : </a>
+<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">          6 : TcpServerBuilder&amp; TcpServerBuilder::max_clients(size_t max) {</span></a>
+<a name="114"><span class="lineNum">     114 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          6 :   if (max == 0) throw std::invalid_argument(&quot;Client limit cannot be 0&quot;);</span></a>
+<a name="115"><span class="lineNum">     115 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          4 :   if (max == 1) throw std::invalid_argument(&quot;Use single_client() for 1 client limit&quot;);</span></a>
+<a name="116"><span class="lineNum">     116 </span>                :<span class="lineCov">          4 :   max_clients_ = max;</span></a>
+<a name="117"><span class="lineNum">     117 </span>                :<span class="lineCov">          4 :   client_limit_set_ = true;</span></a>
+<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
+<a name="119"><span class="lineNum">     119 </span>                :            : }</a>
+<a name="120"><span class="lineNum">     120 </span>                :            : </a>
+<a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">          4 : TcpServerBuilder&amp; TcpServerBuilder::single_client() {</span></a>
+<a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">          4 :   max_clients_ = 1;  // Simplified: actually handled by TcpServer's set_client_limit(1)</span></a>
+<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">          4 :   client_limit_set_ = true;</span></a>
+<a name="124"><span class="lineNum">     124 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
+<a name="125"><span class="lineNum">     125 </span>                :            : }</a>
+<a name="126"><span class="lineNum">     126 </span>                :            : </a>
+<a name="127"><span class="lineNum">     127 </span>                :<span class="lineCov">          5 : TcpServerBuilder&amp; TcpServerBuilder::multi_client(size_t max) { return max_clients(max); }</span></a>
+<a name="128"><span class="lineNum">     128 </span>                :            : </a>
+<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">         51 : TcpServerBuilder&amp; TcpServerBuilder::unlimited_clients() {</span></a>
+<a name="130"><span class="lineNum">     130 </span>                :<span class="lineCov">         51 :   max_clients_ = 0;</span></a>
+<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">         51 :   client_limit_set_ = true;</span></a>
+<a name="132"><span class="lineNum">     132 </span>                :<span class="lineCov">         51 :   return *this;</span></a>
+<a name="133"><span class="lineNum">     133 </span>                :            : }</a>
+<a name="134"><span class="lineNum">     134 </span>                :            : </a>
+<a name="135"><span class="lineNum">     135 </span>                :            : }  // namespace builder</a>
+<a name="136"><span class="lineNum">     136 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
