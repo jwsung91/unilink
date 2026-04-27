@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📄_20license_0',['📄 License',['..//home/runner/work/unilink/unilink/README.md#autotoc_md854',1,'']]]
+  ['📄_20license_0',['📄 License',['..//home/runner/work/unilink/unilink/README.md#autotoc_md859',1,'']]]
 ];

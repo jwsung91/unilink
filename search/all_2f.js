@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📦_20installation_0',['📦 Installation',['..//home/runner/work/unilink/unilink/README.md#autotoc_md844',1,'']]]
+  ['📦_20installation_0',['📦 Installation',['..//home/runner/work/unilink/unilink/README.md#autotoc_md849',1,'']]]
 ];

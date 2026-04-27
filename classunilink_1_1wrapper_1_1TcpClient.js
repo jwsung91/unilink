@@ -29,7 +29,11 @@ var classunilink_1_1wrapper_1_1TcpClient =
     [ "operator=", "classunilink_1_1wrapper_1_1TcpClient.html#a044c48c7e3accbb1a75c955bb0646e9b", null ],
     [ "retry_interval", "classunilink_1_1wrapper_1_1TcpClient.html#a1c82047870092eb93fa8002375348d72", null ],
     [ "send", "classunilink_1_1wrapper_1_1TcpClient.html#abfd2fff029f6c241cd0b39b75ce92e43", null ],
+    [ "send_blocking", "classunilink_1_1wrapper_1_1TcpClient.html#aa49c266eddd7e04b73d2900a5e4e3190", null ],
     [ "send_line", "classunilink_1_1wrapper_1_1TcpClient.html#a5ad98b80dd4370157ade6a2dd4c39a79", null ],
+    [ "send_line_blocking", "classunilink_1_1wrapper_1_1TcpClient.html#a1f42c394f70ff1792aa090186c11f1aa", null ],
     [ "start", "classunilink_1_1wrapper_1_1TcpClient.html#af28e9e16877808ff5b8b6765a6a70227", null ],
-    [ "stop", "classunilink_1_1wrapper_1_1TcpClient.html#a4dee749ef29e143d91bed46b827e8c70", null ]
+    [ "stop", "classunilink_1_1wrapper_1_1TcpClient.html#a4dee749ef29e143d91bed46b827e8c70", null ],
+    [ "try_send", "classunilink_1_1wrapper_1_1TcpClient.html#ac2bc6fba6fa12519e4c08fe13fb07e50", null ],
+    [ "try_send_line", "classunilink_1_1wrapper_1_1TcpClient.html#aba41859051f3f0094b899382f1debf88", null ]
 ];

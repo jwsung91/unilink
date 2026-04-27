@@ -230,9 +230,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a718701d3df14f9cea59f1ade4744f5ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8c25a22979f9b3188c409d5f9d6a546" id="r_ac8c25a22979f9b3188c409d5f9d6a546"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#ac8c25a22979f9b3188c409d5f9d6a546">writing_</a> = false</td></tr>
 <tr class="separator:ac8c25a22979f9b3188c409d5f9d6a546"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a38ff14e343716596a4684de39dddcb" id="r_a0a38ff14e343716596a4684de39dddcb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a0a38ff14e343716596a4684de39dddcb">queued_bytes_</a> = 0</td></tr>
-<tr class="separator:a0a38ff14e343716596a4684de39dddcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8d8eb4a3d7faf9f953aac8f30c6fc8c" id="r_aa8d8eb4a3d7faf9f953aac8f30c6fc8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#aa8d8eb4a3d7faf9f953aac8f30c6fc8c">bp_strategy_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a>}</td></tr>
+<tr class="memitem:a2abe03468ac53c511d9d28084ae9fa2b" id="r_a2abe03468ac53c511d9d28084ae9fa2b"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a2abe03468ac53c511d9d28084ae9fa2b">queued_bytes_</a> {0}</td></tr>
+<tr class="separator:a2abe03468ac53c511d9d28084ae9fa2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d8eb4a3d7faf9f953aac8f30c6fc8c" id="r_aa8d8eb4a3d7faf9f953aac8f30c6fc8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#aa8d8eb4a3d7faf9f953aac8f30c6fc8c">bp_strategy_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6">base::constants::BackpressureStrategy::Reliable</a>}</td></tr>
 <tr class="separator:aa8d8eb4a3d7faf9f953aac8f30c6fc8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56f17fe0a66020800566a09731be1b61" id="r_a56f17fe0a66020800566a09731be1b61"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a56f17fe0a66020800566a09731be1b61">bp_high_</a></td></tr>
 <tr class="separator:a56f17fe0a66020800566a09731be1b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -240,8 +240,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:acfe2f23c0629828e38ec121ea5bb7ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a742bd4150abb83defcfa5d05076169c2" id="r_a742bd4150abb83defcfa5d05076169c2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a742bd4150abb83defcfa5d05076169c2">bp_low_</a></td></tr>
 <tr class="separator:a742bd4150abb83defcfa5d05076169c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52f1d5aa272f50cb7dbf90a1e81ae10d" id="r_a52f1d5aa272f50cb7dbf90a1e81ae10d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a52f1d5aa272f50cb7dbf90a1e81ae10d">backpressure_active_</a> = false</td></tr>
-<tr class="separator:a52f1d5aa272f50cb7dbf90a1e81ae10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb8275bba6cd2b234f6727fe1df1bf5b" id="r_adb8275bba6cd2b234f6727fe1df1bf5b"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#adb8275bba6cd2b234f6727fe1df1bf5b">backpressure_active_</a> {false}</td></tr>
+<tr class="separator:adb8275bba6cd2b234f6727fe1df1bf5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af88981533657cc7968ea84f79944c52d" id="r_af88981533657cc7968ea84f79944c52d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#af88981533657cc7968ea84f79944c52d">on_bytes_</a></td></tr>
 <tr class="separator:af88981533657cc7968ea84f79944c52d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0467c0824620098701d1d88cb4e54e6f" id="r_a0467c0824620098701d1d88cb4e54e6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a0467c0824620098701d1d88cb4e54e6f">on_state_</a></td></tr>
@@ -750,14 +750,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a52f1d5aa272f50cb7dbf90a1e81ae10d" name="a52f1d5aa272f50cb7dbf90a1e81ae10d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52f1d5aa272f50cb7dbf90a1e81ae10d">&#9670;&#160;</a></span>backpressure_active_</h2>
+<a id="adb8275bba6cd2b234f6727fe1df1bf5b" name="adb8275bba6cd2b234f6727fe1df1bf5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb8275bba6cd2b234f6727fe1df1bf5b">&#9670;&#160;</a></span>backpressure_active_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool unilink::transport::Serial::Impl::backpressure_active_ = false</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::transport::Serial::Impl::backpressure_active_ {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -821,7 +821,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> unilink::transport::Serial::Impl::bp_strategy_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a>}</td>
+          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> unilink::transport::Serial::Impl::bp_strategy_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6">base::constants::BackpressureStrategy::Reliable</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -990,14 +990,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0a38ff14e343716596a4684de39dddcb" name="a0a38ff14e343716596a4684de39dddcb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a38ff14e343716596a4684de39dddcb">&#9670;&#160;</a></span>queued_bytes_</h2>
+<a id="a2abe03468ac53c511d9d28084ae9fa2b" name="a2abe03468ac53c511d9d28084ae9fa2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2abe03468ac53c511d9d28084ae9fa2b">&#9670;&#160;</a></span>queued_bytes_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t unilink::transport::Serial::Impl::queued_bytes_ = 0</td>
+          <td class="memname">std::atomic&lt;size_t&gt; unilink::transport::Serial::Impl::queued_bytes_ {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1159,7 +1159,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

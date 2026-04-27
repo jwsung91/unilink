@@ -8,6 +8,8 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#a56b79a3a0e9a8b532e72609622627a67", null ],
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#ae96fdae45fd148c0f0dd7cc34d8d2b2f", null ],
     [ "auto_start", "classunilink_1_1wrapper_1_1TcpServer.html#a2d8c7983984c7816c6bba7bf91fee7bc", null ],
+    [ "backpressure_strategy", "classunilink_1_1wrapper_1_1TcpServer.html#a2e167784621f76de54d67834b1477721", null ],
+    [ "backpressure_threshold", "classunilink_1_1wrapper_1_1TcpServer.html#a59fea2993947bb6e974d650b646e3a9d", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1TcpServer.html#a54382f1c15ebb6509e04b413b03c37d7", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a164d2801bb8bf56c39a6a844163de117", null ],
@@ -16,6 +18,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "listening", "classunilink_1_1wrapper_1_1TcpServer.html#afa0b2e12980ba7756b6cff5c522ddc30", null ],
     [ "manage_external_context", "classunilink_1_1wrapper_1_1TcpServer.html#aac8c49a3601bed2f6aa06b4acaabec21", null ],
     [ "max_clients", "classunilink_1_1wrapper_1_1TcpServer.html#af0259a35d0b4084abef647654bd66a7b", null ],
+    [ "on_backpressure", "classunilink_1_1wrapper_1_1TcpServer.html#a84e135d351d98857b71bdd949e6aeb88", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1TcpServer.html#acd03a8d5e1a03b575eb9386114f9aa73", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1TcpServer.html#a30745a9e9f88247048edef18045f2e11", null ],
     [ "on_data_batch", "classunilink_1_1wrapper_1_1TcpServer.html#aae5d127ad60f2f456bb60f9609fe1f76", null ],
@@ -27,7 +30,10 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "operator=", "classunilink_1_1wrapper_1_1TcpServer.html#ac7f64a7b54be0ec30c23945b8dbc902b", null ],
     [ "port_retry", "classunilink_1_1wrapper_1_1TcpServer.html#ac7a82725f9cb67fc18c47b720374b923", null ],
     [ "send_to", "classunilink_1_1wrapper_1_1TcpServer.html#ab84c5a94e1beed98db9d1f4302b313cf", null ],
+    [ "send_to_blocking", "classunilink_1_1wrapper_1_1TcpServer.html#a9b87210894d1fec902db8011484b415d", null ],
     [ "start", "classunilink_1_1wrapper_1_1TcpServer.html#a1217e27e16fa0451b75300009aedf017", null ],
     [ "stop", "classunilink_1_1wrapper_1_1TcpServer.html#a41196195d706a2409f1bc3273e31d5be", null ],
+    [ "try_broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a8603d52e3c76f92af3aa0f1b934193f1", null ],
+    [ "try_send_to", "classunilink_1_1wrapper_1_1TcpServer.html#ac82530130ed20cee6514642feb30390c", null ],
     [ "unlimited_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a4f20f7b28dc851c8344d4ce37d5817e1", null ]
 ];

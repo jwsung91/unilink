@@ -158,6 +158,7 @@ $(document).ready(function(){initNavTree('classunilink_1_1builder_1_1BuilderInte
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classunilink_1_1builder_1_1BuilderInterface-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">unilink::builder::BuilderInterface&lt; T, Derived &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
@@ -180,7 +181,7 @@ $(document).ready(function(){initNavTree('classunilink_1_1builder_1_1BuilderInte
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface__coll__graph.svg" width="180" height="391"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface__coll__graph.svg" width="219" height="506"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -247,6 +248,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a48e1e77596222c1451477559e8a892a7"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a48e1e77596222c1451477559e8a892a7">on_message</a> (U *obj, F method)</td></tr>
 <tr class="memdesc:a48e1e77596222c1451477559e8a892a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback using member function pointer.  <br /></td></tr>
 <tr class="separator:a48e1e77596222c1451477559e8a892a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39ada28148664574168a69b0ba0fa4b8" id="r_a39ada28148664574168a69b0ba0fa4b8"><td class="memItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a39ada28148664574168a69b0ba0fa4b8">backpressure_strategy</a> (<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> strategy)</td></tr>
+<tr class="memdesc:a39ada28148664574168a69b0ba0fa4b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a39ada28148664574168a69b0ba0fa4b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a708ff496351336f1217357c27ca83d80" id="r_a708ff496351336f1217357c27ca83d80"><td class="memItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a708ff496351336f1217357c27ca83d80">backpressure_threshold</a> (size_t threshold)</td></tr>
+<tr class="memdesc:a708ff496351336f1217357c27ca83d80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the backpressure threshold in bytes.  <br /></td></tr>
+<tr class="separator:a708ff496351336f1217357c27ca83d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a41fb5b16a7db6690cc0a21a8be7b8362" id="r_a41fb5b16a7db6690cc0a21a8be7b8362"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a41fb5b16a7db6690cc0a21a8be7b8362">get_effective_backpressure_threshold</a> () const</td></tr>
+<tr class="separator:a41fb5b16a7db6690cc0a21a8be7b8362"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -262,6 +274,14 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ae6ed9d140b8e8b25d5707ea7eaea7202"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d93e221a88b4399e6141416f8065188" id="r_a3d93e221a88b4399e6141416f8065188"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3d93e221a88b4399e6141416f8065188">on_message_</a></td></tr>
 <tr class="separator:a3d93e221a88b4399e6141416f8065188"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7acdb0d17ff8dce34ad9b9af511d950" id="r_aa7acdb0d17ff8dce34ad9b9af511d950"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#aa7acdb0d17ff8dce34ad9b9af511d950">bp_strategy_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6">base::constants::BackpressureStrategy::Reliable</a>}</td></tr>
+<tr class="separator:aa7acdb0d17ff8dce34ad9b9af511d950"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeda8618fb292425b00ae67e84059d8bc" id="r_aeda8618fb292425b00ae67e84059d8bc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#aeda8618fb292425b00ae67e84059d8bc">bp_threshold_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>}</td></tr>
+<tr class="separator:aeda8618fb292425b00ae67e84059d8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c1fdd6462dc49967647bdabdb16732d" id="r_a2c1fdd6462dc49967647bdabdb16732d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2c1fdd6462dc49967647bdabdb16732d">bp_strategy_set_</a> {false}</td></tr>
+<tr class="separator:a2c1fdd6462dc49967647bdabdb16732d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b7021abaaabff38f06f93741663d15c" id="r_a5b7021abaaabff38f06f93741663d15c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a5b7021abaaabff38f06f93741663d15c">bp_threshold_set_</a> {false}</td></tr>
+<tr class="separator:a5b7021abaaabff38f06f93741663d15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, typename Derived&gt;<br />
@@ -275,7 +295,7 @@ class unilink::builder::BuilderInterface&lt; T, Derived &gt;</div><p>Generic Bui
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00045">45</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00046">46</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4c9007f791048f912597ccd39fa99a76" name="a4c9007f791048f912597ccd39fa99a76"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c9007f791048f912597ccd39fa99a76">&#9670;&#160;</a></span>~BuilderInterface()</h2>
@@ -427,6 +447,84 @@ template&lt;typename T , typename Derived &gt; </div>
 
 </div>
 </div>
+<a id="a39ada28148664574168a69b0ba0fa4b8" name="a39ada28148664574168a69b0ba0fa4b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39ada28148664574168a69b0ba0fa4b8">&#9670;&#160;</a></span>backpressure_strategy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Derived &amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::backpressure_strategy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td>
+          <td class="paramname"><em>strategy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the backpressure strategy. </p>
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00229">229</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_a39ada28148664574168a69b0ba0fa4b8_icgraph.svg" width="398" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a708ff496351336f1217357c27ca83d80" name="a708ff496351336f1217357c27ca83d80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a708ff496351336f1217357c27ca83d80">&#9670;&#160;</a></span>backpressure_threshold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Derived &amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::backpressure_threshold </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>threshold</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the backpressure threshold in bytes. </p>
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00238">238</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_a708ff496351336f1217357c27ca83d80_icgraph.svg" width="398" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a73e67bdf335bf8018e515e5a2e0c1834" name="a73e67bdf335bf8018e515e5a2e0c1834"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a73e67bdf335bf8018e515e5a2e0c1834">&#9670;&#160;</a></span>build()</h2>
 
@@ -494,14 +592,43 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00166">166</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00167">167</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_acd6f6559458503f2d7fd8c57d62985c4_icgraph.svg" width="396" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a id="a41fb5b16a7db6690cc0a21a8be7b8362" name="a41fb5b16a7db6690cc0a21a8be7b8362"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41fb5b16a7db6690cc0a21a8be7b8362">&#9670;&#160;</a></span>get_effective_backpressure_threshold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::get_effective_backpressure_threshold </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00245">245</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -540,12 +667,12 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00095">95</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00096">96</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_aef6afb1aad926719826706b41e137071_icgraph.svg" width="406" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -606,12 +733,12 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00109">109</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00110">110</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_a4ae548e70dac9cd226771312fc9d1911_cgraph.svg" width="406" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -652,12 +779,12 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00072">72</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00073">73</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_aaff548b4457e2c2682a14a0c9aa7d940_icgraph.svg" width="406" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -718,12 +845,12 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00086">86</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00087">87</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_a2e2fc91d234bf12ee8f61c4eb0b026c4_cgraph.svg" width="406" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -764,12 +891,12 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00118">118</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00119">119</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_add49f2443a402ee3004c40f090f8f56a_icgraph.svg" width="422" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -830,12 +957,12 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00132">132</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00133">133</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_a911ab45c5c221e7091eb0003877abced_cgraph.svg" width="422" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -876,12 +1003,12 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00141">141</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00142">142</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_ac0fd38617f00cc7fd8edb0d926b1cd1d_icgraph.svg" width="406" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -942,12 +1069,12 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00155">155</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00156">156</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_abd06bd3ecd853d72df1107baf291d537_cgraph.svg" width="406" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -988,12 +1115,12 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00207">207</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00208">208</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_af02e4e518d5654001d6db1a5f3aa2154_icgraph.svg" width="406" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1054,12 +1181,12 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00221">221</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
-<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00222">222</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div id="dynsection-14-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1builder_1_1BuilderInterface_a48e1e77596222c1451477559e8a892a7_cgraph.svg" width="406" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1174,7 +1301,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00178">178</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00179">179</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1231,11 +1358,115 @@ template&lt;typename T , typename Derived &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00194">194</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00195">195</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa7acdb0d17ff8dce34ad9b9af511d950" name="aa7acdb0d17ff8dce34ad9b9af511d950"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7acdb0d17ff8dce34ad9b9af511d950">&#9670;&#160;</a></span>bp_strategy_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::bp_strategy_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6">base::constants::BackpressureStrategy::Reliable</a>}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00262">262</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2c1fdd6462dc49967647bdabdb16732d" name="a2c1fdd6462dc49967647bdabdb16732d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c1fdd6462dc49967647bdabdb16732d">&#9670;&#160;</a></span>bp_strategy_set_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::bp_strategy_set_ {false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00264">264</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aeda8618fb292425b00ae67e84059d8bc" name="aeda8618fb292425b00ae67e84059d8bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeda8618fb292425b00ae67e84059d8bc">&#9670;&#160;</a></span>bp_threshold_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::bp_threshold_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00263">263</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a5b7021abaaabff38f06f93741663d15c" name="a5b7021abaaabff38f06f93741663d15c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b7021abaaabff38f06f93741663d15c">&#9670;&#160;</a></span>bp_threshold_set_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::bp_threshold_set_ {false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00265">265</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
 <a id="afbf08ebcd192d371f685b559b8815ff5" name="afbf08ebcd192d371f685b559b8815ff5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afbf08ebcd192d371f685b559b8815ff5">&#9670;&#160;</a></span>framer_factory_</h2>
 
@@ -1258,7 +1489,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00226">226</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00255">255</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1284,7 +1515,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00228">228</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00257">257</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1310,7 +1541,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00227">227</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00256">256</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1336,7 +1567,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00229">229</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00258">258</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1362,7 +1593,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00230">230</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00259">259</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1388,7 +1619,7 @@ template&lt;typename T , typename Derived &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00231">231</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00260">260</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -1401,7 +1632,7 @@ template&lt;typename T , typename Derived &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

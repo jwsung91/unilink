@@ -191,8 +191,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8ab8cedd92a78d5e9aa4f9aadbe736d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a8b8b9a961dffd4e71d5d64d570c8e2" id="r_a1a8b8b9a961dffd4e71d5d64d570c8e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a1a8b8b9a961dffd4e71d5d64d570c8e2">stop</a> ()</td></tr>
 <tr class="separator:a1a8b8b9a961dffd4e71d5d64d570c8e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eb42ea9060878e32eb41bc7c2f08b69" id="r_a5eb42ea9060878e32eb41bc7c2f08b69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a5eb42ea9060878e32eb41bc7c2f08b69">try_send</a> (std::string_view data)</td></tr>
+<tr class="separator:a5eb42ea9060878e32eb41bc7c2f08b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b1a1d14ad6ad4ca774a863c762f1ba7" id="r_a4b1a1d14ad6ad4ca774a863c762f1ba7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4b1a1d14ad6ad4ca774a863c762f1ba7">send</a> (std::string_view data)</td></tr>
 <tr class="separator:a4b1a1d14ad6ad4ca774a863c762f1ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0493b763eece9e74b68acee321943989" id="r_a0493b763eece9e74b68acee321943989"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a0493b763eece9e74b68acee321943989">send_line</a> (std::string_view line)</td></tr>
+<tr class="separator:a0493b763eece9e74b68acee321943989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17d731cf8904383d6c3a66defd9c22a7" id="r_a17d731cf8904383d6c3a66defd9c22a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a17d731cf8904383d6c3a66defd9c22a7">try_send_line</a> (std::string_view line)</td></tr>
+<tr class="separator:a17d731cf8904383d6c3a66defd9c22a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fa77e8b54dc650fa15e8d4f2bd9ba30" id="r_a7fa77e8b54dc650fa15e8d4f2bd9ba30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a7fa77e8b54dc650fa15e8d4f2bd9ba30">send_blocking</a> (std::string_view data)</td></tr>
+<tr class="separator:a7fa77e8b54dc650fa15e8d4f2bd9ba30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f09c93c99e924ba49d3881677732ee2" id="r_a5f09c93c99e924ba49d3881677732ee2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a5f09c93c99e924ba49d3881677732ee2">send_line_blocking</a> (std::string_view line)</td></tr>
+<tr class="separator:a5f09c93c99e924ba49d3881677732ee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e37027e6c5df69de3ac8637f6fbac1c" id="r_a6e37027e6c5df69de3ac8637f6fbac1c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a6e37027e6c5df69de3ac8637f6fbac1c">connected</a> () const</td></tr>
 <tr class="separator:a6e37027e6c5df69de3ac8637f6fbac1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71ca6976f08b07bfb8fdc6c17d84aae5" id="r_a71ca6976f08b07bfb8fdc6c17d84aae5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a71ca6976f08b07bfb8fdc6c17d84aae5">setup_internal_handlers</a> ()</td></tr>
@@ -210,6 +220,10 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:af815d60beae58de0eda44a67b105e4b2" id="r_af815d60beae58de0eda44a67b105e4b2"><td class="memItemLeft" align="right" valign="top">std::shared_mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af815d60beae58de0eda44a67b105e4b2">mutex_</a></td></tr>
 <tr class="separator:af815d60beae58de0eda44a67b105e4b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a287782cd630cf11e320f4be108c552c3" id="r_a287782cd630cf11e320f4be108c552c3"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a287782cd630cf11e320f4be108c552c3">bp_mutex_</a></td></tr>
+<tr class="separator:a287782cd630cf11e320f4be108c552c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9390b8a5474c35b6fe5a997225b4ccbe" id="r_a9390b8a5474c35b6fe5a997225b4ccbe"><td class="memItemLeft" align="right" valign="top">std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a9390b8a5474c35b6fe5a997225b4ccbe">bp_cv_</a></td></tr>
+<tr class="separator:a9390b8a5474c35b6fe5a997225b4ccbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca0a60cb12164a233457b830bc2d2fb5" id="r_aca0a60cb12164a233457b830bc2d2fb5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aca0a60cb12164a233457b830bc2d2fb5">host_</a></td></tr>
 <tr class="separator:aca0a60cb12164a233457b830bc2d2fb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac340a7423e8b0e2d4010066223195502" id="r_ac340a7423e8b0e2d4010066223195502"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ac340a7423e8b0e2d4010066223195502">port_</a></td></tr>
@@ -270,7 +284,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a2fc4a9ad141cca9a56fc1f2894c7f710"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a406674addb650fda8808d7635403656e" id="r_a406674addb650fda8808d7635403656e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a406674addb650fda8808d7635403656e">backpressure_threshold_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>}</td></tr>
 <tr class="separator:a406674addb650fda8808d7635403656e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b02295972ff655dac83ea6eaa42c262" id="r_a4b02295972ff655dac83ea6eaa42c262"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4b02295972ff655dac83ea6eaa42c262">backpressure_strategy_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a>}</td></tr>
+<tr class="memitem:a4b02295972ff655dac83ea6eaa42c262" id="r_a4b02295972ff655dac83ea6eaa42c262"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4b02295972ff655dac83ea6eaa42c262">backpressure_strategy_</a> {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6">base::constants::BackpressureStrategy::Reliable</a>}</td></tr>
 <tr class="separator:a4b02295972ff655dac83ea6eaa42c262"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -311,7 +325,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00081">81</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00083">83</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -355,7 +369,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00083">83</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00085">85</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -383,7 +397,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00091">91</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00093">93</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -417,7 +431,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00096">96</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00098">98</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -452,7 +466,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00353">353</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00379">379</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -479,7 +493,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00255">255</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00280">280</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -513,7 +527,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00113">113</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00115">115</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -548,7 +562,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00103">103</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00105">105</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -576,7 +590,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00385">385</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00411">411</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -604,7 +618,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00391">391</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00417">417</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -631,7 +645,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00140">140</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00142">142</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -666,14 +680,91 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00245">245</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00257">257</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a4b1a1d14ad6ad4ca774a863c762f1ba7_cgraph.svg" width="440" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+<a id="a7fa77e8b54dc650fa15e8d4f2bd9ba30" name="a7fa77e8b54dc650fa15e8d4f2bd9ba30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fa77e8b54dc650fa15e8d4f2bd9ba30">&#9670;&#160;</a></span>send_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpClient::Impl::send_blocking </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00269">269</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="a0493b763eece9e74b68acee321943989" name="a0493b763eece9e74b68acee321943989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0493b763eece9e74b68acee321943989">&#9670;&#160;</a></span>send_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpClient::Impl::send_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00262">262</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="a5f09c93c99e924ba49d3881677732ee2" name="a5f09c93c99e924ba49d3881677732ee2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f09c93c99e924ba49d3881677732ee2">&#9670;&#160;</a></span>send_line_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpClient::Impl::send_line_blocking </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00278">278</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -701,7 +792,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00379">379</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00405">405</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -728,19 +819,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00260">260</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00285">285</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a71ca6976f08b07bfb8fdc6c17d84aae5_cgraph.svg" width="648" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-7-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a71ca6976f08b07bfb8fdc6c17d84aae5_cgraph.svg" width="648" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a71ca6976f08b07bfb8fdc6c17d84aae5_icgraph.svg" width="476" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -769,12 +860,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00152">152</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
-<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00154">154</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a8ab8cedd92a78d5e9aa4f9aadbe736d3_cgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -803,14 +894,77 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00203">203</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00205">205</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a1a8b8b9a961dffd4e71d5d64d570c8e2_icgraph.svg" width="448" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a5eb42ea9060878e32eb41bc7c2f08b69" name="a5eb42ea9060878e32eb41bc7c2f08b69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eb42ea9060878e32eb41bc7c2f08b69">&#9670;&#160;</a></span>try_send()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpClient::Impl::try_send </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00248">248</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-10-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-10-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a1a8b8b9a961dffd4e71d5d64d570c8e2_icgraph.svg" width="448" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1TcpClient_1_1Impl_a5eb42ea9060878e32eb41bc7c2f08b69_cgraph.svg" width="440" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a id="a17d731cf8904383d6c3a66defd9c22a7" name="a17d731cf8904383d6c3a66defd9c22a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17d731cf8904383d6c3a66defd9c22a7">&#9670;&#160;</a></span>try_send_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpClient::Impl::try_send_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00267">267</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -827,7 +981,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00054">54</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00056">56</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -843,7 +997,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00074">74</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00076">76</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -854,12 +1008,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> unilink::wrapper::TcpClient::Impl::backpressure_strategy_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f">base::constants::BackpressureStrategy::KeepAll</a>}</td>
+          <td class="memname"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> unilink::wrapper::TcpClient::Impl::backpressure_strategy_ {<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6">base::constants::BackpressureStrategy::Reliable</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00079">79</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00081">81</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -875,7 +1029,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00078">78</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00080">80</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -891,7 +1045,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00070">70</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00072">72</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="a9390b8a5474c35b6fe5a997225b4ccbe" name="a9390b8a5474c35b6fe5a997225b4ccbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9390b8a5474c35b6fe5a997225b4ccbe">&#9670;&#160;</a></span>bp_cv_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::condition_variable unilink::wrapper::TcpClient::Impl::bp_cv_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00044">44</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -907,7 +1077,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00061">61</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00063">63</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="a287782cd630cf11e320f4be108c552c3" name="a287782cd630cf11e320f4be108c552c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a287782cd630cf11e320f4be108c552c3">&#9670;&#160;</a></span>bp_mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex unilink::wrapper::TcpClient::Impl::bp_mutex_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00043">43</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -923,7 +1109,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00045">45</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00047">47</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -939,7 +1125,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00058">58</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00060">60</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -955,7 +1141,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00077">77</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00079">79</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -971,7 +1157,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00057">57</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00059">59</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -987,7 +1173,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00068">68</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00070">70</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1003,7 +1189,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00056">56</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00058">58</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1205,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00059">59</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00061">61</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1035,7 +1221,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00060">60</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00062">62</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1051,7 +1237,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00046">46</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00048">48</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1067,7 +1253,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00049">49</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00051">51</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1083,7 +1269,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00065">65</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00067">67</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1099,7 +1285,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00043">43</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00045">45</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1301,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00048">48</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00050">50</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1131,7 +1317,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00072">72</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00074">74</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1147,7 +1333,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00071">71</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00073">73</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1349,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00076">76</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00078">78</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1179,7 +1365,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00063">63</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00065">65</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1195,7 +1381,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00069">69</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00071">71</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1211,7 +1397,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00062">62</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00064">64</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1251,7 +1437,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00052">52</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00054">54</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1267,7 +1453,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00044">44</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00046">46</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1283,7 +1469,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00075">75</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00077">77</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1299,7 +1485,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00053">53</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00055">55</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1315,7 +1501,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00047">47</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00049">49</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1331,7 +1517,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00050">50</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00052">52</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1344,7 +1530,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['keepall_0',['KeepAll',['../namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f',1,'unilink::base::constants']]],
-  ['keeplatest_1',['KeepLatest',['../namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa52d9feaeecbc94316bf7566c71717a63',1,'unilink::base::constants']]]
+  ['large_0',['LARGE',['../classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410da71726adf0ff60cd03eaf3c515883eeb8',1,'unilink::memory::MemoryPool']]],
+  ['level_1',['LEVEL',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html#a5285a6fcc65135444c2ad21c8d8719c1a9d69e2238f7d0e3bbf9b1cc6b2ec1506',1,'unilink::diagnostics::Logger::Impl::FormatPart']]],
+  ['listening_2',['Listening',['../namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8',1,'unilink::base']]],
+  ['literal_3',['LITERAL',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html#a5285a6fcc65135444c2ad21c8d8719c1a102f7bf9dd9ab9d47ec127bd316714b6',1,'unilink::diagnostics::Logger::Impl::FormatPart']]]
 ];

@@ -11,6 +11,6 @@ var searchData=
   ['4_20singleton_20pattern_8',['4. Singleton Pattern',['../index.html#autotoc_md117',1,'']]],
   ['4_3a_20build_20with_20custom_20boost_20location_9',['Example 4: Build with Custom Boost Location',['../contrib_build.html#autotoc_md288',1,'']]],
   ['4_3a_20git_20submodule_20integration_10',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md579',1,'']]],
-  ['4_3a_20run_20both_20programs_11',['Step 4: Run Both Programs',['../tutorial_05.html#autotoc_md830',1,'']]],
-  ['4_3a_20test_20with_20a_20second_20terminal_12',['Step 4: Test With A Second Terminal',['../tutorial_04.html#autotoc_md813',1,'']]]
+  ['4_3a_20run_20both_20programs_11',['Step 4: Run Both Programs',['../tutorial_05.html#autotoc_md835',1,'']]],
+  ['4_3a_20test_20with_20a_20second_20terminal_12',['Step 4: Test With A Second Terminal',['../tutorial_04.html#autotoc_md818',1,'']]]
 ];

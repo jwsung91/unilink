@@ -220,14 +220,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a483612d5e20fe53227ca5ecd6cce7334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f15a635639f84ebda0fe1c8082f6cf" id="r_a31f15a635639f84ebda0fe1c8082f6cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a31f15a635639f84ebda0fe1c8082f6cf">is_connected</a> () const override</td></tr>
 <tr class="separator:a31f15a635639f84ebda0fe1c8082f6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d3fc7204935c58eac2170569cd7c06b" id="r_a6d3fc7204935c58eac2170569cd7c06b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a6d3fc7204935c58eac2170569cd7c06b">is_backpressure_active</a> () const override</td></tr>
+<tr class="separator:a6d3fc7204935c58eac2170569cd7c06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ca15f407b77b829f0b4f1cc940a80e3" id="r_a1ca15f407b77b829f0b4f1cc940a80e3"><td class="memItemLeft" align="right" valign="top">boost::asio::any_io_executor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a1ca15f407b77b829f0b4f1cc940a80e3">get_executor</a> () override</td></tr>
 <tr class="separator:a1ca15f407b77b829f0b4f1cc940a80e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c2b6c07b63911273deb53e4f3a863b3" id="r_a9c2b6c07b63911273deb53e4f3a863b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a9c2b6c07b63911273deb53e4f3a863b3">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data) override</td></tr>
-<tr class="separator:a9c2b6c07b63911273deb53e4f3a863b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0121ea0f97534722feb3ebe191c70438" id="r_a0121ea0f97534722feb3ebe191c70438"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a0121ea0f97534722feb3ebe191c70438">async_write_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
-<tr class="separator:a0121ea0f97534722feb3ebe191c70438"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7149f26ed27adf289cf4ff1485fa5084" id="r_a7149f26ed27adf289cf4ff1485fa5084"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a7149f26ed27adf289cf4ff1485fa5084">async_write_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data) override</td></tr>
-<tr class="separator:a7149f26ed27adf289cf4ff1485fa5084"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22e6951d3b4532e0f4d211aa379bc87b" id="r_a22e6951d3b4532e0f4d211aa379bc87b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a22e6951d3b4532e0f4d211aa379bc87b">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data) override</td></tr>
+<tr class="separator:a22e6951d3b4532e0f4d211aa379bc87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0214084557445e842eabf6205e020399" id="r_a0214084557445e842eabf6205e020399"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a0214084557445e842eabf6205e020399">async_write_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
+<tr class="separator:a0214084557445e842eabf6205e020399"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29dff7fb608aa51d1e358938410bb282" id="r_a29dff7fb608aa51d1e358938410bb282"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a29dff7fb608aa51d1e358938410bb282">async_write_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data) override</td></tr>
+<tr class="separator:a29dff7fb608aa51d1e358938410bb282"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d6266cd525005baddcbb2f3a68d1394" id="r_a3d6266cd525005baddcbb2f3a68d1394"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a3d6266cd525005baddcbb2f3a68d1394">on_bytes</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb) override</td></tr>
 <tr class="separator:a3d6266cd525005baddcbb2f3a68d1394"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a168bae909f2e4703f65233c09529a231" id="r_a168bae909f2e4703f65233c09529a231"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a168bae909f2e4703f65233c09529a231">on_state</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb) override</td></tr>
@@ -356,8 +358,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9c2b6c07b63911273deb53e4f3a863b3" name="a9c2b6c07b63911273deb53e4f3a863b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c2b6c07b63911273deb53e4f3a863b3">&#9670;&#160;</a></span>async_write_copy()</h2>
+<a id="a22e6951d3b4532e0f4d211aa379bc87b" name="a22e6951d3b4532e0f4d211aa379bc87b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22e6951d3b4532e0f4d211aa379bc87b">&#9670;&#160;</a></span>async_write_copy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,7 +368,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void unilink::transport::UdsClient::async_write_copy </td>
+          <td class="memname">bool unilink::transport::UdsClient::async_write_copy </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
@@ -380,21 +382,21 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a02927701793911d1942102248864d614">unilink::interface::Channel</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ab3de15afcb45050fb83de877c79972b1">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00246">246</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00247">247</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-3-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsClient_a9c2b6c07b63911273deb53e4f3a863b3_cgraph.svg" width="506" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsClient_a22e6951d3b4532e0f4d211aa379bc87b_cgraph.svg" width="506" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
-<a id="a0121ea0f97534722feb3ebe191c70438" name="a0121ea0f97534722feb3ebe191c70438"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0121ea0f97534722feb3ebe191c70438">&#9670;&#160;</a></span>async_write_move()</h2>
+<a id="a0214084557445e842eabf6205e020399" name="a0214084557445e842eabf6205e020399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0214084557445e842eabf6205e020399">&#9670;&#160;</a></span>async_write_move()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -403,7 +405,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void unilink::transport::UdsClient::async_write_move </td>
+          <td class="memname">bool unilink::transport::UdsClient::async_write_move </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
@@ -417,14 +419,14 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268">unilink::interface::Channel</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#af124759dbd38cbba8abba3a3e4534b0d">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00251">251</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00253">253</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
-<a id="a7149f26ed27adf289cf4ff1485fa5084" name="a7149f26ed27adf289cf4ff1485fa5084"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7149f26ed27adf289cf4ff1485fa5084">&#9670;&#160;</a></span>async_write_shared()</h2>
+<a id="a29dff7fb608aa51d1e358938410bb282" name="a29dff7fb608aa51d1e358938410bb282"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29dff7fb608aa51d1e358938410bb282">&#9670;&#160;</a></span>async_write_shared()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -433,7 +435,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void unilink::transport::UdsClient::async_write_shared </td>
+          <td class="memname">bool unilink::transport::UdsClient::async_write_shared </td>
           <td>(</td>
           <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
@@ -447,9 +449,9 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ae737f9ed052f3020eb840ab0b4630875">unilink::interface::Channel</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a3975916969f2a3ef00fc93e9eb757d5c">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00270">270</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00274">274</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -588,7 +590,36 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#adea8af03e8270024c653495735812ed2">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00244">244</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00245">245</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="a6d3fc7204935c58eac2170569cd7c06b" name="a6d3fc7204935c58eac2170569cd7c06b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d3fc7204935c58eac2170569cd7c06b">&#9670;&#160;</a></span>is_backpressure_active()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::transport::UdsClient::is_backpressure_active </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#afba4c1a1e1308940584ad651283088bf">unilink::interface::Channel</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00243">243</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -636,7 +667,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00314">314</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00320">320</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -666,7 +697,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a4b311bb483fedf3c5ae93508e4e54d8b">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00297">297</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00303">303</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -696,7 +727,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00287">287</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00293">293</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -726,7 +757,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#aa4462e2992427c466d6e12fa492e1b80">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00292">292</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00298">298</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -798,7 +829,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00302">302</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00308">308</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -818,7 +849,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00308">308</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00314">314</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -838,7 +869,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00306">306</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__client_8cc_source.html#l00312">312</a> of file <a class="el" href="transport_2uds_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
 
 </div>
 </div>
@@ -917,7 +948,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

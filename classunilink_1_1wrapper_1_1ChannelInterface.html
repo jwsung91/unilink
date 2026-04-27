@@ -209,11 +209,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2110813c183960be6a743c1fa5477dfa" id="r_a2110813c183960be6a743c1fa5477dfa"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">connected</a> () const =0</td></tr>
 <tr class="separator:a2110813c183960be6a743c1fa5477dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea0f1a7ed2e31e0dad1680a996687b48" id="r_aea0f1a7ed2e31e0dad1680a996687b48"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">send</a> (std::string_view data)=0</td></tr>
-<tr class="memdesc:aea0f1a7ed2e31e0dad1680a996687b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue data for transmission.  <br /></td></tr>
+<tr class="memdesc:aea0f1a7ed2e31e0dad1680a996687b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue data for transmission, honouring the backpressure strategy.  <br /></td></tr>
 <tr class="separator:aea0f1a7ed2e31e0dad1680a996687b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4d2c671707e6c3c4bc7080aaaa74590" id="r_af4d2c671707e6c3c4bc7080aaaa74590"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">send_line</a> (std::string_view line)=0</td></tr>
-<tr class="memdesc:af4d2c671707e6c3c4bc7080aaaa74590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a line (data + "\n") for transmission.  <br /></td></tr>
+<tr class="memdesc:af4d2c671707e6c3c4bc7080aaaa74590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a line (data + "\n") for transmission, honouring the backpressure strategy.  <br /></td></tr>
 <tr class="separator:af4d2c671707e6c3c4bc7080aaaa74590"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86c5b4222bc621a8dd0ec8e7a2ca9226" id="r_a86c5b4222bc621a8dd0ec8e7a2ca9226"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86c5b4222bc621a8dd0ec8e7a2ca9226">send_blocking</a> (std::string_view data)=0</td></tr>
+<tr class="memdesc:a86c5b4222bc621a8dd0ec8e7a2ca9226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block the calling thread until queue pressure is relieved, then enqueue.  <br /></td></tr>
+<tr class="separator:a86c5b4222bc621a8dd0ec8e7a2ca9226"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5851fe0dbc0eea11e5ee94d6f3e72d2" id="r_aa5851fe0dbc0eea11e5ee94d6f3e72d2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aa5851fe0dbc0eea11e5ee94d6f3e72d2">send_line_blocking</a> (std::string_view line)=0</td></tr>
+<tr class="memdesc:aa5851fe0dbc0eea11e5ee94d6f3e72d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocking variant of <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590" title="Enqueue a line (data + &quot;\n&quot;) for transmission, honouring the backpressure strategy.">send_line()</a>. Always blocks regardless of strategy.  <br /></td></tr>
+<tr class="separator:aa5851fe0dbc0eea11e5ee94d6f3e72d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b2212d41ed3f4ec66f7e783e607c22f" id="r_a6b2212d41ed3f4ec66f7e783e607c22f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6b2212d41ed3f4ec66f7e783e607c22f">try_send</a> (std::string_view data)=0</td></tr>
+<tr class="memdesc:a6b2212d41ed3f4ec66f7e783e607c22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:a6b2212d41ed3f4ec66f7e783e607c22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad85f6064ab3b5f575bbaa3c87dc1c102" id="r_ad85f6064ab3b5f575bbaa3c87dc1c102"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad85f6064ab3b5f575bbaa3c87dc1c102">try_send_line</a> (std::string_view line)=0</td></tr>
+<tr class="memdesc:ad85f6064ab3b5f575bbaa3c87dc1c102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:ad85f6064ab3b5f575bbaa3c87dc1c102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a224eb09b48d5949b4703453c1d962e62" id="r_a224eb09b48d5949b4703453c1d962e62"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a224eb09b48d5949b4703453c1d962e62">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler)=0</td></tr>
 <tr class="separator:a224eb09b48d5949b4703453c1d962e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a203b730e7939654f6f5a13c3211dbd32" id="r_a203b730e7939654f6f5a13c3211dbd32"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a203b730e7939654f6f5a13c3211dbd32">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler)=0</td></tr>
@@ -459,9 +471,9 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a68dff33182be92b857170fcaf737afec">unilink::wrapper::TcpClient</a>.</p>
+<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a4693fa73b908e37913006b1510e75d57">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a68dff33182be92b857170fcaf737afec">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a273f5f125ec3c6a5a9f41ba75ef22f8b">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a404832b269719188046010e3c84f7c8a">unilink::wrapper::UdsClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00094">94</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00144">144</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -697,13 +709,47 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Enqueue data for transmission. </p>
+<p>Enqueue data for transmission, honouring the backpressure strategy. </p>
+<p>BestEffort: non-blocking, drops if the send queue is full. Reliable: blocks until queue pressure is relieved, then enqueues.</p>
 <dl class="section return"><dt>Returns</dt><dd>true Data was accepted into the send queue. </dd>
 <dd>
-false Data was dropped — channel not connected or backpressure limit reached.</dd></dl>
-<p>The call is non-blocking. Delivery is not guaranteed even when true is returned; network errors are reported via <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">on_error()</a>. </p>
+false Data was dropped (not connected, or BestEffort queue full). </dd></dl>
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a6b120ec3e9e98e9c57c789607f1649bb">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#abfd2fff029f6c241cd0b39b75ce92e43">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#ac7cb513ae60cf2683582feb75c64e5b3">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a41955159bb466a19e19920e5e9ae2650">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
+<a id="a86c5b4222bc621a8dd0ec8e7a2ca9226" name="a86c5b4222bc621a8dd0ec8e7a2ca9226"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86c5b4222bc621a8dd0ec8e7a2ca9226">&#9670;&#160;</a></span>send_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::send_blocking </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Block the calling thread until queue pressure is relieved, then enqueue. </p>
+<p>Ignores the configured strategy — always blocks. Prefer <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48" title="Enqueue data for transmission, honouring the backpressure strategy.">send()</a> unless you need to override BestEffort behaviour for a specific call.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Channel stopped while waiting. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a470a799440850ff5a9cf5b2c09747783">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa49c266eddd7e04b73d2900a5e4e3190">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a36d93116993af6f41498adb999298c55">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a16051f191494afecb289d407df70b86c">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -731,12 +777,45 @@ false Data was dropped — channel not connected or backpressure limit reached.<
 </table>
 </div><div class="memdoc">
 
-<p>Enqueue a line (data + "\n") for transmission. </p>
-<dl class="section return"><dt>Returns</dt><dd>true Data was accepted into the send queue. </dd>
+<p>Enqueue a line (data + "\n") for transmission, honouring the backpressure strategy. </p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
 <dd>
-false Data was dropped — channel not connected or backpressure limit reached. </dd></dl>
+false Data was dropped. </dd></dl>
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a492c829f734bbff5baf617b4a32806a1">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a5ad98b80dd4370157ade6a2dd4c39a79">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a926ac38e4174653fda3d00a504cac4c1">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a2f4b0a463087c84d0600d3e1966edc5a">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
+<a id="aa5851fe0dbc0eea11e5ee94d6f3e72d2" name="aa5851fe0dbc0eea11e5ee94d6f3e72d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5851fe0dbc0eea11e5ee94d6f3e72d2">&#9670;&#160;</a></span>send_line_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::send_line_blocking </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Blocking variant of <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590" title="Enqueue a line (data + &quot;\n&quot;) for transmission, honouring the backpressure strategy.">send_line()</a>. Always blocks regardless of strategy. </p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Channel stopped while waiting. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a9c82bd5db4d04c95eb730705237a8cf6">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a1f42c394f70ff1792aa090186c11f1aa">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#abe7052cb9b8ab3834b82aacc817542e7">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a2b232bfea432f1d987a580470a9dbdab">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -826,6 +905,73 @@ false Data was dropped — channel not connected or backpressure limit reached. 
 
 </div>
 </div>
+<a id="a6b2212d41ed3f4ec66f7e783e607c22f" name="a6b2212d41ed3f4ec66f7e783e607c22f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b2212d41ed3f4ec66f7e783e607c22f">&#9670;&#160;</a></span>try_send()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::try_send </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking send that always drops on a full queue, ignoring strategy. </p>
+<p>Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Dropped (not connected or queue full). </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a2faf8cbc432c98939b50580fb5c970bf">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ac2bc6fba6fa12519e4c08fe13fb07e50">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a34ae992b5705c5b3adfb147baa10820d">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ad12bbabbdbd68695c040d337a8cc89a3">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
+<a id="ad85f6064ab3b5f575bbaa3c87dc1c102" name="ad85f6064ab3b5f575bbaa3c87dc1c102"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad85f6064ab3b5f575bbaa3c87dc1c102">&#9670;&#160;</a></span>try_send_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::try_send_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking send_line that always drops on a full queue, ignoring strategy. </p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Dropped. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#af0f88a7d2ad73cb9d761b33052644200">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aba41859051f3f0094b899382f1debf88">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a7d722cdd17b55bf28d1d8519b821c0a9">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ab8ce1f88f3b7a8613f82990568f4abb1">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>unilink/wrapper/<a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a></li>
 </ul>
@@ -835,7 +981,7 @@ false Data was dropped — channel not connected or backpressure limit reached. 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

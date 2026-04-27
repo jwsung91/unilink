@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🛠️_20advanced_20features_0',['🛠️ Advanced Features',['../user_python_bindings.html#autotoc_md620',1,'']]]
+  ['🛠️_20advanced_20features_0',['🛠️ Advanced Features',['../user_python_bindings.html#autotoc_md624',1,'']]]
 ];

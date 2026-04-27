@@ -184,7 +184,7 @@ Runtime Optimization</h1>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Creates dedicated thread</span></div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00042">tcp_client_builder.cc:42</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aca771ac62af9bf986f5ab31c04c8e2be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aca771ac62af9bf986f5ab31c04c8e2be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00097">tcp_client_builder.cc:97</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md590"></a>
 2. Async Logging</h2>
@@ -257,13 +257,60 @@ Network Optimization</h1>
 3. Socket Tuning</h2>
 <p>For extremely high throughput, tune OS-level socket buffers: </p><div class="fragment"><div class="line">sudo sysctl -w net.core.rmem_max=16777216  # 16 MB</div>
 <div class="line">sudo sysctl -w net.core.wmem_max=16777216  # 16 MB</div>
+</div><!-- fragment --><hr  />
+<h1><a class="anchor" id="backpressure-management"></a>
+Backpressure Management</h1>
+<p>When the data generation rate exceeds the network's transmission capacity, Unilink's internal send queues grow. Managing this "backpressure" is critical for stability and latency.</p>
+<h2><a class="anchor" id="autotoc_md602"></a>
+1. Choosing a Strategy</h2>
+<p>Unilink provides two strategies for handling full queues:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Strategy   </th><th class="markdownTableHeadLeft">Behavior   </th><th class="markdownTableHeadLeft">Best For    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><code>Reliable</code> (Default)   </td><td class="markdownTableBodyLeft">Retains all data until a hard limit (64MB) is reached.   </td><td class="markdownTableBodyLeft">Reliable data (files, logs, commands).    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"><code>BestEffort</code>   </td><td class="markdownTableBodyLeft">Drops oldest data when a threshold is reached.   </td><td class="markdownTableBodyLeft">Real-time sensors (LiDAR, Video, Telemetry).   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md603"></a>
+2. High-Throughput Sensors (LiDAR/Camera)</h2>
+<p>For robotics perception, processing stale data is often worse than skipping frames. Use <code>BestEffort</code> with a low threshold to prevent <b>Bufferbloat</b>.</p>
+<div class="fragment"><div class="line"><span class="comment">// 🤖 Best configuration for robotics sensors</span></div>
+<div class="line"><span class="keyword">auto</span> lidar = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;192.168.1.10&quot;</span>, 2368)</div>
+<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#a39ada28148664574168a69b0ba0fa4b8">backpressure_strategy</a>(<a class="code hl_enumvalue" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230">unilink::base::constants::BackpressureStrategy::BestEffort</a>)</div>
+<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#a708ff496351336f1217357c27ca83d80">backpressure_threshold</a>(1024 * 512)  <span class="comment">// 0.5 MB threshold</span></div>
+<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// In Python</span></div>
+<div class="line">client.backpressure_strategy = <a class="code hl_namespace" href="namespaceunilink.html">unilink</a>.BackpressureStrategy.BestEffort</div>
+<div class="line">client.backpressure_threshold = 1024 * 512</div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a39ada28148664574168a69b0ba0fa4b8"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a39ada28148664574168a69b0ba0fa4b8">unilink::builder::BuilderInterface::backpressure_strategy</a></div><div class="ttdeci">Derived &amp; backpressure_strategy(base::constants::BackpressureStrategy strategy)</div><div class="ttdoc">Set the backpressure strategy.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00229">ibuilder.hpp:229</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a708ff496351336f1217357c27ca83d80"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a708ff496351336f1217357c27ca83d80">unilink::builder::BuilderInterface::backpressure_threshold</a></div><div class="ttdeci">Derived &amp; backpressure_threshold(size_t threshold)</div><div class="ttdoc">Set the backpressure threshold in bytes.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00238">ibuilder.hpp:238</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_1_1constants_html_af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230"><div class="ttname"><a href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230">unilink::base::constants::BackpressureStrategy::BestEffort</a></div><div class="ttdeci">@ BestEffort</div></div>
+<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
+</div><!-- fragment --><p><b>Benchmarking Insights:</b></p><ul>
+<li>In Python, using <code>BestEffort</code> without Flow Control can increase throughput by <b>up to 3x</b> (e.g., 133 MB/s → 414 MB/s) by preventing GIL contention caused by blocked sender threads.</li>
+<li>Aggressive flushing during network disconnects ensures that once reconnection occurs, the receiver instantly gets the <b>most recent frame</b> instead of waiting for a multi-gigabyte backlog to drain.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md604"></a>
+3. Critical Reliable Data</h2>
+<p>For data that must not be lost, use <code>Reliable</code> combined with <b>Flow Control</b> in your application.</p>
+<div class="fragment"><div class="line"><span class="keywordtype">bool</span> paused = <span class="keyword">false</span>;</div>
+<div class="line">client-&gt;on_backpressure([&amp;paused](<span class="keywordtype">size_t</span> queued) {</div>
+<div class="line">    <span class="comment">// If queue exceeds 12MB, pause sending; resume when below 4MB</span></div>
+<div class="line">    <span class="keywordflow">if</span> (queued &gt; 12 * 1024 * 1024) paused = <span class="keyword">true</span>;</div>
+<div class="line">    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (queued &lt; 4 * 1024 * 1024) paused = <span class="keyword">false</span>;</div>
+<div class="line">});</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// In your sender loop</span></div>
+<div class="line"><span class="keywordflow">if</span> (!paused) client-&gt;send(critical_data);</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

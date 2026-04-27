@@ -12,6 +12,7 @@ var classunilink_1_1wrapper_1_1ServerInterface =
     [ "connected_clients", "classunilink_1_1wrapper_1_1ServerInterface.html#a2d52f8bfad723402c2b99472e8715fba", null ],
     [ "framer", "classunilink_1_1wrapper_1_1ServerInterface.html#ac2151283a784a61cd2b2b0aaf8b110ae", null ],
     [ "listening", "classunilink_1_1wrapper_1_1ServerInterface.html#a328c04f53504a865d95d1712928140cd", null ],
+    [ "on_backpressure", "classunilink_1_1wrapper_1_1ServerInterface.html#a8f7a03bdf134b43899712b1d57cb7de4", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1ServerInterface.html#af6f5d7163923cf82721385246b448a69", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1ServerInterface.html#a39eb8c72d637c8eee7dd7c0e94b6b7c6", null ],
     [ "on_data_batch", "classunilink_1_1wrapper_1_1ServerInterface.html#a637fa1fc50c1777ef53e69204da6f72d", null ],
@@ -20,7 +21,10 @@ var classunilink_1_1wrapper_1_1ServerInterface =
     [ "on_message", "classunilink_1_1wrapper_1_1ServerInterface.html#ad24bc099659445bb75e62d1809c063b9", null ],
     [ "on_message_batch", "classunilink_1_1wrapper_1_1ServerInterface.html#a275d1e986bc367c0082bb9db3971c43b", null ],
     [ "send_to", "classunilink_1_1wrapper_1_1ServerInterface.html#a20b16e1e57ab82297d6d443a24adf0e1", null ],
+    [ "send_to_blocking", "classunilink_1_1wrapper_1_1ServerInterface.html#afd1d972d7e2c7801e4d314850ec2f6d0", null ],
     [ "start", "classunilink_1_1wrapper_1_1ServerInterface.html#a823ccba7490a070689c366a09ed10b1a", null ],
     [ "start_sync", "classunilink_1_1wrapper_1_1ServerInterface.html#a52ac712bb695a3dbb52c063cbb4b153a", null ],
-    [ "stop", "classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0", null ]
+    [ "stop", "classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0", null ],
+    [ "try_broadcast", "classunilink_1_1wrapper_1_1ServerInterface.html#a8e1c4ef868a94d39992e114c0b7725c8", null ],
+    [ "try_send_to", "classunilink_1_1wrapper_1_1ServerInterface.html#a1f5795e294b646631c4233465aef16f3", null ]
 ];

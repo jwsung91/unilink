@@ -1,8 +1,8 @@
 var constants_8hpp =
 [
     [ "BackpressureStrategy", "constants_8hpp.html#af1e6ca56552bcb7c548ec6091a4d2e0a", [
-      [ "KeepAll", "constants_8hpp.html#af1e6ca56552bcb7c548ec6091a4d2e0aa98e4e92f8ed10755a2fde1531cf6593f", null ],
-      [ "KeepLatest", "constants_8hpp.html#af1e6ca56552bcb7c548ec6091a4d2e0aa52d9feaeecbc94316bf7566c71717a63", null ]
+      [ "Reliable", "constants_8hpp.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6", null ],
+      [ "BestEffort", "constants_8hpp.html#af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230", null ]
     ] ],
     [ "DEFAULT_BACKPRESSURE_THRESHOLD", "constants_8hpp.html#ad0b2e8b4c7cc4815320c993081ed7c81", null ],
     [ "DEFAULT_BUFFER_SIZE", "constants_8hpp.html#a4a4ffa14c446f51d9b713a5d7715e191", null ],

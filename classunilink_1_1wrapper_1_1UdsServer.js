@@ -8,6 +8,8 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html#ad1e8847c725ead1454a8f1398206f88f", null ],
     [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html#a27acfc3b43e56d82c351f01818dbc879", null ],
     [ "auto_start", "classunilink_1_1wrapper_1_1UdsServer.html#a555d7306f5283a1d798179a7341e6897", null ],
+    [ "backpressure_strategy", "classunilink_1_1wrapper_1_1UdsServer.html#ade8129e1be329a00c6eb957e382035d6", null ],
+    [ "backpressure_threshold", "classunilink_1_1wrapper_1_1UdsServer.html#ae33d0fa65793d73359e4ca41befc4637", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1UdsServer.html#a43983c237bfa6949654c1248c75e8dfe", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1UdsServer.html#aef6a244b6ff21ab3e46912208ef08110", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1UdsServer.html#a22d78e227c2705fba874d64c71952346", null ],
@@ -16,6 +18,7 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "listening", "classunilink_1_1wrapper_1_1UdsServer.html#a5b74c341da06fd117476e50494961150", null ],
     [ "manage_external_context", "classunilink_1_1wrapper_1_1UdsServer.html#afae65f61fb6149ef45d3aa89680fe3ac", null ],
     [ "max_clients", "classunilink_1_1wrapper_1_1UdsServer.html#a259fcef47817a8ffabf9b56e07ea60d9", null ],
+    [ "on_backpressure", "classunilink_1_1wrapper_1_1UdsServer.html#af4ede548501f8b368d18ad4e22a71194", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1UdsServer.html#a946b8ac8139ccb590df48c743c89465f", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1UdsServer.html#a79ce10d7ee5799078bda65121a08900f", null ],
     [ "on_data_batch", "classunilink_1_1wrapper_1_1UdsServer.html#ad4f8ddf8b8ae7f4a988ad75baed45c83", null ],
@@ -26,7 +29,10 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "operator=", "classunilink_1_1wrapper_1_1UdsServer.html#a4ac8ee54c5b3bc1419cc06517bb0df1f", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1UdsServer.html#a52976edcdfc27a9508716f5dba220cb8", null ],
     [ "send_to", "classunilink_1_1wrapper_1_1UdsServer.html#ab85d87986b379c902088c7e1e2211c58", null ],
+    [ "send_to_blocking", "classunilink_1_1wrapper_1_1UdsServer.html#aa3a999cf7c6d326a504527e2cc1374df", null ],
     [ "start", "classunilink_1_1wrapper_1_1UdsServer.html#a26de1dce570cdd96462c4b2f8b5286f0", null ],
     [ "stop", "classunilink_1_1wrapper_1_1UdsServer.html#a1fcc0e0aae5f7084accba6516967087e", null ],
+    [ "try_broadcast", "classunilink_1_1wrapper_1_1UdsServer.html#ac56c6ce2b2d399ca2cc20c8ebf2dc15b", null ],
+    [ "try_send_to", "classunilink_1_1wrapper_1_1UdsServer.html#a4f98b1490a20cf84dfcdee76e5efad57", null ],
     [ "unlimited_clients", "classunilink_1_1wrapper_1_1UdsServer.html#a202988355158595022c3a6a30f95ca89", null ]
 ];

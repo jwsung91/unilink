@@ -203,6 +203,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aef2d453ea13990a3b0bdcd088dd64c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c04eb9b7152bb067e1bb5996a9ddd9d" id="r_a9c04eb9b7152bb067e1bb5996a9ddd9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9c04eb9b7152bb067e1bb5996a9ddd9d">stop</a> ()</td></tr>
 <tr class="separator:a9c04eb9b7152bb067e1bb5996a9ddd9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a933b6ec1aa008bd81988bb03aa47961e" id="r_a933b6ec1aa008bd81988bb03aa47961e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a933b6ec1aa008bd81988bb03aa47961e">send_to</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data)</td></tr>
+<tr class="separator:a933b6ec1aa008bd81988bb03aa47961e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac53493b215fe426a68af23ae3844e8ed" id="r_ac53493b215fe426a68af23ae3844e8ed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ac53493b215fe426a68af23ae3844e8ed">try_broadcast</a> (std::string_view data)</td></tr>
+<tr class="separator:ac53493b215fe426a68af23ae3844e8ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a290b90e2b5d2bccd086d2b8df7a583ee" id="r_a290b90e2b5d2bccd086d2b8df7a583ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a290b90e2b5d2bccd086d2b8df7a583ee">broadcast</a> (std::string_view data)</td></tr>
+<tr class="separator:a290b90e2b5d2bccd086d2b8df7a583ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a089d32085e7d24b56701bb0657b537f7" id="r_a089d32085e7d24b56701bb0657b537f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a089d32085e7d24b56701bb0657b537f7">send_to_blocking</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data)</td></tr>
+<tr class="separator:a089d32085e7d24b56701bb0657b537f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a335e5b62d1284029ec86007e01dec975" id="r_a335e5b62d1284029ec86007e01dec975"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a335e5b62d1284029ec86007e01dec975">try_send_to</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data)</td></tr>
+<tr class="separator:a335e5b62d1284029ec86007e01dec975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -222,6 +232,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:affec1e108de03a3e7785e6db14789bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a637a2659d5fb199aa060f49c65964e05" id="r_a637a2659d5fb199aa060f49c65964e05"><td class="memItemLeft" align="right" valign="top">std::shared_mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a637a2659d5fb199aa060f49c65964e05">mutex</a></td></tr>
 <tr class="separator:a637a2659d5fb199aa060f49c65964e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae31124571a596cd2dcf365ae49ed44b6" id="r_ae31124571a596cd2dcf365ae49ed44b6"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ae31124571a596cd2dcf365ae49ed44b6">bp_mutex_</a></td></tr>
+<tr class="separator:ae31124571a596cd2dcf365ae49ed44b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61441281df6bf42c4f60299fb6e812d5" id="r_a61441281df6bf42c4f60299fb6e812d5"><td class="memItemLeft" align="right" valign="top">std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a61441281df6bf42c4f60299fb6e812d5">bp_cv_</a></td></tr>
+<tr class="separator:a61441281df6bf42c4f60299fb6e812d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0478f64d6806dbe8decdacec4aa0bbf" id="r_ab0478f64d6806dbe8decdacec4aa0bbf"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::promise&lt; bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ab0478f64d6806dbe8decdacec4aa0bbf">pending_promises</a></td></tr>
 <tr class="separator:ab0478f64d6806dbe8decdacec4aa0bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0929b3d39e47808bdefd9d0dbec35d03" id="r_a0929b3d39e47808bdefd9d0dbec35d03"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0929b3d39e47808bdefd9d0dbec35d03">started</a> {false}</td></tr>
@@ -250,6 +264,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af4ac5ab8c08181c1e2e5b6e9f77e8ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a427a3f7cbd39df7c0425390bb5783dbf" id="r_a427a3f7cbd39df7c0425390bb5783dbf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a427a3f7cbd39df7c0425390bb5783dbf">on_error</a> {nullptr}</td></tr>
 <tr class="separator:a427a3f7cbd39df7c0425390bb5783dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a382a7a18559b6868d3ce76ce0bbfc067" id="r_a382a7a18559b6868d3ce76ce0bbfc067"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(size_t)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a382a7a18559b6868d3ce76ce0bbfc067">bp_handler</a> {nullptr}</td></tr>
+<tr class="separator:a382a7a18559b6868d3ce76ce0bbfc067"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca0c974620edf67db29ccc55a22dda50" id="r_aca0c974620edf67db29ccc55a22dda50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aca0c974620edf67db29ccc55a22dda50">framer_factory</a> {nullptr}</td></tr>
 <tr class="separator:aca0c974620edf67db29ccc55a22dda50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdf5cd9a047dbb98d58279b1bee733ee" id="r_afdf5cd9a047dbb98d58279b1bee733ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#afdf5cd9a047dbb98d58279b1bee733ee">on_message</a> {nullptr}</td></tr>
@@ -297,7 +313,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00103">103</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00106">106</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -335,7 +351,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00104">104</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00107">107</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -363,7 +379,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00106">106</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00109">109</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -397,7 +413,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00111">111</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00114">114</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -409,6 +425,41 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a290b90e2b5d2bccd086d2b8df7a583ee" name="a290b90e2b5d2bccd086d2b8df7a583ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290b90e2b5d2bccd086d2b8df7a583ee">&#9670;&#160;</a></span>broadcast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpServer::Impl::broadcast </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00464">464</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a290b90e2b5d2bccd086d2b8df7a583ee_cgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
+</div>
+</div>
 <a id="a7c606a895edc5e8c1892935f35e677fc" name="a7c606a895edc5e8c1892935f35e677fc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7c606a895edc5e8c1892935f35e677fc">&#9670;&#160;</a></span>flush_batches()</h2>
 
@@ -432,12 +483,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00129">129</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00132">132</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a7c606a895edc5e8c1892935f35e677fc_icgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -467,12 +518,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00119">119</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00122">122</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_affd7f6bc86138ed402b21f816aeecf8d_icgraph.svg" width="100%" height="434"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -501,12 +552,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00188">188</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00191">191</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a9bbdd1e4011a4b4c407126f7d6877725_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -535,19 +586,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00156">156</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a57da99cafd4de957640593004fa34afd_cgraph.svg" width="472" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00159">159</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a57da99cafd4de957640593004fa34afd_cgraph.svg" width="472" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a57da99cafd4de957640593004fa34afd_icgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -576,20 +627,117 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00169">169</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a90e0f997d6fcd89334e0d3edc1da8c85_cgraph.svg" width="464" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00172">172</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a90e0f997d6fcd89334e0d3edc1da8c85_cgraph.svg" width="464" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a90e0f997d6fcd89334e0d3edc1da8c85_icgraph.svg" width="464" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a933b6ec1aa008bd81988bb03aa47961e" name="a933b6ec1aa008bd81988bb03aa47961e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a933b6ec1aa008bd81988bb03aa47961e">&#9670;&#160;</a></span>send_to()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpServer::Impl::send_to </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00447">447</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a933b6ec1aa008bd81988bb03aa47961e_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
+</div>
+</div>
+<a id="a089d32085e7d24b56701bb0657b537f7" name="a089d32085e7d24b56701bb0657b537f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a089d32085e7d24b56701bb0657b537f7">&#9670;&#160;</a></span>send_to_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpServer::Impl::send_to_blocking </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00480">480</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a089d32085e7d24b56701bb0657b537f7_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a089d32085e7d24b56701bb0657b537f7_icgraph.svg" width="464" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -617,19 +765,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00217">217</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00220">220</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div id="dynsection-14-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_acc6c86c0987b2e7097c779d03fc009f8_cgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-15-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-15-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_acc6c86c0987b2e7097c779d03fc009f8_icgraph.svg" width="484" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -658,12 +806,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00338">338</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00347">347</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-16-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-16-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div id="dynsection-16-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_aef2d453ea13990a3b0bdcd088dd64c46_cgraph.svg" width="100%" height="500"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -692,20 +840,114 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00383">383</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00392">392</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-17" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-17-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-17-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-13-content" class="dyncontent" style="display:none;">
+<div id="dynsection-17-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a9c04eb9b7152bb067e1bb5996a9ddd9d_cgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-18" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-18-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-18-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-14-content" class="dyncontent" style="display:none;">
+<div id="dynsection-18-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a9c04eb9b7152bb067e1bb5996a9ddd9d_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ac53493b215fe426a68af23ae3844e8ed" name="ac53493b215fe426a68af23ae3844e8ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac53493b215fe426a68af23ae3844e8ed">&#9670;&#160;</a></span>try_broadcast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpServer::Impl::try_broadcast </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00453">453</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-19" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-19-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-19-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-19-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_ac53493b215fe426a68af23ae3844e8ed_cgraph.svg" width="448" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-20" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-20-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-20-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-20-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_ac53493b215fe426a68af23ae3844e8ed_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a335e5b62d1284029ec86007e01dec975" name="a335e5b62d1284029ec86007e01dec975"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a335e5b62d1284029ec86007e01dec975">&#9670;&#160;</a></span>try_send_to()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpServer::Impl::try_send_to </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00489">489</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-21" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-21-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-21-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-21-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a335e5b62d1284029ec86007e01dec975_cgraph.svg" width="448" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-22" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-22-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-22-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-22-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a335e5b62d1284029ec86007e01dec975_icgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -723,7 +965,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00083">83</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00085">85</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -739,7 +981,55 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00099">99</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00102">102</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a61441281df6bf42c4f60299fb6e812d5" name="a61441281df6bf42c4f60299fb6e812d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61441281df6bf42c4f60299fb6e812d5">&#9670;&#160;</a></span>bp_cv_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::condition_variable unilink::wrapper::UdpServer::Impl::bp_cv_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00069">69</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a382a7a18559b6868d3ce76ce0bbfc067" name="a382a7a18559b6868d3ce76ce0bbfc067"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a382a7a18559b6868d3ce76ce0bbfc067">&#9670;&#160;</a></span>bp_handler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;void(size_t)&gt; unilink::wrapper::UdpServer::Impl::bp_handler {nullptr}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00092">92</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="ae31124571a596cd2dcf365ae49ed44b6" name="ae31124571a596cd2dcf365ae49ed44b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae31124571a596cd2dcf365ae49ed44b6">&#9670;&#160;</a></span>bp_mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex unilink::wrapper::UdpServer::Impl::bp_mutex_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00068">68</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -787,7 +1077,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00097">97</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00100">100</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -803,7 +1093,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00079">79</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00081">81</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -851,7 +1141,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00090">90</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00093">93</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -867,7 +1157,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00094">94</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00097">97</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -883,7 +1173,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00070">70</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00072">72</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -915,7 +1205,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00101">101</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00104">104</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -931,7 +1221,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00100">100</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00103">103</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -947,7 +1237,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00098">98</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00101">101</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -987,7 +1277,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00078">78</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00080">80</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1003,7 +1293,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00085">85</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00087">87</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1309,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00087">87</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00089">89</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1035,7 +1325,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00088">88</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00090">90</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1051,7 +1341,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00086">86</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00088">88</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1067,7 +1357,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00089">89</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00091">91</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1083,7 +1373,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00091">91</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00094">94</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1099,7 +1389,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00092">92</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00095">95</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1405,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00068">68</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00070">70</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1131,7 +1421,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00082">82</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00084">84</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1147,7 +1437,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00081">81</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00083">83</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1453,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00080">80</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00082">82</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1179,7 +1469,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00069">69</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00071">71</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1224,7 +1514,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

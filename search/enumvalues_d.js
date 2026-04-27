@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['portinuse_0',['PortInUse',['../namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aae04f77652129aed8ed07cc57e63b6297',1,'unilink']]]
+  ['reliable_0',['Reliable',['../namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aa84fcf5d37086f2a93953734ce8f385b6',1,'unilink::base::constants']]]
 ];

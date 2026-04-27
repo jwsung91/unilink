@@ -214,9 +214,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa0b2e12980ba7756b6cff5c522ddc30" id="r_afa0b2e12980ba7756b6cff5c522ddc30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#afa0b2e12980ba7756b6cff5c522ddc30">listening</a> () const override</td></tr>
 <tr class="separator:afa0b2e12980ba7756b6cff5c522ddc30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45b4eb1fb1e8cd8786bf240b765d7181" id="r_a45b4eb1fb1e8cd8786bf240b765d7181"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181">broadcast</a> (std::string_view data) override</td></tr>
+<tr class="memdesc:a45b4eb1fb1e8cd8786bf240b765d7181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send to all connected clients, honouring the backpressure strategy.  <br /></td></tr>
 <tr class="separator:a45b4eb1fb1e8cd8786bf240b765d7181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab84c5a94e1beed98db9d1f4302b313cf" id="r_ab84c5a94e1beed98db9d1f4302b313cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ab84c5a94e1beed98db9d1f4302b313cf">send_to</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data) override</td></tr>
+<tr class="memdesc:ab84c5a94e1beed98db9d1f4302b313cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send to a specific client, honouring the backpressure strategy.  <br /></td></tr>
 <tr class="separator:ab84c5a94e1beed98db9d1f4302b313cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b87210894d1fec902db8011484b415d" id="r_a9b87210894d1fec902db8011484b415d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a9b87210894d1fec902db8011484b415d">send_to_blocking</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data) override</td></tr>
+<tr class="memdesc:a9b87210894d1fec902db8011484b415d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block until queue pressure is relieved, then send to a client. Ignores strategy.  <br /></td></tr>
+<tr class="separator:a9b87210894d1fec902db8011484b415d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac82530130ed20cee6514642feb30390c" id="r_ac82530130ed20cee6514642feb30390c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ac82530130ed20cee6514642feb30390c">try_send_to</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data) override</td></tr>
+<tr class="memdesc:ac82530130ed20cee6514642feb30390c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_to that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:ac82530130ed20cee6514642feb30390c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8603d52e3c76f92af3aa0f1b934193f1" id="r_a8603d52e3c76f92af3aa0f1b934193f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a8603d52e3c76f92af3aa0f1b934193f1">try_broadcast</a> (std::string_view data) override</td></tr>
+<tr class="memdesc:a8603d52e3c76f92af3aa0f1b934193f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking broadcast that always drops on full queues, ignoring strategy.  <br /></td></tr>
+<tr class="separator:a8603d52e3c76f92af3aa0f1b934193f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd03a8d5e1a03b575eb9386114f9aa73" id="r_acd03a8d5e1a03b575eb9386114f9aa73"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#acd03a8d5e1a03b575eb9386114f9aa73">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler) override</td></tr>
 <tr class="separator:acd03a8d5e1a03b575eb9386114f9aa73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42e5745b5aee461bfbe1028f45373d36" id="r_a42e5745b5aee461bfbe1028f45373d36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a42e5745b5aee461bfbe1028f45373d36">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler) override</td></tr>
@@ -228,6 +239,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aae5d127ad60f2f456bb60f9609fe1f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9f81ab409fae99f9b02da5187e49957" id="r_af9f81ab409fae99f9b02da5187e49957"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#af9f81ab409fae99f9b02da5187e49957">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override</td></tr>
 <tr class="separator:af9f81ab409fae99f9b02da5187e49957"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84e135d351d98857b71bdd949e6aeb88" id="r_a84e135d351d98857b71bdd949e6aeb88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a84e135d351d98857b71bdd949e6aeb88">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
+<tr class="memdesc:a84e135d351d98857b71bdd949e6aeb88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
+<tr class="separator:a84e135d351d98857b71bdd949e6aeb88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4301de269dbc59838c68f7416708233" id="r_aa4301de269dbc59838c68f7416708233"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#aa4301de269dbc59838c68f7416708233">framer</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override</td></tr>
 <tr class="memdesc:aa4301de269dbc59838c68f7416708233"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a factory function to create a new framer for each client connection.  <br /></td></tr>
 <tr class="separator:aa4301de269dbc59838c68f7416708233"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -251,6 +265,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af0259a35d0b4084abef647654bd66a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f20f7b28dc851c8344d4ce37d5817e1" id="r_a4f20f7b28dc851c8344d4ce37d5817e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a4f20f7b28dc851c8344d4ce37d5817e1">unlimited_clients</a> ()</td></tr>
 <tr class="separator:a4f20f7b28dc851c8344d4ce37d5817e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59fea2993947bb6e974d650b646e3a9d" id="r_a59fea2993947bb6e974d650b646e3a9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a59fea2993947bb6e974d650b646e3a9d">backpressure_threshold</a> (size_t threshold)</td></tr>
+<tr class="separator:a59fea2993947bb6e974d650b646e3a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e167784621f76de54d67834b1477721" id="r_a2e167784621f76de54d67834b1477721"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a2e167784621f76de54d67834b1477721">backpressure_strategy</a> (<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a> strategy)</td></tr>
+<tr class="separator:a2e167784621f76de54d67834b1477721"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac8c49a3601bed2f6aa06b4acaabec21" id="r_aac8c49a3601bed2f6aa06b4acaabec21"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#aac8c49a3601bed2f6aa06b4acaabec21">manage_external_context</a> (bool manage)</td></tr>
 <tr class="separator:aac8c49a3601bed2f6aa06b4acaabec21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1wrapper_1_1ServerInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">unilink::wrapper::ServerInterface</a></td></tr>
@@ -277,7 +295,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Modernized TCP Server Wrapper. </p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00046">46</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp_source.html">tcp_server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00047">47</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp_source.html">tcp_server.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af1dc28050ac533e03d8c494b7b8c97ca" name="af1dc28050ac533e03d8c494b7b8c97ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af1dc28050ac533e03d8c494b7b8c97ca">&#9670;&#160;</a></span>TcpServer() <span class="overload">[1/5]</span></h2>
@@ -303,7 +321,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00394">394</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00461">461</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -333,7 +351,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00395">395</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00462">462</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -361,7 +379,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00397">397</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00464">464</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -469,7 +487,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a29376f8067ad8f10e890b1b74dd32693">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00475">475</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00545">545</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -477,6 +495,46 @@ Additional Inherited Members</h2></td></tr>
 <div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1TcpServer_a2d8c7983984c7816c6bba7bf91fee7bc_cgraph.svg" width="456" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a id="a2e167784621f76de54d67834b1477721" name="a2e167784621f76de54d67834b1477721"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e167784621f76de54d67834b1477721">&#9670;&#160;</a></span>backpressure_strategy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp; unilink::wrapper::TcpServer::backpressure_strategy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">base::constants::BackpressureStrategy</a>&#160;</td>
+          <td class="paramname"><em>strategy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00583">583</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a59fea2993947bb6e974d650b646e3a9d" name="a59fea2993947bb6e974d650b646e3a9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59fea2993947bb6e974d650b646e3a9d">&#9670;&#160;</a></span>backpressure_threshold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp; unilink::wrapper::TcpServer::backpressure_threshold </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>threshold</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00578">578</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -504,9 +562,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Send to all connected clients, honouring the backpressure strategy. </p>
+<dl class="section return"><dt>Returns</dt><dd>true At least one client accepted the data. </dd></dl>
+
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00407">407</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00474">474</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -535,7 +596,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad18e4d24ce196ade73fac5c7b83a2270">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00463">463</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00533">533</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -564,7 +625,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2d52f8bfad723402c2b99472e8715fba">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00469">469</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00539">539</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -602,7 +663,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac2151283a784a61cd2b2b0aaf8b110ae">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00445">445</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00515">515</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -622,7 +683,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00488">488</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00558">558</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -651,7 +712,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a328c04f53504a865d95d1712928140cd">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00405">405</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00472">472</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -671,7 +732,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00508">508</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00588">588</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -691,7 +752,45 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00493">493</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00563">563</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a84e135d351d98857b71bdd949e6aeb88" name="a84e135d351d98857b71bdd949e6aeb88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84e135d351d98857b71bdd949e6aeb88">&#9670;&#160;</a></span>on_backpressure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::TcpServer::on_backpressure </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(size_t)&gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register a callback to be notified when send queue congestion changes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented from <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8f7a03bdf134b43899712b1d57cb7de4">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00509">509</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -721,7 +820,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#af6f5d7163923cf82721385246b448a69">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00419">419</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00483">483</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -751,7 +850,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a39eb8c72d637c8eee7dd7c0e94b6b7c6">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00429">429</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00493">493</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -783,7 +882,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a637fa1fc50c1777ef53e69204da6f72d">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00434">434</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00498">498</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -813,7 +912,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2b2ab220d0e4875935b2caa54589871c">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00424">424</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00488">488</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -843,7 +942,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a44bc173a5fcad1186b744f1040d4942f">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00439">439</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00503">503</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -881,7 +980,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad24bc099659445bb75e62d1809c063b9">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00451">451</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00521">521</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -913,7 +1012,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a275d1e986bc367c0082bb9db3971c43b">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00457">457</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00527">527</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +1100,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00481">481</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00551">551</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1039,9 +1138,60 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Send to a specific client, honouring the backpressure strategy. </p>
+<p>BestEffort: non-blocking, drops if the client's send queue is full. Reliable: blocks until queue pressure is relieved, then enqueues.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Dropped or client not found. </dd></dl>
+
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a20b16e1e57ab82297d6d443a24adf0e1">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00413">413</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00476">476</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a9b87210894d1fec902db8011484b415d" name="a9b87210894d1fec902db8011484b415d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b87210894d1fec902db8011484b415d">&#9670;&#160;</a></span>send_to_blocking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpServer::send_to_blocking </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Block until queue pressure is relieved, then send to a client. Ignores strategy. </p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Server stopped while waiting. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afd1d972d7e2c7801e4d314850ec2f6d0">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00479">479</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1070,7 +1220,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a823ccba7490a070689c366a09ed10b1a">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00403">403</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00470">470</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -1116,7 +1266,86 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00404">404</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00471">471</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a8603d52e3c76f92af3aa0f1b934193f1" name="a8603d52e3c76f92af3aa0f1b934193f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8603d52e3c76f92af3aa0f1b934193f1">&#9670;&#160;</a></span>try_broadcast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpServer::try_broadcast </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking broadcast that always drops on full queues, ignoring strategy. </p>
+<dl class="section return"><dt>Returns</dt><dd>true At least one client accepted the data. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8e1c4ef868a94d39992e114c0b7725c8">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00475">475</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="ac82530130ed20cee6514642feb30390c" name="ac82530130ed20cee6514642feb30390c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac82530130ed20cee6514642feb30390c">&#9670;&#160;</a></span>try_send_to()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::TcpServer::try_send_to </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking send_to that always drops on a full queue, ignoring strategy. </p>
+<p>Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Dropped or client not found. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a1f5795e294b646631c4233465aef16f3">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00477">477</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1135,7 +1364,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00501">501</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00571">571</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1149,7 +1378,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 00:44:50 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

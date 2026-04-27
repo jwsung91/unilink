@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['queue_5fbytes_5f_0',['queue_bytes_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a501749bceb5e8a7cecfd1cbada265b13',1,'unilink::transport::TcpClient::Impl::queue_bytes_'],['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abc6fdc541d5e28f498f3ca001749e6e0',1,'unilink::transport::UdpChannel::Impl::queue_bytes_'],['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ae9325688efafd6032d488a58032d3f69',1,'unilink::transport::UdsClient::Impl::queue_bytes_']]],
+  ['queue_5fbytes_5f_0',['queue_bytes_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a803d5ca72b51ce5d7c0897f7a3464377',1,'unilink::transport::TcpClient::Impl::queue_bytes_'],['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a74cf807d4a6c8356a01fe48b8ddcfcb6',1,'unilink::transport::UdpChannel::Impl::queue_bytes_'],['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#af9fd07d7054dd8de981437e24aad688d',1,'unilink::transport::UdsClient::Impl::queue_bytes_']]],
   ['queue_5fcv_5f_1',['queue_cv_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a3bf5a5eac7a987b180de6e89cd33965c',1,'unilink::diagnostics::Logger::Impl']]],
   ['queue_5fmutex_5f_2',['queue_mutex_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#afb799d55d11bfeeac6d5d306157b6847',1,'unilink::diagnostics::Logger::Impl']]],
   ['queue_5fsize_3',['queue_size',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc',1,'unilink::diagnostics::AsyncLogStats']]],
-  ['queued_5fbytes_5f_4',['queued_bytes_',['../structunilink_1_1transport_1_1Serial_1_1Impl.html#a0a38ff14e343716596a4684de39dddcb',1,'unilink::transport::Serial::Impl']]],
+  ['queued_5fbytes_5f_4',['queued_bytes_',['../structunilink_1_1transport_1_1Serial_1_1Impl.html#a2abe03468ac53c511d9d28084ae9fa2b',1,'unilink::transport::Serial::Impl']]],
   ['quick_20build_5',['Quick Build',['../contrib_build.html#autotoc_md259',1,'']]],
-  ['quick_20environment_20test_6',['Quick Environment Test',['../user_requirements.html#autotoc_md674',1,'']]],
+  ['quick_20environment_20test_6',['Quick Environment Test',['../user_requirements.html#autotoc_md679',1,'']]],
   ['quick_20links_20user_20docs_7',['Quick Links (User Docs)',['../contrib_index.html#autotoc_md344',1,'']]],
   ['quick_20start_8',['Quick Start',['../contrib_testing.html#autotoc_md359',1,'']]],
   ['quick_20start_20guide_9',['Unilink Quick Start Guide',['../user_quickstart.html',1,'user_index']]],
-  ['quickly_10',['3. Application Exits Too Quickly',['../user_troubleshooting.html#autotoc_md729',1,'']]],
+  ['quickly_10',['3. Application Exits Too Quickly',['../user_troubleshooting.html#autotoc_md734',1,'']]],
   ['quickstart_2emd_11',['quickstart.md',['../quickstart_8md.html',1,'']]]
 ];
