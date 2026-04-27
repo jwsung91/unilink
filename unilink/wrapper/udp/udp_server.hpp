@@ -60,6 +60,8 @@ class UNILINK_API UdpServer : public ServerInterface {
   bool broadcast(std::string_view data) override;
   bool send_to(ClientId client_id, std::string_view data) override;
   bool send_to_blocking(ClientId client_id, std::string_view data) override;
+  bool try_send_to(ClientId client_id, std::string_view data) override;
+  bool try_broadcast(std::string_view data) override;
 
   // Event handlers
   ServerInterface& on_connect(ConnectionHandler handler) override;

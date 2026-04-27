@@ -91,6 +91,9 @@ class UNILINK_API ChannelInterface {
    */
   virtual bool send_line_blocking(std::string_view line) = 0;
 
+  virtual bool try_send(std::string_view data) = 0;
+  virtual bool try_send_line(std::string_view line) = 0;
+
   // Event handlers
   virtual ChannelInterface& on_data(MessageHandler handler) = 0;
 

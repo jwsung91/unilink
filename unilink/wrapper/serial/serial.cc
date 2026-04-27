@@ -234,6 +234,28 @@ struct Serial::Impl {
     if (framer) framer->reset();
   }
 
+
+  bool try_send(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
+      auto binary_view = base::safe_convert::string_to_bytes(data);
+      return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    }
+    return false;
+  }
+
+  bool send(std::string_view data) {
+    if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
+    return try_send(data);
+  }
+
+  bool send_line(std::string_view line) {
+    if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
+    return try_send_line(line);
+  }
+
+  bool try_send_line(std::string_view line) { return try_send(std::string(line) + "\n"); }
+
   bool send_blocking(std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
     while (true) {
@@ -427,15 +449,10 @@ Serial& Serial::operator=(Serial&&) noexcept = default;
 
 std::future<bool> Serial::start() { return impl_->start(); }
 void Serial::stop() { impl_->stop(); }
-bool Serial::send(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  if (impl_->channel && impl_->channel->is_connected()) {
-    auto binary_view = base::safe_convert::string_to_bytes(data);
-    return impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-  }
-  return false;
-}
-bool Serial::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
+bool Serial::send(std::string_view data) { return impl_->send(data); }
+bool Serial::try_send(std::string_view data) { return impl_->try_send(data); }
+bool Serial::send_line(std::string_view line) { return impl_->send_line(line); }
+bool Serial::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
 bool Serial::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
 bool Serial::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool Serial::connected() const {

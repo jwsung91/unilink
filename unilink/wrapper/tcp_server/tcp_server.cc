@@ -289,10 +289,30 @@ struct TcpServer::Impl {
     channel_.reset();
   }
 
-  bool send_to(ClientId client_id, std::string_view data) {
+  bool try_send_to(ClientId client_id, std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     const auto& ts = transport_cache_;
     return ts ? ts->send_to_client(client_id, data) : false;
+  }
+
+  bool try_broadcast(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    const auto& ts = transport_cache_;
+    return ts ? ts->broadcast(data) : false;
+  }
+
+  bool send_to(ClientId client_id, std::string_view data) {
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) return send_to_blocking(client_id, data);
+    return try_send_to(client_id, data);
+  }
+
+  bool broadcast(std::string_view data) {
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) {
+      std::vector<ClientId> clients; { std::shared_lock<std::shared_mutex> lock(mutex_); if (transport_cache_) clients = transport_cache_->connected_clients(); }
+      bool any_sent = false; for (auto id : clients) { if (send_to_blocking(id, data)) any_sent = true; }
+      return any_sent;
+    }
+    return try_broadcast(data);
   }
 
   bool send_to_blocking(ClientId client_id, std::string_view data) {
@@ -302,7 +322,7 @@ struct TcpServer::Impl {
       const auto& ts = transport_cache_;
       return !started_.load() || !ts || !ts->is_backpressure_active(client_id);
     });
-    return send_to(client_id, data);
+    return try_send_to(client_id, data);
   }
 
   void setup_internal_handlers() {
@@ -443,13 +463,10 @@ std::future<bool> TcpServer::start() { return impl_->start(); }
 void TcpServer::stop() { impl_->stop(); }
 bool TcpServer::listening() const { return get_impl()->is_listening_.load(); }
 
-bool TcpServer::broadcast(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  const auto& ts = impl_->transport_cache_;
-  return ts ? ts->broadcast(data) : false;
-}
-
+bool TcpServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
+bool TcpServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }
 bool TcpServer::send_to(ClientId client_id, std::string_view data) { return impl_->send_to(client_id, data); }
+bool TcpServer::try_send_to(ClientId client_id, std::string_view data) { return impl_->try_send_to(client_id, data); }
 
 bool TcpServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);

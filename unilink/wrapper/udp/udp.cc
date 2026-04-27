@@ -225,16 +225,29 @@ struct UdpClient::Impl {
     }
   }
 
+
+  bool send(std::string_view data) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
+    return try_send(data);
+  }
+
+  bool send_line(std::string_view line) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
+    return try_send_line(line);
+  }
+
+  bool try_send_line(std::string_view line) { return try_send(std::string(line) + "\n"); }
+
   bool send_blocking(std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
     bp_cv_.wait(bp_lock, [this] {
       std::shared_lock<std::shared_mutex> lock(mutex_);
       return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
     });
-    return send(data);
+    return try_send(data);
   }
 
-  bool send(std::string_view data) {
+  bool try_send(std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
@@ -394,7 +407,9 @@ UdpClient& UdpClient::operator=(UdpClient&&) noexcept = default;
 std::future<bool> UdpClient::start() { return impl_->start(); }
 void UdpClient::stop() { impl_->stop(); }
 bool UdpClient::send(std::string_view data) { return impl_->send(data); }
-bool UdpClient::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
+bool UdpClient::try_send(std::string_view data) { return impl_->try_send(data); }
+bool UdpClient::send_line(std::string_view line) { return impl_->send_line(line); }
+bool UdpClient::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
 bool UdpClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
 bool UdpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool UdpClient::connected() const {

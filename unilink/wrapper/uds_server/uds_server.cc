@@ -115,6 +115,33 @@ struct UdsServer::Impl {
     }
   }
 
+
+  bool try_send_to(ClientId client_id, std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
+    return ts ? ts->send_to_client(client_id, data) : false;
+  }
+
+  bool try_broadcast(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_);
+    return ts ? ts->broadcast(data) : false;
+  }
+
+  bool send_to(ClientId client_id, std::string_view data) {
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) return send_to_blocking(client_id, data);
+    return try_send_to(client_id, data);
+  }
+
+  bool broadcast(std::string_view data) {
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) {
+      std::vector<ClientId> clients; { std::shared_lock<std::shared_mutex> lock(mutex_); auto ts = std::dynamic_pointer_cast<transport::UdsServer>(server_); if (ts) clients = ts->connected_clients(); }
+      bool any_sent = false; for (auto id : clients) { if (send_to_blocking(id, data)) any_sent = true; }
+      return any_sent;
+    }
+    return try_broadcast(data);
+  }
+
   bool send_to_blocking(ClientId client_id, std::string_view data) {
     std::unique_lock<std::mutex> lock(bp_mutex_);
     bp_cv_.wait(lock, [this, client_id]() {
@@ -380,17 +407,10 @@ void UdsServer::stop() { impl_->stop(); }
 
 bool UdsServer::listening() const { return impl_->is_listening_.load(); }
 
-bool UdsServer::broadcast(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  auto ts = std::dynamic_pointer_cast<transport::UdsServer>(impl_->server_);
-  return ts ? ts->broadcast(data) : false;
-}
-
-bool UdsServer::send_to(ClientId client_id, std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  auto ts = std::dynamic_pointer_cast<transport::UdsServer>(impl_->server_);
-  return ts ? ts->send_to_client(client_id, data) : false;
-}
+bool UdsServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
+bool UdsServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }
+bool UdsServer::send_to(ClientId client_id, std::string_view data) { return impl_->send_to(client_id, data); }
+bool UdsServer::try_send_to(ClientId client_id, std::string_view data) { return impl_->try_send_to(client_id, data); }
 
 bool UdsServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);

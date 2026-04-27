@@ -444,16 +444,42 @@ struct UdpServer::Impl {
     channel.reset();
   }
 
+
+  bool send_to(ClientId client_id, std::string_view data) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_to_blocking(client_id, data);
+    return try_send_to(client_id, data);
+  }
+
+  bool try_broadcast(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    if (!channel) return false;
+    bool sent = false;
+    auto bytes = base::safe_convert::string_to_bytes(data);
+    for (const auto& [id, entry] : sessions) {
+      sent |= channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
+    }
+    return sent;
+  }
+
+  bool broadcast(std::string_view data) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
+      std::vector<ClientId> clients; { std::shared_lock<std::shared_mutex> lock(mutex); for (const auto& [id, _] : sessions) clients.push_back(id); }
+      bool any_sent = false; for (auto id : clients) { if (send_to_blocking(id, data)) any_sent = true; }
+      return any_sent;
+    }
+    return try_broadcast(data);
+  }
+
   bool send_to_blocking(ClientId client_id, std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
     bp_cv_.wait(bp_lock, [this] {
       std::shared_lock<std::shared_mutex> lock(mutex);
       return !started.load() || !channel || !channel->is_backpressure_active();
     });
-    return send_to_client_impl(client_id, data);
+    return try_send_to(client_id, data);
   }
 
-  bool send_to_client_impl(ClientId client_id, std::string_view data) {
+  bool try_send_to(ClientId client_id, std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex);
     auto it = sessions.find(client_id);
     if (it == sessions.end() || !channel) return false;
@@ -485,21 +511,10 @@ std::future<bool> UdpServer::start() { return impl_->start(); }
 void UdpServer::stop() { impl_->stop(); }
 bool UdpServer::listening() const { return impl_->is_listening.load(); }
 
-bool UdpServer::broadcast(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex);
-  if (!impl_->channel) return false;
-
-  bool sent = false;
-  auto bytes = base::safe_convert::string_to_bytes(data);
-  for (const auto& [id, entry] : impl_->sessions) {
-    sent |= impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
-  }
-  return sent;
-}
-
-bool UdpServer::send_to(ClientId client_id, std::string_view data) {
-  return impl_->send_to_client_impl(client_id, data);
-}
+bool UdpServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
+bool UdpServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }
+bool UdpServer::send_to(ClientId client_id, std::string_view data) { return impl_->send_to(client_id, data); }
+bool UdpServer::try_send_to(ClientId client_id, std::string_view data) { return impl_->try_send_to(client_id, data); }
 
 bool UdpServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);
