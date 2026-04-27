@@ -24,6 +24,7 @@
 #include <string_view>
 #include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/wrapper/iserver.hpp"
 
@@ -88,6 +89,8 @@ class UNILINK_API UdsServer : public ServerInterface {
   UdsServer& idle_timeout(std::chrono::milliseconds timeout);
   UdsServer& max_clients(size_t max);
   UdsServer& unlimited_clients();
+  UdsServer& backpressure_threshold(size_t threshold);
+  UdsServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdsServer& manage_external_context(bool manage);
 
  private:

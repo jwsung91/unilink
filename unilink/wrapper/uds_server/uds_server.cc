@@ -55,6 +55,9 @@ struct UdsServer::Impl {
   std::atomic<bool> auto_start_{false};
   std::atomic<int> idle_timeout_ms_{0};
   std::atomic<size_t> max_clients_{1000000};
+  std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
+  std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
+      base::constants::BackpressureStrategy::KeepAll};
 
   ConnectionHandler client_connect_handler_{nullptr};
   ConnectionHandler client_disconnect_handler_{nullptr};
@@ -157,6 +160,8 @@ struct UdsServer::Impl {
       config::UdsServerConfig config;
       config.socket_path = socket_path_;
       config.idle_timeout_ms = idle_timeout_ms_.load();
+      config.backpressure_threshold = backpressure_threshold_.load();
+      config.backpressure_strategy = backpressure_strategy_.load();
       server_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
@@ -452,6 +457,16 @@ UdsServer& UdsServer::max_clients(size_t max) {
 
 UdsServer& UdsServer::unlimited_clients() {
   impl_->max_clients_.store(1000000);
+  return *this;
+}
+
+UdsServer& UdsServer::backpressure_threshold(size_t threshold) {
+  impl_->backpressure_threshold_.store(threshold);
+  return *this;
+}
+
+UdsServer& UdsServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->backpressure_strategy_.store(strategy);
   return *this;
 }
 

@@ -274,13 +274,18 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error", [](TcpServer& self, std::function<void(const ErrorContext&)> h) {
-        self.on_error([h](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          h(ctx);
-        });
-        return &self;
-      });
+      .def("on_error",
+           [](TcpServer& self, std::function<void(const ErrorContext&)> h) {
+             self.on_error([h](const ErrorContext& ctx) {
+               py::gil_scoped_acquire gil;
+               h(ctx);
+             });
+             return &self;
+           })
+      .def_property("backpressure_threshold", nullptr,
+                    [](TcpServer& self, size_t v) { self.backpressure_threshold(v); })
+      .def_property("backpressure_strategy", nullptr,
+                    [](TcpServer& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); });
 
   // Serial
   py::class_<Serial, std::shared_ptr<Serial>>(m, "Serial")
@@ -370,13 +375,17 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error", [](Serial& self, std::function<void(const ErrorContext&)> h) {
-        self.on_error([h](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          h(ctx);
-        });
-        return &self;
-      });
+      .def("on_error",
+           [](Serial& self, std::function<void(const ErrorContext&)> h) {
+             self.on_error([h](const ErrorContext& ctx) {
+               py::gil_scoped_acquire gil;
+               h(ctx);
+             });
+             return &self;
+           })
+      .def_property("backpressure_threshold", nullptr, [](Serial& self, size_t v) { self.backpressure_threshold(v); })
+      .def_property("backpressure_strategy", nullptr,
+                    [](Serial& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); });
 
   // UdsClient
   py::class_<UdsClient, std::shared_ptr<UdsClient>>(m, "UdsClient")
@@ -463,13 +472,18 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error", [](UdsClient& self, std::function<void(const ErrorContext&)> h) {
-        self.on_error([h](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          h(ctx);
-        });
-        return &self;
-      });
+      .def("on_error",
+           [](UdsClient& self, std::function<void(const ErrorContext&)> h) {
+             self.on_error([h](const ErrorContext& ctx) {
+               py::gil_scoped_acquire gil;
+               h(ctx);
+             });
+             return &self;
+           })
+      .def_property("backpressure_threshold", nullptr,
+                    [](UdsClient& self, size_t v) { self.backpressure_threshold(v); })
+      .def_property("backpressure_strategy", nullptr,
+                    [](UdsClient& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); });
 
   // UdsServer
   py::class_<UdsServer, std::shared_ptr<UdsServer>>(m, "UdsServer")
@@ -559,13 +573,18 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error", [](UdsServer& self, std::function<void(const ErrorContext&)> h) {
-        self.on_error([h](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          h(ctx);
-        });
-        return &self;
-      });
+      .def("on_error",
+           [](UdsServer& self, std::function<void(const ErrorContext&)> h) {
+             self.on_error([h](const ErrorContext& ctx) {
+               py::gil_scoped_acquire gil;
+               h(ctx);
+             });
+             return &self;
+           })
+      .def_property("backpressure_threshold", nullptr,
+                    [](UdsServer& self, size_t v) { self.backpressure_threshold(v); })
+      .def_property("backpressure_strategy", nullptr,
+                    [](UdsServer& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); });
 
   // UdpConfig
   py::class_<config::UdpConfig>(m, "UdpConfig")

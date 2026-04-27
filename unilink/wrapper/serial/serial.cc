@@ -84,6 +84,8 @@ struct Serial::Impl {
   std::string parity = "none";
   std::string flow_control = "none";
   std::chrono::milliseconds retry_interval{base::constants::DEFAULT_RETRY_INTERVAL_MS};
+  size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::KeepAll;
 
   Impl(const std::string& dev, uint32_t baud) : device(dev), baud_rate(baud) {}
   Impl(const std::string& dev, uint32_t baud, std::shared_ptr<boost::asio::io_context> ioc)
@@ -376,6 +378,8 @@ struct Serial::Impl {
       config.flow = config::SerialConfig::Flow::None;
 
     config.retry_interval_ms = static_cast<unsigned int>(retry_interval.count());
+    config.backpressure_threshold = backpressure_threshold;
+    config.backpressure_strategy = backpressure_strategy;
     return config;
   }
 };
@@ -485,6 +489,18 @@ Serial& Serial::retry_interval(std::chrono::milliseconds i) {
     auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);
     if (ts) ts->set_retry_interval(static_cast<unsigned int>(i.count()));
   }
+  return *this;
+}
+
+Serial& Serial::backpressure_threshold(size_t threshold) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_threshold = threshold;
+  return *this;
+}
+
+Serial& Serial::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_strategy = strategy;
   return *this;
 }
 

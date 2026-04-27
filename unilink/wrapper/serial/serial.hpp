@@ -23,6 +23,7 @@
 #include <string>
 #include <string_view>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/wrapper/ichannel.hpp"
@@ -84,6 +85,8 @@ class UNILINK_API Serial : public ChannelInterface {
   Serial& parity(const std::string& parity);
   Serial& flow_control(const std::string& flow_control);
   Serial& retry_interval(std::chrono::milliseconds interval);
+  Serial& backpressure_threshold(size_t threshold);
+  Serial& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   Serial& manage_external_context(bool manage);
 
  protected:

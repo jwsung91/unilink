@@ -59,6 +59,9 @@ struct TcpServer::Impl {
   std::atomic<int> idle_timeout_ms_{0};
   std::atomic<bool> client_limit_enabled_{false};
   std::atomic<size_t> max_clients_{0};
+  std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
+  std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
+      base::constants::BackpressureStrategy::KeepAll};
 
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_disconnect_{nullptr};
@@ -90,7 +93,9 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0) {}
+        max_clients_(0),
+        backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+        backpressure_strategy_(base::constants::BackpressureStrategy::KeepAll) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
@@ -105,7 +110,9 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0) {}
+        max_clients_(0),
+        backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+        backpressure_strategy_(base::constants::BackpressureStrategy::KeepAll) {}
 
   explicit Impl(std::shared_ptr<interface::Channel> channel)
       : port_(0),
@@ -118,7 +125,9 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0) {
+        max_clients_(0),
+        backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+        backpressure_strategy_(base::constants::BackpressureStrategy::KeepAll) {
     setup_internal_handlers();
   }
 
@@ -197,6 +206,8 @@ struct TcpServer::Impl {
       config.max_port_retries = max_port_retries_.load();
       config.port_retry_interval_ms = port_retry_interval_ms_.load();
       config.idle_timeout_ms = idle_timeout_ms_.load();
+      config.backpressure_threshold = backpressure_threshold_.load();
+      config.backpressure_strategy = backpressure_strategy_.load();
 
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
@@ -502,6 +513,16 @@ TcpServer& TcpServer::unlimited_clients() {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_limit_enabled_.store(false);
   if (impl_->transport_cache_) impl_->transport_cache_->set_unlimited_clients();
+  return *this;
+}
+
+TcpServer& TcpServer::backpressure_threshold(size_t threshold) {
+  impl_->backpressure_threshold_.store(threshold);
+  return *this;
+}
+
+TcpServer& TcpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->backpressure_strategy_.store(strategy);
   return *this;
 }
 

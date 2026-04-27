@@ -23,6 +23,7 @@
 #include <string>
 #include <string_view>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
@@ -81,6 +82,8 @@ class UNILINK_API UdsClient : public ChannelInterface {
   UdsClient& retry_interval(std::chrono::milliseconds interval);
   UdsClient& max_retries(int max_retries);
   UdsClient& connection_timeout(std::chrono::milliseconds timeout);
+  UdsClient& backpressure_threshold(size_t threshold);
+  UdsClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdsClient& manage_external_context(bool manage);
 
  private:

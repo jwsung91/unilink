@@ -73,6 +73,8 @@ struct UdsClient::Impl {
   std::chrono::milliseconds retry_interval_{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
+  size_t backpressure_threshold_ = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy_ = base::constants::BackpressureStrategy::KeepAll;
 
   explicit Impl(const std::string& socket_path) : socket_path_(socket_path), started_(false) {}
 
@@ -166,6 +168,8 @@ struct UdsClient::Impl {
       cfg.retry_interval_ms = static_cast<unsigned>(retry_interval_.count());
       cfg.max_retries = max_retries_;
       cfg.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
+      cfg.backpressure_threshold = backpressure_threshold_;
+      cfg.backpressure_strategy = backpressure_strategy_;
 
       if (use_external_context_) {
         channel_ = factory::ChannelFactory::create(cfg, external_ioc_);
@@ -487,6 +491,18 @@ UdsClient& UdsClient::max_retries(int max_retries) {
 UdsClient& UdsClient::connection_timeout(std::chrono::milliseconds timeout) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connection_timeout_ = timeout;
+  return *this;
+}
+
+UdsClient& UdsClient::backpressure_threshold(size_t threshold) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_threshold_ = threshold;
+  return *this;
+}
+
+UdsClient& UdsClient::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_strategy_ = strategy;
   return *this;
 }
 

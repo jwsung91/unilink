@@ -23,6 +23,7 @@
 #include <string_view>
 #include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/wrapper/iserver.hpp"
 
@@ -88,6 +89,8 @@ class UNILINK_API TcpServer : public ServerInterface {
   TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& max_clients(size_t max);
   TcpServer& unlimited_clients();
+  TcpServer& backpressure_threshold(size_t threshold);
+  TcpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   TcpServer& manage_external_context(bool manage);
 
  private:
