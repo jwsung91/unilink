@@ -1006,12 +1006,19 @@ client.start()
 
 ### Thresholds
 
-The `backpressure_threshold` (default 512 KB) is the queue size at which `BestEffort` starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (`bp_limit_`, at least 512 KB) prevents unbounded memory use regardless of strategy.
+Unilink uses **Dynamic Defaults** for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:
 
-| Parameter              | Default | Notes                                          |
-| ---------------------- | ------- | ---------------------------------------------- |
-| `backpressure_threshold` | 512 KB | Flush threshold for `BestEffort`; high-water mark for `Reliable` |
-| Hard cap (`bp_limit_`) | ≥ 512 KB | Per-message reject limit; never drops below the threshold × 4 |
+| Strategy | Default Threshold | Typical Use Case |
+| :--- | :--- | :--- |
+| `Reliable` | **4 MiB** | Commands, logs, file transfers |
+| `BestEffort` | **512 KiB** | LiDAR, Camera, Real-time state |
+
+A hard cap (`bp_limit_`) is automatically calculated as `max(threshold * 4, 4MB)` to prevent unbounded memory use while ensuring enough room for large individual messages.
+
+| Parameter | Default | Notes |
+| :--- | :--- | :--- |
+| `backpressure_threshold` | *Dynamic* | 4MB for Reliable, 512KB for BestEffort |
+| Hard cap (`bp_limit_`) | ≥ 4 MiB | Per-message reject limit |
 
 ---
 

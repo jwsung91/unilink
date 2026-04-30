@@ -247,9 +247,9 @@ class BuilderInterface {
       return bp_threshold_;
     }
     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-      return 1024 * 1024;  // 1 MB for BestEffort (freshness first)
+      return base::constants::DEFAULT_THRESHOLD_BEST_EFFORT;
     }
-    return 8 * 1024 * 1024;  // 8 MB for Reliable (default)
+    return base::constants::DEFAULT_THRESHOLD_RELIABLE;
   }
 
   std::function<std::unique_ptr<framer::IFramer>()> framer_factory_;
@@ -260,7 +260,7 @@ class BuilderInterface {
   std::function<void(const wrapper::MessageContext&)> on_message_;
 
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
-  size_t bp_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
+  size_t bp_threshold_{0};
   bool bp_strategy_set_{false};
   bool bp_threshold_set_{false};
 };

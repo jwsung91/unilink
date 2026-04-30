@@ -182,7 +182,7 @@ TEST_F(TransportTcpClientTest, QueueLimitDropsMessage) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
-  cfg.backpressure_threshold = 1024;             // bp_limit = max(4KB, 16MB) = 16MB
+  cfg.backpressure_threshold = 1024;             // bp_limit = max(4KB, 512KB) = 512KB
 
   client_ = TcpClient::create(cfg, ioc);
 
