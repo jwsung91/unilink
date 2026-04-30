@@ -660,9 +660,15 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send",
            [](UdpClient& self, py::buffer b) {
              py::buffer_info info = b.request();
-             return self.send(std::string_view(static_cast<const char*>(info.ptr), info.size));
+             std::string_view data(static_cast<const char*>(info.ptr), info.size);
+             py::gil_scoped_release release;
+             return self.send(data);
            })
-      .def("send_line", &UdpClient::send_line)
+      .def("send_line",
+           [](UdpClient& self, std::string_view line) {
+             py::gil_scoped_release release;
+             return self.send_line(line);
+           })
       .def("connected", &UdpClient::connected)
       .def("auto_start", &UdpClient::auto_start, py::arg("start") = true)
       .def(

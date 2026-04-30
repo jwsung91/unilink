@@ -122,9 +122,9 @@ if __name__ == "__main__":
     print("Unilink UDS Local IPC Chaos Benchmark")
     print("=" * 75)
 
-    r_all = run_bench("Reliable (512KB) + Flow Control", unilink.BackpressureStrategy.Reliable, 0.5, True)
+    r_all = run_bench("Reliable (4MB) + Flow Control", unilink.BackpressureStrategy.Reliable, 4, True)
     time.sleep(1)
-    r_lat = run_bench("BestEffort (1MB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 1, False)
+    r_lat = run_bench("BestEffort (512KB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 0.5, False)
 
     print("\n" + "=" * 75)
     print(f"{'Metric':30s} {'Reliable+FC':>18s} {'BestEffort+NoFC':>20s}")

@@ -31,7 +31,7 @@ import unilink_py as unilink
 # LV3 equivalent — same as 2026-04-26 baseline (Python column)
 PAYLOAD_SIZE    = 65_536   # 64 KB
 SEND_SLEEP      = 0.00001  # 10 μs  (GIL safety, same as LV3)
-DURATION        = 30       # seconds (abbreviated from 60 s baseline)
+DURATION        = 5        # seconds (abbreviated from 60 s baseline)
 PORT_BASE       = 10040    # separate from other benches
 
 
@@ -127,8 +127,8 @@ if __name__ == "__main__":
     print(f"Payload: {PAYLOAD_SIZE//1024} KB | Sleep: {SEND_SLEEP*1e6:.0f} µs | Duration: {DURATION}s (no chaos)")
     print("=" * W)
 
-    r_all = run_bench("Reliable   (512 KB)",  unilink.BackpressureStrategy.Reliable,   0.5,  PORT_BASE)
-    r_lat = run_bench("BestEffort (0.5 MB)", unilink.BackpressureStrategy.BestEffort, 0.5, PORT_BASE + 1)
+    r_all = run_bench("Reliable   (4 MiB)",  unilink.BackpressureStrategy.Reliable,   4.0,  PORT_BASE)
+    r_lat = run_bench("BestEffort (512 KiB)", unilink.BackpressureStrategy.BestEffort, 0.5, PORT_BASE + 1)
 
     print("\n" + "=" * W)
     print("Results vs 2026-04-26 Baseline  (Python, LV3, 60 s, Reliable default)")

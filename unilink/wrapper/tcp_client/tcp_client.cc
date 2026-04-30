@@ -255,7 +255,7 @@ struct TcpClient::Impl {
     // Store as pending if in BestEffort mode to send upon reconnection
     if (backpressure_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
       pending_best_effort_msg_ = std::string(data);
-      return true; // Accepted for later delivery
+      return true;  // Accepted for later delivery
     }
     return false;
   }
