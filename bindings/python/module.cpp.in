@@ -1,6 +1,6 @@
+#include <pybind11/pybind11.h>
 #include <pybind11/chrono.h>
 #include <pybind11/functional.h>
-#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 #include "unilink/framer/line_framer.hpp"
@@ -95,9 +95,22 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send",
            [](TcpClient& self, py::buffer b) {
              py::buffer_info info = b.request();
-             return self.send(std::string_view(static_cast<const char*>(info.ptr), info.size));
+             std::string_view data(static_cast<const char*>(info.ptr), info.size);
+             py::gil_scoped_release release;
+             return self.send(data);
            })
-      .def("send_line", &TcpClient::send_line)
+      .def("send_line",
+           [](TcpClient& self, std::string_view line) {
+             py::gil_scoped_release release;
+             return self.send_line(line);
+           })
+      .def("send_blocking",
+           [](TcpClient& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             std::string_view data(static_cast<const char*>(info.ptr), info.size);
+             py::gil_scoped_release release;
+             return self.send_blocking(data);
+           })
       .def("connected", &TcpClient::connected)
       .def("auto_start", &TcpClient::auto_start, py::arg("start") = true)
       .def("retry_interval", &TcpClient::retry_interval)
