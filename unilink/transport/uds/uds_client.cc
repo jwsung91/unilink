@@ -368,9 +368,8 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
     self->impl_->retry_attempts_ = 0;
     self->impl_->transition_to(LinkState::Connected);
     self->impl_->start_read(self, seq);
-    if (!self->impl_->tx_.empty() && !self->impl_->writing_) {
-      self->impl_->do_write(self, seq);
-    }
+    self->impl_->writing_ = false;  // Force reset
+    self->impl_->do_write(self, seq);
   }));
 }
 

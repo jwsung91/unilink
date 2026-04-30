@@ -532,8 +532,13 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
             UNILINK_LOG_INFO("tcp_client", "connect",
                              "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
           }
+          self->impl_->connected_.store(true);
+          self->impl_->transition_to(LinkState::Connected);
           self->impl_->start_read(self, seq);
-          self->impl_->do_write(self, seq);
+          net::post(self->impl_->strand_, [self, seq]() {
+            self->impl_->writing_ = false;
+            self->impl_->do_write(self, seq);
+          });
         });
       });
 }
