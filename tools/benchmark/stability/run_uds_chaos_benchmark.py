@@ -16,11 +16,11 @@ sys.path.append(os.path.join(os.getcwd(), "build/bindings/python"))
 import unilink_py as unilink
 
 # Spec for high-speed local IPC
-PAYLOAD_SIZE    = 1024 * 128  # 128 KB (Larger for UDS)
-SEND_SLEEP      = 0.000001    # 1 μs (Extremely fast)
-DURATION        = 15          # 15 seconds
+PAYLOAD_SIZE    = 1024 * 1024 # 1 MB
+SEND_SLEEP      = 0.001       # 1 ms (Allow other threads to run)
+DURATION        = 10          # 10 seconds
 SOCK_PATH       = "/tmp/unilink_bench.sock"
-CHAOS_INTERVAL  = 3.0         # 3s active
+CHAOS_INTERVAL  = 2.0         # 2s active
 DOWN_TIME       = 1.0         # 1s down
 
 def run_bench(label: str, strategy, threshold_mb: float, use_flow_control: bool) -> dict:
@@ -48,13 +48,18 @@ def run_bench(label: str, strategy, threshold_mb: float, use_flow_control: bool)
     client.backpressure_threshold = int(threshold_mb * 1024 * 1024)
     client.backpressure_strategy  = strategy
 
+    client.on_connect(lambda ctx: print("Client connected!", flush=True))
+    client.on_disconnect(lambda ctx: print("Client disconnected!", flush=True))
+    client.on_error(lambda ctx: print(f"Client error: {ctx.message}", flush=True))
+
     def on_bp(queued: int) -> None:
         nonlocal bp_events, send_allowed
         limit = int(threshold_mb * 1024 * 1024)
+        print(f"on_bp called, queued={queued/(1024*1024):.2f}MB", flush=True)
         if queued > limit * 0.8:
             bp_events += 1
             if use_flow_control: send_allowed = False
-        elif queued < limit * 0.2:
+        else:
             if use_flow_control: send_allowed = True
 
     client.on_backpressure(on_bp)
@@ -65,11 +70,14 @@ def run_bench(label: str, strategy, threshold_mb: float, use_flow_control: bool)
         while running:
             time.sleep(CHAOS_INTERVAL)
             if not running: break
-            # stop reader indirectly by stopping server
+            print("Chaos monkey: stopping server...", flush=True)
             server.stop()
+            print("Chaos monkey: server stopped.", flush=True)
             time.sleep(DOWN_TIME)
             if not running: break
+            print("Chaos monkey: starting server...", flush=True)
             server.start_sync()
+            print("Chaos monkey: server started.", flush=True)
 
     # ── Monitor ───────────────────────────────────────────────────────────────
     def monitor():
@@ -93,6 +101,10 @@ def run_bench(label: str, strategy, threshold_mb: float, use_flow_control: bool)
             if send_allowed:
                 if client.send(payload):
                     sent_bytes += PAYLOAD_SIZE
+                else:
+                    time.sleep(0.01) # Wait if queue full at C++ level
+            else:
+                time.sleep(0.1) # Wait longer if blocked by Python flow control
             if SEND_SLEEP > 0:
                 time.sleep(SEND_SLEEP)
         running = False
