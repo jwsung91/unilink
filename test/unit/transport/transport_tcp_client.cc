@@ -189,8 +189,8 @@ TEST_F(TransportTcpClientTest, QueueLimitDropsMessage) {
   std::atomic<bool> backpressure_seen{false};
   client_->on_backpressure([&](size_t) { backpressure_seen = true; });
 
-  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, connection stays alive
-  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xEF);
+  // 1MB exceeds bp_limit (512KB): message dropped, backpressure fires, connection stays alive
+  std::vector<uint8_t> huge(1024 * 1024, 0xEF);
   client_->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(std::chrono::milliseconds(50));
@@ -540,4 +540,6 @@ TEST_F(TransportTcpClientTest, OwnedIoContextRestartAfterStopStart) {
   EXPECT_TRUE(TestUtils::waitForCondition([&] { return connecting_count.load() >= 2; }, 200));
 
   client_->stop();
+}
+p();
 }

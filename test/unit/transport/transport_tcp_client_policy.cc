@@ -336,8 +336,8 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   ASSERT_TRUE(connected.load());
 
   // Write large data to trigger backpressure (not a fatal error with new drop behavior)
-  // Overflow (> bp_limit 16MB) results in message drop + backpressure, not disconnection
-  std::vector<uint8_t> huge_data(20 * 1024 * 1024);
+  // Overflow (> bp_limit 512KB) results in message drop + backpressure, not disconnection
+  std::vector<uint8_t> huge_payload(1024 * 1024, 0xFF);  // 1MB exceeds 512KB limit
 
   std::atomic<bool> backpressure_seen{false};
   client_->on_backpressure([&](size_t) { backpressure_seen = true; });

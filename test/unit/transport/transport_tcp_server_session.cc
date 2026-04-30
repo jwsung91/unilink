@@ -75,8 +75,8 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 20MB exceeds bp_limit (16MB): message rejected synchronously, backpressure DOES NOT fire
-  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xBB);
+  // 1MB exceeds bp_limit (512KB): message rejected synchronously, backpressure DOES NOT fire
+  std::vector<uint8_t> huge(1024 * 1024, 0xBB);
   EXPECT_FALSE(session->async_write_move(std::move(huge)));
 
   ioc.run_for(50ms);
@@ -99,8 +99,8 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 20MB exceeds bp_limit (16MB): message rejected synchronously, backpressure DOES NOT fire
-  auto huge = std::make_shared<const std::vector<uint8_t>>(20 * 1024 * 1024, 0xCC);
+  // 1MB exceeds bp_limit (512KB): message rejected synchronously, backpressure DOES NOT fire
+  auto huge = std::make_shared<const std::vector<uint8_t>>(1024 * 1024, 0xCC);
   EXPECT_FALSE(session->async_write_shared(huge));
 
   ioc.run_for(50ms);
@@ -164,4 +164,6 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
 
   EXPECT_TRUE(closed.load());
   EXPECT_FALSE(session->alive());
+}
+());
 }

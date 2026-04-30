@@ -127,7 +127,7 @@ if __name__ == "__main__":
     print(f"Payload: {PAYLOAD_SIZE//1024} KB | Sleep: {SEND_SLEEP*1e6:.0f} µs | Duration: {DURATION}s (no chaos)")
     print("=" * W)
 
-    r_all = run_bench("Reliable   (16 MB)",  unilink.BackpressureStrategy.Reliable,   16,  PORT_BASE)
+    r_all = run_bench("Reliable   (512 KB)",  unilink.BackpressureStrategy.Reliable,   0.5,  PORT_BASE)
     r_lat = run_bench("BestEffort (0.5 MB)", unilink.BackpressureStrategy.BestEffort, 0.5, PORT_BASE + 1)
 
     print("\n" + "=" * W)

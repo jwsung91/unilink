@@ -143,7 +143,7 @@ if __name__ == "__main__":
     print(f"Chaos: {CHAOS_INTERVAL}s interval, {DOWN_TIME}s down time")
     print("=" * W)
 
-    r_all = run_bench("Reliable (16 MB) + Flow Control", unilink.BackpressureStrategy.Reliable, 16, PORT_BASE, True)
+    r_all = run_bench("Reliable (512 KB) + Flow Control", unilink.BackpressureStrategy.Reliable, 0.5, PORT_BASE, True)
     r_lat = run_bench("BestEffort (0.5 MB) NO Flow Control", unilink.BackpressureStrategy.BestEffort, 0.5, PORT_BASE + 1, False)
 
     print("\n" + "=" * W)

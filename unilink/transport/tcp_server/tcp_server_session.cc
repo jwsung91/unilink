@@ -342,17 +342,25 @@ void TcpServerSession::do_close() {
   }
 }
 
-void TcpServerSession::Impl::maybe_flush_for_keep_latest(size_t added) {
+void TcpServerSession::maybe_flush_for_keep_latest(size_t added) {
   if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
     while (!tx_.empty() && (queue_bytes_ + added > bp_high_)) {
-      size_t oldest_size = tx_.front().size();
+      size_t oldest_size = std::visit(
+          [](auto&& buf) -> size_t {
+            using T = std::decay_t<decltype(buf)>;
+            if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+              return buf ? buf->size() : 0;
+            } else {
+              return buf.size();
+            }
+          },
+          tx_.front());
       queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
       tx_.pop_front();
     }
   }
 }
-
 
 void TcpServerSession::report_backpressure(size_t queued_bytes) {
   if (closing_ || !alive_ || !on_bp_) return;
