@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
           .build();
 
-  if (!client->start().get()) {
+  if (!client->start_sync()) {
     std::cerr << "Failed to connect to " << path << "\n";
     return 1;
   }

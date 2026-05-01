@@ -38,7 +38,7 @@ class UdsEchoServer {
             .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
             .build();
 
-    if (!server_->start().get()) {
+    if (!server_->start_sync()) {
       std::cerr << "Failed to start UDS server on " << path_ << "\n";
       return false;
     }
