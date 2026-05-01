@@ -112,13 +112,20 @@ TEST_F(StressTest, RapidStartStop) {
 TEST_F(StressTest, ConcurrentClientConnections) {
   const uint16_t port = TestUtils::getAvailableTestPort();
   const int num_clients = 20;
+  const int messages_per_client = 50;
+  const std::string payload = "stress_test_data";
   std::atomic<int> connected_count{0};
   std::atomic<int> received_count{0};
+  std::atomic<int> send_success_count{0};
 
   auto server = tcp_server(port)
                     .unlimited_clients()
+                    .use_line_framer()
                     .on_connect([&](const wrapper::ConnectionContext&) { connected_count++; })
-                    .on_data([&](const wrapper::MessageContext&) { received_count++; })
+                    .on_message([&](const wrapper::MessageContext& ctx) {
+                      EXPECT_EQ(ctx.data_as_string(), payload);
+                      received_count++;
+                    })
                     .build();
 
   server->start();
@@ -141,10 +148,10 @@ TEST_F(StressTest, ConcurrentClientConnections) {
   // Send messages concurrently
   std::vector<std::thread> senders;
   for (auto& client : clients) {
-    senders.emplace_back([client]() {
-      for (int i = 0; i < 50; ++i) {
-        if (client->send("stress_test_data")) {
-          // Successfully queued
+    senders.emplace_back([client, &send_success_count, messages_per_client, &payload]() {
+      for (int i = 0; i < messages_per_client; ++i) {
+        if (client->send_line(payload)) {
+          send_success_count++;
         }
         std::this_thread::sleep_for(5ms);  // Increased delay
       }
@@ -153,9 +160,11 @@ TEST_F(StressTest, ConcurrentClientConnections) {
 
   for (auto& t : senders) t.join();
 
+  EXPECT_EQ(send_success_count.load(), num_clients * messages_per_client);
+
   // Wait for all data
-  TestUtils::waitForCondition([&]() { return received_count.load() == num_clients * 50; }, 5000);
-  EXPECT_EQ(received_count.load(), num_clients * 50);
+  TestUtils::waitForCondition([&]() { return received_count.load() == num_clients * messages_per_client; }, 5000);
+  EXPECT_EQ(received_count.load(), num_clients * messages_per_client);
 
   for (auto& client : clients) client->stop();
   server->stop();
