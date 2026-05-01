@@ -541,5 +541,3 @@ TEST_F(TransportTcpClientTest, OwnedIoContextRestartAfterStopStart) {
 
   client_->stop();
 }
-p();
-}
