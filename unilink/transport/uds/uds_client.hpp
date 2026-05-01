@@ -30,7 +30,7 @@
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/iuds_socket.hpp"
 #include "unilink/memory/memory_pool.hpp"
-#include "unilink/transport/tcp_client/reconnect_policy.hpp"
+#include "unilink/transport/base/reconnect_policy.hpp"
 
 // Forward declare boost components
 namespace boost {

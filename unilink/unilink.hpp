@@ -33,6 +33,7 @@
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
+#include "unilink/wrapper/udp/udp_server.hpp"
 #include "unilink/wrapper/uds_client/uds_client.hpp"
 #include "unilink/wrapper/uds_server/uds_server.hpp"
 

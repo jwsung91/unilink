@@ -335,7 +335,7 @@ jobs:
           $env:UNILINK_INSTALL_PATH = $installPath
           $env:UNILINK_PACKAGE_PATH = $packagePath
           python bindings/python/diagnose_windows_import.py
-          python bindings/python/test_import.py
+          python bindings/python/tests/test_import.py
           python -m pytest bindings/python/tests -q
 
       - name: Verify Python Import (Linux/macOS)
@@ -344,5 +344,5 @@ jobs:
         run: |
           PY_SITE=$(python3 -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip('/\\\\'))")
           export PYTHONPATH="$PWD/build/install/$PY_SITE:$PYTHONPATH"
-          python3 bindings/python/test_import.py
+          python3 bindings/python/tests/test_import.py
           python3 -m pytest bindings/python/tests -q
