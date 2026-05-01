@@ -292,6 +292,7 @@ if(NOT UNILINK_BOOST_INCLUDE_DIR)
   endif()
 endif()
 
+find_package(spdlog CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 
 # Optional dependencies
@@ -378,7 +379,9 @@ endif()
 add_library(unilink_dependencies INTERFACE)
 
 # Link common dependencies
-target_link_libraries(unilink_dependencies INTERFACE Threads::Threads)
+target_link_libraries(
+  unilink_dependencies INTERFACE Threads::Threads spdlog::spdlog
+)
 if(UNILINK_LINK_BOOST_SYSTEM)
   if(UNILINK_BOOST_FETCHED)
     # For local targets (FetchContent), use BUILD_INTERFACE to avoid export

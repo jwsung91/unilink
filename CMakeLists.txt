@@ -37,7 +37,6 @@ set(UNILINK_SOURCES
     unilink/config/config_manager.cc
     unilink/diagnostics/error_handler.cc
     unilink/diagnostics/exceptions.cc
-    unilink/diagnostics/log_rotation.cc
     unilink/diagnostics/logger.cc
     unilink/factory/channel_factory.cc
     unilink/interface/channel.cc
@@ -99,7 +98,6 @@ set(UNILINK_HEADERS
     unilink/diagnostics/error_handler.hpp
     unilink/diagnostics/error_types.hpp
     unilink/diagnostics/exceptions.hpp
-    unilink/diagnostics/log_rotation.hpp
     unilink/diagnostics/logger.hpp
     unilink/factory/channel_factory.hpp
     unilink/interface/channel.hpp

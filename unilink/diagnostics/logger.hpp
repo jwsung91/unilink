@@ -24,7 +24,6 @@
 #include <string_view>
 #include <vector>
 
-#include "log_rotation.hpp"
 #include "unilink/base/visibility.hpp"
 
 #ifdef DEBUG
@@ -60,20 +59,17 @@ enum class LogLevel { DEBUG = 0, INFO = 1, WARNING = 2, ERROR = 3, CRITICAL = 4 
 enum class LogOutput { CONSOLE = 0x01, FILE = 0x02, CALLBACK = 0x04 };
 
 /**
- * @brief Log entry structure for async processing
+ * @brief Log rotation configuration
  */
-struct LogEntry {
-  std::chrono::system_clock::time_point timestamp;
-  LogLevel level;
-  std::string component;
-  std::string operation;
-  std::string message;
-  std::string formatted_message;
+struct LogRotationConfig {
+  size_t max_file_size_bytes = 10 * 1024 * 1024;    // 10MB default
+  size_t max_files = 10;                            // Keep 10 files max
+  bool enable_compression = false;                  // Future feature
+  std::string file_pattern = "{name}.{index}.log";  // File naming pattern
 
-  LogEntry() : level(LogLevel::INFO) {}
+  LogRotationConfig() = default;
 
-  LogEntry(LogLevel lvl, std::string_view comp, std::string_view op, std::string_view msg)
-      : timestamp(std::chrono::system_clock::now()), level(lvl), component(comp), operation(op), message(msg) {}
+  LogRotationConfig(size_t max_size, size_t max_count) : max_file_size_bytes(max_size), max_files(max_count) {}
 };
 
 /**
@@ -81,50 +77,16 @@ struct LogEntry {
  */
 struct AsyncLogConfig {
   size_t max_queue_size = 10000;                     // Maximum queue size
-  size_t batch_size = 100;                           // Batch processing size
+  size_t batch_size = 100;                           // [IGNORED] Batch processing size (handled by spdlog)
   std::chrono::milliseconds flush_interval{100};     // Flush interval
   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout
-  bool enable_backpressure = true;                   // Enable backpressure handling
-  bool enable_batch_processing = true;               // Enable batch processing
+  bool enable_backpressure = true;                   // Enable backpressure handling (maps to spdlog block policy)
+  bool enable_batch_processing = true;               // [IGNORED] Enable batch processing (handled by spdlog)
 
   AsyncLogConfig() = default;
 
   AsyncLogConfig(size_t max_q, size_t batch, std::chrono::milliseconds interval)
       : max_queue_size(max_q), batch_size(batch), flush_interval(interval) {}
-};
-
-/**
- * @brief Async logging statistics
- */
-struct AsyncLogStats {
-  uint64_t total_logs{0};
-  uint64_t dropped_logs{0};
-  uint64_t queue_size{0};
-  uint64_t max_queue_size_reached{0};
-  uint64_t batch_count{0};
-  uint64_t flush_count{0};
-  std::chrono::system_clock::time_point start_time;
-
-  AsyncLogStats() : start_time(std::chrono::system_clock::now()) {}
-
-  void reset() {
-    total_logs = 0;
-    dropped_logs = 0;
-    queue_size = 0;
-    max_queue_size_reached = 0;
-    batch_count = 0;
-    flush_count = 0;
-    start_time = std::chrono::system_clock::now();
-  }
-
-  double get_drop_rate() const {
-    if (total_logs == 0) return 0.0;
-    return static_cast<double>(dropped_logs) / static_cast<double>(total_logs);
-  }
-
-  std::chrono::milliseconds get_uptime() const {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start_time);
-  }
 };
 
 /**
@@ -196,11 +158,6 @@ class UNILINK_API Logger {
    * @brief Check if async logging is enabled
    */
   bool async_logging_enabled() const;
-
-  /**
-   * @brief Get async logging statistics
-   */
-  AsyncLogStats async_stats() const;
 
   /**
    * @brief Set log callback
