@@ -36,7 +36,7 @@
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
-#include "unilink/transport/tcp_client/reconnect_policy.hpp"
+#include "unilink/transport/base/reconnect_policy.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
 using namespace unilink;

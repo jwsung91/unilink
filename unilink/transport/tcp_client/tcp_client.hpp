@@ -29,7 +29,7 @@
 #include "unilink/diagnostics/error_types.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/memory/memory_pool.hpp"
-#include "unilink/transport/tcp_client/reconnect_policy.hpp"
+#include "unilink/transport/base/reconnect_policy.hpp"
 
 // Forward declare boost components
 namespace boost {
