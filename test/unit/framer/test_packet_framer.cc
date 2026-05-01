@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "unilink/framer/packet_framer.hpp"
-
 #include <gtest/gtest.h>
 
 #include <vector>
+
+#include "unilink/framer/packet_framer.hpp"
 
 using namespace unilink;
 using namespace unilink::framer;
@@ -186,7 +186,7 @@ TEST_F(PacketFramerTest, ResetClearsState) {
   end_ = {0x02};
   framer_ = std::make_unique<PacketFramer>(start_, end_, 1024);
   framer_->on_message([&](memory::ConstByteSpan) { count++; });
-  
+
   framer_->push_bytes(memory::ConstByteSpan(std::vector<uint8_t>{0x01, 0x00}.data(), 2));
   framer_->reset();
   framer_->push_bytes(memory::ConstByteSpan(std::vector<uint8_t>{0x02}.data(), 1));

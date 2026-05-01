@@ -1,5 +1,3 @@
-#include "unilink/transport/tcp_client/detail/reconnect_decider.hpp"
-
 #include <gtest/gtest.h>
 
 #include <chrono>
@@ -8,6 +6,7 @@
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/error_types.hpp"
 #include "unilink/transport/base/reconnect_policy.hpp"
+#include "unilink/transport/tcp_client/detail/reconnect_decider.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include "unilink/framer/line_framer.hpp"
-
 #include <gtest/gtest.h>
 
 #include <string>
 #include <vector>
+
+#include "unilink/framer/line_framer.hpp"
 
 using namespace unilink;
 using namespace unilink::framer;
