@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">33</td>
-            <td class="headerCovTableEntry">34</td>
-            <td class="headerCovTableEntryHi">97.1 %</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">40</td>
+            <td class="headerCovTableEntryHi">97.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-27 11:57:39</td>
+            <td class="headerValue">2026-05-01 04:08:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">60</td>
-            <td class="headerCovTableEntry">67</td>
-            <td class="headerCovTableEntryMed">89.6 %</td>
+            <td class="headerCovTableEntry">63</td>
+            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntryHi">90.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntryMed">75.0 %</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">60.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -123,8 +123,8 @@
 <a name="45"><span class="lineNum">      45 </span>                :            : template &lt;typename T, typename Derived&gt;</a>
 <a name="46"><span class="lineNum">      46 </span>                :            : class BuilderInterface {</a>
 <a name="47"><span class="lineNum">      47 </span>                :            :  public:</a>
-<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">        205 :   virtual ~BuilderInterface() = default;</span></a>
-<a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">        205 :   BuilderInterface() = default;</span></a>
+<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">        206 :   virtual ~BuilderInterface() = default;</span></a>
+<a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">        206 :   BuilderInterface() = default;</span></a>
 <a name="50"><span class="lineNum">      50 </span>                :            :   BuilderInterface(const BuilderInterface&amp;) = default;</a>
 <a name="51"><span class="lineNum">      51 </span>                :            :   BuilderInterface(BuilderInterface&amp;&amp;) = default;</a>
 <a name="52"><span class="lineNum">      52 </span>                :            :   BuilderInterface&amp; operator=(const BuilderInterface&amp;) = default;</a>
@@ -148,9 +148,9 @@
 <a name="70"><span class="lineNum">      70 </span>                :            :    * @param handler Function to handle incoming data with context</a>
 <a name="71"><span class="lineNum">      71 </span>                :            :    * @return Derived&amp; Reference to this builder for method chaining</a>
 <a name="72"><span class="lineNum">      72 </span>                :            :    */</a>
-<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">         27 :   Derived&amp; on_data(std::function&lt;void(const wrapper::MessageContext&amp;)&gt; handler) {</span></a>
-<a name="74"><span class="lineNum">      74 </span>                :<span class="lineCov">         27 :     on_data_ = std::move(handler);</span></a>
-<a name="75"><span class="lineNum">      75 </span>                :<span class="lineCov">         27 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></a>
+<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">         26 :   Derived&amp; on_data(std::function&lt;void(const wrapper::MessageContext&amp;)&gt; handler) {</span></a>
+<a name="74"><span class="lineNum">      74 </span>                :<span class="lineCov">         26 :     on_data_ = std::move(handler);</span></a>
+<a name="75"><span class="lineNum">      75 </span>                :<span class="lineCov">         26 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></a>
 <a name="76"><span class="lineNum">      76 </span>                :            :   }</a>
 <a name="77"><span class="lineNum">      77 </span>                :            : </a>
 <a name="78"><span class="lineNum">      78 </span>                :            :   /**</a>
@@ -254,14 +254,14 @@
 <a name="176"><span class="lineNum">     176 </span>                :            :    * @param max_length Maximum message length before an error is raised</a>
 <a name="177"><span class="lineNum">     177 </span>                :            :    * @return Derived&amp; Reference to this builder</a>
 <a name="178"><span class="lineNum">     178 </span>                :            :    */</a>
-<a name="179"><span class="lineNum">     179 </span>                :            :   Derived&amp; use_line_framer(std::string_view delimiter = &quot;\n&quot;, bool include_delimiter = false,</a>
+<a name="179"><span class="lineNum">     179 </span>                :<span class="lineCov">          1 :   Derived&amp; use_line_framer(std::string_view delimiter = &quot;\n&quot;, bool include_delimiter = false,</span></a>
 <a name="180"><span class="lineNum">     180 </span>                :            :                            size_t max_length = 65536) {</a>
-<a name="181"><span class="lineNum">     181 </span>                :            :     std::string delim(delimiter);</a>
-<a name="182"><span class="lineNum">     182 </span>                :            :     framer_factory_ = [delim, include_delimiter, max_length]() {</a>
-<a name="183"><span class="lineNum">     183 </span>                :            :       return std::make_unique&lt;framer::LineFramer&gt;(delim, include_delimiter, max_length);</a>
+<a name="181"><span class="lineNum">     181 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     std::string delim(delimiter);</span></a>
+<a name="182"><span class="lineNum">     182 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :     framer_factory_ = [delim, include_delimiter, max_length]() {</span></a>
+<a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">         20 :       return std::make_unique&lt;framer::LineFramer&gt;(delim, include_delimiter, max_length);</span></a>
 <a name="184"><span class="lineNum">     184 </span>                :            :     };</a>
-<a name="185"><span class="lineNum">     185 </span>                :            :     return static_cast&lt;Derived&amp;&gt;(*this);</a>
-<a name="186"><span class="lineNum">     186 </span>                :            :   }</a>
+<a name="185"><span class="lineNum">     185 </span>                :<span class="lineCov">          1 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></a>
+<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">          1 :   }</span></a>
 <a name="187"><span class="lineNum">     187 </span>                :            : </a>
 <a name="188"><span class="lineNum">     188 </span>                :            :   /**</a>
 <a name="189"><span class="lineNum">     189 </span>                :            :    * @brief Activate binary packet framing with explicit start/end byte patterns.</a>
@@ -283,9 +283,9 @@
 <a name="205"><span class="lineNum">     205 </span>                :            :    * @param handler Function to handle complete messages with context</a>
 <a name="206"><span class="lineNum">     206 </span>                :            :    * @return Derived&amp; Reference to this builder</a>
 <a name="207"><span class="lineNum">     207 </span>                :            :    */</a>
-<a name="208"><span class="lineNum">     208 </span>                :<span class="lineCov">          4 :   Derived&amp; on_message(std::function&lt;void(const wrapper::MessageContext&amp;)&gt; handler) {</span></a>
-<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">          4 :     on_message_ = std::move(handler);</span></a>
-<a name="210"><span class="lineNum">     210 </span>                :<span class="lineCov">          4 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></a>
+<a name="208"><span class="lineNum">     208 </span>                :<span class="lineCov">          5 :   Derived&amp; on_message(std::function&lt;void(const wrapper::MessageContext&amp;)&gt; handler) {</span></a>
+<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">          5 :     on_message_ = std::move(handler);</span></a>
+<a name="210"><span class="lineNum">     210 </span>                :<span class="lineCov">          5 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></a>
 <a name="211"><span class="lineNum">     211 </span>                :            :   }</a>
 <a name="212"><span class="lineNum">     212 </span>                :            : </a>
 <a name="213"><span class="lineNum">     213 </span>                :            :   /**</a>
@@ -320,14 +320,14 @@
 <a name="242"><span class="lineNum">     242 </span>                :            :   }</a>
 <a name="243"><span class="lineNum">     243 </span>                :            : </a>
 <a name="244"><span class="lineNum">     244 </span>                :            :  protected:</a>
-<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">        199 :   size_t get_effective_backpressure_threshold() const {</span></a>
-<a name="246"><span class="lineNum">     246 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 196 times"> + </span>]:<span class="lineCov">        199 :     if (bp_threshold_set_) {</span></a>
+<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">        200 :   size_t get_effective_backpressure_threshold() const {</span></a>
+<a name="246"><span class="lineNum">     246 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 197 times"> + </span>]:<span class="lineCov">        200 :     if (bp_threshold_set_) {</span></a>
 <a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">          3 :       return bp_threshold_;</span></a>
 <a name="248"><span class="lineNum">     248 </span>                :            :     }</a>
-<a name="249"><span class="lineNum">     249 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 196 times"> + </span>]:<span class="lineCov">        196 :     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {</span></a>
-<a name="250"><span class="lineNum">     250 </span>                :<span class="lineNoCov">          0 :       return 1024 * 1024;  // 1 MB for BestEffort (freshness first)</span></a>
+<a name="249"><span class="lineNum">     249 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 197 times"> + </span>]:<span class="lineCov">        197 :     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {</span></a>
+<a name="250"><span class="lineNum">     250 </span>                :<span class="lineNoCov">          0 :       return base::constants::DEFAULT_THRESHOLD_BEST_EFFORT;</span></a>
 <a name="251"><span class="lineNum">     251 </span>                :            :     }</a>
-<a name="252"><span class="lineNum">     252 </span>                :<span class="lineCov">        196 :     return 8 * 1024 * 1024;  // 8 MB for Reliable (default)</span></a>
+<a name="252"><span class="lineNum">     252 </span>                :<span class="lineCov">        197 :     return base::constants::DEFAULT_THRESHOLD_RELIABLE;</span></a>
 <a name="253"><span class="lineNum">     253 </span>                :            :   }</a>
 <a name="254"><span class="lineNum">     254 </span>                :            : </a>
 <a name="255"><span class="lineNum">     255 </span>                :            :   std::function&lt;std::unique_ptr&lt;framer::IFramer&gt;()&gt; framer_factory_;</a>
@@ -338,7 +338,7 @@
 <a name="260"><span class="lineNum">     260 </span>                :            :   std::function&lt;void(const wrapper::MessageContext&amp;)&gt; on_message_;</a>
 <a name="261"><span class="lineNum">     261 </span>                :            : </a>
 <a name="262"><span class="lineNum">     262 </span>                :            :   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};</a>
-<a name="263"><span class="lineNum">     263 </span>                :            :   size_t bp_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};</a>
+<a name="263"><span class="lineNum">     263 </span>                :            :   size_t bp_threshold_{0};</a>
 <a name="264"><span class="lineNum">     264 </span>                :            :   bool bp_strategy_set_{false};</a>
 <a name="265"><span class="lineNum">     265 </span>                :            :   bool bp_threshold_set_{false};</a>
 <a name="266"><span class="lineNum">     266 </span>                :            : };</a>
