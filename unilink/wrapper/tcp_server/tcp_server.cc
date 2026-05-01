@@ -82,7 +82,7 @@ struct TcpServer::Impl {
   size_t max_batch_size_ = 100;
   std::chrono::milliseconds max_batch_latency_{1};
 
-  std::unordered_map<ClientId, std::unique_ptr<framer::IFramer>> framers_;
+  std::unordered_map<ClientId, std::shared_ptr<framer::IFramer>> framers_;
   // Cached transport pointer — set once in start(), avoids repeated dynamic_cast.
   std::shared_ptr<transport::TcpServer> transport_cache_;
 
@@ -351,7 +351,8 @@ struct TcpServer::Impl {
           if (framer_factory_) {
             auto framer = framer_factory_();
             if (framer) {
-              framer->on_message([this, id](memory::ConstByteSpan msg) {
+              auto shared_framer = std::shared_ptr<framer::IFramer>(std::move(framer));
+              shared_framer->on_message([this, id](memory::ConstByteSpan msg) {
                 std::unique_lock<std::shared_mutex> lock(mutex_);
                 if (message_batch_handler_) {
                   message_batch_queue_.emplace_back(id, memory::SafeDataBuffer(msg));
@@ -373,7 +374,7 @@ struct TcpServer::Impl {
                   on_message_handler(MessageContext(id, memory::SafeDataBuffer(msg)));
                 }
               });
-              framers_[id] = std::move(framer);
+              framers_[id] = std::move(shared_framer);
             }
           }
           handler = on_client_connect_;
@@ -384,6 +385,7 @@ struct TcpServer::Impl {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
+        std::shared_ptr<framer::IFramer> framer;
         std::unique_lock<std::shared_mutex> lock(mutex_);
         if (data_batch_handler_) {
           data_batch_queue_.emplace_back(id, memory::SafeDataBuffer(data_span));
@@ -407,8 +409,10 @@ struct TcpServer::Impl {
 
         auto it = framers_.find(id);
         if (it != framers_.end()) {
-          it->second->push_bytes(data_span);
+          framer = it->second;
         }
+        lock.unlock();
+        if (framer) framer->push_bytes(data_span);
       });
       transport_server->on_multi_disconnect([this, weak_alive](ClientId id) {
         auto alive = weak_alive.lock();
