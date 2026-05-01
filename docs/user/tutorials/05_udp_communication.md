@@ -140,19 +140,18 @@ For simple local tests, UDP is useful when you want low overhead and can tolerat
 For ready-to-run maintained examples, use:
 
 - [examples/udp/README.md](../../../examples/udp/README.md)
-- [examples/udp/udp_receiver.cpp](../../examples/udp/udp_receiver.cpp)
-- [examples/udp/udp_sender.cpp](../../examples/udp/udp_sender.cpp)
-
-Those examples intentionally stay minimal too: one receiver bound to `9000` and one sender targeting `127.0.0.1:9000`.
+- [examples/udp/sync/receiver.cc](../../../examples/udp/sync/receiver.cc)
+- [examples/udp/sync/sender.cc](../../../examples/udp/sync/sender.cc)
 
 ---
 
 ## Next Steps
 
+- [Asynchronous Programming Patterns](06_asynchronous_patterns.md)
 - [API Reference](../api_guide.md#udp-communication)
 - [Performance Guide](../performance.md)
-- [Examples Directory](../../../examples/udp/README.md)
 
 ---
 
 **Previous**: [← Serial Communication](04_serial_communication.md)
+**Next**: [Asynchronous Programming Patterns →](06_asynchronous_patterns.md)

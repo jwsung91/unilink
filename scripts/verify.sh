@@ -22,10 +22,13 @@ cd build
 cmake .. -DCMAKE_BUILD_TYPE=Debug 2>&1 | tail -5
 cmake --build . -j"$(nproc)" \
   --target unilink_shared unilink_static \
-  tcp_echo_server tcp_echo_client tcp_broadcast_server \
-  udp_receiver udp_sender \
-  uds_echo_server uds_echo_client \
-  serial_echo
+  sync_tcp_echo_server sync_tcp_echo_client sync_tcp_broadcast_server \
+  async_tcp_echo_server async_tcp_echo_client \
+  sync_udp_receiver sync_udp_sender \
+  async_udp_receiver async_udp_sender \
+  sync_uds_echo_server sync_uds_echo_client \
+  async_uds_echo_server async_uds_echo_client \
+  sync_serial_echo async_serial_echo
 cd "$PROJECT_ROOT"
 
 # ---------------------------------------------------------------------------

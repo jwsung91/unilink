@@ -527,7 +527,7 @@ TEST(CustomTest, ClientServerCommunication) {
         })
         .build();
     
-    ASSERT_TRUE(server->start().get());
+    ASSERT_TRUE(server->start_sync());
     server_ready = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     
@@ -535,7 +535,7 @@ TEST(CustomTest, ClientServerCommunication) {
     auto client = unilink::tcp_client("127.0.0.1", 8080)
         .build();
     
-    ASSERT_TRUE(client->start().get());
+    ASSERT_TRUE(client->start_sync());
     
     // Wait for connection
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

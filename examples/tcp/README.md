@@ -1,23 +1,29 @@
 # TCP Examples
 
+## Examples Structure
+
+- `sync/` — Synchronous (blocking) examples. Uses `start_sync()` for simplicity.
+- `async/` — Asynchronous (callback-driven) examples. Shows non-blocking patterns.
+
 ## Binaries
 
 | Binary | Description |
 |--------|-------------|
-| `tcp_echo_server` | Accepts unlimited clients, echoes each message back to the sender |
-| `tcp_echo_client` | Connects to a server and enters an interactive send/receive loop |
-| `tcp_broadcast_server` | Accepts unlimited clients, broadcasts every message to all of them |
+| `sync_tcp_echo_server` | Blocking echo server |
+| `sync_tcp_echo_client` | Interactive blocking client |
+| `async_tcp_echo_server`| Event-driven server with status heartbeat |
+| `async_tcp_echo_client`| Event-driven client with parallel input handling |
 
 ## Usage
 
 ```bash
 # Echo pair (default port 8080)
-./tcp_echo_server [port]
-./tcp_echo_client [host] [port]
+./sync_tcp_echo_server [port]
+./sync_tcp_echo_client [host] [port]
 
 # Broadcast server — connect multiple clients to see messages relayed
-./tcp_broadcast_server [port]
-./tcp_echo_client 127.0.0.1 8080   # connect as many as you like
+./sync_tcp_broadcast_server [port]
+./sync_tcp_echo_client 127.0.0.1 8080   # connect as many as you like
 ```
 
 Type messages in any client terminal. `/quit` disconnects.
@@ -27,7 +33,7 @@ Type messages in any client terminal. `/quit` disconnects.
 - `unlimited_clients()` — allow any number of concurrent connections
 - `send_to(client_id, data)` — reply to a specific client (echo server)
 - `broadcast(data)` — send to all connected clients (broadcast server)
-- `start().get()` — block until the server is listening or failed
+- `start_sync()` — block until the server is listening or failed
 
 ## Troubleshooting
 

@@ -12,10 +12,19 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-add_executable(udp_receiver receiver.cc)
-target_link_libraries(udp_receiver PRIVATE unilink::unilink)
-unilink_configure_executable(udp_receiver)
+add_executable(sync_udp_receiver sync/receiver.cc)
+target_link_libraries(sync_udp_receiver PRIVATE unilink::unilink)
+unilink_configure_executable(sync_udp_receiver)
 
-add_executable(udp_sender sender.cc)
-target_link_libraries(udp_sender PRIVATE unilink::unilink)
-unilink_configure_executable(udp_sender)
+add_executable(sync_udp_sender sync/sender.cc)
+target_link_libraries(sync_udp_sender PRIVATE unilink::unilink)
+unilink_configure_executable(sync_udp_sender)
+
+# Async Examples
+add_executable(async_udp_receiver async/receiver.cc)
+target_link_libraries(async_udp_receiver PRIVATE unilink::unilink)
+unilink_configure_executable(async_udp_receiver)
+
+add_executable(async_udp_sender async/sender.cc)
+target_link_libraries(async_udp_sender PRIVATE unilink::unilink)
+unilink_configure_executable(async_udp_sender)

@@ -12,6 +12,11 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-add_executable(serial_echo echo.cc)
-target_link_libraries(serial_echo PRIVATE unilink::unilink)
-unilink_configure_executable(serial_echo)
+add_executable(sync_serial_echo sync/echo.cc)
+target_link_libraries(sync_serial_echo PRIVATE unilink::unilink)
+unilink_configure_executable(sync_serial_echo)
+
+# Async Examples
+add_executable(async_serial_echo async/echo.cc)
+target_link_libraries(async_serial_echo PRIVATE unilink::unilink)
+unilink_configure_executable(async_serial_echo)

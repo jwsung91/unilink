@@ -476,11 +476,11 @@ ctest --output-on-failure
 ### Run Examples
 
 ```bash
-# TCP Echo Server
-./build/examples/tcp/single-echo/tcp_echo_server
+# TCP Echo Server (sync)
+./build/bin/sync_tcp_echo_server
 
 # TCP Echo Client (in another terminal)
-./build/examples/tcp/single-echo/tcp_echo_client
+./build/bin/sync_tcp_echo_client
 ```
 
 ### Check Library Symbols

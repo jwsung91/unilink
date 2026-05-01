@@ -12,10 +12,19 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-add_executable(uds_echo_server echo_server.cc)
-target_link_libraries(uds_echo_server PRIVATE unilink::unilink)
-unilink_configure_executable(uds_echo_server)
+add_executable(sync_uds_echo_server sync/echo_server.cc)
+target_link_libraries(sync_uds_echo_server PRIVATE unilink::unilink)
+unilink_configure_executable(sync_uds_echo_server)
 
-add_executable(uds_echo_client echo_client.cc)
-target_link_libraries(uds_echo_client PRIVATE unilink::unilink)
-unilink_configure_executable(uds_echo_client)
+add_executable(sync_uds_echo_client sync/echo_client.cc)
+target_link_libraries(sync_uds_echo_client PRIVATE unilink::unilink)
+unilink_configure_executable(sync_uds_echo_client)
+
+# Async Examples
+add_executable(async_uds_echo_client async/echo_client.cc)
+target_link_libraries(async_uds_echo_client PRIVATE unilink::unilink)
+unilink_configure_executable(async_uds_echo_client)
+
+add_executable(async_uds_echo_server async/echo_server.cc)
+target_link_libraries(async_uds_echo_server PRIVATE unilink::unilink)
+unilink_configure_executable(async_uds_echo_server)

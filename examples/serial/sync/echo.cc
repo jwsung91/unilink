@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
           .build();
 
-  if (!port->start().get()) {
+  if (!port->start_sync()) {
     std::cerr << "Failed to open " << device << " at " << baud << " baud\n";
     return 1;
   }

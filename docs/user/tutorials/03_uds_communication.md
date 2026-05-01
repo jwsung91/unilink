@@ -48,7 +48,7 @@ int main() {
         })
         .build();
 
-    if (!server->start().get()) {
+    if (!server->start_sync()) {
         std::cerr << "Failed to start UDS server" << std::endl;
         return 1;
     }
@@ -85,7 +85,7 @@ int main() {
         })
         .build();
 
-    if (!client->start().get()) {
+    if (!client->start_sync()) {
         std::cerr << "Failed to connect to UDS server" << std::endl;
         return 1;
     }

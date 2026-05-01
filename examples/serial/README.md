@@ -4,12 +4,17 @@
 
 | Binary | Description |
 |--------|-------------|
-| `serial_echo` | Opens a serial port, prints received data, sends user input |
+| `sync_serial_echo` | Opens a serial port, prints received data, sends user input |
+
+## Examples Structure
+
+- `sync/` — Synchronous (blocking) examples. Uses `start_sync()` for simplicity.
+- `async/` — Asynchronous (callback-driven) examples. Shows how to handle serial data without blocking the main loop.
 
 ## Usage
 
 ```bash
-./serial_echo [device] [baud]
+./sync_serial_echo [device] [baud]
 ```
 
 Defaults: `/dev/ttyUSB0` at `115200` baud. Type messages; `/quit` exits.
@@ -23,7 +28,7 @@ Use `socat` to create a virtual serial pair:
 socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
 
 # Terminal 2 — run serial echo
-./serial_echo /tmp/ttyA 115200
+./sync_serial_echo /tmp/ttyA 115200
 
 # Terminal 3 — interact
 socat - /tmp/ttyB

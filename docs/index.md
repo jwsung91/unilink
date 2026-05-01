@@ -29,6 +29,7 @@ You are building an application using unilink.
 | [UDS Communication](user/tutorials/03_uds_communication.md) | Local IPC with Unix domain sockets |
 | [Serial Communication](user/tutorials/04_serial_communication.md) | Device I/O and virtual-port testing |
 | [UDP Communication](user/tutorials/05_udp_communication.md) | Connectionless send/receive workflow |
+| [Asynchronous Patterns](user/tutorials/06_asynchronous_patterns.md) | Advanced non-blocking usage and safety |
 
 ---
 

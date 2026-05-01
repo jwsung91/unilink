@@ -12,14 +12,23 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-add_executable(tcp_echo_server echo_server.cc)
-target_link_libraries(tcp_echo_server PRIVATE unilink::unilink)
-unilink_configure_executable(tcp_echo_server)
+add_executable(sync_tcp_echo_server sync/echo_server.cc)
+target_link_libraries(sync_tcp_echo_server PRIVATE unilink::unilink)
+unilink_configure_executable(sync_tcp_echo_server)
 
-add_executable(tcp_echo_client echo_client.cc)
-target_link_libraries(tcp_echo_client PRIVATE unilink::unilink)
-unilink_configure_executable(tcp_echo_client)
+add_executable(sync_tcp_echo_client sync/echo_client.cc)
+target_link_libraries(sync_tcp_echo_client PRIVATE unilink::unilink)
+unilink_configure_executable(sync_tcp_echo_client)
 
-add_executable(tcp_broadcast_server broadcast_server.cc)
-target_link_libraries(tcp_broadcast_server PRIVATE unilink::unilink)
-unilink_configure_executable(tcp_broadcast_server)
+add_executable(sync_tcp_broadcast_server sync/broadcast_server.cc)
+target_link_libraries(sync_tcp_broadcast_server PRIVATE unilink::unilink)
+unilink_configure_executable(sync_tcp_broadcast_server)
+
+# Async Examples
+add_executable(async_tcp_echo_client async/echo_client.cc)
+target_link_libraries(async_tcp_echo_client PRIVATE unilink::unilink)
+unilink_configure_executable(async_tcp_echo_client)
+
+add_executable(async_tcp_echo_server async/echo_server.cc)
+target_link_libraries(async_tcp_echo_server PRIVATE unilink::unilink)
+unilink_configure_executable(async_tcp_echo_server)

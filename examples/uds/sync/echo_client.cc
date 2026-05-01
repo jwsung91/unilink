@@ -20,11 +20,10 @@
 #include "unilink/unilink.hpp"
 
 int main(int argc, char** argv) {
-  std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
-  uint16_t port = (argc > 2) ? static_cast<uint16_t>(std::stoi(argv[2])) : 8080;
+  std::string path = (argc > 1) ? argv[1] : "/tmp/unilink_echo.sock";
 
   auto client =
-      unilink::tcp_client(host, port)
+      unilink::uds_client(path)
           .on_connect(
               [](const unilink::ConnectionContext&) { std::cout << "Connected. Type messages or '/quit' to exit.\n"; })
           .on_data([](const unilink::MessageContext& ctx) { std::cout << "[server] " << ctx.data() << "\n"; })
@@ -32,8 +31,8 @@ int main(int argc, char** argv) {
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
           .build();
 
-  if (!client->start().get()) {
-    std::cerr << "Failed to connect to " << host << ":" << port << "\n";
+  if (!client->start_sync()) {
+    std::cerr << "Failed to connect to " << path << "\n";
     return 1;
   }
 

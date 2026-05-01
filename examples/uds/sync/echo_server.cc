@@ -20,18 +20,16 @@
 
 #include "unilink/unilink.hpp"
 
-// Uses a class so that server_ is a stable member that callbacks can safely
-// capture via `this` without any dangling-pointer risk.
-class EchoServer {
+class UdsEchoServer {
  public:
-  explicit EchoServer(uint16_t port) : port_(port) {}
+  explicit UdsEchoServer(const std::string& path) : path_(path) {}
 
   bool start() {
     server_ =
-        unilink::tcp_server(port_)
+        unilink::uds_server(path_)
             .unlimited_clients()
             .on_connect([](const unilink::ConnectionContext& ctx) {
-              std::cout << "[connect] client " << ctx.client_id() << " from " << ctx.client_info() << "\n";
+              std::cout << "[connect] client " << ctx.client_id() << "\n";
             })
             .on_data([this](const unilink::MessageContext& ctx) { server_->send_to(ctx.client_id(), ctx.data()); })
             .on_disconnect([](const unilink::ConnectionContext& ctx) {
@@ -40,12 +38,12 @@ class EchoServer {
             .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
             .build();
 
-    if (!server_->start().get()) {
-      std::cerr << "Failed to start server on port " << port_ << "\n";
+    if (!server_->start_sync()) {
+      std::cerr << "Failed to start UDS server on " << path_ << "\n";
       return false;
     }
 
-    std::cout << "Echo server listening on port " << port_ << "\n";
+    std::cout << "UDS echo server listening on " << path_ << "\n";
     return true;
   }
 
@@ -59,14 +57,14 @@ class EchoServer {
   }
 
  private:
-  uint16_t port_;
-  std::unique_ptr<unilink::TcpServer> server_;
+  std::string path_;
+  std::unique_ptr<unilink::UdsServer> server_;
 };
 
 int main(int argc, char** argv) {
-  uint16_t port = (argc > 1) ? static_cast<uint16_t>(std::stoi(argv[1])) : 8080;
+  std::string path = (argc > 1) ? argv[1] : "/tmp/unilink_echo.sock";
 
-  EchoServer server(port);
+  UdsEchoServer server(path);
   if (!server.start()) return 1;
 
   server.run();
