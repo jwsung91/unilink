@@ -128,6 +128,29 @@ tcp_server(port)
 - **`independent_context(true)`**: Builder creates its own `io_context` and runs it on an internal thread; cleanup is automatic.
 - **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_start(true)` (it starts immediately).
 
+### Starting Synchronously vs. Asynchronously
+
+Unilink provides two ways to start a channel or server:
+
+1.  **Synchronous (`start_sync()`):** Blocks the calling thread until the connection is established (client) or the port is bound (server). Returns a `bool` indicating success. Best for simple command-line tools or initial setup.
+2.  **Asynchronous (`start()`):** Returns immediately with a `std::future<bool>`. The actual startup process happens in the background. Best for GUI applications or systems managing multiple concurrent connections.
+
+#### Asynchronous Example
+
+```cpp
+auto client = unilink::tcp_client("127.0.0.1", 8080)
+    .on_connect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "Connected asynchronously!" << std::endl;
+    })
+    .build();
+
+// Start without blocking
+client->start(); 
+
+// Main thread is free to do other work...
+std::cout << "Starting connection in background..." << std::endl;
+```
+
 ---
 
 ## TCP Client
@@ -156,7 +179,7 @@ auto client = unilink::tcp_client("192.168.1.100", 8080)
     .build();
 
 // Start connection
-bool connected = client->start().get();
+bool connected = client->start_sync();
 
 // Send data
 if (connected && client->connected()) {
@@ -256,7 +279,7 @@ auto server = unilink::tcp_server(8080)
     .build();
 
 // Start server
-bool listening = server->start().get();
+bool listening = server->start_sync();
 
 // Send to specific client
 if (listening) {
@@ -376,7 +399,7 @@ auto serial = unilink::serial("/dev/ttyUSB0", 115200)
     .build();
 
 // Start serial communication
-bool opened = serial->start().get();
+bool opened = serial->start_sync();
 
 // Send AT command
 if (opened) {
@@ -500,7 +523,7 @@ auto receiver = unilink::udp_client(8080)
     })
     .build();
 
-bool receiver_started = receiver->start().get();
+bool receiver_started = receiver->start_sync();
 
 // Keep running...
 if (receiver_started) {
@@ -519,7 +542,7 @@ auto sender = unilink::udp_client(0)  // 0 = ephemeral port
     .remote("127.0.0.1", 8080)
     .build();
 
-bool sender_started = sender->start().get();
+bool sender_started = sender->start_sync();
 if (sender_started) {
     sender->send("Hello UDP!");
 }
@@ -589,7 +612,7 @@ auto server = unilink::udp_server(8080)
     })
     .build();
 
-server->start().get();
+server->start_sync();
 ```
 
 ---
@@ -615,7 +638,7 @@ auto server = unilink::uds_server("/tmp/my_service.sock")
     })
     .build();
 
-bool listening = server->start().get();
+bool listening = server->start_sync();
 if (!listening) {
     std::cerr << "Failed to start UDS server" << std::endl;
 }
@@ -632,7 +655,7 @@ auto client = unilink::uds_client("/tmp/my_service.sock")
     })
     .build();
 
-bool connected = client->start().get();
+bool connected = client->start_sync();
 if (connected) {
     client->send("Hello IPC!");
 }

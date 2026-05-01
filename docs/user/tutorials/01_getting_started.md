@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
         .build();
 
     std::cout << "Connecting to " << host << ":" << port << "..." << std::endl;
-    if (!client->start().get()) {
+    if (!client->start_sync()) {
         std::cerr << "Initial connection attempt failed" << std::endl;
         return 1;
     }
@@ -129,7 +129,7 @@ The tutorial code uses context-based callbacks consistently:
 The initial `start()` call returns `std::future<bool>`, so the common pattern is:
 
 ```cpp
-if (!client->start().get()) {
+if (!client->start_sync()) {
     // handle startup failure
 }
 ```
@@ -147,7 +147,7 @@ After the client is running, use:
 
 The repository includes ready-to-build examples:
 
-- [examples/tcp/echo_client.cc](../../../examples/tcp/echo_client.cc)
+- [examples/tcp/sync/echo_client.cc](../../../examples/tcp/sync/echo_client.cc)
 
 This tutorial stays smaller than the example sources on purpose.
 

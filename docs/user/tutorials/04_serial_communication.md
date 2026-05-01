@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
         })
         .build();
 
-    if (!serial->start().get()) {
+    if (!serial->start_sync()) {
         std::cerr << "Failed to open serial device" << std::endl;
         return 1;
     }

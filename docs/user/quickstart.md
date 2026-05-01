@@ -43,7 +43,7 @@ int main() {
         })
         .build();
 
-    bool started = client->start().get();
+    bool started = client->start_sync();
 
     // Send a message
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -86,7 +86,7 @@ int main() {
         })
         .build();
 
-    if (!server->start().get()) {
+    if (!server->start_sync()) {
         std::cerr << "Failed to start server" << std::endl;
         return 1;
     }
@@ -120,7 +120,7 @@ int main() {
         })
         .build();
 
-    if (!serial->start().get()) {
+    if (!serial->start_sync()) {
         std::cerr << "Failed to open serial port" << std::endl;
         return 1;
     }

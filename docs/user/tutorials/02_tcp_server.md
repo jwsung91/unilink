@@ -57,7 +57,7 @@ public:
             })
             .build();
 
-        if (!server_->start().get()) {
+        if (!server_->start_sync()) {
             throw std::runtime_error("failed to start TCP server");
         }
     }
@@ -109,7 +109,7 @@ Anything you send should be echoed back.
 
 The current server wrapper uses these key methods:
 
-- `start().get()` to verify startup
+- `start_sync()` to verify startup
 - `broadcast(...)` to send to all connected clients
 - `send_to(client_id, ...)` to reply to one client
 - `listening()` to check listener state
@@ -141,8 +141,8 @@ For tutorial simplicity, the example above uses `unlimited_clients()`.
 
 The repository includes ready-to-build examples:
 
-- [examples/tcp/echo_server.cc](../../../examples/tcp/echo_server.cc) — echo back to individual clients
-- [examples/tcp/broadcast_server.cc](../../../examples/tcp/broadcast_server.cc) — broadcast to all connected clients
+- [examples/tcp/sync/echo_server.cc](../../../examples/tcp/sync/echo_server.cc) — echo back to individual clients
+- [examples/tcp/sync/broadcast_server.cc](../../../examples/tcp/sync/broadcast_server.cc) — broadcast to all connected clients
 
 ---
 
