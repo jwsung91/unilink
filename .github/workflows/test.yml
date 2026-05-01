@@ -41,6 +41,11 @@ jobs:
             cc: clang-14
             cxx: clang++-14
             boost_version: "1.74"
+          - os: ubuntu-22.04-arm
+            compiler: gcc
+            cc: gcc
+            cxx: g++
+            boost_version: "1.74"
           # Ubuntu 24.04: GCC 13 and Clang 15
           - os: ubuntu-24.04
             compiler: gcc
@@ -51,6 +56,11 @@ jobs:
             compiler: clang
             cc: clang-15
             cxx: clang++-15
+            boost_version: "1.83"
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            cc: gcc
+            cxx: g++
             boost_version: "1.83"
           # macOS: Clang
           - os: macos-14
@@ -255,6 +265,64 @@ jobs:
       with:
         name: integration-test-results
         path: build-integration/Testing/
+        retention-days: 7
+        overwrite: true
+
+  integration-tests-arm64:
+    name: Integration Tests (ubuntu-22.04-arm, gcc)
+    runs-on: ubuntu-22.04-arm
+    timeout-minutes: 45
+    needs: []
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Cache ccache
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/ccache
+        key: ccache-${{ runner.os }}-integration-arm64-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ccache-${{ runner.os }}-integration-arm64-
+
+    - name: Install dependencies
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake ccache libboost1.74-dev libboost-system1.74-dev socat"
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build-integration-arm64 \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+    - name: Build integration tests
+      run: cmake --build build-integration-arm64 -j $(nproc)
+
+    - name: Run integration tests
+      run: |
+        cd build-integration-arm64
+        ctest --output-on-failure --parallel 2 \
+          --label-regex "integration|mock|stable" \
+          --label-exclude "slow" || \
+        ctest --rerun-failed --output-on-failure --parallel 2 \
+          --label-regex "integration|mock|stable" \
+          --label-exclude "slow"
+
+    - name: Upload integration test results
+      uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: integration-test-results-ubuntu-22.04-arm-gcc
+        path: build-integration-arm64/Testing/
         retention-days: 7
         overwrite: true
 

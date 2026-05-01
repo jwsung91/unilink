@@ -30,6 +30,13 @@ jobs:
             release_files: |
               build/package/unilink-*.tar.gz
 
+          - os: ubuntu-22.04-arm
+            label: Linux ARM64 (Ubuntu 22.04)
+            cmake_generator: "Ninja"
+            cpack_generator: "TGZ"
+            release_files: |
+              build/package/unilink-*.tar.gz
+
           - os: macos-14
             label: macOS 14
             cmake_generator: "Ninja"

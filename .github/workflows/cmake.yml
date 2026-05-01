@@ -39,6 +39,24 @@ jobs:
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
+          - name: C++ (Linux ARM64, GCC, Ubuntu 22.04)
+            os: ubuntu-22.04-arm
+            triplet: arm64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
+          - name: C++ (Linux ARM64, GCC, Ubuntu 24.04)
+            os: ubuntu-24.04-arm
+            triplet: arm64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
           - name: C++ (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows
@@ -62,6 +80,24 @@ jobs:
           - name: Python3 (Linux, GCC)
             os: ubuntu-24.04
             triplet: x64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
+          - name: Python3 (Linux ARM64, GCC, Ubuntu 22.04)
+            os: ubuntu-22.04-arm
+            triplet: arm64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
+          - name: Python3 (Linux ARM64, GCC, Ubuntu 24.04)
+            os: ubuntu-24.04-arm
+            triplet: arm64-linux
             cc: gcc
             cxx: g++
             generator: Ninja

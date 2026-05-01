@@ -74,17 +74,27 @@ Pre-built binary packages are available from GitHub Releases.
 
 Choose the archive matching your OS and architecture. Replace `${VERSION}` with the current version number (found in the root `CMakeLists.txt`).
 
-- **Linux**: `.tar.gz` (e.g. `unilink-${VERSION}-Linux-x86_64.tar.gz`)
+- **Linux**: `.tar.gz` (e.g. `unilink-${VERSION}-Linux-x86_64.tar.gz` or `unilink-${VERSION}-Linux-aarch64.tar.gz`)
 - **macOS**: `.tar.gz`, `.dmg`
 - **Windows**: `.zip`
 
 ```bash
-# Example for Linux (replace ${VERSION} with the actual version, e.g., 0.4.3)
+# Example for Linux x86_64 (replace ${VERSION} with the actual version, e.g., 0.4.3)
 export UNILINK_VERSION="0.4.3"
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
 tar -xzf unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
 cd unilink-${UNILINK_VERSION}-Linux-x86_64
 ```
+
+```bash
+# Example for Linux ARM64 / aarch64
+export UNILINK_VERSION="0.4.3"
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-aarch64.tar.gz
+tar -xzf unilink-${UNILINK_VERSION}-Linux-aarch64.tar.gz
+cd unilink-${UNILINK_VERSION}-Linux-aarch64
+```
+
+ARM64 release artifacts are intended to be produced from an Ubuntu 22.04 baseline so Jetson/Orin systems can consume the same package without relying on Ubuntu 24.04 userspace.
 
 #### Step 2: Install
 

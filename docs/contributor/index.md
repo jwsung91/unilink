@@ -8,6 +8,7 @@ Documentation for developers building, extending, or contributing to unilink its
 
 - [Build Guide](build_guide.md) — CMake options, build profiles, sanitizers, platform-specific notes
 - [Testing](testing.md) — Running the test suite, CI integration, writing tests
+- [Orin Nano Validation](orin_nano_validation.md) — Ubuntu 22.04 ARM64 bring-up and test runbook
 - [Implementation Status](implementation_status.md) — Verified scope, known gaps, and codebase snapshot
 - [Test Structure](test_structure.md) — Test organization and coverage breakdown
 

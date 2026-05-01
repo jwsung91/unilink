@@ -42,6 +42,7 @@ You are developing or extending unilink itself.
 |----------|----------------|
 | [Build Guide](contributor/build_guide.md) | CMake options, build profiles, sanitizers |
 | [Testing](contributor/testing.md) | Running tests, CI integration |
+| [Orin Nano Validation](contributor/orin_nano_validation.md) | Ubuntu 22.04 ARM64 build and test runbook |
 | [Implementation Status](contributor/implementation_status.md) | Verified scope and known gaps |
 | [Test Structure](contributor/test_structure.md) | Test organization and coverage |
 | [Architecture Overview](contributor/architecture/README.md) | Layers, responsibilities, design patterns |
