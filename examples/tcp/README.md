@@ -3,15 +3,16 @@
 ## Examples Structure
 
 - `sync/` — Synchronous (blocking) examples. Uses `start_sync()` for simplicity.
-- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+- `async/` — Asynchronous (callback-driven) examples. Shows non-blocking patterns.
 
 ## Binaries
 
 | Binary | Description |
 |--------|-------------|
-| `sync_tcp_echo_server` | Accepts unlimited clients, echoes each message back to the sender |
-| `sync_tcp_echo_client` | Connects to a server and enters an interactive send/receive loop |
-| `sync_tcp_broadcast_server` | Accepts unlimited clients, broadcasts every message to all of them |
+| `sync_tcp_echo_server` | Blocking echo server |
+| `sync_tcp_echo_client` | Interactive blocking client |
+| `async_tcp_echo_server`| Event-driven server with status heartbeat |
+| `async_tcp_echo_client`| Event-driven client with parallel input handling |
 
 ## Usage
 

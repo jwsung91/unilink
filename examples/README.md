@@ -7,13 +7,17 @@ Runnable examples for the `unilink/unilink.hpp` public API.
 ```
 examples/
   tcp/
-    sync/  — Synchronous (blocking) TCP examples
+    sync/   — Synchronous (blocking) TCP examples
+    async/  — Asynchronous (event-driven) TCP examples
   udp/
-    sync/  — Synchronous UDP sender and receiver
+    sync/   — Synchronous UDP examples
+    async/  — Asynchronous UDP examples
   uds/
-    sync/  — Synchronous Unix Domain Socket examples
+    sync/   — Synchronous UDS examples
+    async/  — Asynchronous UDS examples
   serial/
-    sync/  — Synchronous Serial port echo example
+    sync/   — Synchronous Serial examples
+    async/  — Asynchronous Serial examples
 ```
 
 ## Build

@@ -3,14 +3,16 @@
 ## Examples Structure
 
 - `sync/` — Synchronous (blocking) examples. Uses `start_sync()` for simplicity.
-- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+- `async/` — Asynchronous (callback-driven) examples.
 
 ## Binaries
 
 | Binary | Description |
 |--------|-------------|
-| `sync_udp_receiver` | Binds a local port and prints incoming datagrams |
-| `sync_udp_sender` | Sends user-entered lines to a remote host/port |
+| `sync_udp_receiver` | Blocking UDP receiver |
+| `sync_udp_sender` | Blocking UDP sender |
+| `async_udp_receiver`| Event-driven UDP receiver |
+| `async_udp_sender`| Non-blocking UDP sender |
 
 ## Usage
 

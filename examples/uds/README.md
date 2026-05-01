@@ -5,14 +5,16 @@ Unix domain socket examples for local IPC. Requires Linux or macOS.
 ## Examples Structure
 
 - `sync/` — Synchronous (blocking) examples. Uses `start_sync()` for simplicity.
-- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+- `async/` — Asynchronous (callback-driven) examples. Shows non-blocking patterns.
 
 ## Binaries
 
 | Binary | Description |
 |--------|-------------|
-| `sync_uds_echo_server` | Accepts unlimited clients, echoes each message back to the sender |
-| `sync_uds_echo_client` | Connects to a UDS server and enters an interactive send/receive loop |
+| `sync_uds_echo_server` | Blocking UDS echo server |
+| `sync_uds_echo_client` | Interactive blocking UDS client |
+| `async_uds_echo_server`| Event-driven UDS server |
+| `async_uds_echo_client`| Event-driven UDS client |
 
 ## Usage
 

@@ -9,7 +9,7 @@
 ## Examples Structure
 
 - `sync/` — Synchronous (blocking) examples. Uses `start_sync()` for simplicity.
-- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+- `async/` — Asynchronous (callback-driven) examples. Shows how to handle serial data without blocking the main loop.
 
 ## Usage
 
