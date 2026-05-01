@@ -17,6 +17,10 @@ Complete guide for testing `unilink`, including running tests, CI/CD integration
 
 ## Quick Start
 
+For Jetson / Ubuntu ARM64 validation, use the dedicated runbook:
+
+- [Orin Nano Validation](orin_nano_validation.md)
+
 ### Build and Run All Tests
 
 ```bash

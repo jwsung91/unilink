@@ -96,13 +96,33 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   if(NOT Boost_FOUND)
     # Manual fallback if the packaged Boost variants don't match expectations
     # (e.g., debug runtime mismatch)
+    set(_boost_fallback_library_hints /usr/lib /usr/local/lib /lib)
+    if(CMAKE_LIBRARY_ARCHITECTURE)
+      list(
+        APPEND
+        _boost_fallback_library_hints
+        "/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+        "/usr/local/lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+        "/lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+      )
+    endif()
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
+      list(APPEND _boost_fallback_library_hints /usr/lib/x86_64-linux-gnu
+           /usr/local/lib/x86_64-linux-gnu /lib/x86_64-linux-gnu
+      )
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+      list(APPEND _boost_fallback_library_hints /usr/lib/aarch64-linux-gnu
+           /usr/local/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu
+      )
+    endif()
+    list(REMOVE_DUPLICATES _boost_fallback_library_hints)
     find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
               HINTS /usr/include /usr/local/include
     )
     find_library(
       BOOST_FALLBACK_SYSTEM_LIB
       NAMES boost_system
-      HINTS /usr/lib /usr/lib/x86_64-linux-gnu /usr/local/lib
+      HINTS ${_boost_fallback_library_hints}
     )
     if(BOOST_FALLBACK_INCLUDE_DIR
        AND BOOST_FALLBACK_SYSTEM_LIB

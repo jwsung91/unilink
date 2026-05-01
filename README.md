@@ -83,6 +83,7 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 
 * [Build Guide](docs/contributor/build_guide.md) – Build configurations, CMake flags, sanitizers
 * [Testing Guide](docs/contributor/testing.md) – Running tests and CI integration
+* [Orin Nano Validation](docs/contributor/orin_nano_validation.md) – Ubuntu 22.04 ARM64 bring-up and test runbook
 * [Implementation Status](docs/contributor/implementation_status.md) – Verified scope and known gaps
 * [Architecture Overview](docs/contributor/architecture/README.md) – High-level structure and layer responsibilities
 * [Runtime Behavior](docs/contributor/architecture/runtime_behavior.md) – Threading model, reconnection, backpressure

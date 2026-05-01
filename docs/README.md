@@ -22,6 +22,7 @@ docs/
 │   ├── index.md       # Contributor guide entry point
 │   ├── build_guide.md
 │   ├── testing.md
+│   ├── orin_nano_validation.md
 │   ├── implementation_status.md
 │   ├── test_structure.md
 │   └── architecture/  # Internal design and transport contracts
