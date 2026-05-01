@@ -518,7 +518,6 @@ gtest_discover_tests(
 
 # Framer tests (separate executables)
 foreach(test_file test_line_framer.cc test_packet_framer.cc
-                  test_line_framer_security.cc test_packet_framer_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(

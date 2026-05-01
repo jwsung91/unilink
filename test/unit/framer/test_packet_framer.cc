@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 Jinwoo Sung
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "unilink/framer/packet_framer.hpp"
 
 #include <gtest/gtest.h>
@@ -6,6 +22,9 @@
 
 using namespace unilink;
 using namespace unilink::framer;
+
+namespace unilink {
+namespace test {
 
 class PacketFramerTest : public ::testing::Test {
  protected:
@@ -91,3 +110,88 @@ TEST_F(PacketFramerTest, RejectEmptyPatterns) {
   std::vector<uint8_t> empty_end;
   EXPECT_THROW({ PacketFramer(empty_start, empty_end, 1024); }, std::invalid_argument);
 }
+
+// --- Coverage & Edge Case Tests ---
+
+TEST_F(PacketFramerTest, EmptyDataInput) {
+  int count = 0;
+  framer_->on_message([&](memory::ConstByteSpan) { count++; });
+  framer_->push_bytes(memory::ConstByteSpan(nullptr, 0));
+  EXPECT_EQ(count, 0);
+}
+
+TEST_F(PacketFramerTest, FastPathEmptyEndPattern) {
+  PacketFramer framer({0x01}, {}, 1024);
+  std::vector<uint8_t> messages;
+  framer.on_message([&](memory::ConstByteSpan data) { messages.insert(messages.end(), data.begin(), data.end()); });
+
+  std::vector<uint8_t> input = {0x01, 0x01, 0x01};
+  framer.push_bytes(memory::ConstByteSpan(input.data(), input.size()));
+  EXPECT_EQ(messages.size(), 3);
+}
+
+TEST_F(PacketFramerTest, PartialMatchAtEnd) {
+  PacketFramer framer({0x01, 0x02}, {0x03}, 1024);
+  std::vector<uint8_t> input = {0x00, 0x01};  // 0x01 is partial start match
+  framer.push_bytes(memory::ConstByteSpan(input.data(), input.size()));
+
+  // Now push the rest
+  input = {0x02, 0x00, 0x03};  // Completes 01 02 ... 03
+  int count = 0;
+  framer.on_message([&](memory::ConstByteSpan) { count++; });
+  framer.push_bytes(memory::ConstByteSpan(input.data(), input.size()));
+  EXPECT_EQ(count, 1);
+}
+
+TEST_F(PacketFramerTest, BufferPathEmptyStartPattern) {
+  PacketFramer framer({}, {0x02}, 1024);  // empty start
+  int count = 0;
+  framer.on_message([&](memory::ConstByteSpan) { count++; });
+
+  // First push partial to trigger buffer path
+  std::vector<uint8_t> input1 = {0x01};
+  framer.push_bytes(memory::ConstByteSpan(input1.data(), input1.size()));
+
+  // Then push end
+  std::vector<uint8_t> input2 = {0x02};
+  framer.push_bytes(memory::ConstByteSpan(input2.data(), input2.size()));
+  EXPECT_EQ(count, 1);
+}
+
+TEST_F(PacketFramerTest, BufferPathStartPatternNotFoundPartialKeep) {
+  PacketFramer framer({0x01, 0x02}, {0x03}, 1024);
+  // Buffer path: push data that does not contain start pattern but ends with partial
+  std::vector<uint8_t> input1 = {0x00, 0x00};  // Force buffer path
+  framer.push_bytes(memory::ConstByteSpan(input1.data(), input1.size()));
+
+  std::vector<uint8_t> input2 = {0x05, 0x05, 0x01};  // Ends with partial 0x01
+  framer.push_bytes(memory::ConstByteSpan(input2.data(), input2.size()));
+
+  // Next push completes start pattern
+  std::vector<uint8_t> input3 = {0x02, 0x03};
+  int count = 0;
+  framer.on_message([&](memory::ConstByteSpan) { count++; });
+  framer.push_bytes(memory::ConstByteSpan(input3.data(), input3.size()));
+  EXPECT_EQ(count, 1);
+}
+
+TEST_F(PacketFramerTest, ResetClearsState) {
+  framer_->push_bytes(memory::ConstByteSpan(std::vector<uint8_t>{0x01, 0x00}.data(), 2));
+  framer_->reset();
+  // After reset, pushing 0x02 should NOT trigger message because 0x01 was cleared
+  int count = 0;
+  framer_->on_message([&](memory::ConstByteSpan) { count++; });
+  // Set start pattern for this test to be something known
+  start_ = {0x01};
+  end_ = {0x02};
+  framer_ = std::make_unique<PacketFramer>(start_, end_, 1024);
+  framer_->on_message([&](memory::ConstByteSpan) { count++; });
+  
+  framer_->push_bytes(memory::ConstByteSpan(std::vector<uint8_t>{0x01, 0x00}.data(), 2));
+  framer_->reset();
+  framer_->push_bytes(memory::ConstByteSpan(std::vector<uint8_t>{0x02}.data(), 1));
+  EXPECT_EQ(count, 0);
+}
+
+}  // namespace test
+}  // namespace unilink
