@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md787',1,'']]],
+  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md789',1,'']]],
   ['generate_20coverage_20report_1',['Generate Coverage Report',['../contrib_testing.html#autotoc_md457',1,'']]],
   ['generate_5fpattern_2',['generate_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ae260c99bd3684af69d879e6562f42712',1,'unilink::memory::MemoryPatternGenerator']]],
   ['generate_5frandom_5fpattern_3',['generate_random_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ad2f76b498219fc9678158f8b0f46ec34',1,'unilink::memory::MemoryPatternGenerator']]],
@@ -25,17 +25,17 @@ var searchData=
   ['get_5ftimestamp_22',['get_timestamp',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a0391ba348eeaca83ab51e33e66a9411f',1,'unilink::diagnostics::Logger::Impl']]],
   ['get_5ftype_23',['get_type',['../classunilink_1_1config_1_1ConfigManagerInterface.html#aaf440e21d6f0c46dc2b65b533e4d633c',1,'unilink::config::ConfigManagerInterface::get_type()'],['../classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496',1,'unilink::config::ConfigManager::get_type()']]],
   ['get_5fuptime_24',['get_uptime',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#a21c46e51e58b6a95af4f69fb19a34a6b',1,'unilink::diagnostics::AsyncLogStats']]],
-  ['getting_20help_25',['Getting Help',['../user_troubleshooting.html#autotoc_md791',1,'']]],
-  ['getting_20started_26',['getting started',['../user_python_bindings.html#autotoc_md632',1,'🚀 Getting Started'],['../user_index.html#autotoc_md585',1,'Getting Started']]],
+  ['getting_20help_25',['Getting Help',['../user_troubleshooting.html#autotoc_md793',1,'']]],
+  ['getting_20started_26',['getting started',['../user_python_bindings.html#autotoc_md634',1,'🚀 Getting Started'],['../user_index.html#autotoc_md587',1,'Getting Started']]],
   ['getting_20started_20with_20unilink_27',['Getting Started with Unilink',['../tutorial_01.html',1,'user_tutorials']]],
-  ['gil_28',['Threading &amp; GIL',['../user_python_bindings.html#autotoc_md652',1,'']]],
-  ['git_20submodule_20integration_29',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md605',1,'']]],
+  ['gil_28',['Threading &amp; GIL',['../user_python_bindings.html#autotoc_md654',1,'']]],
+  ['git_20submodule_20integration_29',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md607',1,'']]],
   ['github_20actions_20integration_30',['GitHub Actions Integration',['../contrib_testing.html#autotoc_md424',1,'']]],
   ['globalmemorypool_31',['globalmemorypool',['../classunilink_1_1memory_1_1GlobalMemoryPool.html',1,'unilink::memory::GlobalMemoryPool'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#a0068d4d81382e7001f2a0cd530840b44',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool()=delete'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#af805a5c371db16d7dd56923e3c74b41e',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool(const GlobalMemoryPool &amp;)=delete']]],
   ['goals_32',['Design Goals',['../index.html#autotoc_md98',1,'']]],
-  ['gps_20module_33',['GPS Module',['../user_api_guide.html#autotoc_md514',1,'']]],
+  ['gps_20module_33',['GPS Module',['../user_api_guide.html#autotoc_md516',1,'']]],
   ['graceful_20shutdown_34',['3. Graceful Shutdown',['../contrib_arch_runtime.html#autotoc_md205',1,'']]],
   ['guarantees_35',['guarantees',['../contrib_arch_memory.html#autotoc_md10',1,'Memory Safety Guarantees'],['../index.html#autotoc_md123',1,'Thread Safety Guarantees']]],
   ['guide_36',['guide',['../contrib_build.html',1,'Build Guide'],['../contrib_index.html',1,'Contributor Guide'],['../user_installation.html',1,'Installation Guide'],['../user_performance.html',1,'Performance Guide'],['../user_python_bindings.html',1,'Python Bindings Guide'],['../contrib_testing.html',1,'Testing Guide'],['../user_troubleshooting.html',1,'Troubleshooting Guide'],['../user_api_guide.html',1,'Unilink API Guide'],['../user_quickstart.html',1,'Unilink Quick Start Guide'],['../user_index.html',1,'User Guide']]],
-  ['guides_37',['Guides',['../user_index.html#autotoc_md591',1,'']]]
+  ['guides_37',['Guides',['../user_index.html#autotoc_md593',1,'']]]
 ];
