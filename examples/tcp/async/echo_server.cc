@@ -16,8 +16,8 @@
 
 #include <chrono>
 #include <iostream>
-#include <thread>
 #include <memory>
+#include <thread>
 #include <vector>
 
 #include "unilink/unilink.hpp"
@@ -37,21 +37,19 @@ int main(int argc, char* argv[]) {
 
   auto builder = unilink::tcp_server(port);
   builder.unlimited_clients()
-         .on_connect([](const unilink::ConnectionContext& ctx) {
-           std::cout << "[Server] Client connected: ID=" << ctx.client_id() << "\n";
-         })
-         .on_data([&server](const unilink::MessageContext& ctx) {
-           std::cout << "[Server] Data from " << ctx.client_id() << ": " << ctx.data() << "\n";
-           if (server) {
-             server->send_to(ctx.client_id(), ctx.data());
-           }
-         })
-         .on_disconnect([](const unilink::ConnectionContext& ctx) {
-           std::cout << "[Server] Client disconnected: ID=" << ctx.client_id() << "\n";
-         })
-         .on_error([](const unilink::ErrorContext& ctx) {
-           std::cerr << "[Server Error] " << ctx.message() << "\n";
-         });
+      .on_connect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "[Server] Client connected: ID=" << ctx.client_id() << "\n";
+      })
+      .on_data([&server](const unilink::MessageContext& ctx) {
+        std::cout << "[Server] Data from " << ctx.client_id() << ": " << ctx.data() << "\n";
+        if (server) {
+          server->send_to(ctx.client_id(), ctx.data());
+        }
+      })
+      .on_disconnect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "[Server] Client disconnected: ID=" << ctx.client_id() << "\n";
+      })
+      .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[Server Error] " << ctx.message() << "\n"; });
 
   server = builder.build();
 

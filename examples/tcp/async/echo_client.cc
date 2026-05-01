@@ -15,8 +15,8 @@
  */
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "unilink/unilink.hpp"
 
@@ -36,21 +36,26 @@ int main(int argc, char* argv[]) {
   std::shared_ptr<unilink::wrapper::TcpClient> client;
 
   auto builder = unilink::tcp_client(host, port);
-  builder.on_connect([&client](const unilink::ConnectionContext&) {
-            std::cout << "\n[Event] Connected to server!\n" << "> " << std::flush;
-            if (client) {
-              client->send("Auto-greeting from client!");
-            }
-          })
-          .on_data([](const unilink::MessageContext& ctx) {
-            std::cout << "\n[Received] " << ctx.data() << "\n" << "> " << std::flush;
-          })
-          .on_disconnect([](const unilink::ConnectionContext&) {
-            std::cout << "\n[Event] Disconnected from server.\n" << "> " << std::flush;
-          })
-          .on_error([](const unilink::ErrorContext& ctx) {
-            std::cerr << "\n[Error] " << ctx.message() << "\n" << "> " << std::flush;
-          });
+  builder
+      .on_connect([&client](const unilink::ConnectionContext&) {
+        std::cout << "\n[Event] Connected to server!\n"
+                  << "> " << std::flush;
+        if (client) {
+          client->send("Auto-greeting from client!");
+        }
+      })
+      .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "\n[Received] " << ctx.data() << "\n"
+                  << "> " << std::flush;
+      })
+      .on_disconnect([](const unilink::ConnectionContext&) {
+        std::cout << "\n[Event] Disconnected from server.\n"
+                  << "> " << std::flush;
+      })
+      .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "\n[Error] " << ctx.message() << "\n"
+                  << "> " << std::flush;
+      });
 
   client = builder.build();
   client->start();

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <thread>
-#include <chrono>
 
 #include "unilink/unilink.hpp"
 
@@ -33,8 +33,7 @@ int main(int argc, char* argv[]) {
 
   auto receiver = unilink::udp_client(port)
                       .on_data([](const unilink::MessageContext& ctx) {
-                        std::cout << "[UDP Recv] from " << ctx.client_info() 
-                                  << ": " << ctx.data() << "\n";
+                        std::cout << "[UDP Recv] from " << ctx.client_info() << ": " << ctx.data() << "\n";
                       })
                       .build();
 

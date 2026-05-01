@@ -16,9 +16,9 @@
 
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
 
 #include "unilink/unilink.hpp"
 
@@ -38,18 +38,23 @@ int main(int argc, char* argv[]) {
   std::shared_ptr<unilink::wrapper::Serial> port;
 
   auto builder = unilink::serial(device, baud);
-  builder.on_connect([](const unilink::ConnectionContext&) {
-           std::cout << "\n[Event] Serial port opened successfully!\n" << "> " << std::flush;
-         })
-         .on_data([](const unilink::MessageContext& ctx) {
-           std::cout << "\n[Received] " << ctx.data() << "\n" << "> " << std::flush;
-         })
-         .on_disconnect([](const unilink::ConnectionContext&) {
-           std::cout << "\n[Event] Serial port closed/disconnected.\n" << "> " << std::flush;
-         })
-         .on_error([](const unilink::ErrorContext& ctx) {
-           std::cerr << "\n[Error] " << ctx.message() << "\n" << "> " << std::flush;
-         });
+  builder
+      .on_connect([](const unilink::ConnectionContext&) {
+        std::cout << "\n[Event] Serial port opened successfully!\n"
+                  << "> " << std::flush;
+      })
+      .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "\n[Received] " << ctx.data() << "\n"
+                  << "> " << std::flush;
+      })
+      .on_disconnect([](const unilink::ConnectionContext&) {
+        std::cout << "\n[Event] Serial port closed/disconnected.\n"
+                  << "> " << std::flush;
+      })
+      .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "\n[Error] " << ctx.message() << "\n"
+                  << "> " << std::flush;
+      });
 
   port = builder.build();
   port->start();
@@ -62,7 +67,7 @@ int main(int argc, char* argv[]) {
   // Non-blocking input handling combined with a heartbeat timer
   while (true) {
     std::cout << "> " << std::flush;
-    
+
     // Simple way to handle input without blocking the whole thread forever,
     // though in a real GUI app this would be even cleaner.
     if (std::cin.peek() != EOF) {
