@@ -165,5 +165,3 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
   EXPECT_TRUE(closed.load());
   EXPECT_FALSE(session->alive());
 }
-());
-}
