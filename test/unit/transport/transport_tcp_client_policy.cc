@@ -342,7 +342,7 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   std::atomic<bool> backpressure_seen{false};
   client_->on_backpressure([&](size_t) { backpressure_seen = true; });
 
-  client_->async_write_copy(huge_data);
+  client_->async_write_copy(huge_payload);
 
   std::atomic<int> connecting_count{0};
   client_->on_state([&](base::LinkState state) {
