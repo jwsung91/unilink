@@ -1,6 +1,6 @@
-#include <pybind11/pybind11.h>
 #include <pybind11/chrono.h>
 #include <pybind11/functional.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 #include "unilink/framer/line_framer.hpp"
@@ -86,7 +86,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( TcpClient& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](TcpClient& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](TcpClient& self) {
              py::gil_scoped_release release;
@@ -207,7 +211,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( TcpServer& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](TcpServer& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](TcpServer& self) {
              py::gil_scoped_release release;
@@ -316,7 +324,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( Serial& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](Serial& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](Serial& self) {
              py::gil_scoped_release release;
@@ -424,7 +436,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( UdsClient& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](UdsClient& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](UdsClient& self) {
              py::gil_scoped_release release;
@@ -530,7 +546,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( UdsServer& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](UdsServer& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](UdsServer& self) {
              py::gil_scoped_release release;
@@ -651,7 +671,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( UdpClient& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](UdpClient& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](UdpClient& self) {
              py::gil_scoped_release release;
@@ -761,7 +785,11 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("start_sync", []( UdpServer& self ) { py::gil_scoped_release release; return self.start_sync(); })
+      .def("start_sync",
+           [](UdpServer& self) {
+             py::gil_scoped_release release;
+             return self.start_sync();
+           })
       .def("stop",
            [](UdpServer& self) {
              py::gil_scoped_release release;
