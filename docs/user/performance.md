@@ -113,8 +113,8 @@ Reusing connections avoids repeated TCP handshake and connection setup overhead.
 ### 3. Socket Tuning
 For extremely high throughput, tune OS-level socket buffers:
 ```bash
-sudo sysctl -w net.core.rmem_max=16777216  # 16 MB
-sudo sysctl -w net.core.wmem_max=16777216  # 16 MB
+sudo sysctl -w net.core.rmem_max=16777216  # 16 MB (OS limit)
+sudo sysctl -w net.core.wmem_max=16777216  # 16 MB (OS limit)
 ```
 
 ---

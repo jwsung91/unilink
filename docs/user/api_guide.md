@@ -43,7 +43,7 @@ auto channel = unilink::{type}(params)
 | `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None     |
 | `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None     |
 | `.on_backpressure(callback)`     | Handle queue threshold events (`void(size_t bytes)`)              | None     |
-| `.backpressure_threshold(bytes)` | Set queue limit for strategy or flow control                      | 16 MB    |
+| `.backpressure_threshold(bytes)` | Set queue limit for strategy or flow control                      | 512 KB   |
 | `.backpressure_strategy(enum)`   | Set behavior when threshold is reached (`Reliable`, `BestEffort`)  | `Reliable`|
 | `.auto_start(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
 | `.independent_context(bool)`     | Create and run a dedicated `io_context` thread managed by unilink | `false`  |
@@ -1006,12 +1006,19 @@ client.start()
 
 ### Thresholds
 
-The `backpressure_threshold` (default 4 MB) is the queue size at which `BestEffort` starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (`bp_limit_`, at least 16 MB) prevents unbounded memory use regardless of strategy.
+Unilink uses **Dynamic Defaults** for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:
 
-| Parameter              | Default | Notes                                          |
-| ---------------------- | ------- | ---------------------------------------------- |
-| `backpressure_threshold` | 4 MB  | Flush threshold for `BestEffort`; high-water mark for `Reliable` |
-| Hard cap (`bp_limit_`) | ≥ 16 MB | Per-message reject limit; never drops below the threshold × 4 |
+| Strategy | Default Threshold | Typical Use Case |
+| :--- | :--- | :--- |
+| `Reliable` | **4 MiB** | Commands, logs, file transfers |
+| `BestEffort` | **512 KiB** | LiDAR, Camera, Real-time state |
+
+A hard cap (`bp_limit_`) is automatically calculated as `max(threshold * 4, 4MB)` to prevent unbounded memory use while ensuring enough room for large individual messages.
+
+| Parameter | Default | Notes |
+| :--- | :--- | :--- |
+| `backpressure_threshold` | *Dynamic* | 4MB for Reliable, 512KB for BestEffort |
+| Hard cap (`bp_limit_`) | ≥ 4 MiB | Per-message reject limit |
 
 ---
 

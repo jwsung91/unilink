@@ -260,7 +260,7 @@ Unilink manages internal buffers when the sender is faster than the receiver. Yo
 ```python
 client = unilink.TcpClient("127.0.0.1", 8080)
 
-# Set queue limit (default 16MB)
+# Set queue limit (default 512KB)
 client.backpressure_threshold = 1024 * 1024 # 1MB
 
 # Reliable (Default): Retains all data until hard limit

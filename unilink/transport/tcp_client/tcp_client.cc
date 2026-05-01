@@ -532,8 +532,13 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
             UNILINK_LOG_INFO("tcp_client", "connect",
                              "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
           }
+          self->impl_->connected_.store(true);
+          self->impl_->transition_to(LinkState::Connected);
           self->impl_->start_read(self, seq);
-          self->impl_->do_write(self, seq);
+          net::post(self->impl_->strand_, [self, seq]() {
+            self->impl_->writing_ = false;
+            self->impl_->do_write(self, seq);
+          });
         });
       });
 }
@@ -775,8 +780,20 @@ void TcpClient::Impl::recalculate_backpressure_bounds() {
 void TcpClient::Impl::maybe_flush_for_keep_latest(size_t added) {
   if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
-    tx_.clear();
-    queue_bytes_ = 0;
+    while (!tx_.empty() && (queue_bytes_ + added > bp_high_)) {
+      size_t oldest_size = std::visit(
+          [](auto&& buf) -> size_t {
+            using T = std::decay_t<decltype(buf)>;
+            if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+              return buf ? buf->size() : 0;
+            } else {
+              return buf.size();
+            }
+          },
+          tx_.front());
+      queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
+      tx_.pop_front();
+    }
   }
 }
 

@@ -42,5 +42,5 @@ Streaming data performance.
 ## 3. Optimization Recommendations
 
 1. **Batching**: Use `batch_size()` and `batch_latency()` for streaming small data.
-2. **Backpressure**: Increase `DEFAULT_BACKPRESSURE_THRESHOLD` (now 16MB) if dropping too many messages.
+2. **Backpressure**: Increase `DEFAULT_BACKPRESSURE_THRESHOLD` (now 512KB) if dropping too many messages.
 3. **GIL Management**: Unilink now releases GIL during blocking `stop()` and `start()` operations to prevent deadlocks.

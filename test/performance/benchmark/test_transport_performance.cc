@@ -131,8 +131,8 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   // --- Test Logic ---
   client_->start();
 
-  // Send large amount of data exceeding bp_limit (16MB); message dropped, backpressure fires
-  const size_t large_data_size = 20 * (1 << 20);  // 20MB
+  // Send large amount of data exceeding bp_high (4MB); data queued while disconnected, backpressure fires
+  const size_t large_data_size = 5 * (1 << 20);  // 5MB
   std::vector<uint8_t> large_data(large_data_size, 0xAA);
   client_->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 

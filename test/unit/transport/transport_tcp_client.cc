@@ -182,15 +182,15 @@ TEST_F(TransportTcpClientTest, QueueLimitDropsMessage) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
-  cfg.backpressure_threshold = 1024;             // bp_limit = max(4KB, 16MB) = 16MB
+  cfg.backpressure_threshold = 1024;             // bp_limit = max(4KB, 512KB) = 512KB
 
   client_ = TcpClient::create(cfg, ioc);
 
   std::atomic<bool> backpressure_seen{false};
   client_->on_backpressure([&](size_t) { backpressure_seen = true; });
 
-  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, connection stays alive
-  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xEF);
+  // 1MB exceeds bp_limit (512KB): message dropped, backpressure fires, connection stays alive
+  std::vector<uint8_t> huge(1024 * 1024, 0xEF);
   client_->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(std::chrono::milliseconds(50));

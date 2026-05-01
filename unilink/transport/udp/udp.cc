@@ -64,7 +64,7 @@ struct UdpChannel::Impl {
     std::optional<udp::endpoint> destination;
   };
 
-  std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
+  std::array<uint8_t, 65536> rx_{};
   std::deque<TxItem> tx_;
   bool writing_{false};
   std::atomic<size_t> queue_bytes_{0};
@@ -186,6 +186,11 @@ struct UdpChannel::Impl {
       transition_to(LinkState::Error, ec);
       return;
     }
+
+    // Set large OS buffers for UDP to prevent drops
+    const int buf_size = std::max(static_cast<int>(bp_high_), 4 * 1024 * 1024);
+    socket_.set_option(net::socket_base::receive_buffer_size(buf_size), ec);
+    socket_.set_option(net::socket_base::send_buffer_size(buf_size), ec);
 
     opened_.store(true);
     if (remote_endpoint_) {
@@ -423,8 +428,21 @@ struct UdpChannel::Impl {
 
     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (backpressure_active_ || queue_bytes_ + size > bp_high_)) {
-      tx_.clear();
-      queue_bytes_ = 0;
+      while (!tx_.empty() && (queue_bytes_ + size > bp_high_)) {
+        auto& oldest = tx_.front();
+        size_t oldest_size = std::visit(
+            [](auto&& buf) -> size_t {
+              using T = std::decay_t<decltype(buf)>;
+              if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+                return buf ? buf->size() : 0;
+              } else {
+                return buf.size();
+              }
+            },
+            oldest.buffer);
+        queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
+        tx_.pop_front();
+      }
     }
 
     if (queue_bytes_ + size > bp_limit_) {
