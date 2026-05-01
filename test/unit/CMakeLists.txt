@@ -125,7 +125,7 @@ foreach(test_file test_config.cc test_config_security.cc
 endforeach()
 
 # Memory tests (separate executables)
-foreach(test_file test_pool_limits.cpp)
+foreach(test_file test_pool_limits.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/memory/${test_file}
@@ -156,7 +156,7 @@ foreach(
   test_udp_stop_perf.cc
   test_udp_options.cc
   test_udp_failure.cc
-  test_udp_state.cpp
+  test_udp_state.cc
   test_tcp_client_error_mapping.cc
   test_uds_advanced.cc
   test_udp_server_advanced.cc
@@ -517,8 +517,8 @@ gtest_discover_tests(
 )
 
 # Framer tests (separate executables)
-foreach(test_file line_framer_test.cc packet_framer_test.cc
-                  line_framer_security_test.cc test_packet_framer_coverage.cc
+foreach(test_file test_line_framer.cc test_packet_framer.cc
+                  test_line_framer_security.cc test_packet_framer_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
