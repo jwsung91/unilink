@@ -26,13 +26,17 @@ Most recent reported Jetson Orin Nano result:
 - Platform: Ubuntu 22.04 on `aarch64`
 - Result: `100% tests passed, 0 tests failed out of 481`
 - Real elapsed test time: `25.52 sec`
+- Python import smoke passed
+- Python API tests passed, including TCP loopback-enabled mode
+- ARM64 release artifact package generation passed
+- Installed-package consumer smoke passed with `find_package(unilink)` and `unilink::unilink`
 - Serial integration labels passed as part of the full sweep
 - One test was listed as not run because it is disabled by design:
   `UdsErrorTest.ServerStopWithActiveSessions`
 
 Interpretation:
 
-- This is strong evidence for Ubuntu 22.04 ARM64 support on Orin Nano
+- This is strong evidence for Ubuntu 22.04 ARM64 support on Orin Nano across C++, Python, and installed-package consumption paths
 - It does not by itself prove every other Linux ARM64 distribution or userspace combination
 
 ---
@@ -221,7 +225,11 @@ For a practical “supported on Orin Nano” claim, use this minimum bar:
 3. Unit and integration `ctest` commands pass.
 4. `bindings/python/test_import.py` passes when Python bindings are enabled.
 
-The current Orin Nano report satisfies the C++ test portion of that bar.
+The current Orin Nano report satisfies that bar and also includes:
+
+1. Python API tests with loopback enabled.
+2. ARM64 `TGZ` package generation.
+3. Installed-package consumer smoke using the canonical `unilink::unilink` target.
 
 For a stronger “generic Ubuntu ARM64” claim, add:
 

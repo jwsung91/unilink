@@ -61,6 +61,8 @@ Latest explicitly reported ARM64 validation:
 
 - Jetson Orin Nano on Ubuntu 22.04 `aarch64`
 - Full C++ `ctest` sweep passed: 481 passed, 0 failed
+- Python import smoke and Python API tests passed, including loopback-enabled TCP validation
+- ARM64 installed-package consumer smoke passed with `find_package(unilink)` and `unilink::unilink`
 - One disabled test was listed as not run: `UdsErrorTest.ServerStopWithActiveSessions`
 - See [Orin Nano Validation](orin_nano_validation.md) for the reproducible runbook and scope boundaries
 
