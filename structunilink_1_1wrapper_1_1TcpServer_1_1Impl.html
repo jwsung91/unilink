@@ -90,7 +90,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">unilink<span id="projectnumber">&#160;0.6.0</span>
+   <div id="projectname">unilink<span id="projectnumber">&#160;0.6.1</span>
    </div>
    <div id="projectbrief">A simple C++ library for unified async communication</div>
   </td>
@@ -280,8 +280,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a32cb071e5306f18cd1609d42c2f9f89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af087334cb0096ee4c6e9d7e7b7772349" id="r_af087334cb0096ee4c6e9d7e7b7772349"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#af087334cb0096ee4c6e9d7e7b7772349">max_batch_latency_</a> {1}</td></tr>
 <tr class="separator:af087334cb0096ee4c6e9d7e7b7772349"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1329b714d24ca318ba7d01954907e155" id="r_a1329b714d24ca318ba7d01954907e155"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a1329b714d24ca318ba7d01954907e155">framers_</a></td></tr>
-<tr class="separator:a1329b714d24ca318ba7d01954907e155"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a612ecda43768f690cbfd15671bf96bdd" id="r_a612ecda43768f690cbfd15671bf96bdd"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::shared_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a612ecda43768f690cbfd15671bf96bdd">framers_</a></td></tr>
+<tr class="separator:a612ecda43768f690cbfd15671bf96bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb50e31a3db025cae59a0c3ac62a3cd2" id="r_adb50e31a3db025cae59a0c3ac62a3cd2"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1TcpServer.html">transport::TcpServer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#adb50e31a3db025cae59a0c3ac62a3cd2">transport_cache_</a></td></tr>
 <tr class="separator:adb50e31a3db025cae59a0c3ac62a3cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -1091,14 +1091,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1329b714d24ca318ba7d01954907e155" name="a1329b714d24ca318ba7d01954907e155"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1329b714d24ca318ba7d01954907e155">&#9670;&#160;</a></span>framers_</h2>
+<a id="a612ecda43768f690cbfd15671bf96bdd" name="a612ecda43768f690cbfd15671bf96bdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a612ecda43768f690cbfd15671bf96bdd">&#9670;&#160;</a></span>framers_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::unique_ptr&lt;<a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a>&gt; &gt; unilink::wrapper::TcpServer::Impl::framers_</td>
+          <td class="memname">std::unordered_map&lt;<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::shared_ptr&lt;<a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a>&gt; &gt; unilink::wrapper::TcpServer::Impl::framers_</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1508,7 +1508,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Fri May 1 2026 02:56:24 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 04:02:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
