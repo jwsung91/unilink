@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-05-01 04:08:17</td>
+            <td class="headerValue">2026-05-01 08:14:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -109,33 +109,33 @@
 <a name="31"><span class="lineNum">      31 </span>                :            :   }</a>
 <a name="32"><span class="lineNum">      32 </span>                :<span class="lineCov">         37 : }</span></a>
 <a name="33"><span class="lineNum">      33 </span>                :            : </a>
-<a name="34"><span class="lineNum">      34 </span>                :<span class="lineCov">      11252 : void LineFramer::push_bytes(memory::ConstByteSpan data) {</span></a>
-<a name="35"><span class="lineNum">      35 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 11252 times"> + </span>]:<span class="lineCov">      11252 :   if (data.empty()) return;</span></a>
+<a name="34"><span class="lineNum">      34 </span>                :<span class="lineCov">      11253 : void LineFramer::push_bytes(memory::ConstByteSpan data) {</span></a>
+<a name="35"><span class="lineNum">      35 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 11253 times"> + </span>]:<span class="lineCov">      11253 :   if (data.empty()) return;</span></a>
 <a name="36"><span class="lineNum">      36 </span>                :            : </a>
 <a name="37"><span class="lineNum">      37 </span>                :            :   // Process data in chunks to prevent large memory allocations (DoS protection)</a>
 <a name="38"><span class="lineNum">      38 </span>                :            :   // We use max(max_length_, 4096) as a reasonable chunk size.</a>
 <a name="39"><span class="lineNum">      39 </span>                :            :   // This ensures that even if the user sends a huge payload, we only</a>
 <a name="40"><span class="lineNum">      40 </span>                :            :   // allocate memory incrementally and have a chance to clear the buffer</a>
 <a name="41"><span class="lineNum">      41 </span>                :            :   // if limits are exceeded.</a>
-<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">      11252 :   const size_t chunk_limit = std::max(max_length_, size_t(4096));</span></a>
+<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">      11253 :   const size_t chunk_limit = std::max(max_length_, size_t(4096));</span></a>
 <a name="43"><span class="lineNum">      43 </span>                :            : </a>
-<a name="44"><span class="lineNum">      44 </span>                :<span class="lineCov">      11252 :   size_t offset = 0;</span></a>
-<a name="45"><span class="lineNum">      45 </span>        [<span class="branchCov" title="Branch 0 was taken 12052 times"> + </span><span class="branchCov" title="Branch 1 was taken 11252 times"> + </span>]:<span class="lineCov">      23304 :   while (offset &lt; data.size()) {</span></a>
-<a name="46"><span class="lineNum">      46 </span>                :<span class="lineCov">      12052 :     size_t len = std::min(data.size() - offset, chunk_limit);</span></a>
-<a name="47"><span class="lineNum">      47 </span>  [<span class="branchCov" title="Branch 0 was taken 12052 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 12052 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      12052 :     push_bytes_internal(data.subspan(offset, len));</span></a>
-<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">      12052 :     offset += len;</span></a>
+<a name="44"><span class="lineNum">      44 </span>                :<span class="lineCov">      11253 :   size_t offset = 0;</span></a>
+<a name="45"><span class="lineNum">      45 </span>        [<span class="branchCov" title="Branch 0 was taken 12053 times"> + </span><span class="branchCov" title="Branch 1 was taken 11253 times"> + </span>]:<span class="lineCov">      23306 :   while (offset &lt; data.size()) {</span></a>
+<a name="46"><span class="lineNum">      46 </span>                :<span class="lineCov">      12053 :     size_t len = std::min(data.size() - offset, chunk_limit);</span></a>
+<a name="47"><span class="lineNum">      47 </span>  [<span class="branchCov" title="Branch 0 was taken 12053 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 12053 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      12053 :     push_bytes_internal(data.subspan(offset, len));</span></a>
+<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">      12053 :     offset += len;</span></a>
 <a name="49"><span class="lineNum">      49 </span>                :            :   }</a>
 <a name="50"><span class="lineNum">      50 </span>                :            : }</a>
 <a name="51"><span class="lineNum">      51 </span>                :            : </a>
-<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">      12052 : void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {</span></a>
-<a name="53"><span class="lineNum">      53 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 12052 times"> + </span>]:<span class="lineCov">      12052 :   if (data.empty()) return;</span></a>
+<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">      12053 : void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {</span></a>
+<a name="53"><span class="lineNum">      53 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 12053 times"> + </span>]:<span class="lineCov">      12053 :   if (data.empty()) return;</span></a>
 <a name="54"><span class="lineNum">      54 </span>                :            : </a>
 <a name="55"><span class="lineNum">      55 </span>                :            :   // Fast Path: If buffer is empty, process data directly (zero-copy)</a>
-<a name="56"><span class="lineNum">      56 </span>        [<span class="branchCov" title="Branch 0 was taken 1118 times"> + </span><span class="branchCov" title="Branch 1 was taken 10934 times"> + </span>]:<span class="lineCov">      12052 :   if (buffer_.empty()) {</span></a>
-<a name="57"><span class="lineNum">      57 </span>        [<span class="branchCov" title="Branch 0 was taken 1118 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1118 :     size_t processed_count = scan_and_process(data, 0);</span></a>
+<a name="56"><span class="lineNum">      56 </span>        [<span class="branchCov" title="Branch 0 was taken 1119 times"> + </span><span class="branchCov" title="Branch 1 was taken 10934 times"> + </span>]:<span class="lineCov">      12053 :   if (buffer_.empty()) {</span></a>
+<a name="57"><span class="lineNum">      57 </span>        [<span class="branchCov" title="Branch 0 was taken 1119 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1119 :     size_t processed_count = scan_and_process(data, 0);</span></a>
 <a name="58"><span class="lineNum">      58 </span>                :            : </a>
 <a name="59"><span class="lineNum">      59 </span>                :            :     // If we haven't processed everything, append the remainder to the buffer</a>
-<a name="60"><span class="lineNum">      60 </span>        [<span class="branchCov" title="Branch 0 was taken 113 times"> + </span><span class="branchCov" title="Branch 1 was taken 1005 times"> + </span>]:<span class="lineCov">       1118 :     if (processed_count &lt; data.size()) {</span></a>
+<a name="60"><span class="lineNum">      60 </span>        [<span class="branchCov" title="Branch 0 was taken 113 times"> + </span><span class="branchCov" title="Branch 1 was taken 1006 times"> + </span>]:<span class="lineCov">       1119 :     if (processed_count &lt; data.size()) {</span></a>
 <a name="61"><span class="lineNum">      61 </span>        [<span class="branchCov" title="Branch 0 was taken 113 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        113 :       buffer_.insert(buffer_.end(), data.begin() + processed_count, data.end());</span></a>
 <a name="62"><span class="lineNum">      62 </span>                :<span class="lineCov">        113 :       scanned_idx_ = buffer_.size();  // We scanned all of it</span></a>
 <a name="63"><span class="lineNum">      63 </span>                :            : </a>
@@ -146,9 +146,9 @@
 <a name="68"><span class="lineNum">      68 </span>                :            :       }</a>
 <a name="69"><span class="lineNum">      69 </span>                :            :     } else {</a>
 <a name="70"><span class="lineNum">      70 </span>                :            :       // All processed, buffer remains empty</a>
-<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">       1005 :       scanned_idx_ = 0;</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">       1006 :       scanned_idx_ = 0;</span></a>
 <a name="72"><span class="lineNum">      72 </span>                :            :     }</a>
-<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">       1118 :     return;</span></a>
+<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">       1119 :     return;</span></a>
 <a name="74"><span class="lineNum">      74 </span>                :            :   }</a>
 <a name="75"><span class="lineNum">      75 </span>                :            : </a>
 <a name="76"><span class="lineNum">      76 </span>                :            :   // Slow Path: Append new data to buffer and process</a>
@@ -182,42 +182,42 @@
 <a name="104"><span class="lineNum">     104 </span>                :            :   }</a>
 <a name="105"><span class="lineNum">     105 </span>                :            : }</a>
 <a name="106"><span class="lineNum">     106 </span>                :            : </a>
-<a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">      12052 : size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_start_offset) {</span></a>
+<a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">      12053 : size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_start_offset) {</span></a>
 <a name="108"><span class="lineNum">     108 </span>                :            :   // Safety clamp</a>
-<a name="109"><span class="lineNum">     109 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 12052 times"> + </span>]:<span class="lineCov">      12052 :   if (search_start_offset &gt; data.size()) {</span></a>
+<a name="109"><span class="lineNum">     109 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 12053 times"> + </span>]:<span class="lineCov">      12053 :   if (search_start_offset &gt; data.size()) {</span></a>
 <a name="110"><span class="lineNum">     110 </span>                :<span class="lineNoCov">          0 :     search_start_offset = data.size();</span></a>
 <a name="111"><span class="lineNum">     111 </span>                :            :   }</a>
 <a name="112"><span class="lineNum">     112 </span>                :            : </a>
 <a name="113"><span class="lineNum">     113 </span>                :            :   // processed_count tracks the number of bytes from the start of the buffer</a>
 <a name="114"><span class="lineNum">     114 </span>                :            :   // that have been either emitted as messages or skipped due to overflow.</a>
-<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">      12052 :   size_t processed_count = 0;</span></a>
+<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">      12053 :   size_t processed_count = 0;</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :            : </a>
 <a name="117"><span class="lineNum">     117 </span>                :            :   // Search cursor</a>
-<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">      12052 :   size_t search_cursor = search_start_offset;</span></a>
+<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">      12053 :   size_t search_cursor = search_start_offset;</span></a>
 <a name="119"><span class="lineNum">     119 </span>                :            : </a>
 <a name="120"><span class="lineNum">     120 </span>                :            :   // O(N) scan loop</a>
 <a name="121"><span class="lineNum">     121 </span>                :            :   while (true) {</a>
-<a name="122"><span class="lineNum">     122 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 636081 times"> + </span>]:<span class="lineCov">     636081 :     if (search_cursor &gt; data.size()) break;</span></a>
+<a name="122"><span class="lineNum">     122 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 636082 times"> + </span>]:<span class="lineCov">     636082 :     if (search_cursor &gt; data.size()) break;</span></a>
 <a name="123"><span class="lineNum">     123 </span>                :            : </a>
 <a name="124"><span class="lineNum">     124 </span>                :            :     // Perform search using iterators derived from current buffer state</a>
-<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">     636081 :     auto search_begin = data.begin() + static_cast&lt;std::ptrdiff_t&gt;(search_cursor);</span></a>
+<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">     636082 :     auto search_begin = data.begin() + static_cast&lt;std::ptrdiff_t&gt;(search_cursor);</span></a>
 <a name="126"><span class="lineNum">     126 </span>                :            :     decltype(data.begin()) it;</a>
 <a name="127"><span class="lineNum">     127 </span>                :            : </a>
-<a name="128"><span class="lineNum">     128 </span>        [<span class="branchCov" title="Branch 0 was taken 636077 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">     636081 :     if (delimiter_.size() == 1) {</span></a>
+<a name="128"><span class="lineNum">     128 </span>        [<span class="branchCov" title="Branch 0 was taken 636078 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">     636082 :     if (delimiter_.size() == 1) {</span></a>
 <a name="129"><span class="lineNum">     129 </span>                :            :       // Optimization: Use std::memchr for single-byte delimiter</a>
-<a name="130"><span class="lineNum">     130 </span>                :<span class="lineCov">    1272154 :       const void* found = std::memchr(search_begin, static_cast&lt;uint8_t&gt;(delimiter_[0]),</span></a>
-<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">     636077 :                                       static_cast&lt;size_t&gt;(std::distance(search_begin, data.end())));</span></a>
-<a name="132"><span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 624027 times"> + </span><span class="branchCov" title="Branch 1 was taken 12050 times"> + </span>]:<span class="lineCov">     636077 :       if (found) {</span></a>
+<a name="130"><span class="lineNum">     130 </span>                :<span class="lineCov">    1272156 :       const void* found = std::memchr(search_begin, static_cast&lt;uint8_t&gt;(delimiter_[0]),</span></a>
+<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">     636078 :                                       static_cast&lt;size_t&gt;(std::distance(search_begin, data.end())));</span></a>
+<a name="132"><span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 624027 times"> + </span><span class="branchCov" title="Branch 1 was taken 12051 times"> + </span>]:<span class="lineCov">     636078 :       if (found) {</span></a>
 <a name="133"><span class="lineNum">     133 </span>                :<span class="lineCov">     624027 :         it = static_cast&lt;const uint8_t*&gt;(found);</span></a>
 <a name="134"><span class="lineNum">     134 </span>                :            :       } else {</a>
-<a name="135"><span class="lineNum">     135 </span>                :<span class="lineCov">      12050 :         it = data.end();</span></a>
+<a name="135"><span class="lineNum">     135 </span>                :<span class="lineCov">      12051 :         it = data.end();</span></a>
 <a name="136"><span class="lineNum">     136 </span>                :            :       }</a>
 <a name="137"><span class="lineNum">     137 </span>                :            :     } else {</a>
 <a name="138"><span class="lineNum">     138 </span>                :<span class="lineCov">          4 :       it = std::search(search_begin, data.end(), delimiter_.begin(), delimiter_.end());</span></a>
 <a name="139"><span class="lineNum">     139 </span>                :            :     }</a>
 <a name="140"><span class="lineNum">     140 </span>                :            : </a>
-<a name="141"><span class="lineNum">     141 </span>        [<span class="branchCov" title="Branch 0 was taken 12052 times"> + </span><span class="branchCov" title="Branch 1 was taken 624029 times"> + </span>]:<span class="lineCov">     636081 :     if (it == data.end()) {</span></a>
-<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">      12052 :       break;</span></a>
+<a name="141"><span class="lineNum">     141 </span>        [<span class="branchCov" title="Branch 0 was taken 12053 times"> + </span><span class="branchCov" title="Branch 1 was taken 624029 times"> + </span>]:<span class="lineCov">     636082 :     if (it == data.end()) {</span></a>
+<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">      12053 :       break;</span></a>
 <a name="143"><span class="lineNum">     143 </span>                :            :     }</a>
 <a name="144"><span class="lineNum">     144 </span>                :            : </a>
 <a name="145"><span class="lineNum">     145 </span>                :            :     // Found a delimiter</a>
@@ -245,7 +245,7 @@
 <a name="167"><span class="lineNum">     167 </span>                :<span class="lineCov">     624029 :     search_cursor = processed_count;</span></a>
 <a name="168"><span class="lineNum">     168 </span>                :<span class="lineCov">     624029 :   }</span></a>
 <a name="169"><span class="lineNum">     169 </span>                :            : </a>
-<a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">      12052 :   return processed_count;</span></a>
+<a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">      12053 :   return processed_count;</span></a>
 <a name="171"><span class="lineNum">     171 </span>                :            : }</a>
 <a name="172"><span class="lineNum">     172 </span>                :            : </a>
 <a name="173"><span class="lineNum">     173 </span>                :<span class="lineCov">         37 : void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></a>
