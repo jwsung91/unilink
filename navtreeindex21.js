@@ -1,5 +1,11 @@
 var NAVTREEINDEX21 =
 {
+"user_api_guide.html#autotoc_md468":[1,3,7,3],
+"user_api_guide.html#autotoc_md469":[1,3,7,3,0],
+"user_api_guide.html#autotoc_md470":[1,3,7,3,1],
+"user_api_guide.html#autotoc_md471":[1,3,7,3,1,0],
+"user_api_guide.html#autotoc_md472":[1,3,7,3,1,1],
+"user_api_guide.html#autotoc_md473":[1,3,7,3,1,2],
 "user_api_guide.html#autotoc_md474":[1,3,7,3,2],
 "user_api_guide.html#autotoc_md475":[1,3,7,3,2,0],
 "user_api_guide.html#autotoc_md476":[1,3,7,3,2,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX21 =
 "user_troubleshooting.html#autotoc_md764":[1,3,9,8],
 "user_tutorials.html":[1,3,8],
 "visibility_8hpp.html":[5,0,1,0,5],
-"visibility_8hpp.html#a6bc7164dbe841703008a07aa5c7dc81d":[5,0,1,0,5,1],
-"visibility_8hpp.html#a768a108034a8fe14866b0f0a4673cfd6":[5,0,1,0,5,2],
-"visibility_8hpp.html#a7d22c17e5ca905a1548908e2b35d5e80":[5,0,1,0,5,3],
-"visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361":[5,0,1,0,5,0],
-"visibility_8hpp_source.html":[5,0,1,0,5],
-"wrapper_2serial_2serial_8cc.html":[5,0,1,11,0,0],
-"wrapper_2serial_2serial_8cc_source.html":[5,0,1,11,0,0]
+"visibility_8hpp.html#a6bc7164dbe841703008a07aa5c7dc81d":[5,0,1,0,5,1]
 };

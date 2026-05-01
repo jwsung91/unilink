@@ -49,6 +49,7 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "message_batch_queue_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a0f3a1be6004ec0bcb6948f4bd4a957eb", null ],
     [ "message_handler_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aaf808ff4abe7a379f4f222077afdc147", null ],
     [ "mutex_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af815d60beae58de0eda44a67b105e4b2", null ],
+    [ "pending_best_effort_msg_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a299f0e8879369ca0fd333b59e9e6632c", null ],
     [ "pending_promises_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4d535a9787a4cd21f66952384e988c4c", null ],
     [ "port_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ac340a7423e8b0e2d4010066223195502", null ],
     [ "retry_interval_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a9e5636c1b147b1873e6344de49f02e68", null ],

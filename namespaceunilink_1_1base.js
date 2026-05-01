@@ -20,6 +20,8 @@ var namespaceunilink_1_1base =
       [ "DEFAULT_RETRY_INTERVAL_MS", "namespaceunilink_1_1base_1_1constants.html#a69a33af91a75d2c380f8d510812e4ffc", null ],
       [ "DEFAULT_THREAD_POOL_SIZE", "namespaceunilink_1_1base_1_1constants.html#ac74e65be9a0712e6383b9c5850be372c", null ],
       [ "DEFAULT_THREAD_STACK_SIZE", "namespaceunilink_1_1base_1_1constants.html#a05abdf71a9089b67af9c1c7f5a8c30b9", null ],
+      [ "DEFAULT_THRESHOLD_BEST_EFFORT", "namespaceunilink_1_1base_1_1constants.html#abe040156933c5760018705ed614712d4", null ],
+      [ "DEFAULT_THRESHOLD_RELIABLE", "namespaceunilink_1_1base_1_1constants.html#aeae728b11cc28e0ab8478aa92c7c8f26", null ],
       [ "LARGE_BUFFER_THRESHOLD", "namespaceunilink_1_1base_1_1constants.html#a31fd082f102ca75d526f168d29727168", null ],
       [ "MAX_BACKPRESSURE_THRESHOLD", "namespaceunilink_1_1base_1_1constants.html#a00c60efa0877c10752105516017c9b45", null ],
       [ "MAX_BAUD_RATE", "namespaceunilink_1_1base_1_1constants.html#a6cf083a77ae87601bafe986812896ed8", null ],

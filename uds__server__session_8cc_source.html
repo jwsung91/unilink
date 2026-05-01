@@ -367,47 +367,59 @@ $(document).ready(function(){initNavTree('uds__server__session_8cc_source.html',
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="keywordtype">void</span> UdsServerSession::maybe_flush_for_keep_latest(<span class="keywordtype">size_t</span> added) {</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  <span class="keywordflow">if</span> (bp_strategy_ != <a class="code hl_enumvalue" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230">base::constants::BackpressureStrategy::BestEffort</a>) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  <span class="keywordflow">if</span> (backpressure_active_ || queue_bytes_ + added &gt; bp_high_) {</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    tx_.clear();</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    queue_bytes_ = 0;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  }</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>}</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span><span class="keywordtype">void</span> UdsServerSession::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  <span class="keywordflow">if</span> (closing_ || !alive_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="keywordflow">if</span> (!on_bp_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    backpressure_active_ = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>      on_bp_(queued_bytes);</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    backpressure_active_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>      on_bp_(queued_bytes);</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    }</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  }</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>}</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="keywordtype">void</span> UdsServerSession::reset_idle_timer() {</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="keywordflow">if</span> (idle_timeout_ms_ &lt;= 0) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  idle_timer_.cancel();</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  idle_timer_.expires_after(std::chrono::milliseconds(idle_timeout_ms_));</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  <span class="keyword">auto</span> self = shared_from_this();</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  idle_timer_.async_wait(net::bind_executor(strand_, [self](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordflow">if</span> (ec == boost::asio::error::operation_aborted) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="keywordflow">if</span> (!self-&gt;alive_ || self-&gt;closing_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <a class="code hl_define" href="logger_8hpp.html#aa917f1cb16e9feb541d8ad6d14a4aa6a">UNILINK_LOG_WARNING</a>(<span class="stringliteral">&quot;uds_server_session&quot;</span>, <span class="stringliteral">&quot;timeout&quot;</span>, <span class="stringliteral">&quot;Connection idle timeout expired, closing session&quot;</span>);</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    self-&gt;do_close();</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  }));</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>}</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordflow">while</span> (!tx_.empty() &amp;&amp; (queue_bytes_ + added &gt; bp_high_)) {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>      <span class="keywordtype">size_t</span> oldest_size = std::visit(</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>          [](<span class="keyword">auto</span>&amp;&amp; buf) -&gt; <span class="keywordtype">size_t</span> {</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(buf)&gt;;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>              <span class="keywordflow">return</span> buf ? buf-&gt;size() : 0;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>              <span class="keywordflow">return</span> buf.size();</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            }</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>          },</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>          tx_.front());</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>      queue_bytes_ = (queue_bytes_ &gt; oldest_size) ? (queue_bytes_ - oldest_size) : 0;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>      tx_.pop_front();</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    }</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>}</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span><span class="keywordtype">void</span> UdsServerSession::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordflow">if</span> (closing_ || !alive_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  <span class="keywordflow">if</span> (!on_bp_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    backpressure_active_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>      on_bp_(queued_bytes);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    }</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    backpressure_active_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>      on_bp_(queued_bytes);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>}</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="keywordtype">void</span> UdsServerSession::reset_idle_timer() {</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="keywordflow">if</span> (idle_timeout_ms_ &lt;= 0) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  idle_timer_.cancel();</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  idle_timer_.expires_after(std::chrono::milliseconds(idle_timeout_ms_));</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="keyword">auto</span> self = shared_from_this();</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  idle_timer_.async_wait(net::bind_executor(strand_, [self](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keywordflow">if</span> (ec == boost::asio::error::operation_aborted) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keywordflow">if</span> (!self-&gt;alive_ || self-&gt;closing_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <a class="code hl_define" href="logger_8hpp.html#aa917f1cb16e9feb541d8ad6d14a4aa6a">UNILINK_LOG_WARNING</a>(<span class="stringliteral">&quot;uds_server_session&quot;</span>, <span class="stringliteral">&quot;timeout&quot;</span>, <span class="stringliteral">&quot;Connection idle timeout expired, closing session&quot;</span>);</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    self-&gt;do_close();</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  }));</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>}</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__uds__socket_8hpp_html"><div class="ttname"><a href="boost__uds__socket_8hpp.html">boost_uds_socket.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00038">safe_span.hpp:38</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a3d1f1b920d4769b25c5bf8a058d203dd"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a3d1f1b920d4769b25c5bf8a058d203dd">unilink::memory::SafeSpan::begin</a></div><div class="ttdeci">constexpr iterator begin() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00088">safe_span.hpp:88</a></div></div>
@@ -439,7 +451,7 @@ $(document).ready(function(){initNavTree('uds__server__session_8cc_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="uds__server__session_8cc.html">uds_server_session.cc</a></li>
-    <li class="footer">Generated on Mon Apr 27 2026 11:44:21 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 02:56:24 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

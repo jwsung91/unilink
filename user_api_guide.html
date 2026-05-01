@@ -204,7 +204,7 @@ Common Methods (All Builders)</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>.on_backpressure(callback)</code>   </td><td class="markdownTableBodyNone">Handle queue threshold events (<code>void(size_t bytes)</code>)   </td><td class="markdownTableBodyNone">None    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>.backpressure_threshold(bytes)</code>   </td><td class="markdownTableBodyNone">Set queue limit for strategy or flow control   </td><td class="markdownTableBodyNone">16 MB    </td></tr>
+<td class="markdownTableBodyNone"><code>.backpressure_threshold(bytes)</code>   </td><td class="markdownTableBodyNone">Set queue limit for strategy or flow control   </td><td class="markdownTableBodyNone">512 KB    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>.backpressure_strategy(enum)</code>   </td><td class="markdownTableBodyNone">Set behavior when threshold is reached (<code>Reliable</code>, <code>BestEffort</code>)   </td><td class="markdownTableBodyNone"><code>Reliable</code>    </td></tr>
 <tr class="markdownTableRowEven">
@@ -1182,14 +1182,23 @@ Python Usage</h2>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdoc">Modernized TCP Client Wrapper.</div><div class="ttdef"><b>Definition</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00047">tcp_client.hpp:47</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md545"></a>
 Thresholds</h2>
-<p>The <code>backpressure_threshold</code> (default 4 MB) is the queue size at which <code>BestEffort</code> starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (<code>bp_limit_</code>, at least 16 MB) prevents unbounded memory use regardless of strategy.</p>
+<p>Unilink uses <b>Dynamic Defaults</b> for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Parameter   </th><th class="markdownTableHeadNone">Default   </th><th class="markdownTableHeadNone">Notes    </th></tr>
+<th class="markdownTableHeadLeft">Strategy   </th><th class="markdownTableHeadLeft">Default Threshold   </th><th class="markdownTableHeadLeft">Typical Use Case    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>backpressure_threshold</code>   </td><td class="markdownTableBodyNone">4 MB   </td><td class="markdownTableBodyNone">Flush threshold for <code>BestEffort</code>; high-water mark for <code>Reliable</code>    </td></tr>
+<td class="markdownTableBodyLeft"><code>Reliable</code>   </td><td class="markdownTableBodyLeft"><b>4 MiB</b>   </td><td class="markdownTableBodyLeft">Commands, logs, file transfers    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Hard cap (<code>bp_limit_</code>)   </td><td class="markdownTableBodyNone">≥ 16 MB   </td><td class="markdownTableBodyNone">Per-message reject limit; never drops below the threshold × 4   </td></tr>
+<td class="markdownTableBodyLeft"><code>BestEffort</code>   </td><td class="markdownTableBodyLeft"><b>512 KiB</b>   </td><td class="markdownTableBodyLeft">LiDAR, Camera, Real-time state   </td></tr>
+</table>
+<p>A hard cap (<code>bp_limit_</code>) is automatically calculated as <code>max(threshold * 4, 4MB)</code> to prevent unbounded memory use while ensuring enough room for large individual messages.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Parameter   </th><th class="markdownTableHeadLeft">Default   </th><th class="markdownTableHeadLeft">Notes    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><code>backpressure_threshold</code>   </td><td class="markdownTableBodyLeft"><em>Dynamic</em>   </td><td class="markdownTableBodyLeft">4MB for Reliable, 512KB for BestEffort    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">Hard cap (<code>bp_limit_</code>)   </td><td class="markdownTableBodyLeft">≥ 4 MiB   </td><td class="markdownTableBodyLeft">Per-message reject limit   </td></tr>
 </table>
 <hr  />
 <h1><a class="anchor" id="autotoc_md547"></a>
@@ -1244,7 +1253,7 @@ Connection Limits</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 02:56:24 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

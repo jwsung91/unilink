@@ -255,8 +255,8 @@ Network Optimization</h1>
 <p>Reusing connections avoids repeated TCP handshake and connection setup overhead. For workloads with many short requests to the same peer, create the client once and reuse it across calls.</p>
 <h2><a class="anchor" id="autotoc_md600"></a>
 3. Socket Tuning</h2>
-<p>For extremely high throughput, tune OS-level socket buffers: </p><div class="fragment"><div class="line">sudo sysctl -w net.core.rmem_max=16777216  # 16 MB</div>
-<div class="line">sudo sysctl -w net.core.wmem_max=16777216  # 16 MB</div>
+<p>For extremely high throughput, tune OS-level socket buffers: </p><div class="fragment"><div class="line">sudo sysctl -w net.core.rmem_max=16777216  # 16 MB (OS limit)</div>
+<div class="line">sudo sysctl -w net.core.wmem_max=16777216  # 16 MB (OS limit)</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="backpressure-management"></a>
 Backpressure Management</h1>
@@ -310,7 +310,7 @@ Backpressure Management</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 27 2026 11:44:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 02:56:24 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

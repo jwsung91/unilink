@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"error__handler_8hpp.html#a5b7a4963a80bfaa872fd54ff9744c05a":[5,0,1,4,1,1],
+"error__handler_8hpp.html#a7f2b308de562edc3c4c1d821b9a65f5e":[5,0,1,4,1,3],
 "error__handler_8hpp.html#a95bf341a9495f4cc97de408b5b02fd3f":[5,0,1,4,1,6],
 "error__handler_8hpp.html#aec3a25238bc1d00b9f7f509b9f6c0616":[5,0,1,4,1,4],
 "error__handler_8hpp_source.html":[5,0,1,4,1],
@@ -28,8 +30,8 @@ var NAVTREEINDEX11 =
 "exceptions_8hpp.html":[5,0,1,4,5],
 "exceptions_8hpp_source.html":[5,0,1,4,5],
 "files.html":[5,0],
-"functions.html":[4,3,0,0],
 "functions.html":[4,3,0],
+"functions.html":[4,3,0,0],
 "functions_b.html":[4,3,0,1],
 "functions_c.html":[4,3,0,2],
 "functions_d.html":[4,3,0,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX11 =
 "memory__tracker_8cc.html":[5,0,1,8,2],
 "memory__tracker_8cc_source.html":[5,0,1,8,2],
 "memory__tracker_8hpp.html":[5,0,1,8,3],
-"memory__tracker_8hpp.html#a3568a6ec688d21c9fb3b53908cac474a":[5,0,1,8,3,5],
-"memory__tracker_8hpp.html#aa32871fa6da50f20b0b830cf5d726d79":[5,0,1,8,3,6],
-"memory__tracker_8hpp.html#acb70088b90faa65294cea506bafc5781":[5,0,1,8,3,4]
+"memory__tracker_8hpp.html#a3568a6ec688d21c9fb3b53908cac474a":[5,0,1,8,3,5]
 };

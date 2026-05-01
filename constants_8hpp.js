@@ -19,6 +19,8 @@ var constants_8hpp =
     [ "DEFAULT_RETRY_INTERVAL_MS", "constants_8hpp.html#a69a33af91a75d2c380f8d510812e4ffc", null ],
     [ "DEFAULT_THREAD_POOL_SIZE", "constants_8hpp.html#ac74e65be9a0712e6383b9c5850be372c", null ],
     [ "DEFAULT_THREAD_STACK_SIZE", "constants_8hpp.html#a05abdf71a9089b67af9c1c7f5a8c30b9", null ],
+    [ "DEFAULT_THRESHOLD_BEST_EFFORT", "constants_8hpp.html#abe040156933c5760018705ed614712d4", null ],
+    [ "DEFAULT_THRESHOLD_RELIABLE", "constants_8hpp.html#aeae728b11cc28e0ab8478aa92c7c8f26", null ],
     [ "LARGE_BUFFER_THRESHOLD", "constants_8hpp.html#a31fd082f102ca75d526f168d29727168", null ],
     [ "MAX_BACKPRESSURE_THRESHOLD", "constants_8hpp.html#a00c60efa0877c10752105516017c9b45", null ],
     [ "MAX_BAUD_RATE", "constants_8hpp.html#a6cf083a77ae87601bafe986812896ed8", null ],
