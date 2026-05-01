@@ -40,7 +40,7 @@ using tcp = net::ip::tcp;
 TEST(TransportTcpServerSessionTest, QueueLimitDropsMessage) {
   net::io_context ioc;
   auto work = net::make_work_guard(ioc);
-  size_t bp_threshold = 1024;  // 1KB bp_high; bp_limit = max(4KB, 512KB) = 512KB
+  size_t bp_threshold = 1024;  // 1KB bp_high; bp_limit = max(4KB, 4MB) = 4MB
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
@@ -51,8 +51,8 @@ TEST(TransportTcpServerSessionTest, QueueLimitDropsMessage) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 1MB exceeds bp_limit (512KB): message rejected synchronously, backpressure DOES NOT fire as it's not queued
-  std::vector<uint8_t> huge(1024 * 1024, 0xAA);
+  // 5MB exceeds bp_limit (4MB): message rejected synchronously, backpressure DOES NOT fire as it's not queued
+  std::vector<uint8_t> huge(5 * 1024 * 1024, 0xAA);
   EXPECT_FALSE(session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size())));
 
   ioc.run_for(50ms);
@@ -75,8 +75,8 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 1MB exceeds bp_limit (512KB): message rejected synchronously, backpressure DOES NOT fire
-  std::vector<uint8_t> huge(1024 * 1024, 0xBB);
+  // 5MB exceeds bp_limit (4MB): message rejected synchronously, backpressure DOES NOT fire
+  std::vector<uint8_t> huge(5 * 1024 * 1024, 0xBB);
   EXPECT_FALSE(session->async_write_move(std::move(huge)));
 
   ioc.run_for(50ms);
@@ -99,8 +99,8 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // 1MB exceeds bp_limit (512KB): message rejected synchronously, backpressure DOES NOT fire
-  auto huge = std::make_shared<const std::vector<uint8_t>>(1024 * 1024, 0xCC);
+  // 5MB exceeds bp_limit (4MB): message rejected synchronously, backpressure DOES NOT fire
+  auto huge = std::make_shared<const std::vector<uint8_t>>(5 * 1024 * 1024, 0xCC);
   EXPECT_FALSE(session->async_write_shared(huge));
 
   ioc.run_for(50ms);

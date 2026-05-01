@@ -161,8 +161,8 @@ TEST(TransportSerialTest, QueueLimitRejectsMessage) {
 
   serial->start();
 
-  // 1MB exceeds bp_limit (max(bp_high*4, 512KB) = 512KB)
-  std::vector<uint8_t> huge(1024 * 1024, 0xEF);
+  // 5MB exceeds bp_limit (max(bp_high*4, 4MB) = 4MB)
+  std::vector<uint8_t> huge(5 * 1024 * 1024, 0xEF);
   EXPECT_FALSE(serial->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size())));
 
   ioc.run_for(50ms);
