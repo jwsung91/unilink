@@ -14,15 +14,16 @@ This guide describes the system requirements and dependencies needed to build an
 
 ### Supported Platforms
 
-| Platform         | Status              | Notes                                 |
-| ---------------- | ------------------- | ------------------------------------- |
-| Ubuntu 22.04 LTS | ✅ Fully Supported  | Recommended for production            |
-| Ubuntu 24.04 LTS | ✅ Fully Supported  | Latest features and optimizations     |
-| Ubuntu ARM64     | 🔄 Validation Path  | Ubuntu 22.04 baseline, 24.04 also checked |
-| Ubuntu 20.04 LTS | ⚠️ Local Build Only | GCC 11+ required manually             |
-| Other Linux      | 🔄 Should Work      | Not officially tested                 |
-| macOS            | ✅ Fully Supported  | Tested in CI (macOS 14, Clang)        |
-| Windows          | ✅ Fully Supported  | Tested in CI (Windows 2022, MSVC)     |
+| Platform                   | Status             | Notes                                                  |
+| -------------------------- | ------------------ | ------------------------------------------------------ |
+| Ubuntu 22.04 LTS           | ✅ Fully Supported | Recommended for production                             |
+| Ubuntu 24.04 LTS           | ✅ Fully Supported | Latest features and optimizations                      |
+| Ubuntu 22.04 ARM64 (Orin)  | ✅ Validated       | Jetson Orin Nano testbed passed full C++ test sweep    |
+| Ubuntu 24.04 ARM64         | 🔄 Validation Path | Secondary ARM64 target in CI/build matrix              |
+| Ubuntu 20.04 LTS           | ⚠️ Local Build Only| GCC 11+ required manually                              |
+| Other Linux                | 🔄 Should Work     | Not officially tested across all distros/architectures |
+| macOS                      | ✅ Fully Supported | Tested in CI (macOS 14, Clang)                         |
+| Windows                    | ✅ Fully Supported | Tested in CI (Windows 2022, MSVC)                      |
 
 ---
 
@@ -95,9 +96,10 @@ sudo apt install -y libboost-system-dev
 ### Ubuntu ARM64 / Jetson Orin Nano
 
 - Source builds use the same Linux/POSIX code path as x86_64
-- Recommended baseline: Ubuntu 22.04 on `aarch64`
-- Secondary validation target: Ubuntu 24.04 on `aarch64`
-- Validate with unit tests, integration tests, and Python import smoke tests
+- Validated on Jetson Orin Nano with Ubuntu 22.04 on `aarch64`
+- Current secondary validation target: Ubuntu 24.04 on `aarch64`
+- Full C++ test sweep passed on the Orin Nano testbed: 481 tests passed, 0 failed
+- One test remains intentionally disabled in that run: `UdsErrorTest.ServerStopWithActiveSessions`
 - Serial integration tests require `socat` or physical loopback hardware
 
 ### Ubuntu 20.04 LTS
