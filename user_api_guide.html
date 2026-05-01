@@ -161,7 +161,7 @@ $(document).ready(function(){initNavTree('user_api_guide.html',''); initResizabl
 <div class="contents">
 <div class="textblock"><p>Comprehensive API reference for the unilink library.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md450"></a>
+<h1><a class="anchor" id="autotoc_md476"></a>
 Table of Contents</h1>
 <ol type="1">
 <li>Builder API</li>
@@ -177,10 +177,10 @@ Table of Contents</h1>
 <li>Security</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md452"></a>
+<h1><a class="anchor" id="autotoc_md478"></a>
 Builder API</h1>
 <p>The Builder API is the recommended way to use unilink. It provides a fluent, chainable interface for creating communication channels.</p>
-<h2><a class="anchor" id="autotoc_md453"></a>
+<h2><a class="anchor" id="autotoc_md479"></a>
 Core Concept</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> channel = <a class="code hl_namespace" href="namespaceunilink.html">unilink</a>::{type}(params)</div>
 <div class="line">    .option1(value1)</div>
@@ -188,7 +188,7 @@ Core Concept</h2>
 <div class="line">    .on_event(callback)</div>
 <div class="line">    .build();</div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md454"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md480"></a>
 Common Methods (All Builders)</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -247,7 +247,7 @@ Common Methods (All Builders)</h2>
 <li><code>TcpServerBuilder</code>: <code>.single_client()</code>, <code>.multi_client(max&gt;=2)</code>, <code>.unlimited_clients()</code> (Defaults to <code>unlimited_clients()</code> if not specified)</li>
 <li>TCP server callbacks use the same Context-based signatures. Use <code>ctx.client_id()</code> and <code>ctx.client_info()</code> to distinguish clients.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md455"></a>
+<h2><a class="anchor" id="autotoc_md481"></a>
 Framed Message Handling</h2>
 <p>Use <code>.on_message()</code> together with a framer when you want callback flow to operate on complete framed messages instead of raw byte chunks.</p>
 <p><b>Benefits:</b></p>
@@ -282,7 +282,7 @@ Framed Message Handling</h2>
 <div class="line">                 ↓</div>
 <div class="line">                 start()</div>
 <div class="line">                 ↓ callbacks fire: on_connect → on_data → on_disconnect/on_error</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md456"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md482"></a>
 IO Context Ownership (advanced)</h2>
 <ul>
 <li><b>Default</b>: Builders use the shared <code>IoContextManager</code> thread; unilink starts/stops it for you.</li>
@@ -290,10 +290,10 @@ IO Context Ownership (advanced)</h2>
 <li><b>External <code>io_context</code></b>: If you manually pass a custom <code>io_context</code> to wrapper constructors, unilink will <em>not</em> run/stop it unless you call <code>manage_external_context(true)</code> on the wrapper. In that case, callbacks should be registered before enabling <code>auto_start(true)</code> (it starts immediately).</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md458"></a>
+<h1><a class="anchor" id="autotoc_md484"></a>
 TCP Client</h1>
 <p>Connect to remote TCP servers with automatic reconnection.</p>
-<h2><a class="anchor" id="autotoc_md459"></a>
+<h2><a class="anchor" id="autotoc_md485"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -330,12 +330,12 @@ Basic Usage</h2>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdoc">Get the error message.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00100">context.hpp:100</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md460"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md486"></a>
 API Reference</h2>
-<h3><a class="anchor" id="autotoc_md461"></a>
+<h3><a class="anchor" id="autotoc_md487"></a>
 Constructor</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="keyword">const</span> std::string&amp; host, uint16_t port)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md462"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md488"></a>
 Builder Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -351,7 +351,7 @@ Builder Methods</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start immediately and stop on destruction   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md463"></a>
+<h3><a class="anchor" id="autotoc_md489"></a>
 Instance Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -373,9 +373,9 @@ Instance Methods</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>connection_timeout()</code>   </td><td class="markdownTableBodyNone"><code>TcpClient&amp;</code>   </td><td class="markdownTableBodyNone">Set connection timeout (<code>std::chrono::milliseconds</code>)   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md464"></a>
+<h2><a class="anchor" id="autotoc_md490"></a>
 Advanced Examples</h2>
-<h3><a class="anchor" id="autotoc_md465"></a>
+<h3><a class="anchor" id="autotoc_md491"></a>
 With Member Functions</h3>
 <div class="fragment"><div class="line"><span class="keyword">class </span>MyClient {</div>
 <div class="line">    std::unique_ptr&lt;unilink::TcpClient&gt; client_;</div>
@@ -393,7 +393,7 @@ With Member Functions</h3>
 <div class="line">    }</div>
 <div class="line">};</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_aaff548b4457e2c2682a14a0c9aa7d940"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#aaff548b4457e2c2682a14a0c9aa7d940">unilink::builder::BuilderInterface::on_data</a></div><div class="ttdeci">Derived &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler)</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00073">ibuilder.hpp:73</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md466"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md492"></a>
 With Lambda Capture</h3>
 <div class="fragment"><div class="line">std::string device_id = <span class="stringliteral">&quot;sensor_001&quot;</span>;</div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
@@ -402,10 +402,10 @@ With Lambda Capture</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md468"></a>
+<h1><a class="anchor" id="autotoc_md494"></a>
 TCP Server</h1>
 <p>Accept multiple client connections with thread-safe operations.</p>
-<h2><a class="anchor" id="autotoc_md469"></a>
+<h2><a class="anchor" id="autotoc_md495"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -448,12 +448,12 @@ Basic Usage</h2>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a5437876db064533f5885d28a50db8972"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">unilink::wrapper::MessageContext::client_id</a></div><div class="ttdeci">ClientId client_id() const</div><div class="ttdoc">Get the client identifier.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00041">context.hpp:41</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00084">unilink.hpp:84</a></div></div>
 </div><!-- fragment --><p><b>Note:</b> If none of <code>.single_client()</code>, <code>.multi_client(max)</code>, or <code>.unlimited_clients()</code> is called before <code>build()</code>, the server defaults to unlimited clients.</p>
-<h2><a class="anchor" id="autotoc_md470"></a>
+<h2><a class="anchor" id="autotoc_md496"></a>
 API Reference</h2>
-<h3><a class="anchor" id="autotoc_md471"></a>
+<h3><a class="anchor" id="autotoc_md497"></a>
 Constructor</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(uint16_t port)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md472"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md498"></a>
 Builder Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -472,7 +472,7 @@ Builder Methods</h3>
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start immediately and stop on destruction   </td></tr>
 </table>
 <p>Multi-client callbacks use the standard <code>ConnectionContext</code> and <code>MessageContext</code> which contain <code>client_id()</code> and <code>client_info()</code> accessors.</p>
-<h3><a class="anchor" id="autotoc_md473"></a>
+<h3><a class="anchor" id="autotoc_md499"></a>
 Instance Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -500,9 +500,9 @@ Instance Methods</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>stop()</code>   </td><td class="markdownTableBodyNone"><code>void</code>   </td><td class="markdownTableBodyNone">Stop server and disconnect all clients   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md474"></a>
+<h2><a class="anchor" id="autotoc_md500"></a>
 Advanced Examples</h2>
-<h3><a class="anchor" id="autotoc_md475"></a>
+<h3><a class="anchor" id="autotoc_md501"></a>
 Single Client Mode</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">single_client</a>()  <span class="comment">// Only one client allowed</span></div>
@@ -511,7 +511,7 @@ Single Client Mode</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00121">tcp_server_builder.cc:121</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md476"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md502"></a>
 Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">single_client</a>()</div>
@@ -522,7 +522,7 @@ Port Retry</h3>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ac0fd38617f00cc7fd8edb0d926b1cd1d"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ac0fd38617f00cc7fd8edb0d926b1cd1d">unilink::builder::BuilderInterface::on_error</a></div><div class="ttdeci">Derived &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler)</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00142">ibuilder.hpp:142</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_af9b5de3896e82bc59ed60c5872c7f6f1"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00101">tcp_server_builder.cc:101</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md477"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md503"></a>
 Echo Server Pattern</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
@@ -535,10 +535,10 @@ Echo Server Pattern</h3>
 <div class="line">server-&gt;start();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9c74b1d7730ee134044b4fcc111191ec"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured TcpServer.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00044">tcp_server_builder.cc:44</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md479"></a>
+<h1><a class="anchor" id="autotoc_md505"></a>
 Serial Communication</h1>
 <p>Interface with serial devices and embedded systems.</p>
-<h2><a class="anchor" id="autotoc_md480"></a>
+<h2><a class="anchor" id="autotoc_md506"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -565,16 +565,16 @@ Basic Usage</h2>
 <div class="line">    serial-&gt;send(binary_payload);</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00120">unilink.hpp:120</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md481"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md507"></a>
 API Reference</h2>
-<h3><a class="anchor" id="autotoc_md482"></a>
+<h3><a class="anchor" id="autotoc_md508"></a>
 Constructor</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate)</div>
 </div><!-- fragment --><p><b>Common Baud Rates:</b></p>
 <ul>
 <li>9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md483"></a>
+<h3><a class="anchor" id="autotoc_md509"></a>
 Builder Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -594,7 +594,7 @@ Builder Methods</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start immediately and stop on destruction   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md484"></a>
+<h3><a class="anchor" id="autotoc_md510"></a>
 Instance Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -622,7 +622,7 @@ Instance Methods</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>retry_interval()</code>   </td><td class="markdownTableBodyNone"><code>Serial&amp;</code>   </td><td class="markdownTableBodyNone">Adjust reconnection interval (<code>std::chrono::milliseconds</code>)   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md485"></a>
+<h2><a class="anchor" id="autotoc_md511"></a>
 Device Paths</h2>
 <p><b>Linux:</b></p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>  <span class="comment">// USB serial adapter</span></div>
@@ -631,9 +631,9 @@ Device Paths</h2>
 </div><!-- fragment --><p><b>Windows:</b></p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;COM3&quot;</span></div>
 <div class="line"><span class="stringliteral">&quot;COM4&quot;</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md486"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md512"></a>
 Advanced Examples</h2>
-<h3><a class="anchor" id="autotoc_md487"></a>
+<h3><a class="anchor" id="autotoc_md513"></a>
 Arduino Communication</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> arduino = <a class="code hl_function" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyACM0&quot;</span>, 9600)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aef6afb1aad926719826706b41e137071">on_connect</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
@@ -648,7 +648,7 @@ Arduino Communication</h3>
 <div class="line">        }</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md488"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md514"></a>
 GPS Module</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> gps = <a class="code hl_function" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>, 9600)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aaff548b4457e2c2682a14a0c9aa7d940">on_data</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
@@ -659,12 +659,12 @@ GPS Module</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md490"></a>
+<h1><a class="anchor" id="autotoc_md516"></a>
 UDP Communication</h1>
 <p>Connectionless communication using UDP protocol.</p>
-<h2><a class="anchor" id="autotoc_md491"></a>
+<h2><a class="anchor" id="autotoc_md517"></a>
 Basic Usage</h2>
-<h3><a class="anchor" id="autotoc_md492"></a>
+<h3><a class="anchor" id="autotoc_md518"></a>
 UDP Receiver (Server)</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -683,7 +683,7 @@ UDP Receiver (Server)</h3>
 <div class="line">    receiver-&gt;stop();</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceunilink_html_ae5558f59454b560328ecb7852f6b35a1"><div class="ttname"><a href="namespaceunilink.html#ae5558f59454b560328ecb7852f6b35a1">unilink::udp_client</a></div><div class="ttdeci">builder::UdpClientBuilder udp_client(uint16_t local_port)</div><div class="ttdoc">Create a UDP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00129">unilink.hpp:129</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md493"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md519"></a>
 UDP Sender (Client)</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -698,9 +698,9 @@ UDP Sender (Client)</h3>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_a5aab8070a6807f659ca8c826cfbacd1d"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#a5aab8070a6807f659ca8c826cfbacd1d">unilink::builder::UdpClientBuilder::remote</a></div><div class="ttdeci">UdpClientBuilder &amp; remote(const std::string &amp;address, uint16_t port)</div><div class="ttdef"><b>Definition</b> <a href="udp__builder_8cc_source.html#l00076">udp_builder.cc:76</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_ad58f3d4420d4d9c0d7e98d48246e220a"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#ad58f3d4420d4d9c0d7e98d48246e220a">unilink::builder::UdpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::UdpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="udp__builder_8cc_source.html#l00033">udp_builder.cc:33</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md494"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md520"></a>
 API Reference</h2>
-<h3><a class="anchor" id="autotoc_md495"></a>
+<h3><a class="anchor" id="autotoc_md521"></a>
 Constructors</h3>
 <div class="fragment"><div class="line"><span class="comment">// UDP client: send and/or receive with a configured remote peer</span></div>
 <div class="line"><a class="code hl_function" href="namespaceunilink.html#ae5558f59454b560328ecb7852f6b35a1">unilink::udp_client</a>(uint16_t local_port)</div>
@@ -708,7 +708,7 @@ Constructors</h3>
 <div class="line"><span class="comment">// UDP server: receive-only listener with virtual sessions per sender</span></div>
 <div class="line"><a class="code hl_function" href="namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd">unilink::udp_server</a>(uint16_t local_port)</div>
 <div class="ttc" id="anamespaceunilink_html_aee1c8d6e1e37f094547571a0e29123dd"><div class="ttname"><a href="namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd">unilink::udp_server</a></div><div class="ttdeci">builder::UdpServerBuilder udp_server(uint16_t local_port)</div><div class="ttdoc">Create a UDP server builder (Virtual sessions)</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00136">unilink.hpp:136</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md496"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md522"></a>
 Builder Methods (UdpClient)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -726,7 +726,7 @@ Builder Methods (UdpClient)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start/stop lifecycle   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md497"></a>
+<h3><a class="anchor" id="autotoc_md523"></a>
 Builder Methods (UdpServer)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -742,7 +742,7 @@ Builder Methods (UdpServer)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start/stop lifecycle   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md498"></a>
+<h3><a class="anchor" id="autotoc_md524"></a>
 Instance Methods (UdpClient)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -756,9 +756,9 @@ Instance Methods (UdpClient)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>connected()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Check if socket is open and ready   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md499"></a>
+<h2><a class="anchor" id="autotoc_md525"></a>
 Advanced Examples</h2>
-<h3><a class="anchor" id="autotoc_md500"></a>
+<h3><a class="anchor" id="autotoc_md526"></a>
 Echo Reply (Receiver)</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> socket = <a class="code hl_function" href="namespaceunilink.html#ae5558f59454b560328ecb7852f6b35a1">unilink::udp_client</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aaff548b4457e2c2682a14a0c9aa7d940">on_data</a>([&amp;](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
@@ -766,7 +766,7 @@ Echo Reply (Receiver)</h3>
 <div class="line">        <span class="comment">// Reply to the sender (automatically tracks last sender)</span></div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md501"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md527"></a>
 UDP Server (Receive-only listener)</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd">unilink::udp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aaff548b4457e2c2682a14a0c9aa7d940">on_data</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
@@ -776,12 +776,12 @@ UDP Server (Receive-only listener)</h3>
 <div class="line"> </div>
 <div class="line">server-&gt;start().get();</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md503"></a>
+<h1><a class="anchor" id="autotoc_md529"></a>
 UDS Communication</h1>
 <p>High-performance local inter-process communication (IPC) using Unix Domain Sockets.</p>
-<h2><a class="anchor" id="autotoc_md504"></a>
+<h2><a class="anchor" id="autotoc_md530"></a>
 Basic Usage</h2>
-<h3><a class="anchor" id="autotoc_md505"></a>
+<h3><a class="anchor" id="autotoc_md531"></a>
 UDS Server</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -801,7 +801,7 @@ UDS Server</h3>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsServerBuilder_html_adc12541e49d23fc1d671c61629372ebe"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsServerBuilder.html#adc12541e49d23fc1d671c61629372ebe">unilink::builder::UdsServerBuilder::unlimited_clients</a></div><div class="ttdeci">UdsServerBuilder &amp; unlimited_clients()</div><div class="ttdef"><b>Definition</b> <a href="uds__builder_8cc_source.html#l00161">uds_builder.cc:161</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_ad9137b62ca2550572c06204e1f4a5c80"><div class="ttname"><a href="namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80">unilink::uds_server</a></div><div class="ttdeci">builder::UdsServerBuilder uds_server(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS server builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00101">unilink.hpp:101</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md506"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md532"></a>
 UDS Client</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -816,13 +816,13 @@ UDS Client</h3>
 <div class="line">    client-&gt;send(<span class="stringliteral">&quot;Hello IPC!&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceunilink_html_aea8ffb995b971cd3ed4474daff633c5a"><div class="ttname"><a href="namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a">unilink::uds_client</a></div><div class="ttdeci">builder::UdsClientBuilder uds_client(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00110">unilink.hpp:110</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md507"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md533"></a>
 API Reference</h2>
-<h3><a class="anchor" id="autotoc_md508"></a>
+<h3><a class="anchor" id="autotoc_md534"></a>
 Constructors</h3>
 <div class="fragment"><div class="line"><a class="code hl_function" href="namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80">unilink::uds_server</a>(<span class="keyword">const</span> std::string&amp; socket_path)</div>
 <div class="line"><a class="code hl_function" href="namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a">unilink::uds_client</a>(<span class="keyword">const</span> std::string&amp; socket_path)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md509"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md535"></a>
 Builder Methods (UDS Server)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -836,7 +836,7 @@ Builder Methods (UDS Server)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start/stop lifecycle   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md510"></a>
+<h3><a class="anchor" id="autotoc_md536"></a>
 Builder Methods (UDS Client)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -852,7 +852,7 @@ Builder Methods (UDS Client)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start/stop lifecycle   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md511"></a>
+<h3><a class="anchor" id="autotoc_md537"></a>
 Instance Methods (UDS Client)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -868,7 +868,7 @@ Instance Methods (UDS Client)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>send_line(text)</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Enqueue text with a trailing newline   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md512"></a>
+<h3><a class="anchor" id="autotoc_md538"></a>
 Instance Methods (UDS Server)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -888,7 +888,7 @@ Instance Methods (UDS Server)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>connected_clients()</code>   </td><td class="markdownTableBodyNone"><code>std::vector&lt;size_t&gt;</code>   </td><td class="markdownTableBodyNone">List of connected client IDs   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md513"></a>
+<h2><a class="anchor" id="autotoc_md539"></a>
 Notes on UDS</h2>
 <ul>
 <li><b>Platform Support</b>: Unix Domain Sockets are natively supported on Linux, macOS, and recent versions of Windows 10/11.</li>
@@ -896,10 +896,10 @@ Notes on UDS</h2>
 <li><b>Cleanup</b>: Unilink automatically removes the socket file when the server starts and stops to ensure clean initialization.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md515"></a>
+<h1><a class="anchor" id="autotoc_md541"></a>
 Error Handling</h1>
 <p>Centralized error handling system with callbacks and statistics.</p>
-<h2><a class="anchor" id="autotoc_md516"></a>
+<h2><a class="anchor" id="autotoc_md542"></a>
 Setup Error Handler</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="error__handler_8hpp.html">unilink/diagnostics/error_handler.hpp</a>&quot;</span></div>
 <div class="line"> </div>
@@ -924,7 +924,7 @@ Setup Error Handler</h2>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_a6f03b4bac2ca5c1e8048466f67524347"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a6f03b4bac2ca5c1e8048466f67524347">unilink::diagnostics::ErrorInfo::message</a></div><div class="ttdeci">std::string message</div><div class="ttdef"><b>Definition</b> <a href="error__types_8hpp_source.html#l00069">error_types.hpp:69</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_ac3644d1d58ce2a174d87f319ec7c6071"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071">unilink::diagnostics::ErrorInfo::level</a></div><div class="ttdeci">ErrorLevel level</div><div class="ttdef"><b>Definition</b> <a href="error__types_8hpp_source.html#l00065">error_types.hpp:65</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_add67e4b87d957bd9eaf36117982d781a"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a">unilink::diagnostics::ErrorInfo::component</a></div><div class="ttdeci">std::string component</div><div class="ttdef"><b>Definition</b> <a href="error__types_8hpp_source.html#l00067">error_types.hpp:67</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md517"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md543"></a>
 Error Levels</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -938,17 +938,17 @@ Error Levels</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>CRITICAL</code>   </td><td class="markdownTableBodyNone">Fatal errors   </td><td class="markdownTableBodyNone">System-wide issues   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md518"></a>
+<h2><a class="anchor" id="autotoc_md544"></a>
 Error Statistics</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> stats = ErrorHandler::instance().get_error_stats();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Total errors: &quot;</span> &lt;&lt; stats.total_errors &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Critical: &quot;</span> &lt;&lt; stats.critical_count &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Errors: &quot;</span> &lt;&lt; stats.error_count &lt;&lt; std::endl;</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md520"></a>
+<h1><a class="anchor" id="autotoc_md546"></a>
 Logging System</h1>
 <p>Flexible logging with multiple outputs and async processing.</p>
-<h2><a class="anchor" id="autotoc_md521"></a>
+<h2><a class="anchor" id="autotoc_md547"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="logger_8hpp.html">unilink/diagnostics/logger.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="error__handler_8hpp.html">unilink/diagnostics/error_handler.hpp</a>&quot;</span></div>
@@ -970,7 +970,7 @@ Basic Usage</h2>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00503">logger.cc:503</a></div></div>
 <div class="ttc" id="alogger_8hpp_html"><div class="ttname"><a href="logger_8hpp.html">logger.hpp</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a></div><div class="ttdeci">@ DEBUG</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md522"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md548"></a>
 Log Levels</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -986,7 +986,7 @@ Log Levels</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>CRITICAL</code>   </td><td class="markdownTableBodyNone">Critical failures   </td><td class="markdownTableBodyNone">System-wide issues   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md523"></a>
+<h2><a class="anchor" id="autotoc_md549"></a>
 Async Logging</h2>
 <div class="fragment"><div class="line"><span class="comment">// Enable async logging for better performance</span></div>
 <div class="line"><a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
@@ -998,10 +998,10 @@ Async Logging</h2>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aca0467bc46f99891373b0338a43e5790"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">unilink::diagnostics::AsyncLogConfig::batch_size</a></div><div class="ttdeci">size_t batch_size</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00084">logger.hpp:84</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_ad45fd1ba0889c92320635c03db237cea"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">unilink::diagnostics::AsyncLogConfig::flush_interval</a></div><div class="ttdeci">std::chrono::milliseconds flush_interval</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00085">logger.hpp:85</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md525"></a>
+<h1><a class="anchor" id="autotoc_md551"></a>
 Configuration Management</h1>
 <p>_(Available when built with <code>UNILINK_ENABLE_CONFIG=ON</code>)_</p>
-<h2><a class="anchor" id="autotoc_md526"></a>
+<h2><a class="anchor" id="autotoc_md552"></a>
 Load Configuration from File</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;any&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="config__factory_8hpp.html">unilink/config/config_factory.hpp</a>&quot;</span></div>
@@ -1022,7 +1022,7 @@ Load Configuration from File</h2>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a811ea3113711224ed4df89b4a6ff5b4f"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a811ea3113711224ed4df89b4a6ff5b4f">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder &amp; retry_interval(std::chrono::milliseconds interval)</div><div class="ttdoc">Set connection retry interval.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00082">tcp_client_builder.cc:82</a></div></div>
 <div class="ttc" id="aclassunilink_1_1config_1_1ConfigFactory_html_a4edec9716691c78976092f69d6810ae5"><div class="ttname"><a href="classunilink_1_1config_1_1ConfigFactory.html#a4edec9716691c78976092f69d6810ae5">unilink::config::ConfigFactory::create_with_defaults</a></div><div class="ttdeci">static std::shared_ptr&lt; ConfigManagerInterface &gt; create_with_defaults()</div><div class="ttdef"><b>Definition</b> <a href="config__factory_8cc_source.html#l00031">config_factory.cc:31</a></div></div>
 <div class="ttc" id="aconfig__factory_8hpp_html"><div class="ttname"><a href="config__factory_8hpp.html">config_factory.hpp</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md527"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md553"></a>
 Configuration File Format</h2>
 <p>The current configuration manager reads simple <code>key=value</code> files.</p>
 <div class="fragment"><div class="line"># unilink.conf</div>
@@ -1038,16 +1038,16 @@ Configuration File Format</h2>
 <div class="line">serial.retry_interval_ms=5000</div>
 </div><!-- fragment --><p>Common preset keys are populated by <code><a class="el" href="classunilink_1_1config_1_1ConfigPresets.html">unilink::config::ConfigPresets</a></code> through <code>ConfigFactory::create_with_defaults()</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md529"></a>
+<h1><a class="anchor" id="autotoc_md555"></a>
 Best Practices</h1>
-<h2><a class="anchor" id="autotoc_md530"></a>
+<h2><a class="anchor" id="autotoc_md556"></a>
 1. Always Handle Errors</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#ac0fd38617f00cc7fd8edb0d926b1cd1d">on_error</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::ErrorContext</a>&amp; ctx) {</div>
 <div class="line">        <span class="comment">// Log error, notify user, etc.</span></div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md531"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md557"></a>
 2. Use Explicit Lifecycle Control</h2>
 <div class="fragment"><div class="line"><span class="comment">// Always use explicit start/stop for clarity</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
@@ -1057,7 +1057,7 @@ Best Practices</h1>
 <div class="line">client-&gt;start();  <span class="comment">// Start when ready</span></div>
 <div class="line"><span class="comment">// ... use the client ...</span></div>
 <div class="line">client-&gt;stop();   <span class="comment">// Stop when done</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md532"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md558"></a>
 3. Set Appropriate Retry Intervals</h2>
 <div class="fragment"><div class="line"><span class="comment">// Fast retry for local connections</span></div>
 <div class="line"><span class="keyword">auto</span> local_client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
@@ -1068,13 +1068,13 @@ Best Practices</h1>
 <div class="line"><span class="keyword">auto</span> remote_client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;remote.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a811ea3113711224ed4df89b4a6ff5b4f">retry_interval</a>(10000ms)  <span class="comment">// 10 seconds</span></div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md533"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md559"></a>
 4. Enable Logging for Debugging</h2>
 <div class="fragment"><div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">set_level</a>(<a class="code hl_enumvalue" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>);</div>
 <div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">set_console_output</a>(<span class="keyword">true</span>);</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2f634f2d64d5be96bd683f3c527a6416"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">unilink::diagnostics::Logger::set_console_output</a></div><div class="ttdeci">void set_console_output(bool enable)</div><div class="ttdoc">Enable/disable console output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00509">logger.cc:509</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7e8ec37c982ad0a16b56ad33ae62932b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">unilink::diagnostics::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00505">logger.cc:505</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md534"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md560"></a>
 5. Use Member Functions for OOP Design</h2>
 <div class="fragment"><div class="line"><span class="keyword">class </span>MyApplication {</div>
 <div class="line">    std::unique_ptr&lt;unilink::TcpClient&gt; client_;</div>
@@ -1088,26 +1088,26 @@ Best Practices</h1>
 <div class="line">    }</div>
 <div class="line">};</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md536"></a>
+<h1><a class="anchor" id="autotoc_md562"></a>
 Performance Tips</h1>
-<h2><a class="anchor" id="autotoc_md537"></a>
+<h2><a class="anchor" id="autotoc_md563"></a>
 1. Use Independent Context for Testing Only</h2>
 <div class="fragment"><div class="line"><span class="comment">// Testing (isolated IO thread)</span></div>
 <div class="line">.independent_context(<span class="keyword">true</span>)</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Production (shared IO thread - more efficient)</span></div>
 <div class="line">.independent_context(<span class="keyword">false</span>)  <span class="comment">// default</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md538"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md564"></a>
 2. Enable Async Logging</h2>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
 <div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a> = 100;</div>
 <div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">set_async_logging</a>(<span class="keyword">true</span>, config);</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00546">logger.cc:546</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md540"></a>
+<h1><a class="anchor" id="autotoc_md566"></a>
 Backpressure Strategy</h1>
 <p>When a sender produces data faster than the network can deliver it, messages accumulate in the send queue. The <code>BackpressureStrategy</code> enum controls what happens when the queue approaches its threshold — trading off <b>completeness</b> against <b>freshness</b>.</p>
-<h2><a class="anchor" id="autotoc_md541"></a>
+<h2><a class="anchor" id="autotoc_md567"></a>
 Strategies</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -1119,7 +1119,7 @@ Strategies</h2>
 </table>
 <p><code>Reliable</code> is the default for all transports. It is the safe choice: no data is silently discarded.</p>
 <p><code>BestEffort</code> is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The <code>on_backpressure</code> callback fires each time the queue is flushed so callers can observe drops.</p>
-<h2><a class="anchor" id="autotoc_md542"></a>
+<h2><a class="anchor" id="autotoc_md568"></a>
 When to use each</h2>
 <p><b>Use <code>Reliable</code> (default) when:</b></p><ul>
 <li>Reliability is critical: file transfers, command sequences, logs, financial data</li>
@@ -1131,7 +1131,7 @@ When to use each</h2>
 <li>You are streaming robot joint angles, camera frames, or GNSS positions over a slow link</li>
 <li>A stale value is worse than a dropped value</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md543"></a>
+<h2><a class="anchor" id="autotoc_md569"></a>
 C++ Usage</h2>
 <p>Set the strategy via the transport config before starting:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
@@ -1171,7 +1171,7 @@ C++ Usage</h2>
 </div><!-- fragment --><p>The strategy can also be changed at runtime on a running transport:</p>
 <div class="fragment"><div class="line"><span class="comment">// Switch strategy dynamically (e.g. entering a high-rate burst mode)</span></div>
 <div class="line">client-&gt;set_backpressure_strategy(BackpressureStrategy::BestEffort);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md544"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md570"></a>
 Python Usage</h2>
 <div class="fragment"><div class="line"><span class="keyword">import</span> unilink_py <span class="keyword">as</span> unilink</div>
 <div class="line"> </div>
@@ -1180,7 +1180,7 @@ Python Usage</h2>
 <div class="line">client.backpressure_strategy  = unilink.BackpressureStrategy.BestEffort</div>
 <div class="line">client.start()</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdoc">Modernized TCP Client Wrapper.</div><div class="ttdef"><b>Definition</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00047">tcp_client.hpp:47</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md545"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md571"></a>
 Thresholds</h2>
 <p>Unilink uses <b>Dynamic Defaults</b> for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:</p>
 <table class="markdownTable">
@@ -1201,9 +1201,9 @@ Thresholds</h2>
 <td class="markdownTableBodyLeft">Hard cap (<code>bp_limit_</code>)   </td><td class="markdownTableBodyLeft">≥ 4 MiB   </td><td class="markdownTableBodyLeft">Per-message reject limit   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md547"></a>
+<h1><a class="anchor" id="autotoc_md573"></a>
 Security</h1>
-<h2><a class="anchor" id="autotoc_md548"></a>
+<h2><a class="anchor" id="autotoc_md574"></a>
 Validate All Input</h2>
 <p>Always validate data received from the network before processing it.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
@@ -1217,7 +1217,7 @@ Validate All Input</h2>
 <div class="line">    }</div>
 <div class="line">    process_message(msg);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md549"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md575"></a>
 Rate Limiting</h2>
 <p>Protect your server from abuse by limiting requests per client.</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>RateLimiter {</div>
@@ -1239,7 +1239,7 @@ Rate Limiting</h2>
 <div class="line">    <span class="keywordflow">if</span> (!limiter.is_allowed(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>())) <span class="keywordflow">return</span>;</div>
 <div class="line">    process_data(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>(), std::string(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>()));</div>
 <div class="line">});</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md550"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md576"></a>
 Connection Limits</h2>
 <p>Use <code>.multi_client(N)</code> to cap simultaneous connections, or enforce limits manually:</p>
 <div class="fragment"><div class="line"><span class="comment">// Built-in limit via builder</span></div>
@@ -1253,7 +1253,7 @@ Connection Limits</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 1 2026 04:02:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 08:11:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

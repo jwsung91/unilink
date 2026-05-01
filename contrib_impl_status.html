@@ -212,6 +212,15 @@ Build And Test Status</h1>
 <li><a class="el" href="test__structure_8md.html">Test Structure</a></li>
 <li><code>ctest</code> output from the active build directory</li>
 </ul>
+<p>Latest explicitly reported ARM64 validation:</p>
+<ul>
+<li>Jetson Orin Nano on Ubuntu 22.04 <code>aarch64</code></li>
+<li>Full C++ <code>ctest</code> sweep passed: 481 passed, 0 failed</li>
+<li>Python import smoke and Python API tests passed, including loopback-enabled TCP validation</li>
+<li>ARM64 installed-package consumer smoke passed with <code>find_package(unilink)</code> and <code>unilink::unilink</code></li>
+<li>One disabled test was listed as not run: <code>UdsErrorTest.ServerStopWithActiveSessions</code></li>
+<li>See <a class="el" href="orin__nano__validation_8md.html">Orin Nano Validation</a> for the reproducible runbook and scope boundaries</li>
+</ul>
 <p>This document intentionally does not repeat exact version numbers, build-cache values, or test counts, because those change more often than the implementation scope itself.</p>
 <h1><a class="anchor" id="autotoc_md338"></a>
 Recommended Reading Order</h1>
@@ -229,7 +238,7 @@ Recommended Reading Order</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 1 2026 04:02:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 08:11:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

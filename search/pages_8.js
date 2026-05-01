@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quick_20start_20guide_0',['Unilink Quick Start Guide',['../user_quickstart.html',1,'user_index']]]
+  ['orin_20nano_20validation_0',['Orin Nano Validation',['../contrib_orin_nano_validation.html',1,'']]]
 ];

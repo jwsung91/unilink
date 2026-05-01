@@ -1,0 +1,387 @@
+<!-- HTML header for doxygen 1.9.8-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>unilink: Orin Nano Validation</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom-awesome.css" rel="stylesheet" type="text/css"/>
+<!-- Mermaid.js support -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".mermaid").each(function() {
+            var pre = $(this).find('pre');
+            var text = "";
+            if (pre.length > 0) {
+                text = pre.text();
+            } else {
+                var html = $(this).html();
+                text = html.replace(/<br\s*\/?>/gi, "\n").replace(/&nbsp;/g, " ");
+                var doc = new DOMParser().parseFromString(text, 'text/html');
+                text = doc.documentElement.textContent;
+            }
+            var fixedText = text
+                .replace(/–/g, "--")
+                .replace(/—/g, "---")
+                .replace(/&ndash;/g, "--")
+                .replace(/&mdash;/g, "---");
+            console.log("Mermaid input text:", fixedText);
+            $(this).empty().text(fixedText.trim());
+            $(this).removeAttr("data-processed");
+        });
+        const isDarkMode = () => document.documentElement.classList.contains("dark-mode");
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: isDarkMode() ? 'dark' : 'default'
+        });
+        mermaid.run();
+        // Listen for dark mode toggle
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributes && mutation.attributeName === "class") {
+                    mermaid.initialize({
+                        theme: isDarkMode() ? 'dark' : 'default'
+                    });
+                    mermaid.run();
+                }
+            });
+        });
+        observer.observe(document.documentElement, { attributes: true });
+    });
+</script>
+<!-- Doxygen Awesome Extensions -->
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        DoxygenAwesomeDarkModeToggle.init()
+        DoxygenAwesomeFragmentCopyButton.init()
+        DoxygenAwesomeParagraphLink.init()
+        DoxygenAwesomeInteractiveToc.init()
+    });
+</script>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">unilink<span id="projectnumber">&#160;0.6.1</span>
+   </div>
+   <div id="projectbrief">A simple C++ library for unified async communication</div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('contrib_orin_nano_validation.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">Orin Nano Validation</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p>Step-by-step validation runbook for <code>unilink</code> on NVIDIA Jetson Orin Nano and similar Ubuntu <code>aarch64</code> systems.</p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md347"></a>
+Scope</h1>
+<p>Use this guide when you want to answer one of these questions:</p>
+<ul>
+<li>Does the library build from source on Ubuntu ARM64?</li>
+<li>Do the unit and integration tests pass on Jetson Orin Nano?</li>
+<li>Do the Python bindings import correctly on ARM64?</li>
+<li>Do Linux serial integration tests work with <code>socat</code> or loopback hardware?</li>
+</ul>
+<p>This guide assumes:</p>
+<ul>
+<li>Ubuntu 22.04 ARM64 is the primary validation baseline</li>
+<li>Ubuntu 24.04 ARM64 is a secondary validation target</li>
+<li>You are building from a local checkout of this repository</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md348"></a>
+Latest Validation Snapshot</h1>
+<p>Most recent reported Jetson Orin Nano result:</p>
+<ul>
+<li>Platform: Ubuntu 22.04 on <code>aarch64</code></li>
+<li>Result: <code>100% tests passed, 0 tests failed out of 481</code></li>
+<li>Real elapsed test time: <code>25.52 sec</code></li>
+<li>Python import smoke passed</li>
+<li>Python API tests passed, including TCP loopback-enabled mode</li>
+<li>ARM64 release artifact package generation passed</li>
+<li>Installed-package consumer smoke passed with <code>find_package(unilink)</code> and <code>unilink::unilink</code></li>
+<li>Serial integration labels passed as part of the full sweep</li>
+<li>One test was listed as not run because it is disabled by design: <code>UdsErrorTest.ServerStopWithActiveSessions</code></li>
+</ul>
+<p>Interpretation:</p>
+<ul>
+<li>This is strong evidence for Ubuntu 22.04 ARM64 support on Orin Nano across C++, Python, and installed-package consumption paths</li>
+<li>It does not by itself prove every other Linux ARM64 distribution or userspace combination</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md350"></a>
+Prerequisites</h1>
+<p>Install the baseline packages:</p>
+<div class="fragment"><div class="line">sudo apt update</div>
+<div class="line">sudo apt install -y \</div>
+<div class="line">  build-essential \</div>
+<div class="line">  cmake \</div>
+<div class="line">  ccache \</div>
+<div class="line">  pkg-config \</div>
+<div class="line">  libboost-dev \</div>
+<div class="line">  libboost-system-dev \</div>
+<div class="line">  python3 \</div>
+<div class="line">  python3-dev \</div>
+<div class="line">  python3-pip \</div>
+<div class="line">  python3-venv \</div>
+<div class="line">  socat</div>
+</div><!-- fragment --><p>Install Python-side build and test helpers:</p>
+<div class="fragment"><div class="line">python3 -m pip install --user pybind11 pytest</div>
+</div><!-- fragment --><p>Check the expected environment:</p>
+<div class="fragment"><div class="line">uname -m</div>
+<div class="line">lsb_release -ds</div>
+<div class="line">cmake --version</div>
+<div class="line">python3 --version</div>
+</div><!-- fragment --><p>Expected baseline:</p>
+<ul>
+<li><code>uname -m</code> prints <code>aarch64</code></li>
+<li>Ubuntu 22.04 is preferred on Orin Nano</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md352"></a>
+Configure And Build</h1>
+<p>From the repository root:</p>
+<div class="fragment"><div class="line">cmake -S . -B build-orin \</div>
+<div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
+<div class="line">  -DUNILINK_BUILD_EXAMPLES=OFF \</div>
+<div class="line">  -DUNILINK_BUILD_DOCS=OFF \</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
+<div class="line">  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \</div>
+<div class="line">  -DBUILD_PYTHON_BINDINGS=ON \</div>
+<div class="line">  -DPython3_EXECUTABLE=&quot;$(python3 -c &#39;import sys; print(sys.executable)&#39;)&quot;</div>
+</div><!-- fragment --><div class="fragment"><div class="line">cmake --build build-orin -j&quot;$(nproc)&quot;</div>
+</div><!-- fragment --><p>If you only want a C++ validation pass and do not need Python bindings:</p>
+<div class="fragment"><div class="line">cmake -S . -B build-orin \</div>
+<div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
+<div class="line">  -DUNILINK_BUILD_EXAMPLES=OFF \</div>
+<div class="line">  -DUNILINK_BUILD_DOCS=OFF \</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
+<div class="line">  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \</div>
+<div class="line">  -DBUILD_PYTHON_BINDINGS=OFF</div>
+</div><!-- fragment --><hr  />
+<h1><a class="anchor" id="autotoc_md354"></a>
+Run C++ Tests</h1>
+<p>Run the fast unit-style suite first:</p>
+<div class="fragment"><div class="line">ctest --test-dir build-orin \</div>
+<div class="line">  --output-on-failure \</div>
+<div class="line">  --parallel &quot;$(nproc)&quot; \</div>
+<div class="line">  --label-regex &quot;unit|core|memory|config&quot;</div>
+</div><!-- fragment --><p>Run the integration suite next:</p>
+<div class="fragment"><div class="line">ctest --test-dir build-orin \</div>
+<div class="line">  --output-on-failure \</div>
+<div class="line">  --parallel 2 \</div>
+<div class="line">  --label-regex &quot;integration|mock|stable&quot; \</div>
+<div class="line">  --label-exclude &quot;slow&quot;</div>
+</div><!-- fragment --><p>Run the end-to-end suite if you want broader confidence:</p>
+<div class="fragment"><div class="line">ctest --test-dir build-orin \</div>
+<div class="line">  --output-on-failure \</div>
+<div class="line">  --parallel 2 \</div>
+<div class="line">  -L e2e</div>
+</div><!-- fragment --><p>Run everything except performance benchmarks:</p>
+<div class="fragment"><div class="line">ctest --test-dir build-orin \</div>
+<div class="line">  --output-on-failure \</div>
+<div class="line">  --parallel 2 \</div>
+<div class="line">  -LE &quot;performance|docs_snippets&quot;</div>
+</div><!-- fragment --><hr  />
+<h1><a class="anchor" id="autotoc_md356"></a>
+Run Python Validation</h1>
+<p>Use the in-tree package plus the built extension:</p>
+<div class="fragment"><div class="line">export PYTHONPATH=&quot;$(pwd)/bindings/python:$(pwd)/build-orin/lib:${PYTHONPATH}&quot;</div>
+<div class="line">python3 bindings/python/test_import.py</div>
+</div><!-- fragment --><p>Run the Python API tests:</p>
+<div class="fragment"><div class="line">python3 -m pytest bindings/python/tests/test_bindings_api.py -q</div>
+</div><!-- fragment --><p>By default, the real transport loopback tests in <code>test_bindings_api.py</code> are skipped. To enable them:</p>
+<div class="fragment"><div class="line">UNILINK_PYTHON_RUN_LOOPBACK_TESTS=1 \</div>
+<div class="line">python3 -m pytest bindings/python/tests/test_bindings_api.py -q</div>
+</div><!-- fragment --><p>Use that loopback mode only when local socket creation is allowed in the environment.</p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md358"></a>
+Serial Validation</h1>
+<h2><a class="anchor" id="autotoc_md359"></a>
+Automated Integration Coverage</h2>
+<p>The ARM64 integration command above already includes serial integration tests.</p>
+<p><code>test_serial_timeout.cc</code> creates a virtual serial pair with <code>socat</code> when it is available, so <code>socat</code> should be installed before running the integration suite.</p>
+<h2><a class="anchor" id="autotoc_md360"></a>
+Manual Virtual Serial Pair</h2>
+<p>If you want to do manual bring-up without hardware:</p>
+<div class="fragment"><div class="line">socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB</div>
+</div><!-- fragment --><p>That creates two connected serial endpoints:</p>
+<ul>
+<li><code>/tmp/ttyA</code></li>
+<li><code>/tmp/ttyB</code></li>
+</ul>
+<p>You can then use the serial example or your own local smoke test against those endpoints.</p>
+<h2><a class="anchor" id="autotoc_md361"></a>
+Physical Loopback</h2>
+<p>If your Orin Nano testbed includes UART hardware, you can validate a real loopback path:</p>
+<ol type="1">
+<li>Connect TX/RX appropriately for your adapter or board header.</li>
+<li>Confirm the device node, for example <code>/dev/ttyTHS0</code>, <code>/dev/ttyUSB0</code>, or <code>/dev/ttyACM0</code>.</li>
+<li>Run your smoke test or serial example with that path.</li>
+</ol>
+<hr  />
+<h1><a class="anchor" id="autotoc_md363"></a>
+Pass Criteria</h1>
+<p>For a practical “supported on Orin Nano” claim, use this minimum bar:</p>
+<ol type="1">
+<li><code>cmake</code> configure succeeds on Ubuntu 22.04 ARM64.</li>
+<li><code>cmake --build</code> succeeds with tests enabled.</li>
+<li>Unit and integration <code>ctest</code> commands pass.</li>
+<li><code>bindings/python/test_import.py</code> passes when Python bindings are enabled.</li>
+</ol>
+<p>The current Orin Nano report satisfies that bar and also includes:</p>
+<ol type="1">
+<li>Python API tests with loopback enabled.</li>
+<li>ARM64 <code>TGZ</code> package generation.</li>
+<li>Installed-package consumer smoke using the canonical <code>unilink::unilink</code> target.</li>
+</ol>
+<p>For a stronger “generic Ubuntu ARM64” claim, add:</p>
+<ol type="1">
+<li>The same validation on Ubuntu 24.04 ARM64.</li>
+<li>Python API tests with loopback enabled.</li>
+<li>At least one serial validation path, either <code>socat</code> or physical loopback.</li>
+</ol>
+<hr  />
+<h1><a class="anchor" id="autotoc_md365"></a>
+Troubleshooting</h1>
+<h2><a class="anchor" id="autotoc_md366"></a>
+Boost Not Found</h2>
+<p>Check that the ARM64 Boost packages are installed:</p>
+<div class="fragment"><div class="line">dpkg -l | grep libboost</div>
+</div><!-- fragment --><p>If CMake still fails, clear the build directory and reconfigure:</p>
+<div class="fragment"><div class="line">rm -rf build-orin</div>
+<div class="line">cmake -S . -B build-orin ...</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md367"></a>
+Python Import Fails</h2>
+<p>Confirm the extension exists:</p>
+<div class="fragment"><div class="line">find build-orin/lib -maxdepth 1 -name &#39;unilink_py*&#39;</div>
+</div><!-- fragment --><p>Then confirm <code>PYTHONPATH</code> includes both:</p>
+<ul>
+<li><code>bindings/python</code></li>
+<li><code>build-orin/lib</code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md368"></a>
+Serial Tests Skip</h2>
+<p>If the serial integration tests skip on ARM64:</p>
+<ul>
+<li>confirm <code>socat</code> is installed</li>
+<li>confirm <code>/tmp</code> is writable</li>
+<li>check that no stale <code>socat</code> process is holding the test symlinks</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md369"></a>
+Port-Binding Failures</h2>
+<p>If TCP or UDS tests fail intermittently:</p>
+<ul>
+<li>rerun the failed tests once</li>
+<li>make sure no unrelated local services are occupying ephemeral ports</li>
+<li>reduce test parallelism from <code>2</code> to <code>1</code></li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md371"></a>
+Related Docs</h1>
+<ul>
+<li><a class="el" href="testing_8md.html">Testing</a></li>
+<li><a class="el" href="build__guide_8md.html">Build Guide</a></li>
+<li><a class="el" href="requirements_8md.html">Requirements</a></li>
+<li><a class="el" href="04__serial__communication_8md.html">Serial Communication Tutorial</a></li>
+<li><a class="el" href="python__bindings_8md.html">Python Bindings Guide</a></li>
+</ul>
+<p><a class="el" href="contributor_2index_8md.html">← Contributor Guide</a> </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Fri May 1 2026 08:11:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+  </ul>
+</div>
+</body>
+</html>
