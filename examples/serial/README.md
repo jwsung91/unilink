@@ -6,6 +6,11 @@
 |--------|-------------|
 | `serial_echo` | Opens a serial port, prints received data, sends user input |
 
+## Examples Structure
+
+- `sync/` — Synchronous (blocking) examples. Uses `.start().get()` for simplicity.
+- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+
 ## Usage
 
 ```bash

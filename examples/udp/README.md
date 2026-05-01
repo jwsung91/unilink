@@ -1,5 +1,10 @@
 # UDP Examples
 
+## Examples Structure
+
+- `sync/` — Synchronous (blocking) examples. Uses `.start().get()` for simplicity.
+- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+
 ## Binaries
 
 | Binary | Description |

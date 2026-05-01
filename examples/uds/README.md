@@ -2,6 +2,11 @@
 
 Unix domain socket examples for local IPC. Requires Linux or macOS.
 
+## Examples Structure
+
+- `sync/` — Synchronous (blocking) examples. Uses `.start().get()` for simplicity.
+- `async/` — Asynchronous (callback-driven) examples (Coming Soon).
+
 ## Binaries
 
 | Binary | Description |
