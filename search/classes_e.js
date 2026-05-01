@@ -10,12 +10,11 @@ var searchData=
   ['udsclient_7',['udsclient',['../classunilink_1_1transport_1_1UdsClient.html',1,'unilink::transport::UdsClient'],['../classunilink_1_1wrapper_1_1UdsClient.html',1,'unilink::wrapper::UdsClient']]],
   ['udsclientbuilder_8',['UdsClientBuilder',['../classunilink_1_1builder_1_1UdsClientBuilder.html',1,'unilink::builder']]],
   ['udsclientconfig_9',['UdsClientConfig',['../structunilink_1_1config_1_1UdsClientConfig.html',1,'unilink::config']]],
-  ['udsreconnectlogicdecision_10',['UdsReconnectLogicDecision',['../structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html',1,'unilink::transport::detail']]],
-  ['udsserver_11',['udsserver',['../classunilink_1_1transport_1_1UdsServer.html',1,'unilink::transport::UdsServer'],['../classunilink_1_1wrapper_1_1UdsServer.html',1,'unilink::wrapper::UdsServer']]],
-  ['udsserverbuilder_12',['UdsServerBuilder',['../classunilink_1_1builder_1_1UdsServerBuilder.html',1,'unilink::builder']]],
-  ['udsserverconfig_13',['UdsServerConfig',['../structunilink_1_1config_1_1UdsServerConfig.html',1,'unilink::config']]],
-  ['udsserversession_14',['UdsServerSession',['../classunilink_1_1transport_1_1UdsServerSession.html',1,'unilink::transport']]],
-  ['udssocketinterface_15',['UdsSocketInterface',['../classunilink_1_1interface_1_1UdsSocketInterface.html',1,'unilink::interface']]],
-  ['unifiedbuilder_16',['UnifiedBuilder',['../classunilink_1_1builder_1_1UnifiedBuilder.html',1,'unilink::builder']]],
-  ['unilinkexception_17',['UnilinkException',['../classunilink_1_1diagnostics_1_1UnilinkException.html',1,'unilink::diagnostics']]]
+  ['udsserver_10',['udsserver',['../classunilink_1_1transport_1_1UdsServer.html',1,'unilink::transport::UdsServer'],['../classunilink_1_1wrapper_1_1UdsServer.html',1,'unilink::wrapper::UdsServer']]],
+  ['udsserverbuilder_11',['UdsServerBuilder',['../classunilink_1_1builder_1_1UdsServerBuilder.html',1,'unilink::builder']]],
+  ['udsserverconfig_12',['UdsServerConfig',['../structunilink_1_1config_1_1UdsServerConfig.html',1,'unilink::config']]],
+  ['udsserversession_13',['UdsServerSession',['../classunilink_1_1transport_1_1UdsServerSession.html',1,'unilink::transport']]],
+  ['udssocketinterface_14',['UdsSocketInterface',['../classunilink_1_1interface_1_1UdsSocketInterface.html',1,'unilink::interface']]],
+  ['unifiedbuilder_15',['UnifiedBuilder',['../classunilink_1_1builder_1_1UnifiedBuilder.html',1,'unilink::builder']]],
+  ['unilinkexception_16',['UnilinkException',['../classunilink_1_1diagnostics_1_1UnilinkException.html',1,'unilink::diagnostics']]]
 ];

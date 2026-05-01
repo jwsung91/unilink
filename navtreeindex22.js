@@ -1,8 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"user_troubleshooting.html#autotoc_md771":[2,3,9,4,1],
-"user_troubleshooting.html#autotoc_md772":[2,3,9,4,1,0],
-"user_troubleshooting.html#autotoc_md773":[2,3,9,4,1,1],
 "user_troubleshooting.html#autotoc_md775":[2,3,9,4,2],
 "user_troubleshooting.html#autotoc_md776":[2,3,9,4,2,0],
 "user_troubleshooting.html#autotoc_md777":[2,3,9,4,2,1],

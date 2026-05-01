@@ -157,25 +157,20 @@ $(document).ready(function(){initNavTree('uds_2detail_2reconnect__decider_8hpp.h
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">reconnect_decider.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;chrono&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
-<code>#include &quot;<a class="el" href="uds__config_8hpp_source.html">unilink/config/uds_config.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="error__types_8hpp_source.html">unilink/diagnostics/error_types.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="reconnect__policy_8hpp_source.html">unilink/transport/tcp_client/reconnect_policy.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="uds__config_8hpp_source.html">unilink/config/uds_config.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="base_2reconnect__decider_8hpp_source.html">unilink/transport/base/reconnect_decider.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for reconnect_decider.hpp:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="uds_2detail_2reconnect__decider_8hpp__incl.svg" width="100%" height="591"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="uds_2detail_2reconnect__decider_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> This graph shows which files directly or indirectly include this file:</div>
@@ -187,12 +182,6 @@ $(document).ready(function(){initNavTree('uds_2detail_2reconnect__decider_8hpp.h
 </div>
 <p><a href="uds_2detail_2reconnect__decider_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html">unilink::transport::detail::UdsReconnectLogicDecision</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the decision on whether to retry a connection attempt for UDS.  <a href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink" id="r_namespaceunilink"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
@@ -202,11 +191,15 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink_1_1transport_1_1detail" id="r_namespaceunilink_1_1transport_1_1detail"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html">unilink::transport::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a8817ba1dfd1f5e479f36de144d96449a" id="r_a8817ba1dfd1f5e479f36de144d96449a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a8817ba1dfd1f5e479f36de144d96449a">unilink::transport::detail::UdsReconnectLogicDecision</a> = <a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a></td></tr>
+<tr class="memdesc:a8817ba1dfd1f5e479f36de144d96449a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the decision on whether to retry a connection attempt for UDS.  <br /></td></tr>
+<tr class="separator:a8817ba1dfd1f5e479f36de144d96449a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a70b2d349db27101eb27f36bf3a608643" id="r_a70b2d349db27101eb27f36bf3a608643"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a70b2d349db27101eb27f36bf3a608643">unilink::transport::detail::clamp_reconnect_delay_uds</a> (std::chrono::milliseconds delay)</td></tr>
-<tr class="separator:a70b2d349db27101eb27f36bf3a608643"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a955086b549ba1ad4eabea036d9a7e5db" id="r_a955086b549ba1ad4eabea036d9a7e5db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html">UdsReconnectLogicDecision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">unilink::transport::detail::decide_reconnect_uds</a> (const <a class="el" href="structunilink_1_1config_1_1UdsClientConfig.html">config::UdsClientConfig</a> &amp;cfg, const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;error_info, uint32_t attempt_count, const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;policy)</td></tr>
+<tr class="memitem:a955086b549ba1ad4eabea036d9a7e5db" id="r_a955086b549ba1ad4eabea036d9a7e5db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a8817ba1dfd1f5e479f36de144d96449a">UdsReconnectLogicDecision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">unilink::transport::detail::decide_reconnect_uds</a> (const <a class="el" href="structunilink_1_1config_1_1UdsClientConfig.html">config::UdsClientConfig</a> &amp;cfg, const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;error_info, uint32_t attempt_count, const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;policy)</td></tr>
 <tr class="memdesc:a955086b549ba1ad4eabea036d9a7e5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a UDS reconnection attempt should be made.  <br /></td></tr>
 <tr class="separator:a955086b549ba1ad4eabea036d9a7e5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -216,7 +209,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="dir_02a9bb08ffce7a5da5a853781c6f41ba.html">detail</a></li><li class="navelem"><a class="el" href="uds_2detail_2reconnect__decider_8hpp.html">reconnect_decider.hpp</a></li>
-    <li class="footer">Generated on Fri May 1 2026 14:43:26 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 22:29:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

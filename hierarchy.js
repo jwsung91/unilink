@@ -147,7 +147,6 @@ var hierarchy =
       [ "unilink::transport::BoostUdsAcceptor", "classunilink_1_1transport_1_1BoostUdsAcceptor.html", null ]
     ] ],
     [ "unilink::config::UdsClientConfig", "structunilink_1_1config_1_1UdsClientConfig.html", null ],
-    [ "unilink::transport::detail::UdsReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html", null ],
     [ "unilink::config::UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", null ],
     [ "unilink::interface::UdsSocketInterface", "classunilink_1_1interface_1_1UdsSocketInterface.html", [
       [ "unilink::transport::BoostUdsSocket", "classunilink_1_1transport_1_1BoostUdsSocket.html", null ]

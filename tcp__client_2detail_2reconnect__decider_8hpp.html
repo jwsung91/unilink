@@ -157,20 +157,13 @@ $(document).ready(function(){initNavTree('tcp__client_2detail_2reconnect__decide
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">reconnect_decider.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;chrono&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
-<code>#include &quot;<a class="el" href="tcp__client__config_8hpp_source.html">unilink/config/tcp_client_config.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="error__types_8hpp_source.html">unilink/diagnostics/error_types.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="reconnect__policy_8hpp_source.html">unilink/transport/tcp_client/reconnect_policy.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="tcp__client__config_8hpp_source.html">unilink/config/tcp_client_config.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="base_2reconnect__decider_8hpp_source.html">unilink/transport/base/reconnect_decider.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for reconnect_decider.hpp:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -183,17 +176,11 @@ $(document).ready(function(){initNavTree('tcp__client_2detail_2reconnect__decide
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="tcp__client_2detail_2reconnect__decider_8hpp__dep__incl.svg" width="363" height="168"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="tcp__client_2detail_2reconnect__decider_8hpp__dep__incl.svg" width="186" height="154"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="tcp__client_2detail_2reconnect__decider_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">unilink::transport::detail::ReconnectLogicDecision</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the decision on whether to retry a connection attempt.  <a href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink" id="r_namespaceunilink"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
@@ -205,16 +192,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a22e4060c24e0be5f58266c56c8b6cd6d" id="r_a22e4060c24e0be5f58266c56c8b6cd6d"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a22e4060c24e0be5f58266c56c8b6cd6d">unilink::transport::detail::clamp_reconnect_delay</a> (std::chrono::milliseconds delay)</td></tr>
-<tr class="separator:a22e4060c24e0be5f58266c56c8b6cd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afea3187da4b3318894729cf30d8f512a" id="r_afea3187da4b3318894729cf30d8f512a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">unilink::transport::detail::decide_reconnect</a> (const <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html">config::TcpClientConfig</a> &amp;cfg, const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;error_info, uint32_t attempt_count, const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;policy)</td></tr>
 <tr class="memdesc:afea3187da4b3318894729cf30d8f512a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a reconnection attempt should be made and the base delay to use.  <br /></td></tr>
 <tr class="separator:afea3187da4b3318894729cf30d8f512a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a532cfa26a3aaa99ee534aaae2adf48f5" id="r_a532cfa26a3aaa99ee534aaae2adf48f5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">unilink::transport::detail::MAX_RECONNECT_DELAY</a> = std::chrono::milliseconds(30000)</td></tr>
-<tr class="separator:a532cfa26a3aaa99ee534aaae2adf48f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -222,7 +202,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_5945cecc8885b190726a3218a193f147.html">tcp_client</a></li><li class="navelem"><a class="el" href="dir_bb399f8cc3e2b96ebdd49be173011b1d.html">detail</a></li><li class="navelem"><a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp.html">reconnect_decider.hpp</a></li>
-    <li class="footer">Generated on Fri May 1 2026 14:43:26 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 1 2026 22:29:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

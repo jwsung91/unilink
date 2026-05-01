@@ -85,8 +85,7 @@ var annotated_dup =
       ] ],
       [ "transport", "namespaceunilink_1_1transport.html", [
         [ "detail", "namespaceunilink_1_1transport_1_1detail.html", [
-          [ "ReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision" ],
-          [ "UdsReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision" ]
+          [ "ReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision" ]
         ] ],
         [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
         [ "BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", "classunilink_1_1transport_1_1BoostTcpAcceptor" ],
