@@ -16,6 +16,13 @@
 
 #include "logger.hpp"
 
+#include <spdlog/async.h>
+#include <spdlog/sinks/base_sink.h>
+#include <spdlog/sinks/dist_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
 #include <condition_variable>
 #include <cstdio>
 #include <cstring>
@@ -33,458 +40,193 @@
 namespace unilink {
 namespace diagnostics {
 
+/**
+ * @brief Custom spdlog sink for LogCallback
+ */
+template <typename Mutex>
+class callback_sink : public spdlog::sinks::base_sink<Mutex> {
+ public:
+  explicit callback_sink(Logger::LogCallback callback) : callback_(std::move(callback)) {}
+
+  void set_callback(Logger::LogCallback callback) {
+    std::lock_guard<Mutex> lock(spdlog::sinks::base_sink<Mutex>::mutex_);
+    callback_ = std::move(callback);
+  }
+
+ protected:
+  void sink_it_(const spdlog::details::log_msg& msg) override {
+    if (!callback_) return;
+
+    spdlog::memory_buf_t formatted;
+    spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, formatted);
+    callback_(from_spdlog_level(msg.level), fmt::to_string(formatted));
+  }
+
+  void flush_() override {}
+
+ private:
+  static LogLevel from_spdlog_level(spdlog::level::level_enum level) {
+    switch (level) {
+      case spdlog::level::debug:
+        return LogLevel::DEBUG;
+      case spdlog::level::info:
+        return LogLevel::INFO;
+      case spdlog::level::warn:
+        return LogLevel::WARNING;
+      case spdlog::level::err:
+        return LogLevel::ERROR;
+      case spdlog::level::critical:
+        return LogLevel::CRITICAL;
+      default:
+        return LogLevel::INFO;
+    }
+  }
+
+  Logger::LogCallback callback_;
+};
+
+using callback_sink_mt = callback_sink<std::mutex>;
+
 struct Logger::Impl {
   mutable std::mutex mutex_;
   std::atomic<LogLevel> current_level_{LogLevel::INFO};
   std::atomic<bool> enabled_{true};
   std::atomic<int> outputs_{static_cast<int>(LogOutput::CONSOLE)};
 
-  struct FormatPart {
-    enum Type { LITERAL, TIMESTAMP, LEVEL, COMPONENT, OPERATION, MESSAGE };
-    Type type;
-    std::string value;  // Only used for LITERAL
-  };
+  std::shared_ptr<spdlog::logger> spd_logger_;
+  std::shared_ptr<spdlog::sinks::dist_sink_mt> dist_sink_;
+  std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink_;
+  std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> file_sink_;
+  std::shared_ptr<callback_sink_mt> callback_sink_;
 
-  struct LogFormat {
-    std::string format_string;
-    std::vector<FormatPart> parsed_format;
-  };
-
-  std::shared_ptr<LogFormat> log_format_;
-
-  std::unique_ptr<std::ofstream> file_output_;
-  LogCallback callback_;
-
-  // Log rotation support
-  std::unique_ptr<LogRotation> log_rotation_;
   std::string current_log_file_;
+  LogRotationConfig rotation_config_;
 
   // Async logging support
   std::atomic<bool> async_enabled_{false};
   AsyncLogConfig async_config_;
-  AsyncLogStats async_stats_;
 
-  // Threading for async logging
-  std::thread worker_thread_;
-  std::atomic<bool> running_{false};
-  std::atomic<bool> shutdown_requested_{false};
+  Impl() {
+    dist_sink_ = std::make_shared<spdlog::sinks::dist_sink_mt>();
 
-  // Queue management
-  std::queue<LogEntry> log_queue_;
-  mutable std::mutex queue_mutex_;
-  std::condition_variable queue_cv_;
-  mutable std::mutex stats_mutex_;
+    // Default to sync logger initially, can be changed to async via set_async_logging
+    spd_logger_ = std::make_shared<spdlog::logger>("unilink", dist_sink_);
+    spd_logger_->set_level(to_spdlog_level(LogLevel::DEBUG));  // Allow all, filter via Logger::log or Logger::set_level
 
-  struct TimestampBuffer {
-    char data[64];
-    size_t length;
-    std::string_view view() const { return {data, length}; }
-  };
+    // Initial setup with console sink
+    console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    dist_sink_->add_sink(console_sink_);
 
-  Impl() { parse_format("{timestamp} [{level}] [{component}] [{operation}] {message}"); }
-
-  ~Impl() {
-    teardown_async_logging();
-    flush();
+    set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
   }
 
+  ~Impl() { spdlog::drop("unilink"); }
+
   void parse_format(const std::string& format) {
-    static const std::string default_format = "{timestamp} [{level}] [{component}] [{operation}] {message}";
-    static std::shared_ptr<LogFormat> cached_default_format;
-    static std::once_flag flag;
+    std::string pattern = format;
 
-    std::call_once(flag, []() {
-      auto new_format = std::make_shared<LogFormat>();
-      new_format->format_string = default_format;
-      new_format->parsed_format.reserve(9);
-      new_format->parsed_format.push_back({FormatPart::TIMESTAMP, ""});
-      new_format->parsed_format.push_back({FormatPart::LITERAL, " ["});
-      new_format->parsed_format.push_back({FormatPart::LEVEL, ""});
-      new_format->parsed_format.push_back({FormatPart::LITERAL, "] ["});
-      new_format->parsed_format.push_back({FormatPart::COMPONENT, ""});
-      new_format->parsed_format.push_back({FormatPart::LITERAL, "] ["});
-      new_format->parsed_format.push_back({FormatPart::OPERATION, ""});
-      new_format->parsed_format.push_back({FormatPart::LITERAL, "] "});
-      new_format->parsed_format.push_back({FormatPart::MESSAGE, ""});
-      cached_default_format = new_format;
-    });
+    // Map unilink placeholders to spdlog pattern
+    // {timestamp} -> %Y-%m-%d %H:%M:%S.%e
+    // {level}     -> %l
+    // {message}   -> %v (Note: macros wrap component/operation into message)
 
-    if (format == default_format) {
-      std::lock_guard<std::mutex> lock(mutex_);
-      log_format_ = cached_default_format;
-      return;
-    }
-
-    auto new_format = std::make_shared<LogFormat>();
-    new_format->format_string = format;
-
-    size_t count = 1;
-    for (char c : format) {
-      if (c == '{') count += 2;
-    }
-    new_format->parsed_format.reserve(count);
-
-    size_t start = 0;
-    size_t pos = 0;
-    std::string_view format_view = format;
-
-    while ((pos = format_view.find('{', start)) != std::string_view::npos) {
-      if (pos > start) {
-        new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(start, pos - start))});
+    auto replace_all = [](std::string& str, const std::string& from, const std::string& to) {
+      size_t pos = 0;
+      while ((pos = str.find(from, pos)) != std::string::npos) {
+        str.replace(pos, from.length(), to);
+        pos += to.length();
       }
+    };
 
-      size_t end = format_view.find('}', pos);
-      if (end == std::string_view::npos) {
-        new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(pos))});
-        start = format_view.length();
-        break;
-      }
+    replace_all(pattern, "{timestamp}", "%Y-%m-%d %H:%M:%S.%e");
+    replace_all(pattern, "{level}", "%l");
+    replace_all(pattern, "{message}", "%v");
 
-      std::string_view placeholder = format_view.substr(pos + 1, end - pos - 1);
-      if (placeholder == "timestamp") {
-        new_format->parsed_format.push_back({FormatPart::TIMESTAMP, ""});
-      } else if (placeholder == "level") {
-        new_format->parsed_format.push_back({FormatPart::LEVEL, ""});
-      } else if (placeholder == "component") {
-        new_format->parsed_format.push_back({FormatPart::COMPONENT, ""});
-      } else if (placeholder == "operation") {
-        new_format->parsed_format.push_back({FormatPart::OPERATION, ""});
-      } else if (placeholder == "message") {
-        new_format->parsed_format.push_back({FormatPart::MESSAGE, ""});
-      } else {
-        new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(pos, end - pos + 1))});
-      }
+    // component and operation are currently embedded in the message by macros
+    // but if they appear in format, we strip them or handle as literal since they are in %v
+    replace_all(pattern, "[{component}] ", "");
+    replace_all(pattern, "[{operation}] ", "");
 
-      start = end + 1;
-    }
+    dist_sink_->set_pattern(pattern);
+  }
 
-    if (start < format_view.length()) {
-      new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(start))});
-    }
-
-    std::lock_guard<std::mutex> lock(mutex_);
-    log_format_ = std::move(new_format);
+  void set_format(const std::string& format) {
+    parse_format(format);
   }
 
   void flush() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    if (file_output_ && file_output_->is_open()) {
-      file_output_->flush();
+    if (spd_logger_) {
+      spd_logger_->flush();
     }
-    std::cout.flush();
-    std::cerr.flush();
-  }
-
-  std::string format_message(std::chrono::system_clock::time_point timestamp_val, LogLevel level,
-                             std::string_view component, std::string_view operation, std::string_view message) {
-    TimestampBuffer timestamp = get_timestamp(timestamp_val);
-    std::string_view level_str = level_to_string(level);
-
-    std::shared_ptr<LogFormat> current_format;
-    {
-      std::lock_guard<std::mutex> lock(mutex_);
-      current_format = log_format_;
-    }
-
-    std::string result;
-    if (current_format) {
-      result.reserve(current_format->format_string.length() + message.length() + 32);
-
-      for (const auto& part : current_format->parsed_format) {
-        switch (part.type) {
-          case FormatPart::LITERAL:
-            result.append(part.value);
-            break;
-          case FormatPart::TIMESTAMP:
-            result.append(timestamp.view());
-            break;
-          case FormatPart::LEVEL:
-            result.append(level_str);
-            break;
-          case FormatPart::COMPONENT:
-            result.append(component);
-            break;
-          case FormatPart::OPERATION:
-            result.append(operation);
-            break;
-          case FormatPart::MESSAGE:
-            result.append(message);
-            break;
-        }
-      }
-    }
-
-    return result;
-  }
-
-  void write_to_sinks(LogLevel level, const std::string& formatted_message) {
-    std::lock_guard<std::mutex> lock(mutex_);
-    int current_outputs = outputs_.load();
-
-    if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
-      write_to_console(formatted_message);
-    }
-
-    if (current_outputs & static_cast<int>(LogOutput::FILE)) {
-      check_and_rotate_log();
-      write_to_file(formatted_message);
-    }
-
-    if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
-      call_callback(level, formatted_message);
-    }
-  }
-
-  std::string_view level_to_string(LogLevel level) const {
-    switch (level) {
-      case LogLevel::DEBUG:
-        return "DEBUG";
-      case LogLevel::INFO:
-        return "INFO";
-      case LogLevel::WARNING:
-        return "WARNING";
-      case LogLevel::ERROR:
-        return "ERROR";
-      case LogLevel::CRITICAL:
-        return "CRITICAL";
-    }
-    return "UNKNOWN";
-  }
-
-  TimestampBuffer get_timestamp(std::chrono::system_clock::time_point timestamp) const {
-    auto time_t = std::chrono::system_clock::to_time_t(timestamp);
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
-
-    static thread_local std::time_t last_t = -1;
-    static thread_local char date_buf[32] = {0};
-
-    if (time_t != last_t) {
-      std::tm time_info{};
-#if defined(_WIN32)
-      ::localtime_s(&time_info, &time_t);
-#else
-      ::localtime_r(&time_t, &time_info);
-#endif
-      std::strftime(date_buf, sizeof(date_buf), "%Y-%m-%d %H:%M:%S", &time_info);
-      last_t = time_t;
-    }
-
-    TimestampBuffer result;
-    int len = std::snprintf(result.data, sizeof(result.data), "%s.%03d", date_buf, static_cast<int>(ms.count()));
-    if (len > 0) {
-      if (static_cast<size_t>(len) >= sizeof(result.data)) {
-        result.length = sizeof(result.data) - 1;
-      } else {
-        result.length = static_cast<size_t>(len);
-      }
-    } else {
-      result.length = 0;
-    }
-    return result;
-  }
-
-  void write_to_console(const std::string& message) const {
-    if (message.find("[ERROR]") != std::string::npos || message.find("[CRITICAL]") != std::string::npos) {
-      std::cerr << message << std::endl;
-    } else {
-#if defined(_WIN32)
-      std::cout << message << std::endl;
-#else
-      std::cout << message << '\n';
-#endif
-    }
-  }
-
-  void write_to_file(const std::string& message) {
-    if (file_output_ && file_output_->is_open()) {
-      *file_output_ << message << '\n';
-    }
-  }
-
-  void call_callback(LogLevel level, const std::string& message) {
-    if (callback_) {
-      try {
-        callback_(level, message);
-      } catch (const std::exception& e) {
-        std::cerr << "Error in log callback: " << e.what() << std::endl;
-      } catch (...) {
-        std::cerr << "Unknown error in log callback" << std::endl;
-      }
-    }
-  }
-
-  void check_and_rotate_log() {
-    if (!log_rotation_ || current_log_file_.empty()) {
-      return;
-    }
-
-    bool should_rotate = false;
-    if (file_output_ && file_output_->is_open()) {
-      std::streampos current_pos = file_output_->tellp();
-      if (current_pos != static_cast<std::streampos>(-1) &&
-          static_cast<size_t>(current_pos) >= log_rotation_->config().max_file_size_bytes) {
-        should_rotate = true;
-      }
-    } else {
-      if (log_rotation_->should_rotate(current_log_file_)) {
-        should_rotate = true;
-      }
-    }
-
-    if (!should_rotate) {
-      return;
-    }
-
-    if (file_output_) {
-      file_output_->flush();
-      file_output_->close();
-      file_output_.reset();
-    }
-
-    log_rotation_->rotate(current_log_file_);
-    open_log_file(current_log_file_);
-  }
-
-  void open_log_file(const std::string& filename) {
-    file_output_ = std::make_unique<std::ofstream>(filename, std::ios::app);
-    if (file_output_->is_open()) {
-      outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
-    } else {
-      file_output_.reset();
-      std::cerr << "Failed to open log file: " << filename << std::endl;
+    if (dist_sink_) {
+      dist_sink_->flush();
     }
   }
 
   void setup_async_logging(const AsyncLogConfig& config) {
-    teardown_async_logging();
+    async_config_ = config;
 
-    {
-      std::lock_guard<std::mutex> lock(mutex_);
-      async_config_ = config;
-      async_stats_.reset();
-      shutdown_requested_.store(false);
-      running_.store(true);
-      async_enabled_.store(true);
+    spdlog::drop("unilink"); // Drop existing logger
+
+    auto overflow_policy = config.enable_backpressure ? 
+                           spdlog::async_overflow_policy::block : 
+                           spdlog::async_overflow_policy::overrun_oldest;
+
+    // spdlog::init_thread_pool is global. Initialize only if not already done.
+    // If the size is different, we could technically re-init, but spdlog replaces the global TP.
+    // For safety and to avoid potential issues with other loggers, we only init once.
+    if (!spdlog::thread_pool()) {
+        spdlog::init_thread_pool(config.max_queue_size, 1);
     }
 
-    worker_thread_ = std::thread(&Impl::worker_loop, this);
+    spd_logger_ = std::make_shared<spdlog::async_logger>(
+        "unilink", dist_sink_, spdlog::thread_pool(), overflow_policy);
+    spd_logger_->set_level(to_spdlog_level(current_level_.load()));
+
+    spdlog::register_logger(spd_logger_);
+
+    if (config.flush_interval.count() > 0) {
+      spdlog::flush_every(std::chrono::duration_cast<std::chrono::seconds>(config.flush_interval));
+    }
+
+    async_enabled_.store(true);
   }
 
   void teardown_async_logging() {
-    std::thread worker_to_join;
-    bool notify_worker = false;
-    {
-      std::lock_guard<std::mutex> lock(mutex_);
-      async_enabled_.store(false);
+    if (!async_enabled_.load()) return;
 
-      if (running_.load()) {
-        shutdown_requested_.store(true);
-        notify_worker = true;
-      }
+    async_enabled_.store(false);
 
-      if (worker_thread_.joinable()) {
-        worker_to_join = std::move(worker_thread_);
-      }
+    // spdlog::drop will flush the logger and wait for async messages to be processed
+    // if the queue is drained.
+    spdlog::drop("unilink");
+
+    // Ensure the async logger is destroyed
+    spd_logger_.reset();
+
+    // Flush sinks to ensure everything is written
+    dist_sink_->flush();
+
+    // Revert to sync logger
+    spd_logger_ = std::make_shared<spdlog::logger>("unilink", dist_sink_);
+    spd_logger_->set_level(to_spdlog_level(current_level_.load()));
+    spdlog::register_logger(spd_logger_);
+  }
+  static spdlog::level::level_enum to_spdlog_level(LogLevel level) {
+    switch (level) {
+      case LogLevel::DEBUG:
+        return spdlog::level::debug;
+      case LogLevel::INFO:
+        return spdlog::level::info;
+      case LogLevel::WARNING:
+        return spdlog::level::warn;
+      case LogLevel::ERROR:
+        return spdlog::level::err;
+      case LogLevel::CRITICAL:
+        return spdlog::level::critical;
+      default:
+        return spdlog::level::info;
     }
-
-    if (notify_worker) {
-      queue_cv_.notify_all();
-    }
-
-    if (worker_to_join.joinable()) {
-      worker_to_join.join();
-    }
-
-    running_.store(false);
-    shutdown_requested_.store(false);
-  }
-
-  void worker_loop() {
-    std::vector<LogEntry> batch;
-    batch.reserve(async_config_.batch_size);
-
-    auto last_flush = std::chrono::steady_clock::now();
-
-    while (true) {
-      std::unique_lock<std::mutex> lock(queue_mutex_);
-
-      bool has_logs = queue_cv_.wait_for(lock, async_config_.flush_interval,
-                                         [this] { return !log_queue_.empty() || shutdown_requested_.load(); });
-
-      if (has_logs && !log_queue_.empty()) {
-        size_t batch_size =
-            async_config_.enable_batch_processing ? std::min(async_config_.batch_size, log_queue_.size()) : 1;
-
-        batch.clear();
-        batch.reserve(batch_size);
-
-        for (size_t i = 0; i < batch_size && !log_queue_.empty(); ++i) {
-          batch.push_back(std::move(log_queue_.front()));
-          log_queue_.pop();
-        }
-
-        lock.unlock();
-
-        if (!batch.empty()) {
-          process_batch(batch);
-          update_stats_on_batch(batch.size());
-        }
-      } else {
-        lock.unlock();
-      }
-
-      auto now = std::chrono::steady_clock::now();
-      if (now - last_flush >= async_config_.flush_interval) {
-        flush();
-        update_stats_on_flush();
-        last_flush = now;
-      }
-
-      if (shutdown_requested_.load() && log_queue_.empty()) {
-        break;
-      }
-    }
-
-    flush();
-    running_.store(false);
-  }
-
-  void process_batch(const std::vector<LogEntry>& batch) {
-    for (const auto& entry : batch) {
-      std::string formatted_message =
-          format_message(entry.timestamp, entry.level, entry.component, entry.operation, entry.message);
-      write_to_sinks(entry.level, formatted_message);
-    }
-  }
-
-  bool should_drop_log() const {
-    size_t current_size = get_queue_size();
-    return current_size >= async_config_.max_queue_size;
-  }
-
-  size_t get_queue_size() const {
-    std::lock_guard<std::mutex> lock(queue_mutex_);
-    return log_queue_.size();
-  }
-
-  void update_stats_on_enqueue() {
-    std::lock_guard<std::mutex> lock(stats_mutex_);
-    async_stats_.total_logs++;
-  }
-
-  void update_stats_on_drop() {
-    std::lock_guard<std::mutex> lock(stats_mutex_);
-    async_stats_.dropped_logs++;
-  }
-
-  void update_stats_on_batch(size_t /* batch_size */) {
-    std::lock_guard<std::mutex> lock(stats_mutex_);
-    async_stats_.batch_count++;
-  }
-
-  void update_stats_on_flush() {
-    std::lock_guard<std::mutex> lock(stats_mutex_);
-    async_stats_.flush_count++;
   }
 };
 
@@ -502,44 +244,62 @@ Logger& Logger::default_logger() {
 
 Logger& Logger::instance() { return default_logger(); }
 
-void Logger::set_level(LogLevel level) { impl_->current_level_.store(level); }
+void Logger::set_level(LogLevel level) {
+  impl_->current_level_.store(level);
+  impl_->spd_logger_->set_level(Impl::to_spdlog_level(level));
+}
 
 LogLevel Logger::level() const { return get_impl()->current_level_.load(); }
 
 void Logger::set_console_output(bool enable) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   if (enable) {
+    if (!impl_->console_sink_) {
+      impl_->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+      impl_->dist_sink_->add_sink(impl_->console_sink_);
+    }
     impl_->outputs_.fetch_or(static_cast<int>(LogOutput::CONSOLE));
   } else {
+    if (impl_->console_sink_) {
+      impl_->dist_sink_->remove_sink(impl_->console_sink_);
+      impl_->console_sink_.reset();
+    }
     impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::CONSOLE));
   }
 }
 
-void Logger::set_file_output(const std::string& filename) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
-
-  if (filename.empty()) {
-    impl_->file_output_.reset();
-    impl_->log_rotation_.reset();
-    impl_->current_log_file_.clear();
-    impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
-  } else {
-    impl_->open_log_file(filename);
-  }
-}
+void Logger::set_file_output(const std::string& filename) { set_file_output_with_rotation(filename); }
 
 void Logger::set_file_output_with_rotation(const std::string& filename, const LogRotationConfig& config) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
 
   if (filename.empty()) {
-    impl_->file_output_.reset();
-    impl_->log_rotation_.reset();
+    if (impl_->file_sink_) {
+      impl_->dist_sink_->remove_sink(impl_->file_sink_);
+      impl_->file_sink_.reset();
+    }
     impl_->current_log_file_.clear();
     impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
   } else {
-    impl_->log_rotation_ = std::make_unique<LogRotation>(config);
-    impl_->current_log_file_ = filename;
-    impl_->open_log_file(filename);
+    try {
+      if (impl_->file_sink_) {
+        impl_->dist_sink_->remove_sink(impl_->file_sink_);
+      }
+
+      impl_->rotation_config_ = config;
+      impl_->current_log_file_ = filename;
+
+      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(filename, config.max_file_size_bytes,
+                                                                                 config.max_files);
+
+      impl_->dist_sink_->add_sink(impl_->file_sink_);
+      impl_->outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
+    } catch (const spdlog::spdlog_ex& e) {
+      std::cerr << "Failed to open log file: " << filename << " (" << e.what() << ")" << std::endl;
+      impl_->file_sink_.reset();
+      impl_->current_log_file_.clear();
+      impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
+    }
   }
 }
 
@@ -553,25 +313,77 @@ void Logger::set_async_logging(bool enable, const AsyncLogConfig& config) {
 
 bool Logger::async_logging_enabled() const { return get_impl()->async_enabled_.load(); }
 
-AsyncLogStats Logger::async_stats() const {
-  std::lock_guard<std::mutex> lock(get_impl()->stats_mutex_);
-  AsyncLogStats result = get_impl()->async_stats_;
-  result.queue_size = get_impl()->get_queue_size();
-  result.max_queue_size_reached = std::max(result.max_queue_size_reached, result.queue_size);
-  return result;
-}
-
 void Logger::set_callback(LogCallback callback) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
-  impl_->callback_ = std::move(callback);
-  if (impl_->callback_) {
-    impl_->outputs_.fetch_or(static_cast<int>(LogOutput::CALLBACK));
-  } else {
+
+  if (!callback) {
+    if (impl_->callback_sink_) {
+      impl_->dist_sink_->remove_sink(impl_->callback_sink_);
+      impl_->callback_sink_.reset();
+    }
     impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::CALLBACK));
+    return;
   }
+
+  if (impl_->callback_sink_) {
+    impl_->callback_sink_->set_callback(std::move(callback));
+  } else {
+    impl_->callback_sink_ = std::make_shared<callback_sink_mt>(std::move(callback));
+    impl_->dist_sink_->add_sink(impl_->callback_sink_);
+  }
+  impl_->outputs_.fetch_or(static_cast<int>(LogOutput::CALLBACK));
 }
 
-void Logger::set_outputs(int outputs) { impl_->outputs_.store(outputs); }
+void Logger::set_outputs(int outputs) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  impl_->outputs_.store(outputs);
+  
+  // Reconcile sinks in dist_sink_ based on the new bitmask
+  
+  // Console Sink
+  if (outputs & static_cast<int>(LogOutput::CONSOLE)) {
+    if (!impl_->console_sink_) {
+      impl_->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+      impl_->dist_sink_->add_sink(impl_->console_sink_);
+    }
+  } else {
+    if (impl_->console_sink_) {
+      impl_->dist_sink_->remove_sink(impl_->console_sink_);
+      impl_->console_sink_.reset();
+    }
+  }
+
+  // File Sink
+  if (outputs & static_cast<int>(LogOutput::FILE)) {
+    if (!impl_->file_sink_ && !impl_->current_log_file_.empty()) {
+      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+          impl_->current_log_file_, impl_->rotation_config_.max_file_size_bytes, impl_->rotation_config_.max_files);
+      impl_->dist_sink_->add_sink(impl_->file_sink_);
+    }
+  } else {
+    if (impl_->file_sink_) {
+      impl_->dist_sink_->remove_sink(impl_->file_sink_);
+      impl_->file_sink_.reset();
+    }
+  }
+
+  // Callback Sink
+  if (outputs & static_cast<int>(LogOutput::CALLBACK)) {
+    // Requires a callback to be set first or handled when set_callback is called
+    // If already set, ensure it's in the dist_sink_
+    if (impl_->callback_sink_) {
+        // Already managed by set_callback, just ensure it's not missing?
+        // Actually dist_sink_->add_sink is idempotent for the same object? 
+        // No, it might add duplicate. We should check.
+    }
+  } else {
+    if (impl_->callback_sink_) {
+      impl_->dist_sink_->remove_sink(impl_->callback_sink_);
+      // We don't reset callback_sink_ here because the user might just want to disable it temporarily
+      // while keeping the callback registered.
+    }
+  }
+}
 
 void Logger::set_enabled(bool enabled) { impl_->enabled_.store(enabled); }
 
@@ -586,29 +398,18 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
     return;
   }
 
-  if (get_impl()->async_enabled_.load()) {
-    LogEntry entry(level, component, operation, message);
-    impl_->update_stats_on_enqueue();
+  // spdlog handles async internally if spd_logger_ is an async_logger.
+  // We'll format the message payload to maintain structured logging look.
+  std::string payload;
+  payload.reserve(component.length() + operation.length() + message.length() + 8);
+  payload.append("[");
+  payload.append(component);
+  payload.append("] [");
+  payload.append(operation);
+  payload.append("] ");
+  payload.append(message);
 
-    if (get_impl()->async_config_.enable_backpressure && impl_->should_drop_log()) {
-      impl_->update_stats_on_drop();
-      return;
-    }
-
-    {
-      std::lock_guard<std::mutex> lock(impl_->queue_mutex_);
-      impl_->log_queue_.push(entry);
-    }
-
-    impl_->queue_cv_.notify_one();
-    return;
-  }
-
-  std::string formatted_message =
-      impl_->format_message(std::chrono::system_clock::now(), level, component, operation, message);
-  if (get_impl()->outputs_.load(std::memory_order_relaxed) != 0) {
-    impl_->write_to_sinks(level, formatted_message);
-  }
+  impl_->spd_logger_->log(Impl::to_spdlog_level(level), payload);
 }
 
 void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) {
