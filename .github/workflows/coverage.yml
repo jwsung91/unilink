@@ -43,6 +43,7 @@ jobs:
             libboost-dev
             libboost-system-dev
             lcov
+            libspdlog-dev
 
       - name: Configure with coverage
         run: |

@@ -65,7 +65,8 @@ jobs:
           build-essential \
           cmake \
           doxygen \
-          graphviz
+          graphviz \
+          libspdlog-dev
         
         echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
         # Install specific compiler versions
