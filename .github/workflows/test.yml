@@ -30,16 +30,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 22.04: GCC 13 and Clang 15
-          - os: ubuntu-22.04
+          # Ubuntu 24.04: GCC 13 and Clang 18
+          - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
             cxx: g++-13
             triplet: x64-linux
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             compiler: clang
-            cc: clang-15
-            cxx: clang++-15
+            cc: clang-18
+            cxx: clang++-18
             triplet: x64-linux
           - os: ubuntu-24.04-arm
             compiler: gcc
@@ -81,18 +81,12 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y software-properties-common wget
-        if apt-cache policy gcc-13 | grep -q "Candidate: (none)"; then
-          echo "Adding toolchain PPA for modern compilers..."
-          sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
-          echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
-          sudo apt-get update
-        fi
+        sudo apt-get install -y ca-certificates
 
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
           sudo apt-get install -y gcc-13 g++-13
         else
-          sudo apt-get install -y clang-15 g++-13
+          sudo apt-get install -y ${{ matrix.cc }} g++-13
         fi
 
         # Install other tools. Boost and spdlog are supplied by vcpkg.
@@ -148,8 +142,8 @@ jobs:
         overwrite: true
 
   docs-snippets:
-    name: Docs Snippets (ubuntu-22.04, gcc)
-    runs-on: ubuntu-22.04
+    name: Docs Snippets (ubuntu-24.04, gcc)
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     needs: []
 
@@ -210,8 +204,8 @@ jobs:
 
   # Integration Tests
   integration-tests:
-    name: Integration Tests (ubuntu-22.04, gcc)
-    runs-on: ubuntu-22.04
+    name: Integration Tests (ubuntu-24.04, gcc)
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     needs: []
 
@@ -345,8 +339,8 @@ jobs:
 
   # Performance Tests
   performance-tests:
-    name: Performance Tests (ubuntu-22.04, gcc)
-    runs-on: ubuntu-22.04
+    name: Performance Tests (ubuntu-24.04, gcc)
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     needs: []
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
@@ -411,7 +405,7 @@ jobs:
   # Memory Safety Tests
   memory-safety-tests:
     name: Memory Safety Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     needs: []
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
@@ -467,7 +461,7 @@ jobs:
   # E2E Tests
   e2e-tests:
     name: E2E Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: []
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.event_name == 'pull_request'
     steps:
@@ -511,7 +505,7 @@ jobs:
   # Test Summary
   test-summary:
     name: Test Summary
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [unit-tests, docs-snippets, integration-tests, performance-tests, memory-safety-tests, e2e-tests]
     if: always()
 

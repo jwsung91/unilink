@@ -20,7 +20,7 @@ on:
 
 jobs:
   build-test-install-consume:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         compiler: [gcc, clang]
@@ -30,24 +30,18 @@ jobs:
       - name: Set up C++ toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y software-properties-common wget
-          echo "Adding toolchain PPA for modern compilers..."
-          sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
-          echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
-          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build
           
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
             sudo apt-get install -y gcc-13 g++-13
             echo "CC=gcc-13" >> $GITHUB_ENV
             echo "CXX=g++-13" >> $GITHUB_ENV
           else
-            sudo apt-get install -y clang-15 g++-13
-            echo "CC=clang-15" >> $GITHUB_ENV
-            echo "CXX=clang++-15" >> $GITHUB_ENV
+            sudo apt-get install -y clang-18 g++-13
+            echo "CC=clang-18" >> $GITHUB_ENV
+            echo "CXX=clang++-18" >> $GITHUB_ENV
             export CXXFLAGS="-stdlib=libstdc++"
           fi
-          
-          sudo apt-get install -y build-essential cmake ninja-build
 
       - name: Install dependencies with vcpkg
         uses: ./.github/actions/setup-vcpkg

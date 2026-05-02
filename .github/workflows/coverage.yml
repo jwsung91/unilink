@@ -22,7 +22,7 @@ on:
 jobs:
   coverage:
     name: Code Coverage Analysis
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       coverage_percent: ${{ steps.coverage.outputs.percentage }}
     permissions:
@@ -36,11 +36,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common wget
-          echo "Adding toolchain PPA for modern compilers..."
-          sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
-          echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
@@ -206,7 +201,7 @@ jobs:
     name: Deploy Coverage to GitHub Pages
     needs: coverage
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       pages: write

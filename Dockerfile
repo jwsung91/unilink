@@ -1,5 +1,5 @@
 # Multi-stage build for optimized production image
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:24.04 AS builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -9,14 +9,10 @@ RUN apt-get update && apt-get install -y \
     git \
     ninja-build \
     pkg-config \
-    software-properties-common \
     tar \
     unzip \
     wget \
     zip \
-    && (wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true) && \
-    echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu jammy main" > /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list && \
-    apt-get update && apt-get install -y \
     gcc-13 \
     g++-13 \
     python3 \
@@ -56,17 +52,9 @@ RUN rm -rf build && mkdir build && cd build && \
     cmake --build . -j $(nproc)
 
 # Production stage
-FROM ubuntu:22.04 AS production
+FROM ubuntu:24.04 AS production
 
-# GCC 13-built binaries may require a newer libstdc++ runtime than the
-# stock Ubuntu 22.04 image provides.
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    wget \
-    && (wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true) && \
-    echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu jammy main" > /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list && \
-    apt-get update && apt-get install -y libstdc++6 && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libstdc++6 && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser

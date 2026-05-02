@@ -22,7 +22,7 @@ jobs:
   # Trivy Security Scan
   trivy-scan:
     name: Trivy Security Scan
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
 
     steps:
@@ -71,7 +71,7 @@ jobs:
   # Dependency Security Check
   dependency-check:
     name: Dependency Security Check
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout code
@@ -113,7 +113,7 @@ jobs:
   # Security Summary
   security-summary:
     name: Security Summary
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [trivy-scan, dependency-check]
     if: always()
 

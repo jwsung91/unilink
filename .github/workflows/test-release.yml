@@ -19,12 +19,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
+        os: [ubuntu-24.04]
         include:
-          - os: ubuntu-20.04
-            triplet: x64-linux
-          - os: ubuntu-22.04
-            triplet: x64-linux
           - os: ubuntu-24.04
             triplet: x64-linux
     steps:
@@ -36,10 +32,7 @@ jobs:
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
-          sudo apt-get install -y build-essential cmake ninja-build software-properties-common wget
-          sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
-          echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
-          sudo apt-get update --allow-releaseinfo-change
+          sudo apt-get install -y build-essential cmake ninja-build
           sudo apt-get install -y gcc-13 g++-13
 
       - name: Install dependencies with vcpkg

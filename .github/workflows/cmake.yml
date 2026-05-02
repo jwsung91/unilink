@@ -31,7 +31,7 @@ jobs:
         include:
           # Matrix for Pure C++ (existing configuration)
           - name: C++ (Linux, GCC)
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             triplet: x64-linux
             cc: gcc-13
             cxx: g++-13
@@ -69,7 +69,7 @@ jobs:
 
           # Matrix for Python Enabled
           - name: Python3 (Linux, GCC)
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             triplet: x64-linux
             cc: gcc-13
             cxx: g++-13
@@ -128,13 +128,7 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            sudo apt-get install -y software-properties-common wget
-            if apt-cache policy gcc-13 | grep -q "Candidate: (none)"; then
-              echo "Adding toolchain PPA for modern compilers..."
-              sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
-              echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
-              sudo apt-get update
-            fi
+            sudo apt-get install -y ca-certificates
             
             # Install build tools and modern GCC for C++20 support
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
