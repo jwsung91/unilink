@@ -27,6 +27,7 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 
 * **C++20 compiler and standard library with `std::format`**: GCC 13+, recent Clang/libc++, or MSVC 2022 (required)
 * CMake 3.12 or later
+* Boost 1.84.0 or later. vcpkg is the recommended dependency supplier; OS package manager Boost versions are supported only when they meet this minimum.
 
 ## 📦 Installation
 
@@ -48,7 +49,7 @@ For a complete guide, see the **[Python Bindings Guide](docs/user/python_binding
 
 * Python 3.8+ (dev headers)
 * pybind11 (`sudo apt-get install pybind11-dev python3-pybind11` on Ubuntu)
-* Boost (`boost-system`, `boost-asio`, `boost-thread`)
+* Boost 1.84.0+ (`boost-system`, `boost-asio`)
 
 ### Build
 

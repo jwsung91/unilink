@@ -35,23 +35,23 @@ jobs:
             compiler: gcc
             cc: gcc-13
             cxx: g++-13
-            boost_version: "1.74"
+            triplet: x64-linux
           - os: ubuntu-22.04
             compiler: clang
             cc: clang-15
             cxx: clang++-15
-            boost_version: "1.74"
+            triplet: x64-linux
           - os: ubuntu-22.04-arm
             compiler: gcc
             cc: gcc-13
             cxx: g++-13
-            boost_version: "1.74"
+            triplet: arm64-linux
           # macOS: Clang
           - os: macos-14
             compiler: clang
             cc: clang
             cxx: clang++
-            boost_version: "1.83"
+            triplet: arm64-osx
 
     steps:
     - name: Checkout code
@@ -93,14 +93,22 @@ jobs:
           sudo apt-get install -y clang-15 g++-13
         fi
 
-        # Install other tools
-        sudo apt-get install -y ninja-build libspdlog-dev libboost-all-dev
+        # Install other tools. Boost and spdlog are supplied by vcpkg.
+        sudo apt-get install -y ninja-build
+
+    - name: Install tools (macOS)
+      if: runner.os == 'macOS'
+      run: brew install ccache ninja
 
     - name: Set up compiler env
-      if: runner.os == 'Linux'
       run: |
         echo "CC=$(which ${{ matrix.cc }})" >> $GITHUB_ENV
         echo "CXX=$(which ${{ matrix.cxx }})" >> $GITHUB_ENV
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: ${{ matrix.triplet }}
 
     - name: Configure CMake
       run: |
@@ -113,6 +121,8 @@ jobs:
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -156,7 +166,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13 python3 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13 python3"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Configure CMake
       run: |
@@ -169,6 +184,8 @@ jobs:
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -211,7 +228,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Configure CMake
       run: |
@@ -225,6 +247,8 @@ jobs:
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -271,7 +295,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev socat libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13 socat"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: arm64-linux
 
     - name: Configure CMake
       run: |
@@ -285,6 +314,8 @@ jobs:
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -333,7 +364,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Configure CMake
       run: |
@@ -347,6 +383,8 @@ jobs:
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -383,7 +421,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Configure CMake with Sanitizers
       run: |
@@ -394,6 +437,8 @@ jobs:
           -DUNILINK_ENABLE_SANITIZERS=ON \
           -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
           -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
           -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
           -DCMAKE_C_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined,leak" \
@@ -428,7 +473,11 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/apt-install
         with:
-          packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
+          packages: "build-essential cmake gcc-13 g++-13"
+      - name: Install dependencies with vcpkg
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: x64-linux
       - name: Configure
         run: |
           cmake -S . -B build-e2e \
@@ -438,7 +487,9 @@ jobs:
             -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF
+            -DUNILINK_BUILD_EXAMPLES=OFF \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+            -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
       - name: Build
         run: cmake --build build-e2e -j $(nproc)
       - name: Run E2E Tests

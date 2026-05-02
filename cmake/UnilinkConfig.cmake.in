@@ -8,7 +8,7 @@ endif()
 include(CMakeFindDependencyMacro)
 
 # Find required dependencies.
-find_dependency(Boost REQUIRED COMPONENTS system)
+find_dependency(Boost @UNILINK_MIN_BOOST_VERSION@ REQUIRED COMPONENTS system)
 find_dependency(Threads REQUIRED)
 
 # Define proxy targets for compatibility with FetchContent builds.

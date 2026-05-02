@@ -1,0 +1,31 @@
+name: setup-vcpkg
+description: Install explicitly listed project dependencies from vcpkg
+inputs:
+  triplet:
+    description: vcpkg target triplet
+    required: true
+  packages:
+    description: Space-separated vcpkg ports to install
+    required: false
+    default: boost-asio boost-system spdlog
+  vcpkg-root:
+    description: vcpkg checkout directory
+    required: false
+    default: ${{ github.workspace }}/vcpkg
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        VCPKG_ROOT="${{ inputs.vcpkg-root }}"
+        if [ ! -d "${VCPKG_ROOT}/.git" ]; then
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
+        fi
+        "${VCPKG_ROOT}/bootstrap-vcpkg.sh" -disableMetrics
+        "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --clean-after-build
+        {
+          echo "VCPKG_ROOT=${VCPKG_ROOT}"
+          echo "VCPKG_TARGET_TRIPLET=${{ inputs.triplet }}"
+          echo "CMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        } >> "$GITHUB_ENV"

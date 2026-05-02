@@ -22,11 +22,14 @@ Complete guide for building `unilink` with different configurations and platform
 ### Basic Build (Recommended)
 
 ```bash
-# 1. Install dependencies
-sudo apt update && sudo apt install -y build-essential cmake libboost-dev libboost-system-dev
+# 1. Install build tools and vcpkg-managed dependencies
+sudo apt update && sudo apt install -y build-essential cmake
+vcpkg install boost-asio boost-system spdlog
 
 # 2. Configure and build
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 cmake --build build -j
 
 # 3. (Optional) Install for system-wide use
@@ -271,8 +274,8 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 
 # Using specific GCC version
-export CC=gcc-11
-export CXX=g++-11
+export CC=gcc-13
+export CXX=g++-13
 
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
@@ -287,10 +290,13 @@ cmake --build build -j
 ```bash
 # Install dependencies
 sudo apt update && apt install -y \
-  build-essential cmake libboost-dev libboost-system-dev
+  build-essential cmake
+vcpkg install boost-asio boost-system spdlog
 
 # Build
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 cmake --build build -j
 ```
 
@@ -298,7 +304,7 @@ cmake --build build -j
 
 ### Ubuntu 20.04 Build
 
-Ubuntu 20.04's default GCC 9.4 does not meet the C++17 requirements. You must install a newer compiler.
+Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.84.0+ through vcpkg or a custom dependency prefix.
 
 #### Prerequisites
 
@@ -306,20 +312,19 @@ Ubuntu 20.04's default GCC 9.4 does not meet the C++17 requirements. You must in
 # Install dependencies
 sudo apt update && sudo apt install -y \
   build-essential \
-  cmake \
-  libboost-dev \
-  libboost-system-dev
+  cmake
 
 # Install newer compiler
-sudo apt install -y gcc-11 g++-11
+sudo apt install -y gcc-13 g++-13
+vcpkg install boost-asio boost-system spdlog
 ```
 
 #### Build Steps
 
 ```bash
 # 1. Set compiler environment
-export CC=gcc-11
-export CXX=g++-11
+export CC=gcc-13
+export CXX=g++-13
 
 # 2. Configure CMake
 cmake -S . -B build \
@@ -327,7 +332,8 @@ cmake -S . -B build \
   -DCMAKE_CXX_STANDARD=20 \
   -DUNILINK_ENABLE_CONFIG=ON \
   -DUNILINK_BUILD_EXAMPLES=ON \
-  -DUNILINK_BUILD_TESTS=ON
+  -DUNILINK_BUILD_TESTS=ON \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 
 # 3. Build
 cmake --build build -j $(nproc)
@@ -350,10 +356,13 @@ cd build && ctest --output-on-failure
 ```bash
 # Install dependencies
 sudo apt update && apt install -y \
-  build-essential cmake libboost-dev libboost-system-dev
+  build-essential cmake
+vcpkg install boost-asio boost-system spdlog
 
 # Build (same as Ubuntu 22.04)
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 cmake --build build -j
 ```
 
@@ -497,10 +506,10 @@ nm -D build/libunilink.so | grep unilink
 
 ```bash
 # Specify Boost location
-cmake -S . -B build -DBOOST_ROOT=/usr/local
+cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.84
 
-# Or install boost-dev
-sudo apt install -y libboost-all-dev
+# Or use vcpkg
+vcpkg install boost-asio boost-system spdlog
 ```
 
 ### Problem: Compiler Not Found
@@ -508,8 +517,8 @@ sudo apt install -y libboost-all-dev
 ```bash
 # Specify compiler explicitly
 cmake -S . -B build \
-  -DCMAKE_C_COMPILER=gcc-11 \
-  -DCMAKE_CXX_COMPILER=g++-11
+  -DCMAKE_C_COMPILER=gcc-13 \
+  -DCMAKE_CXX_COMPILER=g++-13
 ```
 
 ### Problem: Out of Memory During Build

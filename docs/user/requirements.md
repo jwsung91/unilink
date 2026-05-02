@@ -11,6 +11,7 @@ This guide describes the system requirements and dependencies needed to build an
 - **Ubuntu 22.04 LTS or later**
 - **C++20 compatible compiler and standard library with `std::format` support** (GCC 13+, recent Clang/libc++, or MSVC 2022+)
 - **CMake 3.12 or later**
+- **Boost 1.84.0 or later**, preferably supplied by vcpkg
 
 ### Supported Platforms
 
@@ -33,16 +34,15 @@ This guide describes the system requirements and dependencies needed to build an
 
 The following packages are required to build and use `unilink`:
 
+Use vcpkg to supply third-party C++ dependencies:
+
 ```bash
-# Ubuntu/Debian
-sudo apt update && sudo apt install -y \
-  build-essential \
-  cmake \
-  gcc-13 \
-  g++-13 \
-  libboost-dev \
-  libboost-system-dev
+vcpkg install boost-asio boost-system spdlog
+cmake -S . -B build \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 ```
+
+If you use system packages instead of vcpkg, the selected Boost installation must be 1.84.0 or later. The default Ubuntu 22.04 and 24.04 apt Boost packages do not satisfy this baseline.
 
 ### Dependency Details
 
@@ -51,7 +51,7 @@ sudo apt update && sudo apt install -y \
 | **GCC/G++** | 13+            | GPL          | C++20 compiler with `std::format` support                                 |
 | **Clang**   | 14+ (optional) | Apache 2.0   | Alternative C++20 compiler; requires a standard library with `std::format` |
 | **CMake**   | 3.12+          | BSD-3-Clause | Build system                                                              |
-| **Boost**   | 1.65+          | BSL 1.0      | Asio for async I/O                                                        |
+| **Boost**   | 1.84.0+        | BSL 1.0      | Asio for async I/O                                                        |
 
 ---
 
@@ -76,10 +76,7 @@ sudo apt update && sudo apt install -y \
 
 ### For Applications Using unilink
 
-```bash
-# Install runtime libraries only
-sudo apt install -y libboost-system-dev
-```
+Applications must be able to resolve the same Boost 1.84.0+ dependency set used to build `unilink`. vcpkg consumers get this through the vcpkg toolchain; source/package consumers should provide a compatible Boost installation through their package environment.
 
 ### Thread Support
 
@@ -92,9 +89,9 @@ sudo apt install -y libboost-system-dev
 
 ### Ubuntu 22.04 LTS
 
-- Default GCC 11.4 meets all requirements
-- All features fully supported
-- Recommended platform for production use
+- Default GCC/Boost packages do **not** meet all requirements
+- Install GCC 13+ and use vcpkg or a custom Boost 1.84.0+ installation
+- Supported as a build target when those dependencies are supplied explicitly
 
 ### Ubuntu ARM64 / Jetson Orin Nano
 
@@ -110,14 +107,13 @@ sudo apt install -y libboost-system-dev
 ### Ubuntu 20.04 LTS
 
 - Default GCC 9.4 does **not** meet requirements
-- Must install GCC 11+ or Clang 14+ manually
+- Must install GCC 13+ or a C++20-capable Clang/libc++ toolchain manually
 - See [Ubuntu 20.04 Build Guide](../contributor/build_guide.md#ubuntu-2004-build)
 - **Note**: Ubuntu 20.04 reached end-of-life in April 2025; local builds still work
 
 ### Other Linux Distributions
 
-- Debian 11+: Supported with default packages
-- Fedora 35+: Supported with default packages
+- Debian/Fedora/RHEL/Arch builds should work when GCC 13+ and Boost 1.84.0+ are supplied
 - CentOS/RHEL 8+: May require SCL or manual compiler installation
 - Arch Linux: Fully supported with latest packages
 
@@ -130,7 +126,7 @@ sudo apt install -y libboost-system-dev
 ```bash
 # GCC
 g++ --version
-# Should show version 11.0 or higher
+# Should show version 13.0 or higher
 
 # Clang (if using)
 clang++ --version
@@ -147,8 +143,8 @@ cmake --version
 ### Check Boost Version
 
 ```bash
-dpkg -l | grep libboost
-# Should show boost libraries version 1.65 or higher
+grep BOOST_LIB_VERSION /path/to/boost/include/boost/version.hpp
+# Should show 1_84 or higher
 ```
 
 ### Quick Environment Test
@@ -179,8 +175,8 @@ export CXX=g++-13
 ### Problem: Boost Not Found
 
 ```bash
-# Install Boost development packages
-sudo apt install -y libboost-all-dev
+# Recommended: install dependencies with vcpkg
+vcpkg install boost-asio boost-system spdlog
 
 # Or specify Boost location to CMake
 cmake -DBOOST_ROOT=/path/to/boost ...

@@ -33,12 +33,12 @@ jobs:
             compiler: gcc
             cc: gcc-13
             cxx: g++-13
-            boost_version: "1.74"
+            triplet: x64-linux
           - os: ubuntu-22.04
             compiler: clang
             cc: clang-15
             cxx: clang++-15
-            boost_version: "1.74"
+            triplet: x64-linux
 
     steps:
     - name: Checkout code
@@ -55,7 +55,6 @@ jobs:
           cmake \
           doxygen \
           graphviz \
-          libspdlog-dev \
           software-properties-common \
           wget
 
@@ -71,9 +70,6 @@ jobs:
           sudo apt-get install -y clang-15 g++-13
         fi
         
-        echo "Installing Boost libraries for ${{ matrix.os }}"
-        sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        
         echo "Verifying compiler installation..."
         ${{ matrix.cc }} --version
         ${{ matrix.cxx }} --version
@@ -82,6 +78,11 @@ jobs:
       run: |
         echo "CC=$(which ${{ matrix.cc }})" >> $GITHUB_ENV
         echo "CXX=$(which ${{ matrix.cxx }})" >> $GITHUB_ENV
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: ${{ matrix.triplet }}
 
     - name: Configure CMake (Minimal Build)
       run: |
@@ -94,7 +95,9 @@ jobs:
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=OFF \
           -DBUILD_EXAMPLES=ON \
-          -DBUILD_TESTING=ON
+          -DBUILD_TESTING=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
 
     - name: Configure CMake (Full Build)
       run: |
@@ -107,7 +110,9 @@ jobs:
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DBUILD_EXAMPLES=ON \
-          -DBUILD_TESTING=ON
+          -DBUILD_TESTING=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
 
     - name: Build (Minimal)
       run: |
@@ -175,7 +180,7 @@ jobs:
         $success = $false
         do {
           try {
-            & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio --triplet x64-windows-static-md
+            & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio spdlog --triplet x64-windows-static-md
             if ($LASTEXITCODE -eq 0) {
               $success = $true
             } else {

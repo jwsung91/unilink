@@ -154,10 +154,7 @@ jobs:
             
             # Install build tools and modern GCC for C++20 support
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
-              gcc-13 g++-13 \
-              libboost-dev libboost-system-dev libboost-date-time-dev \
-              libboost-context-dev libboost-container-dev libboost-coroutine-dev \
-              libspdlog-dev
+              gcc-13 g++-13
             
             # Set as default if not already
             if [ "${{ matrix.cc }}" = "gcc" ]; then
@@ -165,8 +162,15 @@ jobs:
               sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
             fi
           else
-            brew install ninja autoconf autoconf-archive automake libtool pkg-config boost pybind11 spdlog
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config
           fi
+
+      - name: Install dependencies with vcpkg (Unix)
+        if: runner.os != 'Windows'
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: ${{ matrix.triplet }}
+          packages: boost-asio boost-system spdlog pybind11
 
       - name: Setup Python
         if: matrix.build_python == 'ON'
@@ -225,7 +229,7 @@ jobs:
             return 0
           }
 
-          retry_command "$VCPKG_EXE" install boost-system boost-asio spdlog --triplet ${{ matrix.triplet }}
+          retry_command "$VCPKG_EXE" install boost-system boost-asio spdlog pybind11 --triplet ${{ matrix.triplet }}
 
       - name: Configure (Linux)
         if: runner.os == 'Linux'
@@ -245,6 +249,8 @@ jobs:
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
             -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
+            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
             "${PYTHON_CMAKE_ARGS[@]}"
 
       - name: Configure (macOS)
@@ -261,12 +267,13 @@ jobs:
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
-            -Dpybind11_DIR="$(brew --prefix pybind11)/share/cmake/pybind11" \
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
             -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
+            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
             "${PYTHON_CMAKE_ARGS[@]}"
 
       - name: Configure (Windows)

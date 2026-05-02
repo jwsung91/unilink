@@ -32,7 +32,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Build project
       run: |
@@ -44,7 +49,9 @@ jobs:
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
-          -DUNILINK_BUILD_TESTS=OFF
+          -DUNILINK_BUILD_TESTS=OFF \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
         cmake --build build-security -j $(nproc)
 
     - name: Run Trivy vulnerability scanner
@@ -73,7 +80,12 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Build project
       run: |
@@ -85,7 +97,9 @@ jobs:
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
-          -DUNILINK_BUILD_TESTS=OFF
+          -DUNILINK_BUILD_TESTS=OFF \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
         cmake --build build-deps -j $(nproc)
 
     - name: Check for known vulnerabilities in dependencies
@@ -93,8 +107,8 @@ jobs:
         echo "Checking system packages for vulnerabilities..."
         apt list --upgradable 2>/dev/null | grep -E "(security|vulnerability)" || echo "No known vulnerabilities found in system packages"
         
-        echo "Checking Boost library version..."
-        dpkg -l | grep libboost || echo "Boost version check completed"
+        echo "Checking vcpkg dependency versions..."
+        "${VCPKG_ROOT}/vcpkg" list
 
   # Security Summary
   security-summary:

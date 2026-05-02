@@ -411,10 +411,10 @@ Tests run across multiple configurations:
 
 | Platform | Compiler | Build Type | Sanitizers | Test Status |
 |----------|----------|------------|------------|-------------|
-| Ubuntu 22.04 | GCC 11 | Debug | ✅ | ✅ Full Testing |
-| Ubuntu 22.04 | GCC 11 | Release | ❌ | ✅ Full Testing |
-| Ubuntu 22.04 | Clang 14 | Debug | ✅ | ✅ Full Testing |
-| Ubuntu 22.04 | Clang 14 | Release | ❌ | ✅ Full Testing |
+| Ubuntu 22.04 | GCC 13 + vcpkg Boost 1.84+ | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 22.04 | GCC 13 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
+| Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.84+ | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
 | Ubuntu 24.04 | GCC 13 | Debug | ✅ | ✅ Full Testing |
 | Ubuntu 24.04 | GCC 13 | Release | ❌ | ✅ Full Testing |
 | Ubuntu 24.04 | Clang 15 | Debug | ✅ | ✅ Full Testing |
