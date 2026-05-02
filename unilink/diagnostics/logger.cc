@@ -27,7 +27,6 @@
 #include <iostream>
 #include <mutex>
 #include <string_view>
-#include <thread>
 
 namespace unilink {
 namespace diagnostics {
@@ -97,6 +96,7 @@ struct Logger::Impl {
   // Async logging support
   std::atomic<bool> async_enabled_{false};
   AsyncLogConfig async_config_;
+  std::future<void> drop_future_;
 
   Impl() {
     dist_sink_ = std::make_shared<spdlog::sinks::dist_sink_mt>();
@@ -112,7 +112,12 @@ struct Logger::Impl {
     set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
   }
 
-  ~Impl() { spdlog::drop("unilink"); }
+  ~Impl() {
+    if (drop_future_.valid()) {
+      drop_future_.wait();
+    }
+    spdlog::drop("unilink");
+  }
 
   void parse_format(const std::string& format) {
     std::string pattern = format;
@@ -142,9 +147,7 @@ struct Logger::Impl {
     dist_sink_->set_pattern(pattern);
   }
 
-  void set_format(const std::string& format) {
-    parse_format(format);
-  }
+  void set_format(const std::string& format) { parse_format(format); }
 
   void flush() {
     if (spd_logger_) {
@@ -158,27 +161,24 @@ struct Logger::Impl {
   void setup_async_logging(const AsyncLogConfig& config) {
     async_config_ = config;
 
-    spdlog::drop("unilink"); // Drop existing logger
+    spdlog::drop("unilink");  // Drop existing logger
 
-    auto overflow_policy = config.enable_backpressure ? 
-                           spdlog::async_overflow_policy::block : 
-                           spdlog::async_overflow_policy::overrun_oldest;
+    auto overflow_policy = config.enable_backpressure ? spdlog::async_overflow_policy::block
+                                                      : spdlog::async_overflow_policy::overrun_oldest;
 
     if (!spdlog::thread_pool()) {
-        spdlog::init_thread_pool(config.max_queue_size, 1);
+      spdlog::init_thread_pool(config.max_queue_size, 1);
     }
 
-    spd_logger_ = std::make_shared<spdlog::async_logger>(
-        "unilink", dist_sink_, spdlog::thread_pool(), overflow_policy);
+    spd_logger_ = std::make_shared<spdlog::async_logger>("unilink", dist_sink_, spdlog::thread_pool(), overflow_policy);
     spd_logger_->set_level(to_spdlog_level(current_level_.load()));
 
     spdlog::register_logger(spd_logger_);
 
     if (config.flush_interval.count() > 0) {
-      // spdlog::flush_every takes std::chrono::seconds. 
+      // spdlog::flush_every takes std::chrono::seconds.
       // Ensure at least 1 second if a positive interval is requested.
-      auto secs = std::max(std::chrono::seconds(1),
-                           std::chrono::duration_cast<std::chrono::seconds>(config.flush_interval));
+      auto secs = std::max(std::chrono::seconds(1), std::chrono::duration_cast<std::chrono::seconds>(config.flush_interval));
       spdlog::flush_every(secs);
     }
 
@@ -190,22 +190,31 @@ struct Logger::Impl {
 
     async_enabled_.store(false);
 
-    // Use std::async to drop the logger with a timeout
-    auto drop_future = std::async(std::launch::async, []() {
-      spdlog::drop("unilink");
-    });
+    // If there's a previous drop still pending, wait for it now to avoid multiple drop tasks
+    if (drop_future_.valid()) {
+      drop_future_.wait();
+    }
 
-    if (drop_future.wait_for(async_config_.shutdown_timeout) == std::future_status::timeout) {
-      // If we timeout, we can't force spdlog to stop, but we stop waiting.
-      // The background thread will eventually finish.
+    // Use std::async to drop the logger with a timeout
+    drop_future_ = std::async(std::launch::async, []() { spdlog::drop("unilink"); });
+
+    bool drop_success = true;
+    if (drop_future_.wait_for(async_config_.shutdown_timeout) == std::future_status::timeout) {
+      drop_success = false;
     }
 
     spd_logger_.reset();
     dist_sink_->flush();
 
+    // Create sync logger
     spd_logger_ = std::make_shared<spdlog::logger>("unilink", dist_sink_);
     spd_logger_->set_level(to_spdlog_level(current_level_.load()));
-    spdlog::register_logger(spd_logger_);
+
+    // Only register globally if the previous drop finished, to avoid race conditions.
+    // If it didn't finish, we still have spd_logger_ internally so log() works.
+    if (drop_success) {
+      spdlog::register_logger(spd_logger_);
+    }
   }
 
   static spdlog::level::level_enum to_spdlog_level(LogLevel level) {
@@ -252,8 +261,9 @@ void Logger::set_console_output(bool enable) {
   if (enable) {
     if (!impl_->console_sink_) {
       impl_->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-      impl_->dist_sink_->add_sink(impl_->console_sink_);
     }
+    impl_->dist_sink_->remove_sink(impl_->console_sink_);  // Ensure no duplicate
+    impl_->dist_sink_->add_sink(impl_->console_sink_);
     impl_->outputs_.fetch_or(static_cast<int>(LogOutput::CONSOLE));
   } else {
     if (impl_->console_sink_) {
@@ -264,9 +274,7 @@ void Logger::set_console_output(bool enable) {
   }
 }
 
-void Logger::set_file_output(const std::string& filename) {
-  set_file_output_with_rotation(filename);
-}
+void Logger::set_file_output(const std::string& filename) { set_file_output_with_rotation(filename); }
 
 void Logger::set_file_output_with_rotation(const std::string& filename, const LogRotationConfig& config) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
@@ -287,8 +295,7 @@ void Logger::set_file_output_with_rotation(const std::string& filename, const Lo
       impl_->rotation_config_ = config;
       impl_->current_log_file_ = filename;
 
-      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-          filename, config.max_file_size_bytes, config.max_files);
+      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(filename, config.max_file_size_bytes, config.max_files);
 
       impl_->dist_sink_->add_sink(impl_->file_sink_);
       impl_->outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
@@ -327,8 +334,8 @@ void Logger::set_callback(LogCallback callback) {
     impl_->callback_sink_->set_callback(std::move(callback));
     // Ensure it's in the dist_sink if outputs bit is set
     if (impl_->outputs_.load() & static_cast<int>(LogOutput::CALLBACK)) {
-        impl_->dist_sink_->remove_sink(impl_->callback_sink_); // Avoid duplicates
-        impl_->dist_sink_->add_sink(impl_->callback_sink_);
+      impl_->dist_sink_->remove_sink(impl_->callback_sink_);  // Avoid duplicates
+      impl_->dist_sink_->add_sink(impl_->callback_sink_);
     }
   } else {
     impl_->callback_sink_ = std::make_shared<callback_sink_mt>(std::move(callback));
@@ -348,7 +355,7 @@ void Logger::set_outputs(int outputs) {
     if (!impl_->console_sink_) {
       impl_->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     }
-    impl_->dist_sink_->remove_sink(impl_->console_sink_); // Ensure no duplicate
+    impl_->dist_sink_->remove_sink(impl_->console_sink_);  // Ensure no duplicate
     impl_->dist_sink_->add_sink(impl_->console_sink_);
   } else {
     if (impl_->console_sink_) {
@@ -360,12 +367,12 @@ void Logger::set_outputs(int outputs) {
   // File Sink
   if (outputs & static_cast<int>(LogOutput::FILE)) {
     if (!impl_->file_sink_ && !impl_->current_log_file_.empty()) {
-      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-          impl_->current_log_file_, impl_->rotation_config_.max_file_size_bytes, impl_->rotation_config_.max_files);
+      impl_->file_sink_ =
+          std::make_shared<spdlog::sinks::rotating_file_sink_mt>(impl_->current_log_file_, impl_->rotation_config_.max_file_size_bytes, impl_->rotation_config_.max_files);
     }
     if (impl_->file_sink_) {
-        impl_->dist_sink_->remove_sink(impl_->file_sink_); // Ensure no duplicate
-        impl_->dist_sink_->add_sink(impl_->file_sink_);
+      impl_->dist_sink_->remove_sink(impl_->file_sink_);  // Ensure no duplicate
+      impl_->dist_sink_->add_sink(impl_->file_sink_);
     }
   } else {
     if (impl_->file_sink_) {
@@ -377,8 +384,8 @@ void Logger::set_outputs(int outputs) {
   // Callback Sink
   if (outputs & static_cast<int>(LogOutput::CALLBACK)) {
     if (impl_->callback_sink_) {
-        impl_->dist_sink_->remove_sink(impl_->callback_sink_); // Ensure no duplicate
-        impl_->dist_sink_->add_sink(impl_->callback_sink_);
+      impl_->dist_sink_->remove_sink(impl_->callback_sink_);  // Ensure no duplicate
+      impl_->dist_sink_->add_sink(impl_->callback_sink_);
     }
   } else {
     if (impl_->callback_sink_) {
@@ -414,25 +421,15 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
   impl_->spd_logger_->log(Impl::to_spdlog_level(level), payload);
 }
 
-void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::DEBUG, component, operation, message);
-}
+void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::DEBUG, component, operation, message); }
 
-void Logger::info(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::INFO, component, operation, message);
-}
+void Logger::info(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::INFO, component, operation, message); }
 
-void Logger::warning(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::WARNING, component, operation, message);
-}
+void Logger::warning(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::WARNING, component, operation, message); }
 
-void Logger::error(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::ERROR, component, operation, message);
-}
+void Logger::error(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::ERROR, component, operation, message); }
 
-void Logger::critical(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::CRITICAL, component, operation, message);
-}
+void Logger::critical(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::CRITICAL, component, operation, message); }
 
 }  // namespace diagnostics
 }  // namespace unilink
