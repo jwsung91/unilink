@@ -292,7 +292,15 @@ if(NOT UNILINK_BOOST_INCLUDE_DIR)
   endif()
 endif()
 
-find_package(spdlog CONFIG REQUIRED)
+find_package(spdlog CONFIG QUIET)
+if(NOT spdlog_FOUND)
+  include(FetchContent)
+  FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.14.1)
+  FetchContent_MakeAvailable(spdlog)
+endif()
 find_package(Threads REQUIRED)
 
 # Optional dependencies
