@@ -59,7 +59,7 @@ jobs:
             vcpkg_features: ""
           - name: C++ (Windows, MSVC)
             os: windows-2022
-            triplet: x64-windows
+            triplet: x64-windows-static-md
             cc: cl
             cxx: cl
             generator: "Visual Studio 17 2022"
@@ -106,7 +106,7 @@ jobs:
             vcpkg_features: "python"
           - name: Python3 (Windows, MSVC)
             os: windows-2022
-            triplet: x64-windows
+            triplet: x64-windows-static-md
             cc: cl
             cxx: cl
             generator: "Visual Studio 17 2022"
@@ -146,9 +146,13 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config
+            # Install build tools and Boost/spdlog via apt to avoid flaky vcpkg source downloads
+            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
+              libboost-dev libboost-system-dev libboost-date-time-dev \
+              libboost-context-dev libboost-container-dev libboost-coroutine-dev \
+              libspdlog-dev
           else
-            brew install ninja autoconf autoconf-archive automake libtool pkg-config boost pybind11
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config boost pybind11 spdlog
           fi
 
       - name: Setup Python
@@ -162,12 +166,8 @@ jobs:
         run: python -m pip install pytest pybind11
 
       - name: Clone vcpkg
-        if: runner.os != 'macOS'
+        if: runner.os == 'Windows'
         run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
-
-      - name: Bootstrap vcpkg (Linux)
-        if: runner.os == 'Linux'
-        run: "${VCPKG_ROOT}/bootstrap-vcpkg.sh"
 
       - name: Bootstrap vcpkg (Windows)
         if: runner.os == 'Windows'
@@ -175,16 +175,24 @@ jobs:
         run: |
           & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
 
+      - name: Create Custom Triplet (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $tripletPath = Join-Path "${{ env.VCPKG_ROOT }}" "triplets/x64-windows-static-md.cmake"
+          Set-Content -Path $tripletPath -Value @"
+          set(VCPKG_TARGET_ARCHITECTURE x64)
+          set(VCPKG_CRT_LINKAGE dynamic)
+          set(VCPKG_LIBRARY_LINKAGE static)
+          "@
+          Write-Host "Created custom triplet at $tripletPath"
+          Get-Content $tripletPath
+
       - name: Install Dependencies (vcpkg)
-        if: runner.os != 'macOS'
+        if: runner.os == 'Windows'
         shell: bash
         run: |
-          # Use Windows-style path for vcpkg executable if on Windows
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            VCPKG_EXE="${VCPKG_ROOT}/vcpkg.exe"
-          else
-            VCPKG_EXE="${VCPKG_ROOT}/vcpkg"
-          fi
+          VCPKG_EXE="${VCPKG_ROOT}/vcpkg.exe"
 
           # Helper function for retrying commands
           retry_command() {
@@ -204,13 +212,7 @@ jobs:
             return 0
           }
 
-          # Install base dependencies
-          retry_command "$VCPKG_EXE" install boost-system boost-asio --triplet ${{ matrix.triplet }}
-
-          # Install python bindings dependencies if requested
-          if [ "${{ matrix.build_python }}" = "ON" ]; then
-            echo "Skipping pybind11 installation via vcpkg to avoid overriding host Python"
-          fi
+          retry_command "$VCPKG_EXE" install boost-system boost-asio spdlog --triplet ${{ matrix.triplet }}
 
       - name: Configure (Linux)
         if: runner.os == 'Linux'
@@ -225,8 +227,6 @@ jobs:
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
-            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
-            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
@@ -334,6 +334,9 @@ jobs:
           $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
           $env:UNILINK_INSTALL_PATH = $installPath
           $env:UNILINK_PACKAGE_PATH = $packagePath
+          # Add package dir first (contains unilink.dll, spdlog.dll, boost DLLs copied at install),
+          # then vcpkg bin as fallback — both paths ensure DLLs are found by the Windows loader.
+          $env:PATH = "$packagePath;$env:VCPKG_ROOT\installed\${{ matrix.triplet }}\bin;$env:PATH"
           python bindings/python/diagnose_windows_import.py
           python bindings/python/tests/test_import.py
           python -m pytest bindings/python/tests -q

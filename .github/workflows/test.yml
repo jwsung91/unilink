@@ -116,7 +116,7 @@ jobs:
       if: runner.os != 'Linux'
       run: |
         brew update
-        brew install cmake ccache boost
+        brew install cmake ccache boost spdlog
 
         # Ensure ccache shims are on PATH for clang on both Intel and Apple Silicon
         echo "PATH=/opt/homebrew/opt/ccache/libexec:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
@@ -178,7 +178,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-11 g++-11 python3 libboost1.74-dev libboost-system1.74-dev"
+        packages: "build-essential cmake ccache gcc-11 g++-11 python3 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
@@ -231,7 +231,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev"
+        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
@@ -289,7 +289,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache libboost1.74-dev libboost-system1.74-dev socat"
+        packages: "build-essential cmake ccache libboost1.74-dev libboost-system1.74-dev socat libspdlog-dev"
 
     - name: Configure CMake
       run: |
@@ -349,7 +349,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev"
+        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
@@ -397,7 +397,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev clang libc++-dev libc++abi-dev"
+        packages: "build-essential cmake gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev clang libc++-dev libc++abi-dev libspdlog-dev"
 
     - name: Configure CMake with Sanitizers
       run: |
@@ -442,7 +442,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev
+          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev libspdlog-dev
       - name: Configure
         run: |
           cmake -S . -B build-e2e \

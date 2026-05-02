@@ -36,6 +36,7 @@ jobs:
             ninja-build
             clang
             libboost-all-dev
+            libspdlog-dev
 
       - name: Configure
         run: |

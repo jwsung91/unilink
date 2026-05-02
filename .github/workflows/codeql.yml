@@ -57,7 +57,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake libboost-dev libboost-system-dev"
+        packages: "build-essential cmake libboost-dev libboost-system-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |

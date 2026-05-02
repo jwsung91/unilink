@@ -7,10 +7,17 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31" AND POLICY CMP0167)
 endif()
 
 # Normalize Boost lookup variants to avoid missing component builds
-set(Boost_USE_STATIC_LIBS
-    OFF
-    CACHE BOOL "Prefer shared Boost libraries" FORCE
-)
+if(WIN32 OR VCPKG_TARGET_TRIPLET MATCHES "static")
+  set(Boost_USE_STATIC_LIBS
+      ON
+      CACHE BOOL "Use static Boost libraries" FORCE
+  )
+else()
+  set(Boost_USE_STATIC_LIBS
+      OFF
+      CACHE BOOL "Prefer shared Boost libraries" FORCE
+  )
+endif()
 set(Boost_USE_MULTITHREADED
     ON
     CACHE BOOL "Use multithreaded Boost libraries" FORCE
@@ -292,6 +299,16 @@ if(NOT UNILINK_BOOST_INCLUDE_DIR)
   endif()
 endif()
 
+find_package(spdlog 1.9 CONFIG QUIET)
+if(NOT spdlog_FOUND)
+  include(FetchContent)
+  FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.14.1
+  )
+  FetchContent_MakeAvailable(spdlog)
+endif()
 find_package(Threads REQUIRED)
 
 # Optional dependencies

@@ -183,17 +183,28 @@ if(UNILINK_ENABLE_INSTALL)
 
   if(WIN32)
     if(VCPKG_INSTALLED_DIR AND VCPKG_TARGET_TRIPLET)
-      message(
-        STATUS "[unilink-python] Staging vcpkg runtime DLLs into Python package"
+      set(_unilink_vcpkg_bin_dir
+          "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/"
       )
-      install(
-        DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/"
-        DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
-        COMPONENT python
-        FILES_MATCHING
-        PATTERN "*.dll"
-        PATTERN "python3*.dll" EXCLUDE
-      )
+      if(EXISTS "${_unilink_vcpkg_bin_dir}")
+        message(
+          STATUS
+            "[unilink-python] Staging vcpkg runtime DLLs into Python package from ${_unilink_vcpkg_bin_dir}"
+        )
+        install(
+          DIRECTORY "${_unilink_vcpkg_bin_dir}"
+          DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
+          COMPONENT python
+          FILES_MATCHING
+          PATTERN "*.dll"
+          PATTERN "python3*.dll" EXCLUDE
+        )
+      else()
+        message(
+          STATUS
+            "[unilink-python] No vcpkg runtime DLL directory found at ${_unilink_vcpkg_bin_dir} (expected for static triplets)"
+        )
+      endif()
     endif()
   endif()
 endif()
