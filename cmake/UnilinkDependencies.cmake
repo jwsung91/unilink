@@ -292,7 +292,7 @@ if(NOT UNILINK_BOOST_INCLUDE_DIR)
   endif()
 endif()
 
-find_package(spdlog CONFIG QUIET)
+find_package(spdlog 1.9 CONFIG QUIET)
 if(NOT spdlog_FOUND)
   include(FetchContent)
   FetchContent_Declare(
