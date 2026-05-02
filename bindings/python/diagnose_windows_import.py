@@ -129,8 +129,12 @@ def main() -> int:
         _load_binary(candidate)
 
     _print_section("Import Specs")
-    print(f"spec(unilink): {importlib.util.find_spec('unilink')}")
-    print(f"spec(unilink.unilink_py): {importlib.util.find_spec('unilink.unilink_py')}")
+    for _spec_name in ("unilink", "unilink.unilink_py"):
+        try:
+            _spec = importlib.util.find_spec(_spec_name)
+            print(f"spec({_spec_name}): {_spec}")
+        except Exception as _exc:
+            print(f"spec({_spec_name}): failed — {_exc}")
 
     _print_section("Python Import")
     try:
