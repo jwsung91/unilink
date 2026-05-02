@@ -33,7 +33,7 @@ jobs:
             triplet: x64-windows
           - os: windows-2022
             triplet: x64-windows-static
-          - os: macos-15
+          - os: macos-26
             triplet: arm64-osx
 
     env:

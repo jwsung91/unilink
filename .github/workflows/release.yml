@@ -39,8 +39,8 @@ jobs:
             release_files: |
               build/package/unilink-*.tar.gz
 
-          - os: macos-15
-            label: macOS 15
+          - os: macos-26
+            label: macOS 26
             triplet: arm64-osx
             cmake_generator: "Ninja"
             cpack_generator: "TGZ;DragNDrop"

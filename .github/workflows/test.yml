@@ -47,7 +47,7 @@ jobs:
             cxx: g++-13
             triplet: arm64-linux
           # macOS: Clang with libc++ std::format support
-          - os: macos-15
+          - os: macos-26
             compiler: clang
             cc: clang
             cxx: clang++

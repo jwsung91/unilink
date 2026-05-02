@@ -23,7 +23,7 @@ This guide describes the system requirements and dependencies needed to build an
 | Ubuntu 24.04 ARM64         | 🔄 Validation Path | Secondary ARM64 target in CI/build matrix              |
 | Ubuntu 20.04 LTS           | ⚠️ Local Build Only | GCC 13+ required manually                              |
 | Other Linux                | 🔄 Should Work     | Not officially tested across all distros/architectures |
-| macOS                      | ✅ Fully Supported | Tested in CI (macOS 15, Clang)                         |
+| macOS                      | ✅ Fully Supported | Tested in CI (macOS 26, Clang)                         |
 | Windows                    | ✅ Fully Supported | Tested in CI (Windows 2022, MSVC)                      |
 
 ---
