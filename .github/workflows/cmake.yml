@@ -334,6 +334,8 @@ jobs:
           $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
           $env:UNILINK_INSTALL_PATH = $installPath
           $env:UNILINK_PACKAGE_PATH = $packagePath
+          # Add vcpkg bin to PATH so spdlog.dll and other runtime DLLs are found
+          $env:PATH = "$env:VCPKG_ROOT\installed\${{ matrix.triplet }}\bin;$env:PATH"
           python bindings/python/diagnose_windows_import.py
           python bindings/python/tests/test_import.py
           python -m pytest bindings/python/tests -q
