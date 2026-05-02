@@ -57,12 +57,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake libboost-dev libboost-system-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
         cmake -S . -B build \
           -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_TESTS=ON

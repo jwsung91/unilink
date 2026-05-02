@@ -32,12 +32,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake libboost-dev libboost-system-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
 
     - name: Build project
       run: |
         cmake -S . -B build-security \
           -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=20 \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -71,12 +73,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake libboost-dev libboost-system-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
 
     - name: Build project
       run: |
         cmake -S . -B build-deps \
           -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=20 \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \

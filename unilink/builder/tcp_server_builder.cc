@@ -46,8 +46,7 @@ template <uint32_t State>
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
+    throw diagnostics::BuilderException("TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
   }
 #endif
 

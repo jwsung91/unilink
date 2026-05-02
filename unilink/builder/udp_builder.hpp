@@ -75,6 +75,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
   UdpClientBuilder<State>& auto_start(bool auto_start = true) override;
   UdpClientBuilder<State>& local_address(const std::string& address);
   UdpClientBuilder<State>& remote_endpoint(const std::string& host, uint16_t port);
+  UdpClientBuilder<State>& remote(const std::string& host, uint16_t port) { return remote_endpoint(host, port); }
   UdpClientBuilder<State>& independent_context(bool use_independent = true);
 
  private:

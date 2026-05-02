@@ -44,8 +44,7 @@ template <uint32_t State>
 std::unique_ptr<wrapper::UdsClient> UdsClientBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "UdsClientBuilder: Mandatory handlers (on_data and on_error) must be set.");
+    throw diagnostics::BuilderException("UdsClientBuilder: Mandatory handlers (on_data and on_error) must be set.");
   }
 #endif
 
@@ -132,8 +131,7 @@ template <uint32_t State>
 std::unique_ptr<wrapper::UdsServer> UdsServerBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "UdsServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
+    throw diagnostics::BuilderException("UdsServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
   }
 #endif
 
@@ -192,7 +190,13 @@ UdsServerBuilder<State>& UdsServerBuilder<State>::max_clients(uint32_t max_clien
 }
 
 // Explicit template instantiations
+template class UdsClientBuilder<BuilderState::None>;
+template class UdsClientBuilder<BuilderState::HasData>;
+template class UdsClientBuilder<BuilderState::HasError>;
 template class UdsClientBuilder<BuilderState::Ready>;
+template class UdsServerBuilder<BuilderState::None>;
+template class UdsServerBuilder<BuilderState::HasData>;
+template class UdsServerBuilder<BuilderState::HasError>;
 template class UdsServerBuilder<BuilderState::Ready>;
 
 }  // namespace builder

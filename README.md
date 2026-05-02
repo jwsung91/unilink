@@ -25,7 +25,7 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 
 ## Requirements
 
-* **C++17 compliant compiler**: GCC 11+ or Clang 14+ (required)
+* **C++20 compiler and standard library with `std::format`**: GCC 13+, recent Clang/libc++, or MSVC 2022 (required)
 * CMake 3.12 or later
 
 ## 📦 Installation

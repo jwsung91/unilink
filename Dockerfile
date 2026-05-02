@@ -5,7 +5,13 @@ FROM ubuntu:22.04 AS builder
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
-    g++ \
+    software-properties-common \
+    wget \
+    && (wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true) && \
+    echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu jammy main" > /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list && \
+    apt-get update && apt-get install -y \
+    gcc-13 \
+    g++-13 \
     libboost-dev \
     libboost-system-dev \
     python3 \
@@ -24,6 +30,9 @@ COPY . .
 RUN rm -rf build && mkdir build && cd build && \
     cmake .. \
         -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=gcc-13 \
+        -DCMAKE_CXX_COMPILER=g++-13 \
+        -DCMAKE_CXX_STANDARD=20 \
         -DUNILINK_ENABLE_CONFIG=ON \
         -DUNILINK_ENABLE_INSTALL=ON \
         -DUNILINK_ENABLE_PKGCONFIG=ON \

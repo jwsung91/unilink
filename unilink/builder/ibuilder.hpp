@@ -21,6 +21,7 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include "unilink/base/constants.hpp"
@@ -49,12 +50,7 @@ concept ConnectionHandler = std::invocable<T, const wrapper::ConnectionContext&>
 /**
  * @brief Builder state bitmask for compile-time tracking
  */
-enum BuilderState : uint32_t {
-  None = 0,
-  HasData = 1 << 0,
-  HasError = 1 << 1,
-  Ready = HasData | HasError
-};
+enum BuilderState : uint32_t { None = 0, HasData = 1 << 0, HasError = 1 << 1, Ready = HasData | HasError };
 
 /**
  * @brief Generic Builder interface for fluent API pattern
@@ -85,7 +81,7 @@ class BuilderInterface {
   template <DataHandler F>
   auto on_data(F&& handler) {
     on_data_ = std::forward<F>(handler);
-    return static_cast<typename Derived::template Rebind<State | BuilderState::HasData>&>(*this);
+    return typename Derived::template Rebind<State | BuilderState::HasData>(std::move(static_cast<Derived&>(*this)));
   }
 
   /**
@@ -136,7 +132,7 @@ class BuilderInterface {
   template <ErrorHandler F>
   auto on_error(F&& handler) {
     on_error_ = std::forward<F>(handler);
-    return static_cast<typename Derived::template Rebind<State | BuilderState::HasError>&>(*this);
+    return typename Derived::template Rebind<State | BuilderState::HasError>(std::move(static_cast<Derived&>(*this)));
   }
 
   /**

@@ -46,8 +46,7 @@ template <uint32_t State>
 std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "SerialBuilder: Mandatory handlers (on_data and on_error) must be set.");
+    throw diagnostics::BuilderException("SerialBuilder: Mandatory handlers (on_data and on_error) must be set.");
   }
 #endif
 
@@ -66,13 +65,17 @@ std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
 
   // Note: wrapper::Serial setters use strings for enum types
   std::string p_str = "none";
-  if (parity_ == config::SerialConfig::Parity::Even) p_str = "even";
-  else if (parity_ == config::SerialConfig::Parity::Odd) p_str = "odd";
+  if (parity_ == config::SerialConfig::Parity::Even)
+    p_str = "even";
+  else if (parity_ == config::SerialConfig::Parity::Odd)
+    p_str = "odd";
   serial->parity(p_str);
 
   std::string f_str = "none";
-  if (flow_ == config::SerialConfig::Flow::Software) f_str = "software";
-  else if (flow_ == config::SerialConfig::Flow::Hardware) f_str = "hardware";
+  if (flow_ == config::SerialConfig::Flow::Software)
+    f_str = "software";
+  else if (flow_ == config::SerialConfig::Flow::Hardware)
+    f_str = "hardware";
   serial->flow_control(f_str);
 
   serial->retry_interval(std::chrono::milliseconds(retry_interval_ms_));
@@ -143,6 +146,9 @@ SerialBuilder<State>& SerialBuilder<State>::independent_context(bool use_indepen
 }
 
 // Explicit template instantiations
+template class SerialBuilder<BuilderState::None>;
+template class SerialBuilder<BuilderState::HasData>;
+template class SerialBuilder<BuilderState::HasError>;
 template class SerialBuilder<BuilderState::Ready>;
 
 }  // namespace builder

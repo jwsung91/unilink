@@ -43,8 +43,8 @@ jobs:
             boost_version: "1.74"
           - os: ubuntu-22.04-arm
             compiler: gcc
-            cc: gcc
-            cxx: g++
+            cc: gcc-13
+            cxx: g++-13
             boost_version: "1.74"
           # macOS: Clang
           - os: macos-14
@@ -156,12 +156,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-11 g++-11 python3 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13 python3 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
         cmake -S . -B build-docs-snippets \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -209,12 +211,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
         cmake -S . -B build-integration \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -267,12 +271,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache libboost1.74-dev libboost-system1.74-dev socat libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev socat libspdlog-dev"
 
     - name: Configure CMake
       run: |
         cmake -S . -B build-integration-arm64 \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -327,12 +333,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
+        packages: "build-essential cmake ccache gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake
       run: |
         cmake -S . -B build-perf \
           -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -375,14 +383,14 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev clang libc++-dev libc++abi-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13 libboost1.74-dev libboost-system1.74-dev libspdlog-dev"
 
     - name: Configure CMake with Sanitizers
       run: |
         cmake -S . -B build-sanitizer \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_COMPILER=clang++ \
-          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=g++-13 \
+          -DCMAKE_C_COMPILER=gcc-13 \
           -DUNILINK_ENABLE_SANITIZERS=ON \
           -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
           -DUNILINK_BUILD_TESTS=ON \
@@ -418,13 +426,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev libspdlog-dev
+        uses: ./.github/actions/apt-install
+        with:
+          packages: "build-essential cmake gcc-13 g++-13 libboost-dev libboost-system-dev libspdlog-dev"
       - name: Configure
         run: |
           cmake -S . -B build-e2e \
             -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_C_COMPILER=gcc-13 \
+            -DCMAKE_CXX_COMPILER=g++-13 \
+            -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_BUILD_EXAMPLES=OFF

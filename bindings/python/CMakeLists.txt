@@ -111,8 +111,8 @@ target_link_libraries(
   unilink_py PRIVATE pybind11::headers unilink::unilink Python3::Module
 )
 
-# Ensure we use C++17
-target_compile_features(unilink_py PUBLIC cxx_std_17)
+# Ensure extension builds use the same standard as the C++ library.
+target_compile_features(unilink_py PUBLIC cxx_std_20)
 
 get_target_property(_unilink_py_suffix unilink_py SUFFIX)
 get_target_property(_unilink_py_debug_postfix unilink_py DEBUG_POSTFIX)

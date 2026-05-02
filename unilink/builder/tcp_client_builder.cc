@@ -44,8 +44,8 @@ template <uint32_t State>
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "TcpClientBuilder: Mandatory handlers (on_data/on_message and on_error) must be registered.");
+    throw diagnostics::BuilderException(
+        "TcpClientBuilder: Mandatory handlers (on_data/on_message and on_error) must be registered.");
   }
 #endif
 
@@ -114,6 +114,9 @@ TcpClientBuilder<State>& TcpClientBuilder<State>::independent_context(bool use_i
 }
 
 // Explicit template instantiations
+template class TcpClientBuilder<BuilderState::None>;
+template class TcpClientBuilder<BuilderState::HasData>;
+template class TcpClientBuilder<BuilderState::HasError>;
 template class TcpClientBuilder<BuilderState::Ready>;
 
 }  // namespace builder

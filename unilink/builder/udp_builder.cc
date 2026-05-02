@@ -42,8 +42,7 @@ template <uint32_t State>
 std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "UdpClientBuilder: Mandatory handlers must be set.");
+    throw diagnostics::BuilderException("UdpClientBuilder: Mandatory handlers must be set.");
   }
 #endif
 
@@ -112,10 +111,7 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::independent_context(bool use_i
 
 template <uint32_t State>
 UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)
-    : local_port_(local_port),
-      local_address_("0.0.0.0"),
-      auto_start_(false),
-      independent_context_(false) {
+    : local_port_(local_port), local_address_("0.0.0.0"), auto_start_(false), independent_context_(false) {
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
@@ -124,8 +120,7 @@ template <uint32_t State>
 std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
-                  "UdpServerBuilder: Mandatory handlers must be set.");
+    throw diagnostics::BuilderException("UdpServerBuilder: Mandatory handlers must be set.");
   }
 #endif
 
@@ -183,7 +178,13 @@ UdpServerBuilder<State>& UdpServerBuilder<State>::independent_context(bool use_i
 }
 
 // Explicit template instantiations
+template class UdpClientBuilder<BuilderState::None>;
+template class UdpClientBuilder<BuilderState::HasData>;
+template class UdpClientBuilder<BuilderState::HasError>;
 template class UdpClientBuilder<BuilderState::Ready>;
+template class UdpServerBuilder<BuilderState::None>;
+template class UdpServerBuilder<BuilderState::HasData>;
+template class UdpServerBuilder<BuilderState::HasError>;
 template class UdpServerBuilder<BuilderState::Ready>;
 
 }  // namespace builder

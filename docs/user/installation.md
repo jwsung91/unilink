@@ -5,7 +5,7 @@ This guide covers the supported ways to install and use the **unilink** library 
 ## Prerequisites
 
 - **CMake**: 3.12 or higher
-- **C++ Compiler**: C++17 compatible (GCC 11+, Clang 14+, MSVC 2019+)
+- **C++ Compiler**: C++20 compatible with `std::format` support (GCC 13+, recent Clang/libc++, MSVC 2022+)
 - **Platform**: Linux, Windows, macOS
 
 **Note:** When using a package manager (vcpkg), dependencies such as Boost are handled automatically.

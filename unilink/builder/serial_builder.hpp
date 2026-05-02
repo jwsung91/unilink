@@ -76,6 +76,7 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
 
   SerialBuilder<State>& auto_start(bool auto_start = true) override;
   SerialBuilder<State>& char_size(unsigned int size);
+  SerialBuilder<State>& data_bits(unsigned int size) { return char_size(size); }
   SerialBuilder<State>& stop_bits(unsigned int bits);
   SerialBuilder<State>& parity(config::SerialConfig::Parity p);
   SerialBuilder<State>& flow_control(config::SerialConfig::Flow f);

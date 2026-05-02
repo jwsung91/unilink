@@ -9,7 +9,7 @@ This guide describes the system requirements and dependencies needed to build an
 ### Recommended Platform
 
 - **Ubuntu 22.04 LTS or later**
-- **C++17 compatible compiler** (GCC 11+ or Clang 14+)
+- **C++20 compatible compiler and standard library with `std::format` support** (GCC 13+, recent Clang/libc++, or MSVC 2022+)
 - **CMake 3.12 or later**
 
 ### Supported Platforms
@@ -20,7 +20,7 @@ This guide describes the system requirements and dependencies needed to build an
 | Ubuntu 24.04 LTS           | ✅ Fully Supported | Latest features and optimizations                      |
 | Ubuntu 22.04 ARM64 (Orin)  | ✅ Validated       | Jetson Orin Nano testbed passed full C++ test sweep    |
 | Ubuntu 24.04 ARM64         | 🔄 Validation Path | Secondary ARM64 target in CI/build matrix              |
-| Ubuntu 20.04 LTS           | ⚠️ Local Build Only| GCC 11+ required manually                              |
+| Ubuntu 20.04 LTS           | ⚠️ Local Build Only | GCC 13+ required manually                              |
 | Other Linux                | 🔄 Should Work     | Not officially tested across all distros/architectures |
 | macOS                      | ✅ Fully Supported | Tested in CI (macOS 14, Clang)                         |
 | Windows                    | ✅ Fully Supported | Tested in CI (Windows 2022, MSVC)                      |
@@ -38,18 +38,20 @@ The following packages are required to build and use `unilink`:
 sudo apt update && sudo apt install -y \
   build-essential \
   cmake \
+  gcc-13 \
+  g++-13 \
   libboost-dev \
   libboost-system-dev
 ```
 
 ### Dependency Details
 
-| Dependency  | Version        | License      | Purpose                    |
-| ----------- | -------------- | ------------ | -------------------------- |
-| **GCC/G++** | 11+            | GPL          | C++17 compiler             |
-| **Clang**   | 14+ (optional) | Apache 2.0   | Alternative C++17 compiler |
-| **CMake**   | 3.12+          | BSD-3-Clause | Build system               |
-| **Boost**   | 1.65+          | BSL 1.0      | Asio for async I/O         |
+| Dependency  | Version        | License      | Purpose                                                                   |
+| ----------- | -------------- | ------------ | ------------------------------------------------------------------------- |
+| **GCC/G++** | 13+            | GPL          | C++20 compiler with `std::format` support                                 |
+| **Clang**   | 14+ (optional) | Apache 2.0   | Alternative C++20 compiler; requires a standard library with `std::format` |
+| **CMake**   | 3.12+          | BSD-3-Clause | Build system                                                              |
+| **Boost**   | 1.65+          | BSL 1.0      | Asio for async I/O                                                        |
 
 ---
 
@@ -59,13 +61,14 @@ sudo apt update && sudo apt install -y \
 
 | Compiler | Minimum Version | Recommended Version |
 | -------- | --------------- | ------------------- |
-| GCC      | 11.0            | 11.4+               |
-| Clang    | 14.0            | 14.0+               |
+| GCC      | 13.0            | 13.0+               |
+| Clang    | 14.0            | Recent Clang/libc++ |
 
 ### C++ Standard
 
-- **C++17** is required
-- C++20 and C++23 are supported but not required
+- **C++20** is required
+- `std::format` support in the selected standard library is required
+- C++23 is supported but not required
 
 ---
 
@@ -151,10 +154,12 @@ dpkg -l | grep libboost
 ### Quick Environment Test
 
 ```bash
-# Test compilation with C++17
-echo 'int main() { return 0; }' > test.cpp
-g++ -std=c++17 test.cpp -o test
-./test && echo "C++17 support: OK"
+# Test compilation with C++20 std::format
+echo '#include <format>
+#include <string>
+int main() { return std::format("{}", 42) == "42" ? 0 : 1; }' > test.cpp
+g++-13 -std=c++20 test.cpp -o test
+./test && echo "C++20 std::format support: OK"
 rm test test.cpp
 ```
 
@@ -166,9 +171,9 @@ rm test test.cpp
 
 ```bash
 # Ubuntu 20.04: Install newer GCC
-sudo apt install -y gcc-11 g++-11
-export CC=gcc-11
-export CXX=g++-11
+sudo apt install -y gcc-13 g++-13
+export CC=gcc-13
+export CXX=g++-13
 ```
 
 ### Problem: Boost Not Found

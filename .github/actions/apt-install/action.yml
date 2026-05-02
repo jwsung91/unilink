@@ -11,4 +11,12 @@ runs:
       run: |
         set -euo pipefail
         sudo apt-get update
+        if apt-cache policy gcc-13 | grep -q "Candidate: (none)"; then
+          sudo apt-get install -y software-properties-common wget
+          sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg \
+            "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
+          echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | \
+            sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
+          sudo apt-get update
+        fi
         sudo apt-get install -y ${{ inputs.packages }}

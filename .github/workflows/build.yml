@@ -56,7 +56,8 @@ jobs:
           doxygen \
           graphviz \
           libspdlog-dev \
-          software-properties-common
+          software-properties-common \
+          wget
 
         echo "Adding toolchain PPA for modern compilers..."
         sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
