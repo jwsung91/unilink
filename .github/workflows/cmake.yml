@@ -31,7 +31,7 @@ jobs:
         include:
           # Matrix for Pure C++ (existing configuration)
           - name: C++ (Linux, GCC)
-            os: ubuntu-24.04
+            os: ubuntu-22.04
             triplet: x64-linux
             cc: gcc
             cxx: g++
@@ -49,7 +49,7 @@ jobs:
             build_python: OFF
             vcpkg_features: ""
           - name: C++ (Linux ARM64, GCC, Ubuntu 24.04)
-            os: ubuntu-24.04-arm
+            os: ubuntu-22.04-arm
             triplet: arm64-linux
             cc: gcc
             cxx: g++
@@ -78,7 +78,7 @@ jobs:
 
           # Matrix for Python Enabled
           - name: Python3 (Linux, GCC)
-            os: ubuntu-24.04
+            os: ubuntu-22.04
             triplet: x64-linux
             cc: gcc
             cxx: g++
@@ -96,7 +96,7 @@ jobs:
             build_python: ON
             vcpkg_features: "python"
           - name: Python3 (Linux ARM64, GCC, Ubuntu 24.04)
-            os: ubuntu-24.04-arm
+            os: ubuntu-22.04-arm
             triplet: arm64-linux
             cc: gcc
             cxx: g++
@@ -146,11 +146,22 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            # Install build tools and Boost/spdlog via apt to avoid flaky vcpkg source downloads
+            sudo apt-get install -y software-properties-common
+            sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+            sudo apt-get update
+            
+            # Install build tools and modern GCC for C++20 support
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
+              gcc-13 g++-13 \
               libboost-dev libboost-system-dev libboost-date-time-dev \
               libboost-context-dev libboost-container-dev libboost-coroutine-dev \
               libspdlog-dev
+            
+            # Set as default if not already
+            if [ "${{ matrix.cc }}" = "gcc" ]; then
+              sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+              sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+            fi
           else
             brew install ninja autoconf autoconf-archive automake libtool pkg-config boost pybind11 spdlog
           fi

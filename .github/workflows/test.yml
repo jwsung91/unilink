@@ -30,38 +30,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 22.04: GCC 11 and Clang 14
+          # Ubuntu 22.04: GCC 13 and Clang 15
           - os: ubuntu-22.04
             compiler: gcc
-            cc: gcc-11
-            cxx: g++-11
+            cc: gcc-13
+            cxx: g++-13
             boost_version: "1.74"
           - os: ubuntu-22.04
             compiler: clang
-            cc: clang-14
-            cxx: clang++-14
+            cc: clang-15
+            cxx: clang++-15
             boost_version: "1.74"
           - os: ubuntu-22.04-arm
             compiler: gcc
             cc: gcc
             cxx: g++
             boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 15
-          - os: ubuntu-24.04
-            compiler: gcc
-            cc: gcc-13
-            cxx: g++-13
-            boost_version: "1.83"
-          - os: ubuntu-24.04
-            compiler: clang
-            cc: clang-15
-            cxx: clang++-15
-            boost_version: "1.83"
-          - os: ubuntu-24.04-arm
-            compiler: gcc
-            cc: gcc
-            cxx: g++
-            boost_version: "1.83"
           # macOS: Clang
           - os: macos-14
             compiler: clang
@@ -93,11 +77,23 @@ jobs:
           ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}-
           ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-
 
-    - name: Install base dependencies (Linux)
+    - name: Install compiler and tools (Linux)
       if: runner.os == 'Linux'
-      uses: ./.github/actions/apt-install
-      with:
-        packages: "build-essential cmake ccache"
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          sudo apt-get install -y gcc-13 g++-13
+        else
+          sudo apt-get install -y clang-15 g++-13
+        fi
+
+        # Install other tools
+        sudo apt-get install -y ninja-build libspdlog-dev libboost-all-dev
+
 
     - name: Install Boost (Linux)
       if: runner.os == 'Linux'

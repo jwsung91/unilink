@@ -28,28 +28,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 22.04: GCC 11 and Clang 14
+          # Ubuntu 22.04: GCC 13 and Clang 15
           - os: ubuntu-22.04
-            compiler: gcc
-            cc: gcc-11
-            cxx: g++-11
-            boost_version: "1.74"
-          - os: ubuntu-22.04
-            compiler: clang
-            cc: clang-14
-            cxx: clang++-14
-            boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 15
-          - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
             cxx: g++-13
-            boost_version: "1.83"
-          - os: ubuntu-24.04
+            boost_version: "1.74"
+          - os: ubuntu-22.04
             compiler: clang
             cc: clang-15
             cxx: clang++-15
-            boost_version: "1.83"
+            boost_version: "1.74"
 
     steps:
     - name: Checkout code
@@ -57,6 +46,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        set(CMAKE_CXX_STANDARD 20)
         set -e  # Exit on any error
         
         echo "Installing basic dependencies..."
@@ -66,24 +56,21 @@ jobs:
           cmake \
           doxygen \
           graphviz \
-          libspdlog-dev
-        
+          libspdlog-dev \
+          software-properties-common
+
+        echo "Adding toolchain PPA for modern compilers..."
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update
+
         echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
         # Install specific compiler versions
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-            sudo apt-get install -y gcc-9 g++-9
-          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y gcc-11 g++-11
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y gcc-13 g++-13
-          fi
+          sudo apt-get install -y gcc-13 g++-13
         else
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y clang-14
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y clang-15
-          fi
+          # Install Clang 15 (available in default 22.04 or via LLVM repo if needed)
+          # Note: Clang on Linux uses libstdc++ by default, so we need g++-13's libstdc++
+          sudo apt-get install -y clang-15 g++-13
         fi
         
         echo "Installing Boost libraries for ${{ matrix.os }}"
