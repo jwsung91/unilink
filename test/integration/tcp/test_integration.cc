@@ -44,10 +44,11 @@ class TcpIntegrationTest : public ::testing::Test {
 // ============================================================================
 
 TEST_F(TcpIntegrationTest, BuilderPatternIntegration) {
-  auto server = unilink::tcp_server(test_port_).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto server =
+      unilink::tcp_server(test_port_).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   EXPECT_NE(server, nullptr);
 
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   EXPECT_NE(client, nullptr);
 }
 
@@ -65,16 +66,25 @@ TEST_F(TcpIntegrationTest, MethodChaining) {
           .on_disconnect([](const wrapper::ConnectionContext&) { std::cout << "Disconnected!" << std::endl; })
           .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Data: " << ctx.data() << std::endl; })
           .on_error([](const wrapper::ErrorContext& ctx) { std::cout << "Error: " << ctx.message() << std::endl; })
-          .on_data([](auto&&){}).on_error([](auto&&){}).build();
+          .build();
 
   EXPECT_NE(client, nullptr);
 }
 
 TEST_F(TcpIntegrationTest, IndependentContext) {
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).independent_context(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
+                    .independent_context(true)
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
   EXPECT_NE(client, nullptr);
 
-  auto server = unilink::tcp_server(test_port_).unlimited_clients().independent_context(false).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto server = unilink::tcp_server(test_port_)
+                    .unlimited_clients()
+                    .independent_context(false)
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
   EXPECT_NE(server, nullptr);
 }
 
@@ -97,14 +107,17 @@ TEST_F(TcpIntegrationTest, BasicCommunication) {
                       received_data = std::string(ctx.data());
                       data_received = true;
                     })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(server, nullptr);
   EXPECT_TRUE(server->start().get());
 
   auto client = unilink::tcp_client("127.0.0.1", comm_port)
                     .on_connect([&client_connected](const wrapper::ConnectionContext&) { client_connected = true; })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(client, nullptr);
   client->start();
@@ -129,7 +142,7 @@ TEST_F(TcpIntegrationTest, ErrorHandling) {
   // Test invalid port (now mostly caught by InputValidator if used, but let's test runtime)
   // unilink::tcp_server(0) might throw or return nullptr depending on version
   try {
-    auto server = unilink::tcp_server(0).on_data([](auto&&){}).on_error([](auto&&){}).build();
+    auto server = unilink::tcp_server(0).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
     if (server) server->start();
   } catch (...) {
   }
@@ -137,7 +150,8 @@ TEST_F(TcpIntegrationTest, ErrorHandling) {
   std::atomic<bool> error_occurred{false};
   auto client = unilink::tcp_client("127.0.0.1", 1)
                     .on_error([&error_occurred](const wrapper::ErrorContext&) { error_occurred = true; })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .build();
 
   EXPECT_NE(client, nullptr);
   client->start();
@@ -152,7 +166,7 @@ TEST_F(TcpIntegrationTest, ErrorHandling) {
 TEST_F(TcpIntegrationTest, ResourceSharing) {
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
   for (int i = 0; i < 3; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+    auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
     EXPECT_NE(client, nullptr);
     clients.push_back(std::move(client));
   }
@@ -166,14 +180,20 @@ TEST_F(TcpIntegrationTest, MultipleClientConnections) {
   auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()
                     .on_connect([&connection_count](const wrapper::ConnectionContext&) { connection_count++; })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(server, nullptr);
   server->start();
 
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
   for (int i = 0; i < 3; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", comm_port).auto_start(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
+    auto client = unilink::tcp_client("127.0.0.1", comm_port)
+                      .auto_start(true)
+                      .on_data([](auto&&) {})
+                      .on_error([](auto&&) {})
+                      .build();
     clients.push_back(std::move(client));
     TestUtils::waitFor(100);
   }
@@ -187,7 +207,9 @@ TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
                     .independent_context(true)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   EXPECT_NE(client, nullptr);
 
@@ -196,7 +218,9 @@ TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
                     .auto_start(false)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   EXPECT_NE(server, nullptr);
 }

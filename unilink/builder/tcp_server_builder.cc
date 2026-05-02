@@ -104,6 +104,9 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::independent_context(bool use_i
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::max_clients(uint32_t max_clients) {
+  if (max_clients == 0) {
+    throw std::invalid_argument("max_clients must be greater than 0; use unlimited_clients() for no limit");
+  }
   max_clients_ = max_clients;
   client_limit_enabled_ = true;
   return *this;
@@ -151,6 +154,9 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::single_client() {
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::multi_client(size_t max) {
+  if (max == 0) {
+    throw std::invalid_argument("multi_client max must be greater than 0; use unlimited_clients() for no limit");
+  }
   max_clients_ = static_cast<uint32_t>(max);
   client_limit_enabled_ = true;
   return *this;

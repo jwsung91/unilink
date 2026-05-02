@@ -42,7 +42,10 @@ class ErrorRecoveryTest : public BaseTest {
 };
 
 TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
-  auto client = tcp_client("127.0.0.1", 1).on_error([this](const wrapper::ErrorContext&) { error_count_++; }).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto client = tcp_client("127.0.0.1", 1)
+                    .on_error([this](const wrapper::ErrorContext&) { error_count_++; })
+                    .on_data([](auto&&) {})
+                    .build();
   ASSERT_NE(client, nullptr);
   client->start();
   TestUtils::waitFor(500);

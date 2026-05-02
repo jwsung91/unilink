@@ -62,7 +62,8 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
   auto server = tcp_server(port)
                     .unlimited_clients()
                     .on_data([&](const wrapper::MessageContext& ctx) { server_received_bytes += ctx.data().size(); })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(server, nullptr);
   server->start();
@@ -71,7 +72,9 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
   std::atomic<bool> client_connected{false};
   auto client = tcp_client("127.0.0.1", port)
                     .on_connect([&](const wrapper::ConnectionContext&) { client_connected = true; })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(client, nullptr);
   client->start();
@@ -97,7 +100,7 @@ TEST_F(StressTest, RapidStartStop) {
   const int iterations = 20;
 
   for (int i = 0; i < iterations; ++i) {
-    auto server = tcp_server(port).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
+    auto server = tcp_server(port).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
     ASSERT_NE(server, nullptr);
 
     auto start_future = server->start();
@@ -126,14 +129,16 @@ TEST_F(StressTest, ConcurrentClientConnections) {
                       EXPECT_EQ(ctx.data_as_string(), payload);
                       received_count++;
                     })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   server->start();
   TestUtils::waitForCondition([&]() { return server->listening(); }, 1000);
 
   std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
   for (int i = 0; i < num_clients; ++i) {
-    auto client = tcp_client("127.0.0.1", port).on_data([](auto&&){}).on_error([](auto&&){}).build();
+    auto client = tcp_client("127.0.0.1", port).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
     clients.push_back(std::move(client));
     clients.back()->start();
   }

@@ -140,20 +140,33 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
                       data_calls++;
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
                     })
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_error([](auto&&) {})
+                    .build();
 
   server->start();
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->listening(); }, 1000));
 
-  auto client = tcp_client("127.0.0.1", port).on_data([](auto&&){}).on_error([](auto&&){}).build();
-  client->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 1000));
+  boost::asio::io_context ioc;
+  boost::asio::ip::tcp::socket socket(ioc);
+  boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::make_address("127.0.0.1"), port);
+  boost::system::error_code ec;
+  socket.connect(endpoint, ec);
+  ASSERT_FALSE(ec) << ec.message();
+  socket.non_blocking(true, ec);
+  ASSERT_FALSE(ec) << ec.message();
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->client_count() == 1; }, 2000));
 
   std::atomic<bool> sending{true};
   std::thread sender([&]() {
     std::string chunk(1024, 'A');
     while (sending.load()) {
-      client->send(chunk);
+      boost::system::error_code write_ec;
+      socket.write_some(boost::asio::buffer(chunk), write_ec);
+      if (write_ec == boost::asio::error::would_block || write_ec == boost::asio::error::try_again) {
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
+        continue;
+      }
+      if (write_ec) break;
       std::this_thread::sleep_for(std::chrono::microseconds(100));
     }
   });
@@ -165,6 +178,6 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
 
   sending = false;
   if (sender.joinable()) sender.join();
-  client->stop();
+  socket.close(ec);
   TestUtils::waitFor(200);
 }

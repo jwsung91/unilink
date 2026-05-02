@@ -57,6 +57,7 @@ struct IoContextManager::Impl {
 
   void stop() {
     std::unique_lock<std::mutex> lock(mutex_);
+    cv_.wait(lock, [this] { return !stopping_; });
     if (!owns_context_ && ioc_) return;
     if (!running_.load() && !io_thread_.joinable()) return;
 
