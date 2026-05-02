@@ -47,10 +47,10 @@ class UdsIntegrationTest : public ::testing::Test {
 };
 
 TEST_F(UdsIntegrationTest, BuilderPatternIntegration) {
-  auto server = unilink::uds_server(socket_path_).unlimited_clients().build();
+  auto server = unilink::uds_server(socket_path_).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
   EXPECT_NE(server, nullptr);
 
-  auto client = unilink::uds_client(socket_path_).build();
+  auto client = unilink::uds_client(socket_path_).on_data([](auto&&){}).on_error([](auto&&){}).build();
   EXPECT_NE(client, nullptr);
 }
 
@@ -71,7 +71,7 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
                       data_received = true;
                       cv.notify_one();
                     })
-                    .build();
+                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   server->start();
 
@@ -82,7 +82,7 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
   auto client = unilink::uds_client(socket_path_)
                     .independent_context(true)
                     .on_connect([&client_connected](const wrapper::ConnectionContext&) { client_connected = true; })
-                    .build();
+                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   client->start();
 
@@ -116,13 +116,13 @@ TEST_F(UdsIntegrationTest, MultiClientCommunication) {
                     .independent_context(true)
                     .on_connect([&connections](const wrapper::ConnectionContext&) { connections++; })
                     .on_data([&](const wrapper::MessageContext& ctx) { messages_received++; })
-                    .build();
+                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   server->start();
   TestUtils::waitForCondition([&]() { return server->listening(); }, 2000);
 
-  auto client1 = unilink::uds_client(socket_path_).independent_context(true).build();
-  auto client2 = unilink::uds_client(socket_path_).independent_context(true).build();
+  auto client1 = unilink::uds_client(socket_path_).independent_context(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto client2 = unilink::uds_client(socket_path_).independent_context(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   client1->start();
   client2->start();

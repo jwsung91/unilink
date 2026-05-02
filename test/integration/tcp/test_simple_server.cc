@@ -58,7 +58,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   // Create server
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // No client limit
-                .build();
+                .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created successfully" << std::endl;
@@ -81,7 +81,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Testing auto-start server with port: " << test_port << std::endl;
 
   // Create server (auto-manage triggers start)
-  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created with auto-start" << std::endl;
@@ -117,7 +117,7 @@ TEST_F(SimpleServerTest, ServerWithCallbacks) {
                   error_called->store(true);
                   *last_error = std::string(ctx.message());
                 })
-                .build();
+                .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
@@ -132,7 +132,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing server state check, port: " << test_port << std::endl;
 
-  server_ = unilink::tcp_server(test_port).unlimited_clients().build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -152,7 +152,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
  */
 TEST_F(SimpleServerTest, ClientLimitSingleClient) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).single_client().build();
+  server_ = unilink::tcp_server(test_port).single_client().on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
@@ -164,7 +164,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
  */
 TEST_F(SimpleServerTest, ClientLimitMultiClient) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).multi_client(3).build();
+  server_ = unilink::tcp_server(test_port).multi_client(3).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
@@ -175,7 +175,7 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
  */
 TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).unlimited_clients().build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
@@ -186,7 +186,7 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
  */
 TEST_F(SimpleServerTest, ClientLimitBuilderValidation) {
   uint16_t test_port = getTestPort();
-  EXPECT_THROW({ server_ = unilink::tcp_server(test_port).multi_client(0).build(); }, std::invalid_argument);
+  EXPECT_THROW({ server_ = unilink::tcp_server(test_port).multi_client(0).on_data([](auto&&){}).on_error([](auto&&){}).build(); }, std::invalid_argument);
 }
 
 int main(int argc, char** argv) {

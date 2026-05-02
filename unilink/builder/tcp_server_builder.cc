@@ -34,7 +34,8 @@ TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
       client_limit_enabled_(false),
       port_retry_enabled_(false),
       max_port_retries_(10),
-      port_retry_interval_ms_(1000) {
+      port_retry_interval_ms_(1000),
+      idle_timeout_(std::chrono::seconds(30)) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
 
   // Ensure background IO service is running
@@ -45,7 +46,8 @@ template <uint32_t State>
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
 #if __cplusplus >= 202002L
   if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
+    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
+                  "TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
   }
 #endif
 
@@ -123,6 +125,41 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::max_port_retries(uint32_t max_
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry_interval(std::chrono::milliseconds interval) {
   port_retry_interval_ms_ = static_cast<uint32_t>(interval.count());
+  return *this;
+}
+
+// Backward compatibility implementations
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry(bool enable, int max_retries, int retry_interval_ms) {
+  port_retry_enabled_ = enable;
+  max_port_retries_ = static_cast<uint32_t>(max_retries);
+  port_retry_interval_ms_ = static_cast<uint32_t>(retry_interval_ms);
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
+  idle_timeout_ = timeout;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::single_client() {
+  max_clients_ = 1;
+  client_limit_enabled_ = true;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::multi_client(size_t max) {
+  max_clients_ = static_cast<uint32_t>(max);
+  client_limit_enabled_ = true;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::unlimited_clients() {
+  client_limit_enabled_ = false;
   return *this;
 }
 

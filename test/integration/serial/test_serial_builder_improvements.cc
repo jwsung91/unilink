@@ -42,19 +42,19 @@ class SerialBuilderIntegrationTest : public ::testing::Test {
 };
 
 TEST_F(SerialBuilderIntegrationTest, BuilderWithInputValidation) {
-  auto serial_ptr = serial(device_, 115200).data_bits(8).stop_bits(1).parity("none").flow_control("none").build();
+  auto serial_ptr = serial(device_, 115200).data_bits(8).stop_bits(1).parity("none").flow_control("none").on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(serial_ptr, nullptr);
 }
 
 TEST_F(SerialBuilderIntegrationTest, BuilderRetryIntervalValidation) {
-  auto serial_ptr = serial(device_, 9600).retry_interval(500ms).build();
+  auto serial_ptr = serial(device_, 9600).retry_interval(500ms).on_data([](auto&&){}).on_error([](auto&&){}).build();
   ASSERT_NE(serial_ptr, nullptr);
 }
 
 TEST_F(SerialBuilderIntegrationTest, BuildFailureOnInvalidParams) {
   EXPECT_NO_THROW({
-    auto serial_ptr = serial(device_, 9600).parity("invalid").build();
+    auto serial_ptr = serial(device_, 9600).parity("invalid").on_data([](auto&&){}).on_error([](auto&&){}).build();
     ASSERT_NE(serial_ptr, nullptr);
   });
 }

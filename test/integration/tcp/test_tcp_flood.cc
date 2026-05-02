@@ -41,7 +41,7 @@ TEST_F(TcpFloodTest, FloodServer) {
   auto server = tcp_server(test_port_)
                     .unlimited_clients()
                     .on_data([&](const wrapper::MessageContext& ctx) { received_bytes += ctx.data().size(); })
-                    .build();
+                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_TRUE(server->start().get());
 
@@ -53,7 +53,7 @@ TEST_F(TcpFloodTest, FloodServer) {
 
   for (int i = 0; i < num_clients; ++i) {
     clients.emplace_back([&]() {
-      auto client = tcp_client("127.0.0.1", test_port_).auto_start(true).build();
+      auto client = tcp_client("127.0.0.1", test_port_).auto_start(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
       bool connected = TestUtils::waitForCondition([&]() { return client->connected(); }, 5000);
       if (!connected) {
         client_connect_failed.store(true);

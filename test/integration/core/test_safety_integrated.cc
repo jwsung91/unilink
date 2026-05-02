@@ -36,7 +36,7 @@ class SafetyIntegratedTest : public ::testing::Test {
 
 TEST_F(SafetyIntegratedTest, RapidDestruction) {
   for (int i = 0; i < 5; ++i) {
-    auto server = tcp_server(port_).build();
+    auto server = tcp_server(port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
     server->start();
     // Destroy immediately
   }
@@ -44,7 +44,7 @@ TEST_F(SafetyIntegratedTest, RapidDestruction) {
 }
 
 TEST_F(SafetyIntegratedTest, NullCallbackSafety) {
-  auto server = tcp_server(port_).build();
+  auto server = tcp_server(port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
   server->start();
 
   // These should not crash

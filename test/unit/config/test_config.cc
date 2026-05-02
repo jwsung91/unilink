@@ -181,7 +181,7 @@ TEST_F(ConfigTest, ConfigValidationBoundaryValues) {
   std::cout << "\n=== Configuration Validation Boundary Values Test ===" << std::endl;
 
   // Test TCP client configuration validation
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_).build();
+  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   EXPECT_NE(client, nullptr);
 
@@ -189,17 +189,17 @@ TEST_F(ConfigTest, ConfigValidationBoundaryValues) {
   auto server = UnifiedBuilder::tcp_server(test_port_)
                     .unlimited_clients()  // No client limit
 
-                    .build();
+                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   EXPECT_NE(server, nullptr);
 
   // Test with minimum valid port
-  auto client1 = UnifiedBuilder::tcp_client("127.0.0.1", 1).build();
+  auto client1 = UnifiedBuilder::tcp_client("127.0.0.1", 1).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   EXPECT_NE(client1, nullptr);
 
   // Test with maximum valid port
-  auto client2 = UnifiedBuilder::tcp_client("127.0.0.1", 65535).build();
+  auto client2 = UnifiedBuilder::tcp_client("127.0.0.1", 65535).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   EXPECT_NE(client2, nullptr);
 }
@@ -211,10 +211,10 @@ TEST_F(ConfigTest, ConfigValidationInvalidValuesNetwork) {
   std::cout << "\n=== Configuration Validation Invalid Values Network Test ===" << std::endl;
 
   // Test with invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).build(), diagnostics::BuilderException);
+  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).on_data([](auto&&){}).on_error([](auto&&){}).build(), diagnostics::BuilderException);
 
   // Test with invalid host (should throw exception due to input validation)
-  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).build(), diagnostics::BuilderException);
+  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build(), diagnostics::BuilderException);
 }
 
 /**

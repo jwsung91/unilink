@@ -140,12 +140,12 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
                       data_calls++;
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
                     })
-                    .build();
+                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   server->start();
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->listening(); }, 1000));
 
-  auto client = tcp_client("127.0.0.1", port).build();
+  auto client = tcp_client("127.0.0.1", port).on_data([](auto&&){}).on_error([](auto&&){}).build();
   client->start();
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 1000));
 

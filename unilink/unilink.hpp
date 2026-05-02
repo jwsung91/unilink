@@ -80,60 +80,64 @@ using ErrorContext = wrapper::ErrorContext;
 /**
  * @brief Create a TCP server builder
  * @param port The port number for the server
- * @return TcpServerBuilder A configured builder for TcpServer
+ * @return TcpServerBuilderDefault A configured builder for TcpServer
  */
-inline builder::TcpServerBuilder tcp_server(uint16_t port) { return builder::TcpServerBuilder(port); }
+inline builder::TcpServerBuilderDefault tcp_server(uint16_t port) { return builder::TcpServerBuilderDefault(port); }
 
 /**
  * @brief Create a TCP client builder
  * @param host The host address to connect to
  * @param port The port number to connect to
- * @return TcpClientBuilder A configured builder for TcpClient
+ * @return TcpClientBuilderDefault A configured builder for TcpClient
  */
-inline builder::TcpClientBuilder tcp_client(const std::string& host, uint16_t port) {
-  return builder::TcpClientBuilder(host, port);
+inline builder::TcpClientBuilderDefault tcp_client(const std::string& host, uint16_t port) {
+  return builder::TcpClientBuilderDefault(host, port);
 }
 
 /**
  * @brief Create a UDS server builder
  * @param socket_path The path to the Unix Domain Socket file
- * @return UdsServerBuilder A configured builder for UdsServer
+ * @return UdsServerBuilderDefault A configured builder for UdsServer
  */
-inline builder::UdsServerBuilder uds_server(const std::string& socket_path) {
-  return builder::UdsServerBuilder(socket_path);
+inline builder::UdsServerBuilderDefault uds_server(const std::string& socket_path) {
+  return builder::UdsServerBuilderDefault(socket_path);
 }
 
 /**
  * @brief Create a UDS client builder
  * @param socket_path The path to the Unix Domain Socket file
- * @return UdsClientBuilder A configured builder for UdsClient
+ * @return UdsClientBuilderDefault A configured builder for UdsClient
  */
-inline builder::UdsClientBuilder uds_client(const std::string& socket_path) {
-  return builder::UdsClientBuilder(socket_path);
+inline builder::UdsClientBuilderDefault uds_client(const std::string& socket_path) {
+  return builder::UdsClientBuilderDefault(socket_path);
 }
 
 /**
  * @brief Create a Serial port builder
  * @param device The serial device path (e.g., "/dev/ttyUSB0")
  * @param baud_rate The baud rate for serial communication
- * @return SerialBuilder A configured builder for Serial
+ * @return SerialBuilderDefault A configured builder for Serial
  */
-inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_rate) {
-  return builder::SerialBuilder(device, baud_rate);
+inline builder::SerialBuilderDefault serial(const std::string& device, uint32_t baud_rate) {
+  return builder::SerialBuilderDefault(device, baud_rate);
 }
 
 /**
  * @brief Create a UDP client builder
  * @param local_port The local port to bind
- * @return UdpClientBuilder A configured builder for UDP Client
+ * @return UdpClientBuilderDefault A configured builder for UDP Client
  */
-inline builder::UdpClientBuilder udp_client(uint16_t local_port) { return builder::UdpClientBuilder(local_port); }
+inline builder::UdpClientBuilderDefault udp_client(uint16_t local_port) {
+  return builder::UdpClientBuilderDefault(local_port);
+}
 
 /**
  * @brief Create a UDP server builder (Virtual sessions)
  * @param local_port The local port to bind
- * @return UdpServerBuilder A configured builder for UDP Server
+ * @return UdpServerBuilderDefault A configured builder for UDP Server
  */
-inline builder::UdpServerBuilder udp_server(uint16_t local_port) { return builder::UdpServerBuilder(local_port); }
+inline builder::UdpServerBuilderDefault udp_server(uint16_t local_port) {
+  return builder::UdpServerBuilderDefault(local_port);
+}
 
 }  // namespace unilink

@@ -84,13 +84,13 @@ TEST_F(ImprovedArchitectureTest, CurrentResourceSharingIssue) {
   uint16_t test_port = TestUtils::getAvailableTestPort();
 
   // Create server
-  server_ = unilink::tcp_server(test_port).unlimited_clients().build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
   std::cout << "Server created successfully" << std::endl;
 
   // Create client
-  client_ = unilink::tcp_client("127.0.0.1", test_port).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(client_, nullptr);
   std::cout << "Client created successfully" << std::endl;
@@ -134,7 +134,7 @@ TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   }
 
   // IoContextManager starts automatically when using builder
-  server_ = unilink::tcp_server(test_port).unlimited_clients().build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   ASSERT_NE(server_, nullptr);
 

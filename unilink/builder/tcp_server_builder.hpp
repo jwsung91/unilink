@@ -33,7 +33,7 @@ namespace builder {
 #endif
 
 /**
- * @brief Modernized Builder for TcpServer
+ * @brief Modernized Builder for TcpServer with C++20 Concepts
  */
 template <uint32_t State = BuilderState::None>
 class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer, TcpServerBuilder<State>, State> {
@@ -54,7 +54,8 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
         client_limit_enabled_(other.client_limit_enabled_),
         port_retry_enabled_(other.port_retry_enabled_),
         max_port_retries_(other.max_port_retries_),
-        port_retry_interval_ms_(other.port_retry_interval_ms_) {
+        port_retry_interval_ms_(other.port_retry_interval_ms_),
+        idle_timeout_(other.idle_timeout_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -80,6 +81,13 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder<State>& enable_port_retry(bool enable = true);
   TcpServerBuilder<State>& max_port_retries(uint32_t max_retries);
   TcpServerBuilder<State>& port_retry_interval(std::chrono::milliseconds interval);
+  
+  // Backward compatibility methods
+  TcpServerBuilder<State>& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
+  TcpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
+  TcpServerBuilder<State>& single_client();
+  TcpServerBuilder<State>& multi_client(size_t max);
+  TcpServerBuilder<State>& unlimited_clients();
 
  private:
   template <uint32_t S>
@@ -96,6 +104,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   bool port_retry_enabled_;
   uint32_t max_port_retries_;
   uint32_t port_retry_interval_ms_;
+  std::chrono::milliseconds idle_timeout_;
 };
 
 using TcpServerBuilderDefault = TcpServerBuilder<BuilderState::None>;
