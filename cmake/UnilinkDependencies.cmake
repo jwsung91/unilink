@@ -7,10 +7,17 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31" AND POLICY CMP0167)
 endif()
 
 # Normalize Boost lookup variants to avoid missing component builds
-set(Boost_USE_STATIC_LIBS
-    OFF
-    CACHE BOOL "Prefer shared Boost libraries" FORCE
-)
+if(WIN32 OR VCPKG_TARGET_TRIPLET MATCHES "static")
+  set(Boost_USE_STATIC_LIBS
+      ON
+      CACHE BOOL "Use static Boost libraries" FORCE
+  )
+else()
+  set(Boost_USE_STATIC_LIBS
+      OFF
+      CACHE BOOL "Prefer shared Boost libraries" FORCE
+  )
+endif()
 set(Boost_USE_MULTITHREADED
     ON
     CACHE BOOL "Use multithreaded Boost libraries" FORCE

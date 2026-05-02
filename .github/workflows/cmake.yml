@@ -59,7 +59,7 @@ jobs:
             vcpkg_features: ""
           - name: C++ (Windows, MSVC)
             os: windows-2022
-            triplet: x64-windows
+            triplet: x64-windows-static-md
             cc: cl
             cxx: cl
             generator: "Visual Studio 17 2022"
@@ -106,7 +106,7 @@ jobs:
             vcpkg_features: "python"
           - name: Python3 (Windows, MSVC)
             os: windows-2022
-            triplet: x64-windows
+            triplet: x64-windows-static-md
             cc: cl
             cxx: cl
             generator: "Visual Studio 17 2022"
@@ -174,6 +174,19 @@ jobs:
         shell: pwsh
         run: |
           & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
+
+      - name: Create Custom Triplet (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $tripletPath = Join-Path "${{ env.VCPKG_ROOT }}" "triplets/x64-windows-static-md.cmake"
+          Set-Content -Path $tripletPath -Value @"
+          set(VCPKG_TARGET_ARCHITECTURE x64)
+          set(VCPKG_CRT_LINKAGE dynamic)
+          set(VCPKG_LIBRARY_LINKAGE static)
+          "@
+          Write-Host "Created custom triplet at $tripletPath"
+          Get-Content $tripletPath
 
       - name: Install Dependencies (vcpkg)
         if: runner.os == 'Windows'
