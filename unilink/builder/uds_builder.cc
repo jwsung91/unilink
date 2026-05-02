@@ -189,6 +189,26 @@ UdsServerBuilder<State>& UdsServerBuilder<State>::max_clients(uint32_t max_clien
   return *this;
 }
 
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::single_client() {
+  max_clients_ = 1;
+  client_limit_enabled_ = true;
+  return *this;
+}
+
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::multi_client(size_t max) {
+  max_clients_ = static_cast<uint32_t>(max);
+  client_limit_enabled_ = true;
+  return *this;
+}
+
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::unlimited_clients() {
+  client_limit_enabled_ = false;
+  return *this;
+}
+
 // Explicit template instantiations
 template class UdsClientBuilder<BuilderState::None>;
 template class UdsClientBuilder<BuilderState::HasData>;

@@ -40,14 +40,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v6
 
-    - name: Cache CodeQL build
-      uses: actions/cache@v5
-      with:
-        path: build
-        key: codeql-build-${{ runner.os }}-${{ matrix.language }}-${{ hashFiles('**/CMakeLists.txt') }}
-        restore-keys: |
-          codeql-build-${{ runner.os }}-${{ matrix.language }}-
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:

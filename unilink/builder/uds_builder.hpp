@@ -17,6 +17,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -133,6 +134,9 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   UdsServerBuilder<State>& auto_start(bool auto_start = true) override;
   UdsServerBuilder<State>& independent_context(bool use_independent = true);
   UdsServerBuilder<State>& max_clients(uint32_t max_clients);
+  UdsServerBuilder<State>& single_client();
+  UdsServerBuilder<State>& multi_client(size_t max);
+  UdsServerBuilder<State>& unlimited_clients();
 
  private:
   template <uint32_t S>

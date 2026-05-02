@@ -11,9 +11,22 @@ set(UNILINK_MIN_BOOST_VERSION
     CACHE STRING "Minimum supported Boost version"
 )
 
-# Normalize Boost lookup variants to avoid missing component builds
-if(WIN32 OR (DEFINED VCPKG_TARGET_TRIPLET AND VCPKG_TARGET_TRIPLET MATCHES
-                                              "static")
+# Normalize Boost lookup variants to avoid missing component builds. vcpkg's
+# built-in Linux triplets (x64-linux, arm64-linux) use static libraries by
+# default; only *-dynamic triplets should request shared Boost libraries.
+set(_unilink_vcpkg_dynamic_triplet OFF)
+if(DEFINED VCPKG_TARGET_TRIPLET AND VCPKG_TARGET_TRIPLET MATCHES "dynamic")
+  set(_unilink_vcpkg_dynamic_triplet ON)
+endif()
+
+set(_unilink_vcpkg_static_linkage OFF)
+if(DEFINED VCPKG_LIBRARY_LINKAGE AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(_unilink_vcpkg_static_linkage ON)
+endif()
+
+if(WIN32
+   OR _unilink_vcpkg_static_linkage
+   OR (DEFINED VCPKG_TARGET_TRIPLET AND NOT _unilink_vcpkg_dynamic_triplet)
 )
   set(Boost_USE_STATIC_LIBS
       ON
