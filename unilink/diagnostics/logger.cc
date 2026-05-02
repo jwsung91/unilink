@@ -178,7 +178,8 @@ struct Logger::Impl {
     if (config.flush_interval.count() > 0) {
       // spdlog::flush_every takes std::chrono::seconds.
       // Ensure at least 1 second if a positive interval is requested.
-      auto secs = std::max(std::chrono::seconds(1), std::chrono::duration_cast<std::chrono::seconds>(config.flush_interval));
+      auto secs =
+          std::max(std::chrono::seconds(1), std::chrono::duration_cast<std::chrono::seconds>(config.flush_interval));
       spdlog::flush_every(secs);
     }
 
@@ -295,7 +296,8 @@ void Logger::set_file_output_with_rotation(const std::string& filename, const Lo
       impl_->rotation_config_ = config;
       impl_->current_log_file_ = filename;
 
-      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(filename, config.max_file_size_bytes, config.max_files);
+      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(filename, config.max_file_size_bytes,
+                                                                                 config.max_files);
 
       impl_->dist_sink_->add_sink(impl_->file_sink_);
       impl_->outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
@@ -367,8 +369,8 @@ void Logger::set_outputs(int outputs) {
   // File Sink
   if (outputs & static_cast<int>(LogOutput::FILE)) {
     if (!impl_->file_sink_ && !impl_->current_log_file_.empty()) {
-      impl_->file_sink_ =
-          std::make_shared<spdlog::sinks::rotating_file_sink_mt>(impl_->current_log_file_, impl_->rotation_config_.max_file_size_bytes, impl_->rotation_config_.max_files);
+      impl_->file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+          impl_->current_log_file_, impl_->rotation_config_.max_file_size_bytes, impl_->rotation_config_.max_files);
     }
     if (impl_->file_sink_) {
       impl_->dist_sink_->remove_sink(impl_->file_sink_);  // Ensure no duplicate
@@ -421,15 +423,25 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
   impl_->spd_logger_->log(Impl::to_spdlog_level(level), payload);
 }
 
-void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::DEBUG, component, operation, message); }
+void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) {
+  log(LogLevel::DEBUG, component, operation, message);
+}
 
-void Logger::info(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::INFO, component, operation, message); }
+void Logger::info(std::string_view component, std::string_view operation, std::string_view message) {
+  log(LogLevel::INFO, component, operation, message);
+}
 
-void Logger::warning(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::WARNING, component, operation, message); }
+void Logger::warning(std::string_view component, std::string_view operation, std::string_view message) {
+  log(LogLevel::WARNING, component, operation, message);
+}
 
-void Logger::error(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::ERROR, component, operation, message); }
+void Logger::error(std::string_view component, std::string_view operation, std::string_view message) {
+  log(LogLevel::ERROR, component, operation, message);
+}
 
-void Logger::critical(std::string_view component, std::string_view operation, std::string_view message) { log(LogLevel::CRITICAL, component, operation, message); }
+void Logger::critical(std::string_view component, std::string_view operation, std::string_view message) {
+  log(LogLevel::CRITICAL, component, operation, message);
+}
 
 }  // namespace diagnostics
 }  // namespace unilink
