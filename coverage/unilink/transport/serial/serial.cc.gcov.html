@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-05-01 22:36:23</td>
+            <td class="headerValue">2026-05-02 06:23:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">44</td>
@@ -561,13 +561,13 @@
 <a name="442"><span class="lineNum">     442 </span>                :            :   }</a>
 <a name="443"><span class="lineNum">     443 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         19 :   auto self = shared_from_this();</span></a>
 <a name="444"><span class="lineNum">     444 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         19 :   net::post(impl-&gt;strand_, [self] {</span></a>
-<a name="445"><span class="lineNum">     445 </span>                :<span class="lineCov">         18 :     auto impl = self-&gt;get_impl();</span></a>
-<a name="446"><span class="lineNum">     446 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">         18 :     if (!impl-&gt;stopping_.load()) {</span></a>
+<a name="445"><span class="lineNum">     445 </span>                :<span class="lineCov">         19 :     auto impl = self-&gt;get_impl();</span></a>
+<a name="446"><span class="lineNum">     446 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">         19 :     if (!impl-&gt;stopping_.load()) {</span></a>
 <a name="447"><span class="lineNum">     447 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :       impl-&gt;state_.set_state(LinkState::Connecting);</span></a>
 <a name="448"><span class="lineNum">     448 </span>                :<span class="lineCov">         16 :       impl-&gt;notify_state();</span></a>
 <a name="449"><span class="lineNum">     449 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :       impl-&gt;open_and_configure(self);</span></a>
 <a name="450"><span class="lineNum">     450 </span>                :            :     }</a>
-<a name="451"><span class="lineNum">     451 </span>                :<span class="lineCov">         18 :   });</span></a>
+<a name="451"><span class="lineNum">     451 </span>                :<span class="lineCov">         19 :   });</span></a>
 <a name="452"><span class="lineNum">     452 </span>                :<span class="lineCov">         19 :   impl-&gt;started_ = true;</span></a>
 <a name="453"><span class="lineNum">     453 </span>                :<span class="lineCov">         19 : }</span></a>
 <a name="454"><span class="lineNum">     454 </span>                :            : </a>
