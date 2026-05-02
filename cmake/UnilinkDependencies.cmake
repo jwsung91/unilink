@@ -388,7 +388,7 @@ add_library(unilink_dependencies INTERFACE)
 
 # Link common dependencies
 target_link_libraries(
-  unilink_dependencies INTERFACE Threads::Threads spdlog::spdlog
+  unilink_dependencies INTERFACE Threads::Threads
 )
 if(UNILINK_LINK_BOOST_SYSTEM)
   if(UNILINK_BOOST_FETCHED)
