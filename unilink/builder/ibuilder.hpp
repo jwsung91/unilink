@@ -182,7 +182,7 @@ class BuilderInterface {
   template <DataHandler F>
   auto on_message(F&& handler) {
     on_message_ = std::forward<F>(handler);
-    return static_cast<typename Derived::template Rebind<State | BuilderState::HasData>&>(*this);
+    return typename Derived::template Rebind<State | BuilderState::HasData>(std::move(static_cast<Derived&>(*this)));
   }
 
   /**

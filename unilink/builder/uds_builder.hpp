@@ -112,7 +112,9 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         max_clients_(other.max_clients_),
-        client_limit_enabled_(other.client_limit_enabled_) {
+        client_limit_enabled_(other.client_limit_enabled_),
+        idle_timeout_(other.idle_timeout_),
+        idle_timeout_set_(other.idle_timeout_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -133,6 +135,7 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
 
   UdsServerBuilder<State>& auto_start(bool auto_start = true) override;
   UdsServerBuilder<State>& independent_context(bool use_independent = true);
+  UdsServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
   UdsServerBuilder<State>& max_clients(uint32_t max_clients);
   UdsServerBuilder<State>& single_client();
   UdsServerBuilder<State>& multi_client(size_t max);
@@ -148,6 +151,8 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
 
   uint32_t max_clients_;
   bool client_limit_enabled_;
+  std::chrono::milliseconds idle_timeout_;
+  bool idle_timeout_set_;
 };
 
 using UdsServerBuilderDefault = UdsServerBuilder<BuilderState::None>;

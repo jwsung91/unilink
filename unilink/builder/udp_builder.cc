@@ -33,7 +33,9 @@ UdpClientBuilder<State>::UdpClientBuilder(uint16_t local_port)
       remote_host_(""),
       remote_port_(0),
       auto_start_(false),
-      independent_context_(false) {
+      independent_context_(false),
+      enable_broadcast_(false),
+      reuse_address_(false) {
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
@@ -52,6 +54,8 @@ std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
   cfg.local_port = local_port_;
   cfg.remote_address = remote_host_;
   cfg.remote_port = remote_port_;
+  cfg.enable_broadcast = enable_broadcast_;
+  cfg.reuse_address = reuse_address_;
 
   if (independent_context_) {
     client = std::make_unique<wrapper::UdpClient>(cfg, std::make_shared<boost::asio::io_context>());
@@ -89,6 +93,12 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::auto_start(bool auto_start) {
 }
 
 template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::local_port(uint16_t port) {
+  local_port_ = port;
+  return *this;
+}
+
+template <uint32_t State>
 UdpClientBuilder<State>& UdpClientBuilder<State>::local_address(const std::string& address) {
   local_address_ = address;
   return *this;
@@ -102,6 +112,18 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::remote_endpoint(const std::str
 }
 
 template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::broadcast(bool enable) {
+  enable_broadcast_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::reuse_address(bool enable) {
+  reuse_address_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
 UdpClientBuilder<State>& UdpClientBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
@@ -111,7 +133,12 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::independent_context(bool use_i
 
 template <uint32_t State>
 UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)
-    : local_port_(local_port), local_address_("0.0.0.0"), auto_start_(false), independent_context_(false) {
+    : local_port_(local_port),
+      local_address_("0.0.0.0"),
+      auto_start_(false),
+      independent_context_(false),
+      enable_broadcast_(false),
+      reuse_address_(false) {
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
@@ -128,6 +155,8 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   config::UdpConfig cfg;
   cfg.local_address = local_address_;
   cfg.local_port = local_port_;
+  cfg.enable_broadcast = enable_broadcast_;
+  cfg.reuse_address = reuse_address_;
 
   if (independent_context_) {
     server = std::make_unique<wrapper::UdpServer>(cfg, std::make_shared<boost::asio::io_context>());
@@ -166,8 +195,26 @@ UdpServerBuilder<State>& UdpServerBuilder<State>::auto_start(bool auto_start) {
 }
 
 template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::local_port(uint16_t port) {
+  local_port_ = port;
+  return *this;
+}
+
+template <uint32_t State>
 UdpServerBuilder<State>& UdpServerBuilder<State>::local_address(const std::string& address) {
   local_address_ = address;
+  return *this;
+}
+
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::broadcast(bool enable) {
+  enable_broadcast_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::reuse_address(bool enable) {
+  reuse_address_ = enable;
   return *this;
 }
 

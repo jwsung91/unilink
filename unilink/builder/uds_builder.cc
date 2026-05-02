@@ -120,7 +120,9 @@ UdsServerBuilder<State>::UdsServerBuilder(const std::string& socket_path)
       auto_start_(false),
       independent_context_(false),
       max_clients_(0),
-      client_limit_enabled_(false) {
+      client_limit_enabled_(false),
+      idle_timeout_(0),
+      idle_timeout_set_(false) {
   if (socket_path.empty()) throw diagnostics::BuilderException("Socket path cannot be empty");
 
   // Ensure background IO service is running
@@ -151,6 +153,9 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder<State>::build() {
   if (client_limit_enabled_) {
     server->max_clients(max_clients_);
   }
+  if (idle_timeout_set_) {
+    server->idle_timeout(idle_timeout_);
+  }
 
   if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -179,6 +184,13 @@ UdsServerBuilder<State>& UdsServerBuilder<State>::auto_start(bool auto_start) {
 template <uint32_t State>
 UdsServerBuilder<State>& UdsServerBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
+  return *this;
+}
+
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
+  idle_timeout_ = timeout;
+  idle_timeout_set_ = true;
   return *this;
 }
 
