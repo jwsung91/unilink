@@ -19,19 +19,19 @@
 namespace unilink {
 namespace builder {
 
-TcpServerBuilder UnifiedBuilder::tcp_server(uint16_t port) { return TcpServerBuilder(port); }
+TcpServerBuilderDefault UnifiedBuilder::tcp_server(uint16_t port) { return TcpServerBuilderDefault(port); }
 
-TcpClientBuilder UnifiedBuilder::tcp_client(const std::string& host, uint16_t port) {
-  return TcpClientBuilder(host, port);
+TcpClientBuilderDefault UnifiedBuilder::tcp_client(const std::string& host, uint16_t port) {
+  return TcpClientBuilderDefault(host, port);
 }
 
-SerialBuilder UnifiedBuilder::serial(const std::string& device, uint32_t baud_rate) {
-  return SerialBuilder(device, baud_rate);
+SerialBuilderDefault UnifiedBuilder::serial(const std::string& device, uint32_t baud_rate) {
+  return SerialBuilderDefault(device, baud_rate);
 }
 
-UdpClientBuilder UnifiedBuilder::udp_client(uint16_t local_port) { return UdpClientBuilder(local_port); }
+UdpClientBuilderDefault UnifiedBuilder::udp_client(uint16_t local_port) { return UdpClientBuilderDefault(local_port); }
 
-UdpServerBuilder UnifiedBuilder::udp_server(uint16_t local_port) { return UdpServerBuilder(local_port); }
+UdpServerBuilderDefault UnifiedBuilder::udp_server(uint16_t local_port) { return UdpServerBuilderDefault(local_port); }
 
 }  // namespace builder
 }  // namespace unilink

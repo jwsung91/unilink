@@ -18,8 +18,10 @@
 
 #include <atomic>
 #include <chrono>
+#include <format>
 #include <functional>
 #include <memory>
+#include <source_location>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -194,13 +196,19 @@ class UNILINK_API Logger {
   void flush();
 
   // Main logging functions
-  void log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message);
+  void log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message,
+           const std::source_location& loc = std::source_location::current());
 
-  void debug(std::string_view component, std::string_view operation, std::string_view message);
-  void info(std::string_view component, std::string_view operation, std::string_view message);
-  void warning(std::string_view component, std::string_view operation, std::string_view message);
-  void error(std::string_view component, std::string_view operation, std::string_view message);
-  void critical(std::string_view component, std::string_view operation, std::string_view message);
+  void debug(std::string_view component, std::string_view operation, std::string_view message,
+             const std::source_location& loc = std::source_location::current());
+  void info(std::string_view component, std::string_view operation, std::string_view message,
+            const std::source_location& loc = std::source_location::current());
+  void warning(std::string_view component, std::string_view operation, std::string_view message,
+               const std::source_location& loc = std::source_location::current());
+  void error(std::string_view component, std::string_view operation, std::string_view message,
+             const std::source_location& loc = std::source_location::current());
+  void critical(std::string_view component, std::string_view operation, std::string_view message,
+                const std::source_location& loc = std::source_location::current());
 
  private:
   struct Impl;
@@ -273,15 +281,15 @@ class UNILINK_API Logger {
           ? std::chrono::high_resolution_clock::now()                                             \
           : std::chrono::high_resolution_clock::time_point()
 
-#define UNILINK_LOG_PERF_END(component, operation)                                                                \
-  do {                                                                                                            \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) {              \
-      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \
-      using _us_t = std::chrono::microseconds;                                                                    \
-      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \
-      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count();             \
-      UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
-    }                                                                                                             \
+#define UNILINK_LOG_PERF_END(component, operation)                                                     \
+  do {                                                                                                 \
+    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) {   \
+      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                          \
+      using _us_t = std::chrono::microseconds;                                                         \
+      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                        \
+      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count();  \
+      UNILINK_LOG_DEBUG(component, operation, std::format("Duration: {} μs", _perf_duration_##operation)); \
+    }                                                                                                  \
   } while (0)
 
 }  // namespace diagnostics

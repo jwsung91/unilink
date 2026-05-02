@@ -21,6 +21,7 @@
 #include <boost/asio.hpp>
 #include <cstddef>
 #include <deque>
+#include <format>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -50,7 +51,7 @@ struct UdpChannel::Impl {
   bool owns_ioc_{true};
   net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
-  std::thread ioc_thread_;
+  std::jthread ioc_thread_;
 
   udp::socket socket_;
   udp::endpoint local_endpoint_;
@@ -132,10 +133,11 @@ struct UdpChannel::Impl {
         work_guard_.reset();
       }
       if (ioc_thread_.joinable()) {
-        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-          ioc_thread_.join();
-        } else {
+        if (std::this_thread::get_id() == ioc_thread_.get_id()) {
           ioc_thread_.detach();
+        } else {
+          ioc_thread_.request_stop();
+          ioc_thread_.join();
         }
       }
       perform_stop_cleanup();
@@ -149,7 +151,7 @@ struct UdpChannel::Impl {
     boost::system::error_code ec;
     auto address = net::ip::make_address(cfg_.local_address, ec);
     if (ec) {
-      UNILINK_LOG_ERROR("udp", "bind", "Invalid local address: " + cfg_.local_address);
+      UNILINK_LOG_ERROR("udp", "bind", std::format("Invalid local address: {}", cfg_.local_address));
       transition_to(LinkState::Error, ec);
       return;
     }
@@ -157,7 +159,7 @@ struct UdpChannel::Impl {
     local_endpoint_ = udp::endpoint(address, cfg_.local_port);
     socket_.open(local_endpoint_.protocol(), ec);
     if (ec) {
-      UNILINK_LOG_ERROR("udp", "open", "Socket open failed: " + ec.message());
+      UNILINK_LOG_ERROR("udp", "open", std::format("Socket open failed: {}", ec.message()));
       transition_to(LinkState::Error, ec);
       return;
     }
@@ -165,7 +167,7 @@ struct UdpChannel::Impl {
     if (cfg_.reuse_address) {
       socket_.set_option(net::socket_base::reuse_address(true), ec);
       if (ec) {
-        UNILINK_LOG_ERROR("udp", "open", "Failed to set reuse_address: " + ec.message());
+        UNILINK_LOG_ERROR("udp", "open", std::format("Failed to set reuse_address: {}", ec.message()));
         transition_to(LinkState::Error, ec);
         return;
       }
@@ -174,7 +176,7 @@ struct UdpChannel::Impl {
     if (cfg_.enable_broadcast) {
       socket_.set_option(net::socket_base::broadcast(true), ec);
       if (ec) {
-        UNILINK_LOG_ERROR("udp", "open", "Failed to set broadcast: " + ec.message());
+        UNILINK_LOG_ERROR("udp", "open", std::format("Failed to set broadcast: {}", ec.message()));
         transition_to(LinkState::Error, ec);
         return;
       }
@@ -182,7 +184,7 @@ struct UdpChannel::Impl {
 
     socket_.bind(local_endpoint_, ec);
     if (ec) {
-      UNILINK_LOG_ERROR("udp", "bind", "Bind failed: " + ec.message());
+      UNILINK_LOG_ERROR("udp", "bind", std::format("Bind failed: {}", ec.message()));
       transition_to(LinkState::Error, ec);
       return;
     }
@@ -232,7 +234,7 @@ struct UdpChannel::Impl {
     }
 
     if (ec) {
-      UNILINK_LOG_ERROR("udp", "receive", "Receive failed: " + ec.message());
+      UNILINK_LOG_ERROR("udp", "receive", std::format("Receive failed: {}", ec.message()));
       transition_to(LinkState::Error, ec);
       return;
     }
@@ -248,7 +250,7 @@ struct UdpChannel::Impl {
         try {
           on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));
         } catch (const std::exception& e) {
-          UNILINK_LOG_ERROR("udp", "on_bytes", "Exception in bytes callback: " + std::string(e.what()));
+          UNILINK_LOG_ERROR("udp", "on_bytes", std::format("Exception in bytes callback: {}", e.what()));
           if (cfg_.stop_on_callback_exception) {
             transition_to(LinkState::Error);
             return;
@@ -266,7 +268,7 @@ struct UdpChannel::Impl {
         try {
           on_bytes_from_(memory::ConstByteSpan(rx_.data(), bytes), recv_endpoint_);
         } catch (const std::exception& e) {
-          UNILINK_LOG_ERROR("udp", "on_bytes_from", "Exception in bytes callback: " + std::string(e.what()));
+          UNILINK_LOG_ERROR("udp", "on_bytes_from", std::format("Exception in bytes callback: {}", e.what()));
           if (cfg_.stop_on_callback_exception) {
             transition_to(LinkState::Error);
             return;
@@ -341,7 +343,7 @@ struct UdpChannel::Impl {
       }
 
       if (ec) {
-        UNILINK_LOG_ERROR("udp", "write", "Send failed: " + ec.message());
+        UNILINK_LOG_ERROR("udp", "write", std::format("Send failed: {}", ec.message()));
         impl->transition_to(LinkState::Error, ec);
         impl->writing_ = false;
         return;
@@ -390,7 +392,7 @@ struct UdpChannel::Impl {
     try {
       on_state_(state_.state());
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("udp", "on_state", "Exception in state callback: " + std::string(e.what()));
+      UNILINK_LOG_ERROR("udp", "on_state", std::format("Exception in state callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("udp", "on_state", "Unknown exception in state callback");
     }
@@ -404,7 +406,7 @@ struct UdpChannel::Impl {
       try {
         on_bp_(queued_bytes);
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("udp", "on_backpressure", "Exception in backpressure callback: " + std::string(e.what()));
+        UNILINK_LOG_ERROR("udp", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
       } catch (...) {
         UNILINK_LOG_ERROR("udp", "on_backpressure", "Unknown exception in backpressure callback");
       }
@@ -413,7 +415,7 @@ struct UdpChannel::Impl {
       try {
         on_bp_(queued_bytes);
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("udp", "on_backpressure", "Exception in backpressure callback: " + std::string(e.what()));
+        UNILINK_LOG_ERROR("udp", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
       } catch (...) {
         UNILINK_LOG_ERROR("udp", "on_backpressure", "Unknown exception in backpressure callback");
       }
@@ -446,7 +448,7 @@ struct UdpChannel::Impl {
     }
 
     if (queue_bytes_ + size > bp_limit_) {
-      UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded (" + std::to_string(queue_bytes_ + size) + " bytes)");
+      UNILINK_LOG_ERROR("udp", "write", std::format("Queue limit exceeded ({} bytes)", queue_bytes_ + size));
       report_backpressure(queue_bytes_ + size);
       return false;
     }
@@ -598,8 +600,9 @@ void UdpChannel::start() {
   });
 
   if (impl->owns_ioc_) {
-    impl->ioc_thread_ = std::thread([impl]() {
+    impl->ioc_thread_ = std::jthread([impl](std::stop_token st) {
       try {
+        std::stop_callback cb(st, [impl] { impl->ioc_->stop(); });
         impl->ioc_->run();
       } catch (...) {
       }

@@ -404,43 +404,42 @@ void Logger::set_format(const std::string& format) { impl_->parse_format(format)
 
 void Logger::flush() { impl_->flush(); }
 
-void Logger::log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message) {
+void Logger::log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message,
+                 const std::source_location& loc) {
   if (!get_impl()->enabled_.load() || level < get_impl()->current_level_.load()) {
     return;
   }
 
-  // spdlog handles async internally if spd_logger_ is an async_logger.
-  // We'll format the message payload to maintain structured logging look.
-  std::string payload;
-  payload.reserve(component.length() + operation.length() + message.length() + 8);
-  payload.append("[");
-  payload.append(component);
-  payload.append("] [");
-  payload.append(operation);
-  payload.append("] ");
-  payload.append(message);
+  // Incorporate source location information into the payload
+  std::string payload =
+      std::format("[{}] [{}] [{}:{}:{}] {}", component, operation, loc.file_name(), loc.line(), loc.function_name(), message);
 
   impl_->spd_logger_->log(Impl::to_spdlog_level(level), payload);
 }
 
-void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::DEBUG, component, operation, message);
+void Logger::debug(std::string_view component, std::string_view operation, std::string_view message,
+                   const std::source_location& loc) {
+  log(LogLevel::DEBUG, component, operation, message, loc);
 }
 
-void Logger::info(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::INFO, component, operation, message);
+void Logger::info(std::string_view component, std::string_view operation, std::string_view message,
+                  const std::source_location& loc) {
+  log(LogLevel::INFO, component, operation, message, loc);
 }
 
-void Logger::warning(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::WARNING, component, operation, message);
+void Logger::warning(std::string_view component, std::string_view operation, std::string_view message,
+                     const std::source_location& loc) {
+  log(LogLevel::WARNING, component, operation, message, loc);
 }
 
-void Logger::error(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::ERROR, component, operation, message);
+void Logger::error(std::string_view component, std::string_view operation, std::string_view message,
+                   const std::source_location& loc) {
+  log(LogLevel::ERROR, component, operation, message, loc);
 }
 
-void Logger::critical(std::string_view component, std::string_view operation, std::string_view message) {
-  log(LogLevel::CRITICAL, component, operation, message);
+void Logger::critical(std::string_view component, std::string_view operation, std::string_view message,
+                      const std::source_location& loc) {
+  log(LogLevel::CRITICAL, component, operation, message, loc);
 }
 
 }  // namespace diagnostics

@@ -17,147 +17,174 @@
 #include "unilink/builder/udp_builder.hpp"
 
 #include <boost/asio/io_context.hpp>
-#include <memory>
 
-#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/builder/auto_initializer.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace builder {
 
-// --- UdpClientBuilder Implementation ---
+// UdpClientBuilder implementation
 
-UdpClientBuilder::UdpClientBuilder(uint16_t local_port) : auto_start_(false), independent_context_(false) {
-  cfg_.local_port = local_port;
+template <uint32_t State>
+UdpClientBuilder<State>::UdpClientBuilder(uint16_t local_port)
+    : local_port_(local_port),
+      local_address_("0.0.0.0"),
+      remote_host_(""),
+      remote_port_(0),
+      auto_start_(false),
+      independent_context_(false) {
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
 }
 
-std::unique_ptr<wrapper::UdpClient> UdpClientBuilder::build() {
-  std::shared_ptr<boost::asio::io_context> ioc = nullptr;
+template <uint32_t State>
+std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
+                  "UdpClientBuilder: Mandatory handlers must be set.");
+  }
+#endif
+
+  std::unique_ptr<wrapper::UdpClient> client;
+  config::UdpConfig cfg;
+  cfg.local_address = local_address_;
+  cfg.local_port = local_port_;
+  cfg.remote_address = remote_host_;
+  cfg.remote_port = remote_port_;
+
   if (independent_context_) {
-    ioc = std::make_shared<boost::asio::io_context>();
+    client = std::make_unique<wrapper::UdpClient>(cfg, std::make_shared<boost::asio::io_context>());
+    client->manage_external_context(true);
+  } else {
+    client = std::make_unique<wrapper::UdpClient>(cfg);
   }
 
-  if (bp_strategy_set_) cfg_.backpressure_strategy = bp_strategy_;
-  cfg_.backpressure_threshold = get_effective_backpressure_threshold();
+  if (this->on_data_) client->on_data(this->on_data_);
+  if (this->on_connect_) client->on_connect(this->on_connect_);
+  if (this->on_disconnect_) client->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) client->on_error(this->on_error_);
 
-  auto udp = std::make_unique<wrapper::UdpClient>(cfg_, ioc);
-  if (independent_context_) {
-    udp->manage_external_context(true);
+  if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
+  client->backpressure_threshold(this->get_effective_backpressure_threshold());
+
+  if (this->framer_factory_) {
+    client->framer(this->framer_factory_());
   }
-
-  if (on_data_) udp->on_data(on_data_);
-  if (on_connect_) udp->on_connect(on_connect_);
-  if (on_disconnect_) udp->on_disconnect(on_disconnect_);
-  if (on_error_) udp->on_error(on_error_);
-
-  if (framer_factory_) {
-    udp->framer(framer_factory_());
-  }
-  if (on_message_) {
-    udp->on_message(std::move(on_message_));
+  if (this->on_message_) {
+    client->on_message(std::move(this->on_message_));
   }
 
   if (auto_start_) {
-    udp->auto_start(true);
+    client->auto_start(true);
   }
 
-  return udp;
+  return client;
 }
 
-UdpClientBuilder& UdpClientBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::local_port(uint16_t port) {
-  cfg_.local_port = port;
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::local_address(const std::string& address) {
+  local_address_ = address;
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::remote(const std::string& address, uint16_t port) {
-  cfg_.remote_address = address;
-  cfg_.remote_port = port;
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::remote_endpoint(const std::string& host, uint16_t port) {
+  remote_host_ = host;
+  remote_port_ = port;
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::broadcast(bool enable) {
-  cfg_.enable_broadcast = enable;
-  return *this;
+// UdpServerBuilder implementation
+
+template <uint32_t State>
+UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)
+    : local_port_(local_port),
+      local_address_("0.0.0.0"),
+      auto_start_(false),
+      independent_context_(false) {
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
 }
 
-UdpClientBuilder& UdpClientBuilder::reuse_address(bool enable) {
-  cfg_.reuse_address = enable;
-  return *this;
-}
-
-// --- UdpServerBuilder Implementation ---
-
-UdpServerBuilder::UdpServerBuilder(uint16_t local_port) : auto_start_(false), independent_context_(false) {
-  cfg_.local_port = local_port;
-}
-
-std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
-  std::shared_ptr<boost::asio::io_context> ioc = nullptr;
-  if (independent_context_) {
-    ioc = std::make_shared<boost::asio::io_context>();
+template <uint32_t State>
+std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
+                  "UdpServerBuilder: Mandatory handlers must be set.");
   }
+#endif
 
-  if (bp_strategy_set_) cfg_.backpressure_strategy = bp_strategy_;
-  cfg_.backpressure_threshold = get_effective_backpressure_threshold();
+  std::unique_ptr<wrapper::UdpServer> server;
+  config::UdpConfig cfg;
+  cfg.local_address = local_address_;
+  cfg.local_port = local_port_;
 
-  auto server = std::make_unique<wrapper::UdpServer>(cfg_, ioc);
   if (independent_context_) {
+    server = std::make_unique<wrapper::UdpServer>(cfg, std::make_shared<boost::asio::io_context>());
     server->manage_external_context(true);
+  } else {
+    server = std::make_unique<wrapper::UdpServer>(cfg);
   }
 
-  if (on_data_) server->on_data(on_data_);
-  if (on_connect_) server->on_connect(on_connect_);
-  if (on_disconnect_) server->on_disconnect(on_disconnect_);
-  if (on_error_) server->on_error(on_error_);
+  if (this->on_data_) server->on_data(this->on_data_);
+  if (this->on_connect_) server->on_connect(this->on_connect_);
+  if (this->on_disconnect_) server->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) server->on_error(this->on_error_);
 
-  if (framer_factory_) {
-    server->framer(framer_factory_);
+  if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
+  server->backpressure_threshold(this->get_effective_backpressure_threshold());
+
+  if (this->framer_factory_) {
+    // Corrected: ServerInterface::framer expects std::function factory
+    server->framer(this->framer_factory_);
   }
-
-  if (on_message_) {
-    server->on_message(on_message_);
+  if (this->on_message_) {
+    server->on_message(std::move(this->on_message_));
   }
 
   if (auto_start_) {
-    server->start();
+    server->auto_start(true);
   }
 
   return server;
 }
 
-UdpServerBuilder& UdpServerBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::local_port(uint16_t port) {
-  cfg_.local_port = port;
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::local_address(const std::string& address) {
+  local_address_ = address;
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::broadcast(bool enable) {
-  cfg_.enable_broadcast = enable;
-  return *this;
-}
-
-UdpServerBuilder& UdpServerBuilder::reuse_address(bool enable) {
-  cfg_.reuse_address = enable;
-  return *this;
-}
+// Explicit template instantiations
+template class UdpClientBuilder<BuilderState::Ready>;
+template class UdpServerBuilder<BuilderState::Ready>;
 
 }  // namespace builder
 }  // namespace unilink

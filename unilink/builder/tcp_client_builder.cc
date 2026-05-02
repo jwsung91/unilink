@@ -24,7 +24,8 @@
 namespace unilink {
 namespace builder {
 
-TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
+template <uint32_t State>
+TcpClientBuilder<State>::TcpClientBuilder(const std::string& host, uint16_t port)
     : host_(host),
       port_(port),
       auto_start_(false),
@@ -39,7 +40,15 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
   AutoInitializer::ensure_io_context_running();
 }
 
-std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
+template <uint32_t State>
+std::unique_ptr<wrapper::TcpClient> TcpClientBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
+                  "TcpClientBuilder: Mandatory handlers (on_data/on_message and on_error) must be registered.");
+  }
+#endif
+
   std::unique_ptr<wrapper::TcpClient> client;
   if (independent_context_) {
     client = std::make_unique<wrapper::TcpClient>(host_, port_, std::make_shared<boost::asio::io_context>());
@@ -48,23 +57,23 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
     client = std::make_unique<wrapper::TcpClient>(host_, port_);
   }
 
-  if (on_data_) client->on_data(on_data_);
-  if (on_connect_) client->on_connect(on_connect_);
-  if (on_disconnect_) client->on_disconnect(on_disconnect_);
-  if (on_error_) client->on_error(on_error_);
+  if (this->on_data_) client->on_data(this->on_data_);
+  if (this->on_connect_) client->on_connect(this->on_connect_);
+  if (this->on_disconnect_) client->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) client->on_error(this->on_error_);
 
   client->retry_interval(retry_interval_);
   client->max_retries(max_retries_);
   client->connection_timeout(connection_timeout_);
 
-  if (bp_strategy_set_) client->backpressure_strategy(bp_strategy_);
-  client->backpressure_threshold(get_effective_backpressure_threshold());
+  if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
+  client->backpressure_threshold(this->get_effective_backpressure_threshold());
 
-  if (framer_factory_) {
-    client->framer(framer_factory_());
+  if (this->framer_factory_) {
+    client->framer(this->framer_factory_());
   }
-  if (on_message_) {
-    client->on_message(std::move(on_message_));
+  if (this->on_message_) {
+    client->on_message(std::move(this->on_message_));
   }
 
   if (auto_start_) {
@@ -74,30 +83,38 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   return client;
 }
 
-TcpClientBuilder& TcpClientBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::retry_interval(std::chrono::milliseconds interval) {
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::retry_interval(std::chrono::milliseconds interval) {
   retry_interval_ = interval;
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::max_retries(int max_retries) {
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::max_retries(int max_retries) {
   max_retries_ = max_retries;
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::connection_timeout(std::chrono::milliseconds timeout) {
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::connection_timeout(std::chrono::milliseconds timeout) {
   connection_timeout_ = timeout;
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
+
+// Explicit template instantiations
+template class TcpClientBuilder<BuilderState::Ready>;
 
 }  // namespace builder
 }  // namespace unilink

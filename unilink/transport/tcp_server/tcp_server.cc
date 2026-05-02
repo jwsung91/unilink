@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <boost/asio.hpp>
+#include <format>
 #include <future>
 #include <iostream>
 #include <mutex>
@@ -46,7 +47,7 @@ struct TcpServer::Impl {
   bool owns_ioc_;
   bool uses_global_ioc_;
   net::io_context& ioc_;
-  std::thread ioc_thread_;
+  std::jthread ioc_thread_;
 
   std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
   config::TcpServerConfig cfg_;
@@ -99,14 +100,12 @@ struct TcpServer::Impl {
   ~Impl() {
     try {
       stopping_.store(true);
-      if (owns_ioc_) {
-        ioc_.stop();
-      }
       if (ioc_thread_.joinable()) {
-        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-          ioc_thread_.join();
-        } else {
+        if (std::this_thread::get_id() == ioc_thread_.get_id()) {
           ioc_thread_.detach();
+        } else {
+          ioc_thread_.request_stop();
+          ioc_thread_.join();
         }
       }
       perform_cleanup();
@@ -135,7 +134,8 @@ struct TcpServer::Impl {
 
     auto address = net::ip::make_address(cfg_.bind_address, ec);
     if (ec) {
-      UNILINK_LOG_ERROR("tcp_server", "bind", "Invalid bind address: " + cfg_.bind_address + ", " + ec.message());
+      UNILINK_LOG_ERROR("tcp_server", "bind",
+                        std::format("Invalid bind address: {}, {}", cfg_.bind_address, ec.message()));
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
@@ -144,7 +144,7 @@ struct TcpServer::Impl {
     if (!acceptor_->is_open()) {
       acceptor_->open(address.is_v6() ? tcp::v6() : tcp::v4(), ec);
       if (ec) {
-        UNILINK_LOG_ERROR("tcp_server", "open", "Failed to open acceptor: " + ec.message());
+        UNILINK_LOG_ERROR("tcp_server", "open", std::format("Failed to open acceptor: {}", ec.message()));
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -166,8 +166,7 @@ struct TcpServer::Impl {
         });
         return;
       } else {
-        UNILINK_LOG_ERROR("tcp_server", "bind",
-                          "Failed to bind to port " + std::to_string(cfg_.port) + ": " + ec.message());
+        UNILINK_LOG_ERROR("tcp_server", "bind", std::format("Failed to bind to port {}: {}", cfg_.port, ec.message()));
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -177,7 +176,7 @@ struct TcpServer::Impl {
     acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     if (ec) {
       UNILINK_LOG_ERROR("tcp_server", "listen",
-                        "Failed to listen on port " + std::to_string(cfg_.port) + ": " + ec.message());
+                        std::format("Failed to listen on port {}: {}", cfg_.port, ec.message()));
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
@@ -218,7 +217,7 @@ struct TcpServer::Impl {
       auto rep = sock.remote_endpoint(ep_ec);
       std::string client_info = "unknown";
       if (!ep_ec) {
-        client_info = rep.address().to_string() + ":" + std::to_string(rep.port());
+        client_info = std::format("{}:{}", rep.address().to_string(), rep.port());
       }
 
       if (accept_impl->client_limit_enabled_) {
@@ -389,7 +388,12 @@ struct TcpServer::Impl {
     }
 
     if (owns_ioc_ && ioc_thread_.joinable()) {
-      ioc_thread_.join();
+      if (std::this_thread::get_id() == ioc_thread_.get_id()) {
+        ioc_thread_.detach();
+      } else {
+        ioc_thread_.request_stop();
+        ioc_thread_.join();
+      }
       ioc_.restart();
     }
   }
@@ -444,7 +448,13 @@ void TcpServer::start() {
   }
 
   if (impl->owns_ioc_) {
-    impl->ioc_thread_ = std::thread([impl] { impl->ioc_.run(); });
+    impl->ioc_thread_ = std::jthread([impl](std::stop_token st) {
+      try {
+        std::stop_callback cb(st, [impl] { impl->ioc_.stop(); });
+        impl->ioc_.run();
+      } catch (...) {
+      }
+    });
   }
   auto self = shared_from_this();
   if (impl->ioc_.get_executor().running_in_this_thread()) {

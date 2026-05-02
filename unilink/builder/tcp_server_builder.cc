@@ -16,32 +16,39 @@
 
 #include "unilink/builder/tcp_server_builder.hpp"
 
-#include <stdexcept>
+#include <boost/asio/io_context.hpp>
 
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace builder {
 
-TcpServerBuilder::TcpServerBuilder(uint16_t port)
+template <uint32_t State>
+TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
     : port_(port),
+      bind_address_("0.0.0.0"),
       auto_start_(false),
       independent_context_(false),
-      enable_port_retry_(false),
-      max_port_retries_(3),
-      port_retry_interval_ms_(1000),
-      idle_timeout_(0),
       max_clients_(0),
-      client_limit_set_(false) {
+      client_limit_enabled_(false),
+      port_retry_enabled_(false),
+      max_port_retries_(10),
+      port_retry_interval_ms_(1000) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
 
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
 
-std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
+template <uint32_t State>
+std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    throw diagnostics::BuilderException("TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
+  }
+#endif
+
   std::unique_ptr<wrapper::TcpServer> server;
   if (independent_context_) {
     server = std::make_unique<wrapper::TcpServer>(port_, std::make_shared<boost::asio::io_context>());
@@ -50,35 +57,23 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server = std::make_unique<wrapper::TcpServer>(port_);
   }
 
-  if (on_data_) server->on_data(on_data_);
-  if (on_connect_) server->on_connect(on_connect_);
-  if (on_disconnect_) server->on_disconnect(on_disconnect_);
-  if (on_error_) server->on_error(on_error_);
+  if (this->on_data_) server->on_data(this->on_data_);
+  if (this->on_connect_) server->on_connect(this->on_connect_);
+  if (this->on_disconnect_) server->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) server->on_error(this->on_error_);
 
-  if (framer_factory_) {
-    server->framer(framer_factory_);
+  if (client_limit_enabled_) {
+    server->max_clients(max_clients_);
   }
 
-  if (on_message_) {
-    server->on_message(on_message_);
+  if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
+  server->backpressure_threshold(this->get_effective_backpressure_threshold());
+
+  if (this->framer_factory_) {
+    server->framer(this->framer_factory_);
   }
-
-  if (bp_strategy_set_) server->backpressure_strategy(bp_strategy_);
-  server->backpressure_threshold(get_effective_backpressure_threshold());
-
-  if (enable_port_retry_) {
-    server->port_retry(true, max_port_retries_, port_retry_interval_ms_);
-  }
-
-  if (idle_timeout_.count() > 0) {
-    server->idle_timeout(idle_timeout_);
-  }
-
-  if (client_limit_set_) {
-    if (max_clients_ == 0)
-      server->unlimited_clients();
-    else
-      server->max_clients(max_clients_);
+  if (this->on_message_) {
+    server->on_message(std::move(this->on_message_));
   }
 
   if (auto_start_) {
@@ -88,49 +83,54 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   return server;
 }
 
-TcpServerBuilder& TcpServerBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::bind_address(const std::string& address) {
+  bind_address_ = address;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::port_retry(bool enable, int max_retries, int retry_interval_ms) {
-  enable_port_retry_ = enable;
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::max_clients(uint32_t max_clients) {
+  max_clients_ = max_clients;
+  client_limit_enabled_ = true;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::enable_port_retry(bool enable) {
+  port_retry_enabled_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::max_port_retries(uint32_t max_retries) {
   max_port_retries_ = max_retries;
-  port_retry_interval_ms_ = retry_interval_ms;
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {
-  idle_timeout_ = timeout;
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry_interval(std::chrono::milliseconds interval) {
+  port_retry_interval_ms_ = static_cast<uint32_t>(interval.count());
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::max_clients(size_t max) {
-  if (max == 0) throw std::invalid_argument("Client limit cannot be 0");
-  if (max == 1) throw std::invalid_argument("Use single_client() for 1 client limit");
-  max_clients_ = max;
-  client_limit_set_ = true;
-  return *this;
-}
-
-TcpServerBuilder& TcpServerBuilder::single_client() {
-  max_clients_ = 1;  // Simplified: actually handled by TcpServer's set_client_limit(1)
-  client_limit_set_ = true;
-  return *this;
-}
-
-TcpServerBuilder& TcpServerBuilder::multi_client(size_t max) { return max_clients(max); }
-
-TcpServerBuilder& TcpServerBuilder::unlimited_clients() {
-  max_clients_ = 0;
-  client_limit_set_ = true;
-  return *this;
-}
+// Explicit template instantiations
+template class TcpServerBuilder<BuilderState::None>;
+template class TcpServerBuilder<BuilderState::HasData>;
+template class TcpServerBuilder<BuilderState::HasError>;
+template class TcpServerBuilder<BuilderState::Ready>;
 
 }  // namespace builder
 }  // namespace unilink

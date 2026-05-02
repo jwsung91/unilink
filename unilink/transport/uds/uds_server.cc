@@ -19,6 +19,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <cstdio>
+#include <format>
 #include <mutex>
 #include <string_view>
 #include <thread>
@@ -42,7 +43,7 @@ struct UdsServer::Impl {
   std::unique_ptr<net::io_context> owned_ioc_;
   net::io_context* ioc_ = nullptr;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
-  std::thread ioc_thread_;
+  std::jthread ioc_thread_;
   bool owns_ioc_ = true;
 
   std::atomic<bool> stopping_{false};
@@ -75,12 +76,12 @@ struct UdsServer::Impl {
       work_guard_.reset();
     }
     if (ioc_ && owns_ioc_) {
-      ioc_->stop();
       if (ioc_thread_.joinable()) {
-        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-          ioc_thread_.join();
-        } else {
+        if (std::this_thread::get_id() == ioc_thread_.get_id()) {
           ioc_thread_.detach();
+        } else {
+          ioc_thread_.request_stop();
+          ioc_thread_.join();
         }
       }
     }
@@ -131,7 +132,7 @@ void UdsServer::start() {
   boost::system::error_code ec;
   impl_->acceptor_->open(uds(), ec);
   if (ec) {
-    UNILINK_LOG_ERROR("uds_server", "start", "Failed to open acceptor: " + ec.message());
+    UNILINK_LOG_ERROR("uds_server", "start", std::format("Failed to open acceptor: {}", ec.message()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -141,7 +142,7 @@ void UdsServer::start() {
   try {
     endpoint = uds::endpoint(impl_->cfg_.socket_path);
   } catch (const std::exception& e) {
-    UNILINK_LOG_ERROR("uds_server", "start", "Invalid UDS endpoint: " + std::string(e.what()));
+    UNILINK_LOG_ERROR("uds_server", "start", std::format("Invalid UDS endpoint: {}", e.what()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -149,7 +150,8 @@ void UdsServer::start() {
 
   impl_->acceptor_->bind(endpoint, ec);
   if (ec) {
-    UNILINK_LOG_ERROR("uds_server", "start", "Failed to bind to " + impl_->cfg_.socket_path + ": " + ec.message());
+    UNILINK_LOG_ERROR("uds_server", "start",
+                      std::format("Failed to bind to {}: {}", impl_->cfg_.socket_path, ec.message()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -157,7 +159,7 @@ void UdsServer::start() {
 
   impl_->acceptor_->listen(net::socket_base::max_listen_connections, ec);
   if (ec) {
-    UNILINK_LOG_ERROR("uds_server", "start", "Failed to listen: " + ec.message());
+    UNILINK_LOG_ERROR("uds_server", "start", std::format("Failed to listen: {}", ec.message()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -172,9 +174,10 @@ void UdsServer::start() {
     }
     impl_->work_guard_ =
         std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(net::make_work_guard(*impl_->ioc_));
-    impl_->ioc_thread_ = std::thread([this]() {
+    impl_->ioc_thread_ = std::jthread([impl = impl_.get()](std::stop_token st) {
       try {
-        impl_->ioc_->run();
+        std::stop_callback cb(st, [impl] { impl->ioc_->stop(); });
+        impl->ioc_->run();
       } catch (...) {
       }
     });
@@ -407,7 +410,7 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
     } else {
       // Log only real errors, not operation_aborted
       if (ec != boost::asio::error::operation_aborted) {
-        UNILINK_LOG_ERROR("uds_server", "accept", "Accept failed: " + ec.message());
+        UNILINK_LOG_ERROR("uds_server", "accept", std::format("Accept failed: {}", ec.message()));
       }
     }
   });

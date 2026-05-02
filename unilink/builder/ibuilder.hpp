@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <functional>
 #include <memory>
 #include <string>
@@ -34,15 +35,31 @@ namespace unilink {
 namespace builder {
 
 /**
- * @brief Generic Builder interface for fluent API pattern
- *
- * This interface provides a common base for all builder classes,
- * enabling a consistent fluent API across different wrapper types.
- *
- * @tparam T The product type that this builder creates
- * @tparam Derived The derived builder type (CRTP)
+ * @brief Concepts for mandatory handler validation
  */
-template <typename T, typename Derived>
+template <typename T>
+concept DataHandler = std::invocable<T, const wrapper::MessageContext&>;
+
+template <typename T>
+concept ErrorHandler = std::invocable<T, const wrapper::ErrorContext&>;
+
+template <typename T>
+concept ConnectionHandler = std::invocable<T, const wrapper::ConnectionContext&>;
+
+/**
+ * @brief Builder state bitmask for compile-time tracking
+ */
+enum BuilderState : uint32_t {
+  None = 0,
+  HasData = 1 << 0,
+  HasError = 1 << 1,
+  Ready = HasData | HasError
+};
+
+/**
+ * @brief Generic Builder interface for fluent API pattern
+ */
+template <typename T, typename Derived, uint32_t State = BuilderState::None>
 class BuilderInterface {
  public:
   virtual ~BuilderInterface() = default;
@@ -54,57 +71,42 @@ class BuilderInterface {
 
   /**
    * @brief Build and return the configured product
-   * @return std::unique_ptr<T> The configured wrapper instance
    */
   virtual std::unique_ptr<T> build() = 0;
 
   /**
    * @brief Enable auto-manage functionality
-   * @param auto_start Whether to automatically manage the wrapper lifecycle
-   * @return Derived& Reference to this builder for method chaining
    */
   virtual Derived& auto_start(bool auto_start = true) = 0;
 
   /**
    * @brief Set data handler callback
-   * @param handler Function to handle incoming data with context
-   * @return Derived& Reference to this builder for method chaining
    */
-  Derived& on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-    on_data_ = std::move(handler);
-    return static_cast<Derived&>(*this);
+  template <DataHandler F>
+  auto on_data(F&& handler) {
+    on_data_ = std::forward<F>(handler);
+    return static_cast<typename Derived::template Rebind<State | BuilderState::HasData>&>(*this);
   }
 
   /**
    * @brief Set data handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return Derived& Reference to this builder for method chaining
    */
   template <typename U, typename F>
-  Derived& on_data(U* obj, F method) {
+  auto on_data(U* obj, F method) {
     return on_data([obj, method](const wrapper::MessageContext& ctx) { (obj->*method)(ctx); });
   }
 
   /**
    * @brief Set connection handler callback
-   * @param handler Function to handle connection events with context
-   * @return Derived& Reference to this builder for method chaining
    */
-  Derived& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    on_connect_ = std::move(handler);
+  template <ConnectionHandler F>
+  Derived& on_connect(F&& handler) {
+    on_connect_ = std::forward<F>(handler);
     return static_cast<Derived&>(*this);
   }
 
   /**
    * @brief Set connection handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return Derived& Reference to this builder for method chaining
    */
   template <typename U, typename F>
   Derived& on_connect(U* obj, F method) {
@@ -113,21 +115,15 @@ class BuilderInterface {
 
   /**
    * @brief Set disconnection handler callback
-   * @param handler Function to handle disconnection events with context
-   * @return Derived& Reference to this builder for method chaining
    */
-  Derived& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    on_disconnect_ = std::move(handler);
+  template <ConnectionHandler F>
+  Derived& on_disconnect(F&& handler) {
+    on_disconnect_ = std::forward<F>(handler);
     return static_cast<Derived&>(*this);
   }
 
   /**
    * @brief Set disconnection handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return Derived& Reference to this builder for method chaining
    */
   template <typename U, typename F>
   Derived& on_disconnect(U* obj, F method) {
@@ -136,24 +132,18 @@ class BuilderInterface {
 
   /**
    * @brief Set error handler callback
-   * @param handler Function to handle error events with context
-   * @return Derived& Reference to this builder for method chaining
    */
-  Derived& on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-    on_error_ = std::move(handler);
-    return static_cast<Derived&>(*this);
+  template <ErrorHandler F>
+  auto on_error(F&& handler) {
+    on_error_ = std::forward<F>(handler);
+    return static_cast<typename Derived::template Rebind<State | BuilderState::HasError>&>(*this);
   }
 
   /**
    * @brief Set error handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return Derived& Reference to this builder for method chaining
    */
   template <typename U, typename F>
-  Derived& on_error(U* obj, F method) {
+  auto on_error(U* obj, F method) {
     return on_error([obj, method](const wrapper::ErrorContext& ctx) { (obj->*method)(ctx); });
   }
 
@@ -161,8 +151,6 @@ class BuilderInterface {
 
   /**
    * @brief Set a custom framer factory
-   * @param factory Function that creates a unique_ptr to an IFramer
-   * @return Derived& Reference to this builder
    */
   Derived& framer(std::function<std::unique_ptr<framer::IFramer>()> factory) {
     framer_factory_ = std::move(factory);
@@ -170,11 +158,7 @@ class BuilderInterface {
   }
 
   /**
-   * @brief Activate line-delimited framing (e.g., newline-separated messages).
-   * @param delimiter Delimiter string (default: "\n")
-   * @param include_delimiter Whether to include delimiter in each message
-   * @param max_length Maximum message length before an error is raised
-   * @return Derived& Reference to this builder
+   * @brief Activate line-delimited framing
    */
   Derived& use_line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
                            size_t max_length = 65536) {
@@ -186,11 +170,7 @@ class BuilderInterface {
   }
 
   /**
-   * @brief Activate binary packet framing with explicit start/end byte patterns.
-   * @param start_pattern Byte sequence marking the beginning of a packet
-   * @param end_pattern Byte sequence marking the end of a packet
-   * @param max_length Maximum packet length before an error is raised
-   * @return Derived& Reference to this builder
+   * @brief Activate binary packet framing
    */
   Derived& use_packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
                              size_t max_length) {
@@ -201,25 +181,19 @@ class BuilderInterface {
   }
 
   /**
-   * @brief Set message handler callback (for framed messages)
-   * @param handler Function to handle complete messages with context
-   * @return Derived& Reference to this builder
+   * @brief Set message handler callback
    */
-  Derived& on_message(std::function<void(const wrapper::MessageContext&)> handler) {
-    on_message_ = std::move(handler);
-    return static_cast<Derived&>(*this);
+  template <DataHandler F>
+  auto on_message(F&& handler) {
+    on_message_ = std::forward<F>(handler);
+    return static_cast<typename Derived::template Rebind<State | BuilderState::HasData>&>(*this);
   }
 
   /**
    * @brief Set message handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return Derived& Reference to this builder
    */
   template <typename U, typename F>
-  Derived& on_message(U* obj, F method) {
+  auto on_message(U* obj, F method) {
     return on_message([obj, method](const wrapper::MessageContext& ctx) { (obj->*method)(ctx); });
   }
 

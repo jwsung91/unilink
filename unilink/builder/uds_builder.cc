@@ -16,51 +16,64 @@
 
 #include "unilink/builder/uds_builder.hpp"
 
+#include <boost/asio/io_context.hpp>
+
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace builder {
 
 // UdsClientBuilder implementation
 
-UdsClientBuilder::UdsClientBuilder(const std::string& socket_path)
+template <uint32_t State>
+UdsClientBuilder<State>::UdsClientBuilder(const std::string& socket_path)
     : socket_path_(socket_path),
       auto_start_(false),
       independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
-      connection_timeout_(5000) {}
+      connection_timeout_(5000) {
+  if (socket_path.empty()) throw diagnostics::BuilderException("Socket path cannot be empty");
 
-std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
+  // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
+}
+
+template <uint32_t State>
+std::unique_ptr<wrapper::UdsClient> UdsClientBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
+                  "UdsClientBuilder: Mandatory handlers (on_data and on_error) must be set.");
+  }
+#endif
 
   std::unique_ptr<wrapper::UdsClient> client;
   if (independent_context_) {
-    auto ioc = std::make_shared<boost::asio::io_context>();
-    client = std::make_unique<wrapper::UdsClient>(socket_path_, ioc);
+    client = std::make_unique<wrapper::UdsClient>(socket_path_, std::make_shared<boost::asio::io_context>());
     client->manage_external_context(true);
   } else {
     client = std::make_unique<wrapper::UdsClient>(socket_path_);
   }
 
-  if (on_data_) client->on_data(on_data_);
-  if (on_connect_) client->on_connect(on_connect_);
-  if (on_disconnect_) client->on_disconnect(on_disconnect_);
-  if (on_error_) client->on_error(on_error_);
+  if (this->on_data_) client->on_data(this->on_data_);
+  if (this->on_connect_) client->on_connect(this->on_connect_);
+  if (this->on_disconnect_) client->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) client->on_error(this->on_error_);
 
   client->retry_interval(retry_interval_);
   client->max_retries(max_retries_);
   client->connection_timeout(connection_timeout_);
 
-  if (bp_strategy_set_) client->backpressure_strategy(bp_strategy_);
-  client->backpressure_threshold(get_effective_backpressure_threshold());
+  if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
+  client->backpressure_threshold(this->get_effective_backpressure_threshold());
 
-  if (framer_factory_) {
-    client->framer(framer_factory_());
+  if (this->framer_factory_) {
+    client->framer(this->framer_factory_());
   }
-  if (on_message_) {
-    client->on_message(std::move(on_message_));
+  if (this->on_message_) {
+    client->on_message(std::move(this->on_message_));
   }
 
   if (auto_start_) {
@@ -70,66 +83,87 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   return client;
 }
 
-UdsClientBuilder& UdsClientBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+UdsClientBuilder<State>& UdsClientBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::retry_interval(std::chrono::milliseconds milliseconds) {
-  retry_interval_ = milliseconds;
+template <uint32_t State>
+UdsClientBuilder<State>& UdsClientBuilder<State>::retry_interval(std::chrono::milliseconds interval) {
+  retry_interval_ = interval;
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::max_retries(int max_retries) {
+template <uint32_t State>
+UdsClientBuilder<State>& UdsClientBuilder<State>::max_retries(int max_retries) {
   max_retries_ = max_retries;
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::connection_timeout(std::chrono::milliseconds milliseconds) {
-  connection_timeout_ = milliseconds;
+template <uint32_t State>
+UdsClientBuilder<State>& UdsClientBuilder<State>::connection_timeout(std::chrono::milliseconds timeout) {
+  connection_timeout_ = timeout;
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+UdsClientBuilder<State>& UdsClientBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
 
 // UdsServerBuilder implementation
 
-UdsServerBuilder::UdsServerBuilder(const std::string& socket_path)
-    : socket_path_(socket_path), auto_start_(false), independent_context_(false), max_clients_(100) {}
+template <uint32_t State>
+UdsServerBuilder<State>::UdsServerBuilder(const std::string& socket_path)
+    : socket_path_(socket_path),
+      auto_start_(false),
+      independent_context_(false),
+      max_clients_(0),
+      client_limit_enabled_(false) {
+  if (socket_path.empty()) throw diagnostics::BuilderException("Socket path cannot be empty");
 
-std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
+  // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
+}
+
+template <uint32_t State>
+std::unique_ptr<wrapper::UdsServer> UdsServerBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    static_assert((State & BuilderState::Ready) == BuilderState::Ready,
+                  "UdsServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
+  }
+#endif
 
   std::unique_ptr<wrapper::UdsServer> server;
   if (independent_context_) {
-    auto ioc = std::make_shared<boost::asio::io_context>();
-    server = std::make_unique<wrapper::UdsServer>(socket_path_, ioc);
+    server = std::make_unique<wrapper::UdsServer>(socket_path_, std::make_shared<boost::asio::io_context>());
     server->manage_external_context(true);
   } else {
     server = std::make_unique<wrapper::UdsServer>(socket_path_);
   }
 
-  if (on_data_) server->on_data(on_data_);
-  if (on_connect_) server->on_connect(on_connect_);
-  if (on_disconnect_) server->on_disconnect(on_disconnect_);
-  if (on_error_) server->on_error(on_error_);
+  if (this->on_data_) server->on_data(this->on_data_);
+  if (this->on_connect_) server->on_connect(this->on_connect_);
+  if (this->on_disconnect_) server->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) server->on_error(this->on_error_);
 
-  if (framer_factory_) {
-    server->framer(framer_factory_);
+  if (client_limit_enabled_) {
+    server->max_clients(max_clients_);
   }
 
-  if (on_message_) {
-    server->on_message(on_message_);
+  if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
+  server->backpressure_threshold(this->get_effective_backpressure_threshold());
+
+  if (this->framer_factory_) {
+    // Corrected: ServerInterface::framer expects FramerFactory std::function
+    server->framer(this->framer_factory_);
   }
-
-  server->idle_timeout(idle_timeout_);
-  server->max_clients(max_clients_);
-
-  if (bp_strategy_set_) server->backpressure_strategy(bp_strategy_);
-  server->backpressure_threshold(get_effective_backpressure_threshold());
+  if (this->on_message_) {
+    server->on_message(std::move(this->on_message_));
+  }
 
   if (auto_start_) {
     server->auto_start(true);
@@ -138,30 +172,28 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   return server;
 }
 
-UdsServerBuilder& UdsServerBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-UdsServerBuilder& UdsServerBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
 
-UdsServerBuilder& UdsServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {
-  idle_timeout_ = timeout;
+template <uint32_t State>
+UdsServerBuilder<State>& UdsServerBuilder<State>::max_clients(uint32_t max_clients) {
+  max_clients_ = max_clients;
+  client_limit_enabled_ = true;
   return *this;
 }
 
-UdsServerBuilder& UdsServerBuilder::max_clients(size_t max) {
-  max_clients_ = max;
-  return *this;
-}
-
-UdsServerBuilder& UdsServerBuilder::unlimited_clients() {
-  max_clients_ = 1000000;
-  return *this;
-}
+// Explicit template instantiations
+template class UdsClientBuilder<BuilderState::Ready>;
+template class UdsServerBuilder<BuilderState::Ready>;
 
 }  // namespace builder
 }  // namespace unilink

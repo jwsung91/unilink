@@ -19,6 +19,7 @@
 #include <chrono>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/builder/ibuilder.hpp"
@@ -28,63 +29,125 @@
 namespace unilink {
 namespace builder {
 
-/**
- * @brief Modernized Builder for UdsClient
- */
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient, UdsClientBuilder> {
+
+/**
+ * @brief Modernized Builder for UdsClient
+ */
+template <uint32_t State = BuilderState::None>
+class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient, UdsClientBuilder<State>, State> {
  public:
+  template <uint32_t NewState>
+  using Rebind = UdsClientBuilder<NewState>;
+
   explicit UdsClientBuilder(const std::string& socket_path);
 
-  std::unique_ptr<wrapper::UdsClient> build() override;
-  UdsClientBuilder& auto_start(bool auto_start = true) override;
+  // Allow conversion between states
+  template <uint32_t OtherState>
+  UdsClientBuilder(UdsClientBuilder<OtherState>&& other) noexcept
+      : socket_path_(std::move(other.socket_path_)),
+        auto_start_(other.auto_start_),
+        independent_context_(other.independent_context_),
+        retry_interval_(other.retry_interval_),
+        max_retries_(other.max_retries_),
+        connection_timeout_(other.connection_timeout_) {
+    this->on_data_ = std::move(other.on_data_);
+    this->on_error_ = std::move(other.on_error_);
+    this->on_connect_ = std::move(other.on_connect_);
+    this->on_disconnect_ = std::move(other.on_disconnect_);
+    this->on_message_ = std::move(other.on_message_);
+    this->framer_factory_ = std::move(other.framer_factory_);
+    this->bp_strategy_ = other.bp_strategy_;
+    this->bp_threshold_ = other.bp_threshold_;
+    this->bp_strategy_set_ = other.bp_strategy_set_;
+    this->bp_threshold_set_ = other.bp_threshold_set_;
+  }
 
-  UdsClientBuilder& retry_interval(std::chrono::milliseconds milliseconds);
-  UdsClientBuilder& max_retries(int max_retries);
-  UdsClientBuilder& connection_timeout(std::chrono::milliseconds milliseconds);
-  UdsClientBuilder& independent_context(bool use_independent = true);
+  // Delete copy
+  UdsClientBuilder(const UdsClientBuilder&) = delete;
+  UdsClientBuilder& operator=(const UdsClientBuilder&) = delete;
+
+  std::unique_ptr<wrapper::UdsClient> build() override;
+
+  UdsClientBuilder<State>& auto_start(bool auto_start = true) override;
+  UdsClientBuilder<State>& retry_interval(std::chrono::milliseconds interval);
+  UdsClientBuilder<State>& max_retries(int max_retries);
+  UdsClientBuilder<State>& connection_timeout(std::chrono::milliseconds timeout);
+  UdsClientBuilder<State>& independent_context(bool use_independent = true);
 
  private:
+  template <uint32_t S>
+  friend class UdsClientBuilder;
+
   std::string socket_path_;
   bool auto_start_;
   bool independent_context_;
+
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
 };
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+
+using UdsClientBuilderDefault = UdsClientBuilder<BuilderState::None>;
 
 /**
  * @brief Modernized Builder for UdsServer
  */
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4251)
-#endif
-class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer, UdsServerBuilder> {
+template <uint32_t State = BuilderState::None>
+class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer, UdsServerBuilder<State>, State> {
  public:
+  template <uint32_t NewState>
+  using Rebind = UdsServerBuilder<NewState>;
+
   explicit UdsServerBuilder(const std::string& socket_path);
 
-  std::unique_ptr<wrapper::UdsServer> build() override;
-  UdsServerBuilder& auto_start(bool auto_start = true) override;
+  // Allow conversion between states
+  template <uint32_t OtherState>
+  UdsServerBuilder(UdsServerBuilder<OtherState>&& other) noexcept
+      : socket_path_(std::move(other.socket_path_)),
+        auto_start_(other.auto_start_),
+        independent_context_(other.independent_context_),
+        max_clients_(other.max_clients_),
+        client_limit_enabled_(other.client_limit_enabled_) {
+    this->on_data_ = std::move(other.on_data_);
+    this->on_error_ = std::move(other.on_error_);
+    this->on_connect_ = std::move(other.on_connect_);
+    this->on_disconnect_ = std::move(other.on_disconnect_);
+    this->on_message_ = std::move(other.on_message_);
+    this->framer_factory_ = std::move(other.framer_factory_);
+    this->bp_strategy_ = other.bp_strategy_;
+    this->bp_threshold_ = other.bp_threshold_;
+    this->bp_strategy_set_ = other.bp_strategy_set_;
+    this->bp_threshold_set_ = other.bp_threshold_set_;
+  }
 
-  UdsServerBuilder& independent_context(bool use_independent = true);
-  UdsServerBuilder& idle_timeout(std::chrono::milliseconds timeout);
-  UdsServerBuilder& max_clients(size_t max);
-  UdsServerBuilder& unlimited_clients();
+  // Delete copy
+  UdsServerBuilder(const UdsServerBuilder&) = delete;
+  UdsServerBuilder& operator=(const UdsServerBuilder&) = delete;
+
+  std::unique_ptr<wrapper::UdsServer> build() override;
+
+  UdsServerBuilder<State>& auto_start(bool auto_start = true) override;
+  UdsServerBuilder<State>& independent_context(bool use_independent = true);
+  UdsServerBuilder<State>& max_clients(uint32_t max_clients);
 
  private:
+  template <uint32_t S>
+  friend class UdsServerBuilder;
+
   std::string socket_path_;
   bool auto_start_;
   bool independent_context_;
-  std::chrono::milliseconds idle_timeout_{0};
-  size_t max_clients_;
+
+  uint32_t max_clients_;
+  bool client_limit_enabled_;
 };
+
+using UdsServerBuilderDefault = UdsServerBuilder<BuilderState::None>;
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

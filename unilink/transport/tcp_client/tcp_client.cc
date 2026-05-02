@@ -460,7 +460,7 @@ void TcpClient::set_reconnect_policy(ReconnectPolicy policy) {
 
 void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64_t seq) {
   resolver_.async_resolve(
-      cfg_.host, std::to_string(cfg_.port), [self, seq](auto ec, tcp::resolver::results_type results) {
+      cfg_.host, std::format("{}", cfg_.port), [self, seq](auto ec, tcp::resolver::results_type results) {
         if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
           return;
         }
