@@ -1,36 +1,29 @@
 <map id="unilink::diagnostics::Logger::level" name="unilink::diagnostics::Logger::level">
-<area shape="rect" id="Node000001" title="Get current log level." alt="" coords="1124,162,1272,202"/>
-<area shape="rect" id="Node000002" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a99248f647bafe1016fe4bca98e93779f" title=" " alt="" coords="927,5,1075,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1163,155,1074,81,1046,62,1049,58,1078,77,1166,150"/>
-<area shape="rect" id="Node000003" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#ac11431b7d1769399869154e5ac407f56" title=" " alt="" coords="720,43,872,97"/>
-<area shape="poly" id="edge18_Node000001_Node000003" title=" " alt="" coords="1113,161,1075,150,872,93,873,88,1077,145,1115,156"/>
-<area shape="rect" id="Node000007" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aa389aa5f38b5ae999769aa93682e6bcb" title=" " alt="" coords="715,121,877,176"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1110,177,877,158,878,153,1111,172"/>
-<area shape="rect" id="Node000008" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a8ebe61aa7e4b6333f0ed5adecc2f5ec1" title=" " alt="" coords="925,187,1076,241"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="1111,199,1077,204,1076,199,1110,194"/>
-<area shape="rect" id="Node000009" href="$classunilink_1_1diagnostics_1_1Logger.html#a0b8b5899e59b1c6beb7572fe937df82d" title=" " alt="" coords="927,266,1075,306"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="1154,212,1077,255,1050,268,1047,264,1075,250,1151,207"/>
-<area shape="rect" id="Node000016" href="$classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b" title="Set minimum log level." alt="" coords="927,330,1075,370"/>
-<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="1177,215,1135,268,1107,295,1078,320,1057,332,1055,328,1074,316,1104,291,1131,264,1173,211"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="913,51,873,59,872,54,913,46"/>
-<area shape="rect" id="Node000004" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#ad52c73ad91eaad48df0ed778e9f0f48e" title=" " alt="" coords="455,90,667,130"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="707,88,667,95,666,89,706,83"/>
-<area shape="rect" id="Node000005" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a7e8d81c56ab40421af8a4a1e4a9ee4dc" title=" " alt="" coords="208,90,407,130"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="441,113,407,113,407,107,441,107"/>
-<area shape="rect" id="Node000006" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a2c07457dc964378102e8797795cf4586" title=" " alt="" coords="5,83,160,137"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="194,113,160,113,160,107,194,107"/>
-<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="701,136,666,130,667,125,702,131"/>
-<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="912,188,877,177,878,172,913,183"/>
-<area shape="rect" id="Node000010" href="$classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115" title=" " alt="" coords="722,201,870,241"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="923,264,859,243,860,238,925,259"/>
-<area shape="rect" id="Node000011" href="$classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5" title=" " alt="" coords="722,265,870,305"/>
-<area shape="poly" id="edge12_Node000009_Node000011" title=" " alt="" coords="913,288,870,288,870,282,913,283"/>
-<area shape="rect" id="Node000012" href="$classunilink_1_1diagnostics_1_1Logger.html#a7f7c78e7d5cda5129036b660fd9f1f46" title=" " alt="" coords="722,329,870,369"/>
-<area shape="poly" id="edge13_Node000009_Node000012" title=" " alt="" coords="923,313,863,331,861,326,921,307"/>
-<area shape="rect" id="Node000013" href="$classunilink_1_1diagnostics_1_1Logger.html#a7ba92315a3aca3940aa2bf1f4aa7277e" title=" " alt="" coords="722,393,870,433"/>
-<area shape="poly" id="edge14_Node000009_Node000013" title=" " alt="" coords="934,315,927,320,912,335,904,351,895,367,879,383,859,395,856,390,876,379,891,363,899,348,908,332,924,316,931,311"/>
-<area shape="rect" id="Node000015" href="$classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116" title=" " alt="" coords="722,457,870,497"/>
-<area shape="poly" id="edge16_Node000009_Node000015" title=" " alt="" coords="931,316,927,320,915,336,909,351,904,382,899,414,892,430,879,447,864,459,860,454,875,443,888,427,894,412,899,381,904,349,911,333,923,316,927,312"/>
-<area shape="rect" id="Node000014" href="$namespaceunilink_1_1base.html#a07399b407f151a0fb40ac854476a40c5" title=" " alt="" coords="494,393,627,433"/>
-<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="708,415,628,415,628,410,708,410"/>
+<area shape="rect" id="Node000001" title="Get current log level." alt="" coords="880,197,1028,237"/>
+<area shape="rect" id="Node000002" href="$classunilink_1_1diagnostics_1_1Logger.html#a0b8b5899e59b1c6beb7572fe937df82d" title=" " alt="" coords="399,133,547,173"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="866,206,832,201,546,165,547,159,832,196,867,201"/>
+<area shape="rect" id="Node000009" href="$classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b" title="Set minimum log level." alt="" coords="399,197,547,237"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="866,220,547,220,547,215,866,215"/>
+<area shape="rect" id="Node000010" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a9be6d32b91caf51b6ed1e6c7ccaec4b8" title=" " alt="" coords="611,257,832,297"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="867,242,800,260,799,255,866,237"/>
+<area shape="rect" id="Node000003" href="$classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115" title=" " alt="" coords="187,5,335,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="433,127,387,93,333,60,310,48,312,43,336,55,390,89,436,123"/>
+<area shape="rect" id="Node000004" href="$classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5" title=" " alt="" coords="187,69,335,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="392,132,327,112,328,107,393,127"/>
+<area shape="rect" id="Node000005" href="$classunilink_1_1diagnostics_1_1Logger.html#a7f7c78e7d5cda5129036b660fd9f1f46" title=" " alt="" coords="187,133,335,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="384,156,335,156,335,151,384,151"/>
+<area shape="rect" id="Node000006" href="$classunilink_1_1diagnostics_1_1Logger.html#a7ba92315a3aca3940aa2bf1f4aa7277e" title=" " alt="" coords="187,197,335,237"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="393,180,328,200,327,195,392,175"/>
+<area shape="rect" id="Node000008" href="$classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116" title=" " alt="" coords="187,261,335,301"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="393,182,384,187,369,203,361,218,352,235,336,251,318,263,315,259,333,247,348,231,356,216,365,200,381,183,390,177"/>
+<area shape="rect" id="Node000007" href="$namespaceunilink_1_1base.html#a07399b407f151a0fb40ac854476a40c5" title=" " alt="" coords="5,197,139,237"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="173,220,139,220,139,215,173,215"/>
+<area shape="poly" id="edge11_Node000010_Node000002" title=" " alt="" coords="677,252,623,220,562,188,533,176,535,171,564,183,625,215,679,248"/>
+<area shape="poly" id="edge12_Node000010_Node000009" title=" " alt="" coords="624,257,546,238,547,232,625,252"/>
+<area shape="rect" id="Node000011" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a1010b32f814447316da185a64f408c5f" title=" " alt="" coords="399,261,547,301"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="597,282,547,283,547,277,597,277"/>
+<area shape="rect" id="Node000012" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a2c07457dc964378102e8797795cf4586" title=" " alt="" coords="395,326,550,381"/>
+<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="643,304,551,332,549,327,641,299"/>
+<area shape="rect" id="Node000013" href="$structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#ab424d3003c2b6ec43076a9943c5081f4" title=" " alt="" coords="383,405,563,459"/>
+<area shape="poly" id="edge14_Node000010_Node000013" title=" " alt="" coords="687,308,631,352,564,396,542,407,540,402,561,391,628,347,684,304"/>
 </map>

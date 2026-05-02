@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 570;
+var viewWidth = 772;
 var viewHeight = 86;
 var sectionId = 'dynsection-5';
 </script>
@@ -83,20 +83,20 @@ var sectionId = 'dynsection-5';
 </a>
 </g>
 </g>
-<!-- Node5 -->
-<g id="Node000005" class="node">
-<title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9" target="_top" xlink:title="Get singleton instance.">
+<!-- Node6 -->
+<g id="Node000006" class="node">
+<title>Node6</title>
+<g id="a_Node000006"><a xlink:href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9" target="_top" xlink:title="Get singleton instance.">
 <polygon fill="white" stroke="#666666" points="247,-30 136,-30 136,0 247,0 247,-30"/>
 <text text-anchor="start" x="144" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::diagnostics</text>
 <text text-anchor="middle" x="191.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">::Logger::instance</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node5 -->
-<g id="edge4_Node000001_Node000005" class="edge">
-<title>Node1&#45;&gt;Node5</title>
-<g id="a_edge4_Node000001_Node000005"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node6 -->
+<g id="edge6_Node000001_Node000006" class="edge">
+<title>Node1&#45;&gt;Node6</title>
+<g id="a_edge6_Node000001_Node000006"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M100.18,-30.54C108.41,-29.12 117.07,-27.63 125.62,-26.16"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="126.32,-29.59 135.58,-24.45 125.13,-22.69 126.32,-29.59"/>
 </a>
@@ -125,9 +125,9 @@ var sectionId = 'dynsection-5';
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="classunilink_1_1diagnostics_1_1Logger.html#a4a88b05c250af04b01f2a3d94473d0e3" target="_top" xlink:title="Get current log level.">
-<polygon fill="white" stroke="#666666" points="562,-78 451,-78 451,-48 562,-48 562,-78"/>
-<text text-anchor="start" x="459" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::diagnostics</text>
-<text text-anchor="middle" x="506.5" y="-55" font-family="Helvetica,sans-Serif" font-size="10.00">::Logger::level</text>
+<polygon fill="white" stroke="#666666" points="764,-77 653,-77 653,-47 764,-47 764,-77"/>
+<text text-anchor="start" x="661" y="-65" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::diagnostics</text>
+<text text-anchor="middle" x="708.5" y="-54" font-family="Helvetica,sans-Serif" font-size="10.00">::Logger::level</text>
 </a>
 </g>
 </g>
@@ -135,25 +135,53 @@ var sectionId = 'dynsection-5';
 <g id="edge3_Node000003_Node000004" class="edge">
 <title>Node3&#45;&gt;Node4</title>
 <g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M404.82,-63C416.39,-63 428.7,-63 440.59,-63"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="440.91,-66.5 450.91,-63 440.91,-59.5 440.91,-66.5"/>
+<path fill="none" stroke="#63b8ff" d="M404.51,-64.28C419.57,-64.58 435.92,-64.85 451,-65 524.77,-65.73 543.23,-66.22 617,-65 625.36,-64.86 634.15,-64.65 642.84,-64.4"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="643.06,-67.9 652.95,-64.1 642.85,-60.9 643.06,-67.9"/>
 </a>
 </g>
 </g>
-<!-- Node6 -->
-<g id="Node000006" class="node">
-<title>Node6</title>
-<g id="a_Node000006"><a xlink:href="classunilink_1_1diagnostics_1_1Logger.html#a144b6e7c317d47e2e4fb9e0109eb7a9d" target="_top" xlink:title=" ">
+<!-- Node5 -->
+<g id="Node000005" class="node">
+<title>Node5</title>
+<g id="a_Node000005"><a xlink:href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a9be6d32b91caf51b6ed1e6c7ccaec4b8" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="617,-56 451,-56 451,-26 617,-26 617,-56"/>
+<text text-anchor="start" x="459" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::diagnostics</text>
+<text text-anchor="middle" x="534" y="-33" font-family="Helvetica,sans-Serif" font-size="10.00">::Logger::Impl::to_spdlog_level</text>
+</a>
+</g>
+</g>
+<!-- Node3&#45;&gt;Node5 -->
+<g id="edge4_Node000003_Node000005" class="edge">
+<title>Node3&#45;&gt;Node5</title>
+<g id="a_edge4_Node000003_Node000005"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M404.91,-56.4C416.17,-55.04 428.33,-53.58 440.51,-52.12"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="441.21,-55.56 450.72,-50.89 440.38,-48.61 441.21,-55.56"/>
+</a>
+</g>
+</g>
+<!-- Node5&#45;&gt;Node4 -->
+<g id="edge5_Node000005_Node000004" class="edge">
+<title>Node5&#45;&gt;Node4</title>
+<g id="a_edge5_Node000005_Node000004"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M617.21,-51.01C625.72,-52.04 634.29,-53.09 642.57,-54.1"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="642.17,-57.57 652.52,-55.31 643.02,-50.62 642.17,-57.57"/>
+</a>
+</g>
+</g>
+<!-- Node7 -->
+<g id="Node000007" class="node">
+<title>Node7</title>
+<g id="a_Node000007"><a xlink:href="classunilink_1_1diagnostics_1_1Logger.html#a144b6e7c317d47e2e4fb9e0109eb7a9d" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="415,-30 283,-30 283,0 415,0 415,-30"/>
 <text text-anchor="start" x="291" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::diagnostics</text>
 <text text-anchor="middle" x="349" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">::Logger::default_logger</text>
 </a>
 </g>
 </g>
-<!-- Node5&#45;&gt;Node6 -->
-<g id="edge5_Node000005_Node000006" class="edge">
-<title>Node5&#45;&gt;Node6</title>
-<g id="a_edge5_Node000005_Node000006"><a xlink:title=" ">
+<!-- Node6&#45;&gt;Node7 -->
+<g id="edge7_Node000006_Node000007" class="edge">
+<title>Node6&#45;&gt;Node7</title>
+<g id="a_edge7_Node000006_Node000007"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M247.32,-15C255.56,-15 264.17,-15 272.74,-15"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="272.75,-18.5 282.75,-15 272.75,-11.5 272.75,-18.5"/>
 </a>

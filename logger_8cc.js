@@ -1,7 +1,6 @@
 var logger_8cc =
 [
+    [ "unilink::diagnostics::callback_sink< Mutex >", "classunilink_1_1diagnostics_1_1callback__sink.html", "classunilink_1_1diagnostics_1_1callback__sink" ],
     [ "unilink::diagnostics::Logger::Impl", "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl" ],
-    [ "unilink::diagnostics::Logger::Impl::FormatPart", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart" ],
-    [ "unilink::diagnostics::Logger::Impl::LogFormat", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat" ],
-    [ "unilink::diagnostics::Logger::Impl::TimestampBuffer", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer" ]
+    [ "callback_sink_mt", "logger_8cc.html#ac806d9d4e21cdca49053a7c3e316aaaa", null ]
 ];

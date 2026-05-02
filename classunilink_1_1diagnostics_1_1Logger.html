@@ -223,9 +223,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3dfe3e110e30c23ec9800a4ef18c0f51" id="r_a3dfe3e110e30c23ec9800a4ef18c0f51"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#a3dfe3e110e30c23ec9800a4ef18c0f51">async_logging_enabled</a> () const</td></tr>
 <tr class="memdesc:a3dfe3e110e30c23ec9800a4ef18c0f51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if async logging is enabled.  <br /></td></tr>
 <tr class="separator:a3dfe3e110e30c23ec9800a4ef18c0f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d95865a91294f933a01d52f5fc3feb2" id="r_a4d95865a91294f933a01d52f5fc3feb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html">AsyncLogStats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#a4d95865a91294f933a01d52f5fc3feb2">async_stats</a> () const</td></tr>
-<tr class="memdesc:a4d95865a91294f933a01d52f5fc3feb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get async logging statistics.  <br /></td></tr>
-<tr class="separator:a4d95865a91294f933a01d52f5fc3feb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2ba283a30ba91bc5cb75959e2f61eb0" id="r_af2ba283a30ba91bc5cb75959e2f61eb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#af2ba283a30ba91bc5cb75959e2f61eb0">set_callback</a> (<a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122">LogCallback</a> callback)</td></tr>
 <tr class="memdesc:af2ba283a30ba91bc5cb75959e2f61eb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set log callback.  <br /></td></tr>
 <tr class="separator:af2ba283a30ba91bc5cb75959e2f61eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -269,7 +266,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Centralized logging system with async support. </p>
 <p>Provides thread-safe, configurable logging with multiple output destinations, async processing, batch operations, and performance optimizations for production use. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00136">136</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00098">98</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aab6b65a72d045195df582a6c5c00f122" name="aab6b65a72d045195df582a6c5c00f122"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aab6b65a72d045195df582a6c5c00f122">&#9670;&#160;</a></span>LogCallback</h2>
@@ -283,7 +280,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00138">138</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00100">100</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -303,7 +300,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00491">491</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00239">239</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -402,35 +399,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Check if async logging is enabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00554">554</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-
-</div>
-</div>
-<a id="a4d95865a91294f933a01d52f5fc3feb2" name="a4d95865a91294f933a01d52f5fc3feb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d95865a91294f933a01d52f5fc3feb2">&#9670;&#160;</a></span>async_stats()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html">AsyncLogStats</a> unilink::diagnostics::Logger::async_stats </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get async logging statistics. </p>
-
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00556">556</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a4d95865a91294f933a01d52f5fc3feb2_cgraph.svg" width="438" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00321">321</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -466,13 +435,13 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00630">630</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00442">442</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a286630c83e07db4633e3f9a9f1f1c115_cgraph.svg" width="551" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a286630c83e07db4633e3f9a9f1f1c115_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -509,13 +478,13 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00614">614</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00426">426</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_ace307c5e28ee9971be657e431f31a8e5_cgraph.svg" width="551" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_ace307c5e28ee9971be657e431f31a8e5_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -543,12 +512,12 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00498">498</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00246">246</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a144b6e7c317d47e2e4fb9e0109eb7a9d_icgraph.svg" width="655" height="179"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -571,12 +540,12 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Check if logging is enabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00578">578</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00401">401</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_af0d271521653c3a590f00889471e7bcb_icgraph.svg" width="368" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -614,13 +583,13 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00626">626</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00438">438</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7f7c78e7d5cda5129036b660fd9f1f46_cgraph.svg" width="551" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7f7c78e7d5cda5129036b660fd9f1f46_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -642,7 +611,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Flush all outputs. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00582">582</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00405">405</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -678,19 +647,19 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00618">618</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00430">430</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7ba92315a3aca3940aa2bf1f4aa7277e_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-7-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7ba92315a3aca3940aa2bf1f4aa7277e_cgraph.svg" width="551" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7ba92315a3aca3940aa2bf1f4aa7277e_icgraph.svg" width="340" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -721,19 +690,19 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Get singleton instance. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00503">503</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00251">251</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a2e114f7695d5aac3b9a993be97c501c9_cgraph.svg" width="383" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-9-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a2e114f7695d5aac3b9a993be97c501c9_cgraph.svg" width="383" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a2e114f7695d5aac3b9a993be97c501c9_icgraph.svg" width="431" height="179"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -756,12 +725,12 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Get current log level. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00507">507</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00258">258</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a4a88b05c250af04b01f2a3d94473d0e3_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -805,19 +774,19 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00584">584</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00407">407</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a0b8b5899e59b1c6beb7572fe937df82d_cgraph.svg" width="624" height="79"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-12-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-12-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a0b8b5899e59b1c6beb7572fe937df82d_cgraph.svg" width="355" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-13-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a0b8b5899e59b1c6beb7572fe937df82d_icgraph.svg" width="536" height="307"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -910,7 +879,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00546">546</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00313">313</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -938,7 +907,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00564">564</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00323">323</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -966,7 +935,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00509">509</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00260">260</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -994,12 +963,12 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00576">576</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00399">399</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-14-content" class="dyncontent" style="display:none;">
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_af51329390a3c9fd12a6b53b28b6e508c_cgraph.svg" width="368" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1029,7 +998,14 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00518">518</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00278">278</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-14-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_ae27d90acc4c3646587ab4aa620bef18f_cgraph.svg" width="416" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1068,7 +1044,14 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00531">531</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00280">280</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-15-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-15-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_ada26b971ae75266aff644f17ecb670e8_icgraph.svg" width="416" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1096,7 +1079,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00580">580</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00403">403</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -1124,13 +1107,13 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00505">505</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-15-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-15-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00253">253</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-16-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-16-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-15-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7e8ec37c982ad0a16b56ad33ae62932b_cgraph.svg" width="355" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-16-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_a7e8ec37c982ad0a16b56ad33ae62932b_cgraph.svg" width="624" height="79"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1159,7 +1142,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00574">574</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00349">349</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -1195,13 +1178,13 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00622">622</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-<div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-16-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-16-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00434">434</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<div id="dynsection-17" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-17-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-17-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-16-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_ad60664c997885ffc6326d8c299189116_cgraph.svg" width="551" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-17-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1diagnostics_1_1Logger_ad60664c997885ffc6326d8c299189116_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -1216,7 +1199,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1diagnostics.html">diagnostics</a></li><li class="navelem"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a></li>
-    <li class="footer">Generated on Fri May 1 2026 22:29:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

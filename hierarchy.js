@@ -2,9 +2,11 @@ var hierarchy =
 [
     [ "unilink::memory::MemoryTracker::AllocationInfo", "structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html", null ],
     [ "unilink::diagnostics::AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", null ],
-    [ "unilink::diagnostics::AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", null ],
     [ "unilink::concurrency::AtomicState< StateType >", "classunilink_1_1concurrency_1_1AtomicState.html", null ],
     [ "unilink::builder::AutoInitializer", "classunilink_1_1builder_1_1AutoInitializer.html", null ],
+    [ "spdlog::sinks::base_sink", null, [
+      [ "unilink::diagnostics::callback_sink< Mutex >", "classunilink_1_1diagnostics_1_1callback__sink.html", null ]
+    ] ],
     [ "unilink::builder::BuilderInterface< T, Derived >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
     [ "unilink::builder::BuilderInterface< wrapper::Serial, SerialBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html", null ]
@@ -63,7 +65,6 @@ var hierarchy =
     [ "unilink::diagnostics::ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", null ],
     [ "unilink::diagnostics::ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", null ],
     [ "unilink::diagnostics::ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", null ],
-    [ "unilink::diagnostics::Logger::Impl::FormatPart", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html", null ],
     [ "unilink::memory::GlobalMemoryPool", "classunilink_1_1memory_1_1GlobalMemoryPool.html", null ],
     [ "unilink::memory::MemoryPool::HealthMetrics", "structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html", null ],
     [ "unilink::framer::IFramer", "classunilink_1_1framer_1_1IFramer.html", [
@@ -88,10 +89,7 @@ var hierarchy =
     [ "unilink::wrapper::UdsServer::Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html", null ],
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
     [ "unilink::concurrency::IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", null ],
-    [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", null ],
-    [ "unilink::diagnostics::Logger::Impl::LogFormat", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html", null ],
     [ "unilink::diagnostics::Logger", "classunilink_1_1diagnostics_1_1Logger.html", null ],
-    [ "unilink::diagnostics::LogRotation", "classunilink_1_1diagnostics_1_1LogRotation.html", null ],
     [ "unilink::diagnostics::LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", null ],
     [ "unilink::memory::MemoryPatternGenerator", "classunilink_1_1memory_1_1MemoryPatternGenerator.html", null ],
     [ "unilink::memory::MemoryPool", "classunilink_1_1memory_1_1MemoryPool.html", null ],
@@ -140,7 +138,6 @@ var hierarchy =
     [ "unilink::concurrency::ThreadSafeState< StateType >", "classunilink_1_1concurrency_1_1ThreadSafeState.html", null ],
     [ "unilink::concurrency::ThreadSafeState< base::LinkState >", "classunilink_1_1concurrency_1_1ThreadSafeState.html", null ],
     [ "unilink::interface::TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", null ],
-    [ "unilink::diagnostics::Logger::Impl::TimestampBuffer", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html", null ],
     [ "unilink::transport::UdpChannel::Impl::TxItem", "structunilink_1_1transport_1_1UdpChannel_1_1Impl_1_1TxItem.html", null ],
     [ "unilink::config::UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", null ],
     [ "unilink::interface::UdsAcceptorInterface", "classunilink_1_1interface_1_1UdsAcceptorInterface.html", [

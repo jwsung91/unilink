@@ -159,9 +159,9 @@ $(document).ready(function(){initNavTree('functions_c.html',''); initResizable()
 <div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_c" name="index_c"></a>- c -</h3><ul>
-<li>call_callback()&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a99248f647bafe1016fe4bca98e93779f">unilink::diagnostics::Logger::Impl</a></li>
-<li>callback_&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a932004f3a1396308ce21f620210be085">unilink::diagnostics::Logger::Impl</a></li>
 <li>callback_mtx_&#160;:&#160;<a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a7bac21aa3826b5fa226d3236b209966a">unilink::transport::TcpClient::Impl</a>, <a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a131b9c554866d0a445940ea9a731064e">unilink::transport::UdsClient::Impl</a></li>
+<li>callback_sink()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1callback__sink.html#ae7eb6da0e623061fa5d19ad75ceae7fc">unilink::diagnostics::callback_sink&lt; Mutex &gt;</a></li>
+<li>callback_sink_&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#ad269469df67c88ed72f6966582e6f60e">unilink::diagnostics::Logger::Impl</a></li>
 <li>cancel()&#160;:&#160;<a class="el" href="classunilink_1_1interface_1_1TimerInterface.html#a176b63ed332f5f26e417dac9ba173da9">unilink::interface::TimerInterface</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#abe516d6e8cd53de6370b736ab031beaf">unilink::transport::TcpServerSession</a></li>
 <li>category&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html#af4e2266aac1e309b00df03e1e7d629de">unilink::diagnostics::ErrorInfo</a></li>
 <li>category_string()&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a8a79a75dd8b77f302178afd3ff7ed665">unilink::diagnostics::ErrorInfo</a></li>
@@ -174,10 +174,8 @@ $(document).ready(function(){initNavTree('functions_c.html',''); initResizable()
 <li>channel_&#160;:&#160;<a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af217d88931fc25b893bf7a92c171cefa">unilink::wrapper::TcpClient::Impl</a>, <a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a61697a7b76a66ec72e66b3645c380784">unilink::wrapper::TcpServer::Impl</a>, <a class="el" href="structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a43ccc658c2a94cac3b64219bfc63787e">unilink::wrapper::UdsClient::Impl</a></li>
 <li>ChannelOptions&#160;:&#160;<a class="el" href="classunilink_1_1factory_1_1ChannelFactory.html#abc08377a370958821ed7fb6dbfee9fef">unilink::factory::ChannelFactory</a></li>
 <li>char_size&#160;:&#160;<a class="el" href="structunilink_1_1config_1_1SerialConfig.html#a417cbb35de0bacf99b3d89f5c1d8309b">unilink::config::SerialConfig</a></li>
-<li>check_and_rotate_log()&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#af740e587fbc15b84570cd287e58e6867">unilink::diagnostics::Logger::Impl</a></li>
 <li>check_bounds()&#160;:&#160;<a class="el" href="classunilink_1_1memory_1_1MemoryValidator.html#a7a2a0c6d8f2f1ec32b08090932427e38">unilink::memory::MemoryValidator</a></li>
 <li>cleanup_old_buffers()&#160;:&#160;<a class="el" href="classunilink_1_1memory_1_1MemoryPool.html#a8b53acaf5578381589d8b66dc86db51b">unilink::memory::MemoryPool</a></li>
-<li>cleanup_old_files()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1LogRotation.html#a2394a0537a209ca40abaac48a13edbc9">unilink::diagnostics::LogRotation</a></li>
 <li>clear()&#160;:&#160;<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeFlag.html#aa49cab05e83a828b9ec50a9ec70d6f8a">unilink::concurrency::ThreadSafeFlag</a>, <a class="el" href="classunilink_1_1config_1_1ConfigManager.html#a3856481d25a75bf4e58776c702b19ef8">unilink::config::ConfigManager</a>, <a class="el" href="classunilink_1_1config_1_1ConfigManagerInterface.html#a37ada42d153dca149cf6380a65e719cf">unilink::config::ConfigManagerInterface</a>, <a class="el" href="classunilink_1_1memory_1_1SafeDataBuffer.html#ae33b944688fa688519be978b53763d2f">unilink::memory::SafeDataBuffer</a></li>
 <li>clear_callbacks()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1ErrorHandler.html#aed798efec33785cec8e38068013f673a">unilink::diagnostics::ErrorHandler</a></li>
 <li>clear_state_change_callbacks()&#160;:&#160;<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#aacc09e9632ebc96702ac595d5776d42b">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a></li>
@@ -193,14 +191,11 @@ $(document).ready(function(){initNavTree('functions_c.html',''); initResizable()
 <li>close_socket()&#160;:&#160;<a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a2bf9054f0c8fd27463f96a29998e8e72">unilink::transport::TcpClient::Impl</a>, <a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a5fd9e984449413e16f0e89dabc0f9897">unilink::transport::UdpChannel::Impl</a>, <a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a405688ea64c396f211bb95acf254d2ce">unilink::transport::UdsClient::Impl</a></li>
 <li>code()&#160;:&#160;<a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html#a75baa0901a7b5c261e5f0f5615a13059">unilink::wrapper::ErrorContext</a></li>
 <li>compare_and_set()&#160;:&#160;<a class="el" href="classunilink_1_1concurrency_1_1AtomicState.html#a96d75928b7629ace9e6675b1ec3972ee">unilink::concurrency::AtomicState&lt; StateType &gt;</a>, <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeCounter.html#a438467bac5502a78915ff04cb6639ae5">unilink::concurrency::ThreadSafeCounter</a>, <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeFlag.html#afbd01e37dd32cf635c5d0f26ec8f767b">unilink::concurrency::ThreadSafeFlag</a>, <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a801aa228c55ce37a501c9313137140b2">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a></li>
-<li>component&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a">unilink::diagnostics::ErrorInfo</a>, <a class="el" href="structunilink_1_1diagnostics_1_1LogEntry.html#a0d20055613a7903cab2fafa8da315c5f">unilink::diagnostics::LogEntry</a></li>
-<li>COMPONENT&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html#a5285a6fcc65135444c2ad21c8d8719c1ae66af536f0d833ffcb9dbd7b43affe25">unilink::diagnostics::Logger::Impl::FormatPart</a></li>
-<li>component()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a283b8567fbc3a079858d44f4efae63a4">unilink::diagnostics::UnilinkException</a></li>
-<li>config()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1LogRotation.html#a8796dc1789fa32df93d422a9f0ebe1c0">unilink::diagnostics::LogRotation</a></li>
+<li>component&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a">unilink::diagnostics::ErrorInfo</a>, <a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a283b8567fbc3a079858d44f4efae63a4">unilink::diagnostics::UnilinkException</a></li>
 <li>config_items_&#160;:&#160;<a class="el" href="structunilink_1_1config_1_1ConfigManager_1_1Impl.html#a0ea2af21b3146527600430e195ec695d">unilink::config::ConfigManager::Impl</a></li>
 <li>config_section()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1ConfigurationException.html#aec8fee6e05f1bda4578633d89ea761e7">unilink::diagnostics::ConfigurationException</a></li>
-<li>ConfigItem()&#160;:&#160;<a class="el" href="structunilink_1_1config_1_1ConfigItem.html#a5d42b01ee9135405a2c2070cdafa1160">unilink::config::ConfigItem</a></li>
-<li>ConfigManager()&#160;:&#160;<a class="el" href="classunilink_1_1config_1_1ConfigManager.html#ab9ac92943cffd10135f186673ee4c92b">unilink::config::ConfigManager</a></li>
+<li>ConfigItem()&#160;:&#160;<a class="el" href="structunilink_1_1config_1_1ConfigItem.html#a05297fd8eb02760236ac63109e996e24">unilink::config::ConfigItem</a></li>
+<li>ConfigManager()&#160;:&#160;<a class="el" href="classunilink_1_1config_1_1ConfigManager.html#ac3cc0448cc4776940c17ea599d96d17f">unilink::config::ConfigManager</a></li>
 <li>ConfigurationException()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1ConfigurationException.html#a2388e240da71b7a790f3619a57ace38e">unilink::diagnostics::ConfigurationException</a></li>
 <li>connect_handler&#160;:&#160;<a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ac0d7c161fba59697abfc902e66b47628">unilink::wrapper::Serial::Impl</a>, <a class="el" href="structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a12184792e9181a618ce4a6553aeb927a">unilink::wrapper::UdpClient::Impl</a></li>
 <li>connect_handler_&#160;:&#160;<a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a906f92001903fba11176a1475dc5b8ab">unilink::wrapper::TcpClient::Impl</a>, <a class="el" href="structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#aac0d17331d0cb65dc42552d8c342f44b">unilink::wrapper::UdsClient::Impl</a></li>
@@ -215,6 +210,7 @@ $(document).ready(function(){initNavTree('functions_c.html',''); initResizable()
 <li>ConnectionContext()&#160;:&#160;<a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html#a659d7af2322341e75623548017ff9068">unilink::wrapper::ConnectionContext</a></li>
 <li>ConnectionException()&#160;:&#160;<a class="el" href="classunilink_1_1diagnostics_1_1ConnectionException.html#a5e0c8c2ed1f21e8fca46cfd3efe97a5a">unilink::diagnostics::ConnectionException</a></li>
 <li>ConnectionHandler&#160;:&#160;<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">unilink::wrapper::ChannelInterface</a>, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">unilink::wrapper::ServerInterface</a></li>
+<li>console_sink_&#160;:&#160;<a class="el" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#afa79329af609379abc961577d5bcb67e">unilink::diagnostics::Logger::Impl</a></li>
 <li>const_iterator&#160;:&#160;<a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a67101303be13272d2a5f1bd2fb6812ac">unilink::memory::SafeSpan&lt; T &gt;</a></li>
 <li>const_pointer&#160;:&#160;<a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a9823c3ec9c43d79d7f07e2b2748ae290">unilink::memory::SafeSpan&lt; T &gt;</a></li>
 <li>const_reference&#160;:&#160;<a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a8f023c3e23cb3ff85341881da63be556">unilink::memory::SafeSpan&lt; T &gt;</a></li>
@@ -243,7 +239,7 @@ $(document).ready(function(){initNavTree('functions_c.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 1 2026 22:29:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 2 2026 06:15:39 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

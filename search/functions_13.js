@@ -26,6 +26,5 @@ var searchData=
   ['validate_5fuds_5fpath_23',['validate_uds_path',['../classunilink_1_1util_1_1InputValidator.html#abc23ab99a94244520ca487c096701080',1,'unilink::util::InputValidator']]],
   ['validate_5fvalue_24',['validate_value',['../structunilink_1_1config_1_1ConfigManager_1_1Impl.html#add33863d8100f77c1a4f852d06419782',1,'unilink::config::ConfigManager::Impl']]],
   ['validationexception_25',['ValidationException',['../classunilink_1_1diagnostics_1_1ValidationException.html#ad38e18a7ed8974d4c95aefb0de9d285e',1,'unilink::diagnostics::ValidationException']]],
-  ['validationresult_26',['ValidationResult',['../structunilink_1_1config_1_1ValidationResult.html#abbc8f1d5eefb0b9e99d0f1d1c7419928',1,'unilink::config::ValidationResult']]],
-  ['view_27',['view',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html#a09342f6cb830b69cad2cb8433391622e',1,'unilink::diagnostics::Logger::Impl::TimestampBuffer']]]
+  ['validationresult_26',['ValidationResult',['../structunilink_1_1config_1_1ValidationResult.html#abbc8f1d5eefb0b9e99d0f1d1c7419928',1,'unilink::config::ValidationResult']]]
 ];
