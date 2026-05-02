@@ -23,6 +23,7 @@
 #include <iostream>
 #include <mutex>
 #include <shared_mutex>
+#include <stop_token>
 #include <thread>
 #include <unordered_map>
 #include <vector>

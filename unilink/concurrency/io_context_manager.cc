@@ -20,6 +20,7 @@
 #include <condition_variable>
 #include <format>
 #include <mutex>
+#include <stop_token>
 #include <thread>
 
 #include "unilink/diagnostics/logger.hpp"

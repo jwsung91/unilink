@@ -25,6 +25,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <stop_token>
 #include <thread>
 #include <type_traits>
 #include <variant>

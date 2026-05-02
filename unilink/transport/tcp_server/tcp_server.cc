@@ -22,6 +22,7 @@
 #include <future>
 #include <iostream>
 #include <mutex>
+#include <stop_token>
 #include <string_view>
 #include <thread>
 #include <unordered_map>

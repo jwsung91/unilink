@@ -23,6 +23,7 @@
 #include <format>
 #include <memory>
 #include <optional>
+#include <stop_token>
 #include <string>
 #include <thread>
 #include <variant>

@@ -28,6 +28,7 @@
 #include <format>
 #include <memory>
 #include <mutex>
+#include <stop_token>
 #include <thread>
 
 #include "unilink/base/constants.hpp"

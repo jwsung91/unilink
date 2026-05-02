@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <format>
 #include <mutex>
+#include <stop_token>
 #include <string_view>
 #include <thread>
 #include <unordered_map>
