@@ -44,6 +44,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
   template <uint32_t NewState>
   using Rebind = UdpClientBuilder<NewState>;
 
+  UdpClientBuilder();
   explicit UdpClientBuilder(uint16_t local_port);
 
   // Allow conversion between states
@@ -109,6 +110,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   template <uint32_t NewState>
   using Rebind = UdpServerBuilder<NewState>;
 
+  UdpServerBuilder();
   explicit UdpServerBuilder(uint16_t local_port);
 
   // Allow conversion between states

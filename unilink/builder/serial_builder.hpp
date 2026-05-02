@@ -79,7 +79,9 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
   SerialBuilder<State>& data_bits(unsigned int size) { return char_size(size); }
   SerialBuilder<State>& stop_bits(unsigned int bits);
   SerialBuilder<State>& parity(config::SerialConfig::Parity p);
+  SerialBuilder<State>& parity(const std::string& p);
   SerialBuilder<State>& flow_control(config::SerialConfig::Flow f);
+  SerialBuilder<State>& flow_control(const std::string& f);
   SerialBuilder<State>& reopen_on_error(bool enable = true);
   SerialBuilder<State>& retry_interval(std::chrono::milliseconds interval);
   SerialBuilder<State>& independent_context(bool use_independent = true);

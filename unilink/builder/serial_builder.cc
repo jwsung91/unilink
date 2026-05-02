@@ -16,7 +16,9 @@
 
 #include "unilink/builder/serial_builder.hpp"
 
+#include <algorithm>
 #include <boost/asio/io_context.hpp>
+#include <cctype>
 
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
@@ -122,8 +124,40 @@ SerialBuilder<State>& SerialBuilder<State>::parity(config::SerialConfig::Parity 
 }
 
 template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::parity(const std::string& p) {
+  std::string value = p;
+  std::transform(value.begin(), value.end(), value.begin(),
+                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+  if (value == "even") {
+    parity_ = config::SerialConfig::Parity::Even;
+  } else if (value == "odd") {
+    parity_ = config::SerialConfig::Parity::Odd;
+  } else {
+    parity_ = config::SerialConfig::Parity::None;
+  }
+  return *this;
+}
+
+template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::flow_control(config::SerialConfig::Flow f) {
   flow_ = f;
+  return *this;
+}
+
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::flow_control(const std::string& f) {
+  std::string value = f;
+  std::transform(value.begin(), value.end(), value.begin(),
+                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+  if (value == "software") {
+    flow_ = config::SerialConfig::Flow::Software;
+  } else if (value == "hardware") {
+    flow_ = config::SerialConfig::Flow::Hardware;
+  } else {
+    flow_ = config::SerialConfig::Flow::None;
+  }
   return *this;
 }
 

@@ -27,6 +27,9 @@ namespace builder {
 // UdpClientBuilder implementation
 
 template <uint32_t State>
+UdpClientBuilder<State>::UdpClientBuilder() : UdpClientBuilder(0) {}
+
+template <uint32_t State>
 UdpClientBuilder<State>::UdpClientBuilder(uint16_t local_port)
     : local_port_(local_port),
       local_address_("0.0.0.0"),
@@ -130,6 +133,9 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::independent_context(bool use_i
 }
 
 // UdpServerBuilder implementation
+
+template <uint32_t State>
+UdpServerBuilder<State>::UdpServerBuilder() : UdpServerBuilder(0) {}
 
 template <uint32_t State>
 UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)

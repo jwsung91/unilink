@@ -74,13 +74,16 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
                 .on_error([](const ErrorContext&) {})
                 .single_client()
                 .port_retry(true, 3, 1000)
-                .on_data([](auto&&){}).on_error([](auto&&){}).build();
-...
+                .build();
+  ASSERT_NE(server_, nullptr) << "Server creation failed";
+  server_->start();
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
   // 1. Connect first client (Success)
   auto s1 = unilink::tcp_client("127.0.0.1", test_port)
                 .on_data([](const MessageContext&) {})
                 .on_error([](const ErrorContext&) {})
-                .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                .build();
   s1->start();
 
   // Wait for connection
@@ -157,7 +160,7 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   TestUtils::waitForCondition([&]() { return server_->client_count() == 0; }, 2000);
 
   // Try to connect again
-  auto s3 = unilink::tcp_client("127.0.0.1", test_port).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto s3 = unilink::tcp_client("127.0.0.1", test_port).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   s3->start();
 
   // Wait for connection

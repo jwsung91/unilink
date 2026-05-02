@@ -26,7 +26,20 @@ runs:
           git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
         fi
         "${VCPKG_ROOT}/bootstrap-vcpkg.sh" -disableMetrics
-        "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --clean-after-build
+        retry_vcpkg_install() {
+          local attempt
+          for attempt in 1 2 3; do
+            if "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --clean-after-build; then
+              return 0
+            fi
+            if [ "${attempt}" -eq 3 ]; then
+              return 1
+            fi
+            echo "vcpkg install failed; retrying attempt $((attempt + 1)) of 3..."
+            sleep $((attempt * 10))
+          done
+        }
+        retry_vcpkg_install
         {
           echo "VCPKG_ROOT=${VCPKG_ROOT}"
           echo "VCPKG_TARGET_TRIPLET=${{ inputs.triplet }}"

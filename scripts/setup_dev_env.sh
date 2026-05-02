@@ -29,7 +29,22 @@ if [ ! -d "${VCPKG_ROOT}/.git" ]; then
 fi
 
 "${VCPKG_ROOT}/bootstrap-vcpkg.sh" -disableMetrics
-"${VCPKG_ROOT}/vcpkg" install ${VCPKG_PACKAGES} --triplet "${VCPKG_TARGET_TRIPLET}" --clean-after-build
+
+retry_vcpkg_install() {
+  local attempt
+  for attempt in 1 2 3; do
+    if "${VCPKG_ROOT}/vcpkg" install ${VCPKG_PACKAGES} --triplet "${VCPKG_TARGET_TRIPLET}" --clean-after-build; then
+      return 0
+    fi
+    if [ "${attempt}" -eq 3 ]; then
+      return 1
+    fi
+    echo "vcpkg install failed; retrying attempt $((attempt + 1)) of 3..."
+    sleep $((attempt * 10))
+  done
+}
+
+retry_vcpkg_install
 
 cat <<EOF
 
