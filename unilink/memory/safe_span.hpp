@@ -50,8 +50,8 @@ class SafeSpan : public std::span<T, Extent> {
   }
 
   // Override subspan to return SafeSpan instead of std::span
-  constexpr SafeSpan<T, std::dynamic_extent> subspan(
-      std::size_t offset, std::size_t count = std::dynamic_extent) const {
+  constexpr SafeSpan<T, std::dynamic_extent> subspan(std::size_t offset,
+                                                     std::size_t count = std::dynamic_extent) const {
     return SafeSpan<T, std::dynamic_extent>(Base::subspan(offset, count));
   }
 

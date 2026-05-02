@@ -70,7 +70,8 @@ inline ErrorCode to_unilink_error_code(const boost::system::error_code& ec) {
  * @brief Determines if a TCP connection error is retryable
  */
 inline bool is_retryable_tcp_connect_error(const boost::system::error_code& ec) {
-  if (!ec) [[likely]] return false;
+  if (!ec) [[likely]]
+    return false;
 
   // Connection refused is temporary (server might be starting up)
   if (ec == boost::asio::error::connection_refused) return true;

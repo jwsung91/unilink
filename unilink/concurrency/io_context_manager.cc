@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <condition_variable>
+#include <format>
 #include <mutex>
 #include <thread>
 
@@ -30,7 +31,7 @@ struct IoContextManager::Impl {
   bool owns_context_{true};
   std::shared_ptr<IoContext> ioc_;
   std::unique_ptr<WorkGuard> work_guard_;
-  std::thread io_thread_;
+  std::jthread io_thread_;
   std::atomic<bool> running_{false};
   mutable std::mutex mutex_;
   std::condition_variable cv_;
@@ -50,50 +51,34 @@ struct IoContextManager::Impl {
   ~Impl() {
     try {
       stop();
-      if (io_thread_.joinable() && io_thread_.get_id() != std::this_thread::get_id()) {
-        io_thread_.join();
-      }
     } catch (...) {
     }
   }
 
   void stop() {
-    std::thread worker;
-    {
-      std::lock_guard<std::mutex> lock(mutex_);
-      if (!owns_context_ && ioc_) return;
-      if (!running_.load() && !io_thread_.joinable()) return;
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (!owns_context_ && ioc_) return;
+    if (!running_.load() && !io_thread_.joinable()) return;
 
-      stopping_ = true;
-      if (work_guard_) work_guard_.reset();
-      if (ioc_ && owns_context_) ioc_->stop();
+    stopping_ = true;
+    if (work_guard_) work_guard_.reset();
+    if (ioc_ && owns_context_) ioc_->stop();
 
-      if (io_thread_.joinable()) {
-        if (io_thread_.get_id() != std::this_thread::get_id()) {
-          worker = std::move(io_thread_);
-        } else {
-          UNILINK_LOG_ERROR("io_context_manager", "stop", "Cannot join IoContext thread from within itself.");
-          stopping_ = false;
-          cv_.notify_all();
-          return;
-        }
+    if (io_thread_.joinable()) {
+      if (io_thread_.get_id() == std::this_thread::get_id()) {
+        UNILINK_LOG_ERROR("io_context_manager", "stop", "Cannot join IoContext thread from within itself.");
+        stopping_ = false;
+        cv_.notify_all();
+        return;
       }
+      lock.unlock();
+      io_thread_.request_stop();
+      io_thread_.join();
+      lock.lock();
     }
 
-    if (worker.joinable()) {
-      try {
-        worker.join();
-      } catch (...) {
-      }
-    }
-
-    {
-      std::lock_guard<std::mutex> lock(mutex_);
-      stopping_ = false;
-      if (!worker.joinable() && !io_thread_.joinable()) {
-        running_.store(false);
-      }
-    }
+    stopping_ = false;
+    running_.store(false);
     cv_.notify_all();
   }
 };
@@ -157,11 +142,13 @@ void IoContextManager::start() {
       impl_->io_thread_.join();
     }
 
-    impl_->io_thread_ = std::thread([this, context]() {
+    impl_->io_thread_ = std::jthread([this, context](std::stop_token st) {
       try {
+        // Register stop callback to gracefully stop io_context when jthread is stopped
+        std::stop_callback cb(st, [context] { context->stop(); });
         context->run();
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+        UNILINK_LOG_ERROR("io_context_manager", "run", std::format("Thread error: {}", e.what()));
       } catch (...) {
       }
       impl_->running_.store(false);
