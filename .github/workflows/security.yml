@@ -38,7 +38,7 @@ jobs:
       run: |
         cmake -S . -B build-security \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_CXX_STANDARD=17 \
+          -DCMAKE_CXX_STANDARD=20 \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
@@ -77,7 +77,7 @@ jobs:
       run: |
         cmake -S . -B build-deps \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_CXX_STANDARD=17 \
+          -DCMAKE_CXX_STANDARD=20 \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \

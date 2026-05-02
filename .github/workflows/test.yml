@@ -17,7 +17,7 @@ on:
 
 env:
   BUILD_TYPE: Debug
-  CXX_STANDARD: 17
+  CXX_STANDARD: 20
 
 jobs:
   # Unit and Integration Tests

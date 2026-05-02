@@ -17,7 +17,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CXX_STANDARD: 17
+  CXX_STANDARD: 20
 
 jobs:
   # Multi-platform Build Matrix (Ubuntu 22.04, 24.04)
