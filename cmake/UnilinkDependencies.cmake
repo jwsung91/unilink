@@ -298,7 +298,8 @@ if(NOT spdlog_FOUND)
   FetchContent_Declare(
     spdlog
     GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG v1.14.1)
+    GIT_TAG v1.14.1
+  )
   FetchContent_MakeAvailable(spdlog)
 endif()
 find_package(Threads REQUIRED)
@@ -387,9 +388,7 @@ endif()
 add_library(unilink_dependencies INTERFACE)
 
 # Link common dependencies
-target_link_libraries(
-  unilink_dependencies INTERFACE Threads::Threads
-)
+target_link_libraries(unilink_dependencies INTERFACE Threads::Threads)
 if(UNILINK_LINK_BOOST_SYSTEM)
   if(UNILINK_BOOST_FETCHED)
     # For local targets (FetchContent), use BUILD_INTERFACE to avoid export
