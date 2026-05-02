@@ -81,8 +81,10 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get install -y software-properties-common wget
+        echo "Adding toolchain PPA for modern compilers..."
+        sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
+        echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
         sudo apt-get update
 
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
@@ -94,38 +96,18 @@ jobs:
         # Install other tools
         sudo apt-get install -y ninja-build libspdlog-dev libboost-all-dev
 
-
-    - name: Install Boost (Linux)
+    - name: Set up compiler env
       if: runner.os == 'Linux'
       run: |
-        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        else
-          # ubuntu-24.04: try 1.83 first, fallback to 1.74
-          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-            echo "Boost 1.83 not available, installing 1.74..."
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-          fi
-        fi
+        echo "CC=$(which ${{ matrix.cc }})" >> $GITHUB_ENV
+        echo "CXX=$(which ${{ matrix.cxx }})" >> $GITHUB_ENV
 
-    - name: Install dependencies (macOS)
-      if: runner.os != 'Linux'
-      run: |
-        brew update
-        brew install cmake ccache boost spdlog
-
-        # Ensure ccache shims are on PATH for clang on both Intel and Apple Silicon
-        echo "PATH=/opt/homebrew/opt/ccache/libexec:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
-       
-    - name: Detect CPU core count
-      run: |
-        CORES=$( (command -v nproc >/dev/null 2>&1 && nproc) || sysctl -n hw.logicalcpu || getconf _NPROCESSORS_ONLN || echo 4 )
-        echo "CORE_COUNT=$CORES" >> $GITHUB_ENV
-       
     - name: Configure CMake
       run: |
         cmake -S . -B build-test \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=${{ env.CC }} \
+          -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \

@@ -46,7 +46,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        set(CMAKE_CXX_STANDARD 20)
         set -e  # Exit on any error
         
         echo "Installing basic dependencies..."
@@ -60,32 +59,19 @@ jobs:
           software-properties-common
 
         echo "Adding toolchain PPA for modern compilers..."
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo wget -O /etc/apt/trusted.gpg.d/ubuntu-toolchain-r.gpg "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x1E9377A2BA9EF27F" || true
+        echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r-test.list
         sudo apt-get update
 
         echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
-        # Install specific compiler versions
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
           sudo apt-get install -y gcc-13 g++-13
         else
-          # Install Clang 15 (available in default 22.04 or via LLVM repo if needed)
-          # Note: Clang on Linux uses libstdc++ by default, so we need g++-13's libstdc++
           sudo apt-get install -y clang-15 g++-13
         fi
         
         echo "Installing Boost libraries for ${{ matrix.os }}"
-        # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-          sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
-        elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        else
-          # Ubuntu 24.04: try 1.83 first, fallback to 1.74
-          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-            echo "Boost 1.83 not available, installing 1.74..."
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-          fi
-        fi
+        sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         
         echo "Verifying compiler installation..."
         ${{ matrix.cc }} --version
@@ -93,8 +79,8 @@ jobs:
 
     - name: Set up compiler
       run: |
-        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
-        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+        echo "CC=$(which ${{ matrix.cc }})" >> $GITHUB_ENV
+        echo "CXX=$(which ${{ matrix.cxx }})" >> $GITHUB_ENV
 
     - name: Configure CMake (Minimal Build)
       run: |
@@ -102,6 +88,8 @@ jobs:
         echo "Configuring minimal build..."
         cmake -S . -B build-minimal \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=${{ env.CC }} \
+          -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=OFF \
           -DBUILD_EXAMPLES=ON \
@@ -113,6 +101,8 @@ jobs:
         echo "Configuring full build..."
         cmake -S . -B build-full \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_C_COMPILER=${{ env.CC }} \
+          -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DBUILD_EXAMPLES=ON \
