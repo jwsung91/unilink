@@ -6,6 +6,26 @@ cd "$PROJECT_ROOT"
 
 section() { echo -e "\n===== $* ====="; }
 
+job_count() {
+  if command -v nproc >/dev/null 2>&1; then
+    nproc
+  elif command -v sysctl >/dev/null 2>&1; then
+    sysctl -n hw.ncpu
+  else
+    echo 2
+  fi
+}
+
+JOBS="$(job_count)"
+
+if [[ -z "${UNILINK_VERIFY_BUILD_DIR:-}" ]]; then
+  if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
+    UNILINK_VERIFY_BUILD_DIR="build/${UNILINK_VERIFY_PRESET}"
+  else
+    UNILINK_VERIFY_BUILD_DIR="build"
+  fi
+fi
+
 # ---------------------------------------------------------------------------
 # Step 1: Format
 # ---------------------------------------------------------------------------
@@ -17,10 +37,13 @@ section "Step 1: Formatting code"
 # Step 2: Build library + examples
 # ---------------------------------------------------------------------------
 section "Step 2: Building project (Debug)"
-mkdir -p build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Debug 2>&1 | tail -5
-cmake --build . -j"$(nproc)" \
+if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
+  cmake --preset "${UNILINK_VERIFY_PRESET}"
+else
+  mkdir -p "${UNILINK_VERIFY_BUILD_DIR}"
+  cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" -DCMAKE_BUILD_TYPE=Debug
+fi
+cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" \
   --target unilink_shared unilink_static \
   sync_tcp_echo_server sync_tcp_echo_client sync_tcp_broadcast_server \
   async_tcp_echo_server async_tcp_echo_client \
@@ -29,23 +52,18 @@ cmake --build . -j"$(nproc)" \
   sync_uds_echo_server sync_uds_echo_client \
   async_uds_echo_server async_uds_echo_client \
   sync_serial_echo async_serial_echo
-cd "$PROJECT_ROOT"
 
 # ---------------------------------------------------------------------------
 # Step 3: Compile documentation snippets
 # ---------------------------------------------------------------------------
 section "Step 3: Compiling documentation snippets"
-cd build
-cmake --build . -j"$(nproc)" --target doc_snippets_smoke
-cd "$PROJECT_ROOT"
+cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --target doc_snippets_smoke
 
 # ---------------------------------------------------------------------------
 # Step 4: Unit tests
 # ---------------------------------------------------------------------------
 section "Step 4: Running unit tests"
-cd build
-ctest -j"$(nproc)" -L unit --output-on-failure
-cd "$PROJECT_ROOT"
+ctest --test-dir "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" -L unit --output-on-failure
 
 echo ""
 echo "===== [SUCCESS] All checks passed! ====="

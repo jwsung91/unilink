@@ -39,6 +39,16 @@ vcpkg install jwsung91-unilink
 
 For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/user/installation.md).
 
+### Contributor Development Setup
+
+```bash
+./scripts/setup_dev_env.sh
+cmake --preset dev-linux-x64
+cmake --build --preset dev-linux-x64
+```
+
+The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.84.0.
+
 ## 🐍 Python Bindings
 
 Unilink provides Python bindings for all core transport families (`TcpClient`, `TcpServer`, `Serial`, `Udp`, `UdsClient`, `UdsServer`). 

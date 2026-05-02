@@ -1,0 +1,136 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "vcpkg-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "UNILINK_ENABLE_CONFIG": "ON"
+      }
+    },
+    {
+      "name": "dev-linux-x64",
+      "displayName": "Dev Linux x64",
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "gcc-13",
+        "CMAKE_CXX_COMPILER": "g++-13",
+        "UNILINK_BUILD_TESTS": "ON",
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
+    },
+    {
+      "name": "dev-linux-arm64",
+      "displayName": "Dev Linux ARM64",
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "gcc-13",
+        "CMAKE_CXX_COMPILER": "g++-13",
+        "UNILINK_BUILD_TESTS": "ON",
+        "VCPKG_TARGET_TRIPLET": "arm64-linux"
+      }
+    },
+    {
+      "name": "dev-macos-arm64",
+      "displayName": "Dev macOS ARM64",
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "UNILINK_BUILD_TESTS": "ON",
+        "VCPKG_TARGET_TRIPLET": "arm64-osx"
+      }
+    },
+    {
+      "name": "dev-macos-x64",
+      "displayName": "Dev macOS x64",
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "UNILINK_BUILD_TESTS": "ON",
+        "VCPKG_TARGET_TRIPLET": "x64-osx"
+      }
+    },
+    {
+      "name": "dev-windows-x64",
+      "displayName": "Dev Windows x64",
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "UNILINK_BUILD_TESTS": "ON",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static-md"
+      }
+    },
+    {
+      "name": "release-linux-x64",
+      "displayName": "Release Linux x64",
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "gcc-13",
+        "CMAKE_CXX_COMPILER": "g++-13",
+        "UNILINK_BUILD_TESTS": "OFF",
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev-linux-x64",
+      "configurePreset": "dev-linux-x64"
+    },
+    {
+      "name": "dev-linux-arm64",
+      "configurePreset": "dev-linux-arm64"
+    },
+    {
+      "name": "dev-macos-arm64",
+      "configurePreset": "dev-macos-arm64"
+    },
+    {
+      "name": "dev-macos-x64",
+      "configurePreset": "dev-macos-x64"
+    },
+    {
+      "name": "dev-windows-x64",
+      "configurePreset": "dev-windows-x64"
+    },
+    {
+      "name": "release-linux-x64",
+      "configurePreset": "release-linux-x64"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev-linux-x64",
+      "configurePreset": "dev-linux-x64",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 0
+      }
+    },
+    {
+      "name": "dev-linux-arm64",
+      "configurePreset": "dev-linux-arm64",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 0
+      }
+    }
+  ]
+}

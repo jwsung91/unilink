@@ -22,22 +22,22 @@ Complete guide for building `unilink` with different configurations and platform
 ### Basic Build (Recommended)
 
 ```bash
-# 1. Install build tools and vcpkg-managed dependencies
-sudo apt update && sudo apt install -y build-essential cmake
-vcpkg install boost-asio boost-system spdlog
+# 1. Install build tools
+sudo apt update && sudo apt install -y build-essential cmake ninja-build gcc-13 g++-13
 
-# 2. Configure and build
-cmake -S . -B build \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
-cmake --build build -j
+# 2. Install vcpkg-managed dependencies and configure with the project preset
+./scripts/setup_dev_env.sh
+cmake --preset dev-linux-x64
+cmake --build --preset dev-linux-x64
 
 # 3. (Optional) Install for system-wide use
-sudo cmake --install build
+sudo cmake --install build/dev-linux-x64
 
 # 4. (Optional) Install to custom prefix
-cmake --install build --prefix /opt/unilink
+cmake --install build/dev-linux-x64 --prefix /opt/unilink
 ```
+
+The repository intentionally does not use a root `vcpkg.json` manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through `UNILINK_MIN_BOOST_VERSION`.
 
 ---
 
