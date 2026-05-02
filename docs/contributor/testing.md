@@ -415,6 +415,7 @@ Tests run across multiple configurations:
 | Ubuntu 22.04 | GCC 13 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
 | Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.84+ | Debug | ✅ | ✅ Full Testing |
 | Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
+| Ubuntu 24.04 ARM64 | GCC 13 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
 | Ubuntu 24.04 | GCC 13 | Debug | ✅ | ✅ Full Testing |
 | Ubuntu 24.04 | GCC 13 | Release | ❌ | ✅ Full Testing |
 | Ubuntu 24.04 | Clang 15 | Debug | ✅ | ✅ Full Testing |

@@ -31,8 +31,8 @@ jobs:
             release_files: |
               build/package/unilink-*.tar.gz
 
-          - os: ubuntu-22.04-arm
-            label: Linux ARM64 (Ubuntu 22.04)
+          - os: ubuntu-24.04-arm
+            label: Linux ARM64 (Ubuntu 24.04)
             triplet: arm64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
