@@ -58,7 +58,7 @@ void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {
 
     // If we haven't processed everything, append the remainder to the buffer
     if (processed_count < data.size()) {
-      buffer_.insert(buffer_.end(), data.begin() + processed_count, data.end());
+      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(processed_count), data.end());
       scanned_idx_ = buffer_.size();  // We scanned all of it
 
       // DoS protection for partial message overflow

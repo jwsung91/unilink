@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
   uint32_t baud = 115200;
 
   if (argc > 1) device = argv[1];
-  if (argc > 2) baud = std::stoul(argv[2]);
+  if (argc > 2) baud = static_cast<uint32_t>(std::stoul(argv[2]));
 
   std::cout << "--- Async Serial Echo ---\n";
   std::cout << "Opening " << device << " at " << baud << " baud (non-blocking)\n";

@@ -81,7 +81,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder<State>& enable_port_retry(bool enable = true);
   TcpServerBuilder<State>& max_port_retries(uint32_t max_retries);
   TcpServerBuilder<State>& port_retry_interval(std::chrono::milliseconds interval);
-  
+
   // Backward compatibility methods
   TcpServerBuilder<State>& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
   TcpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);

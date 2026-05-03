@@ -50,8 +50,8 @@ jobs:
             -DUNILINK_ENABLE_INSTALL=ON \
             -DUNILINK_ENABLE_PKGCONFIG=ON \
             -DUNILINK_ENABLE_EXPORT_HEADER=ON \
-            -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-            -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
+            -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
 
       - name: Build
         run: cmake --build build --config Release -- -v

@@ -18,6 +18,18 @@ job_count() {
 
 JOBS="$(job_count)"
 
+if [[ -z "${UNILINK_VERIFY_PRESET:-}" ]]; then
+  # Detect host platform and suggest a preset
+  OS="$(uname -s)"
+  ARCH="$(uname -m)"
+  case "${OS}:${ARCH}" in
+    Linux:x86_64)  UNILINK_VERIFY_PRESET="dev-linux-x64" ;;
+    Linux:aarch64 | Linux:arm64) UNILINK_VERIFY_PRESET="dev-linux-arm64" ;;
+    Darwin:arm64)  UNILINK_VERIFY_PRESET="dev-macos-arm64" ;;
+    Darwin:x86_64) UNILINK_VERIFY_PRESET="dev-macos-x64" ;;
+  esac
+fi
+
 if [[ -z "${UNILINK_VERIFY_BUILD_DIR:-}" ]]; then
   if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
     UNILINK_VERIFY_BUILD_DIR="build/${UNILINK_VERIFY_PRESET}"
@@ -38,20 +50,22 @@ section "Step 1: Formatting code"
 # ---------------------------------------------------------------------------
 section "Step 2: Building project (Debug)"
 if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
+  echo "Using preset: ${UNILINK_VERIFY_PRESET}"
   cmake --preset "${UNILINK_VERIFY_PRESET}"
 else
   mkdir -p "${UNILINK_VERIFY_BUILD_DIR}"
-  cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" -DCMAKE_BUILD_TYPE=Debug
+  # Check if local vcpkg toolchain exists and use it as fallback
+  VCPKG_TOOLCHAIN="${PROJECT_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  if [[ -f "${VCPKG_TOOLCHAIN}" ]]; then
+    echo "Using local vcpkg toolchain: ${VCPKG_TOOLCHAIN}"
+    cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_TOOLCHAIN_FILE="${VCPKG_TOOLCHAIN}"
+  else
+    cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" -DCMAKE_BUILD_TYPE=Debug
+  fi
 fi
-cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" \
-  --target unilink_shared unilink_static \
-  sync_tcp_echo_server sync_tcp_echo_client sync_tcp_broadcast_server \
-  async_tcp_echo_server async_tcp_echo_client \
-  sync_udp_receiver sync_udp_sender \
-  async_udp_receiver async_udp_sender \
-  sync_uds_echo_server sync_uds_echo_client \
-  async_uds_echo_server async_uds_echo_client \
-  sync_serial_echo async_serial_echo
+cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
 
 # ---------------------------------------------------------------------------
 # Step 3: Compile documentation snippets

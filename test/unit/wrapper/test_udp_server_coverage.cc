@@ -70,9 +70,6 @@ TEST(UdpServerCoverageTest, SessionReaping) {
   boost::asio::ip::udp::socket sock(ioc);
   sock.open(boost::asio::ip::udp::v4());
 
-  uint16_t port = 0;
-  // We need the bound port
-  // Since UdpServer doesn't expose port easily, we might need a way to get it or use a fixed port
   // For coverage, we can just trigger reaper even if sessions are empty,
   // but to cover the session removal logic we need a real session.
 }
@@ -88,7 +85,8 @@ TEST(UdpServerCoverageTest, IPv6EndpointHashCoverage) {
   // But since UdpEndpointHash is in anonymous namespace in .cc, we trigger it via server behavior
   try {
     wrapper::UdpServer server(cfg);
-    server.start();
+    auto started = server.start();
+    (void)started;
     // If start fails due to no IPv6 support on host, it's fine, we just wanted to exercise construction
   } catch (...) {
   }

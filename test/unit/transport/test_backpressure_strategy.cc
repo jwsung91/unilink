@@ -193,7 +193,9 @@ TEST(BackpressureStrategyTest, BuilderFluentBackpressureStrategy) {
   auto client = builder::TcpClientBuilder("127.0.0.1", 19810)
                     .backpressure_strategy(BackpressureStrategy::BestEffort)
                     .backpressure_threshold(512 * 1024)
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
   ASSERT_NE(client, nullptr);
 }
 
@@ -202,7 +204,9 @@ TEST(BackpressureStrategyTest, UdsBuilderFluentBackpressureStrategy) {
   auto client = builder::UdsClientBuilder(tmp_path)
                     .backpressure_strategy(BackpressureStrategy::BestEffort)
                     .backpressure_threshold(256 * 1024)
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
   ASSERT_NE(client, nullptr);
 }
 
@@ -210,7 +214,9 @@ TEST(BackpressureStrategyTest, UdpBuilderFluentBackpressureStrategy) {
   auto udp = builder::UdpClientBuilder(0)
                  .backpressure_strategy(BackpressureStrategy::BestEffort)
                  .backpressure_threshold(128 * 1024)
-                 .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                 .on_data([](auto&&) {})
+                 .on_error([](auto&&) {})
+                 .build();
   ASSERT_NE(udp, nullptr);
 }
 

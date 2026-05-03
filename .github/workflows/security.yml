@@ -41,7 +41,7 @@ jobs:
 
     - name: Build project
       run: |
-        cmake -S . -B build-security \
+        cmake -S . -B build-deps \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=gcc-13 \
           -DCMAKE_CXX_COMPILER=g++-13 \
@@ -50,9 +50,9 @@ jobs:
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=OFF \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
-        cmake --build build-security -j $(nproc)
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
+        cmake --build build-deps -j $(nproc)
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@v0.36.0
@@ -98,8 +98,8 @@ jobs:
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=OFF \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
         cmake --build build-deps -j $(nproc)
 
     - name: Check for known vulnerabilities in dependencies

@@ -38,7 +38,9 @@ TEST(UdpBuilderCoverageTest, UdpClientBuilderSetters) {
                  .on_error([](const wrapper::ErrorContext&) {})
                  .framer([]() { return std::make_unique<framer::LineFramer>(); })
                  .on_message([](const wrapper::MessageContext&) {})
-                 .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                 .on_data([](auto&&) {})
+                 .on_error([](auto&&) {})
+                 .build();
 
   ASSERT_NE(udp, nullptr);
 }
@@ -56,7 +58,9 @@ TEST(UdpBuilderCoverageTest, UdpServerBuilderSetters) {
                     .on_error([](const wrapper::ErrorContext&) {})
                     .framer([]() { return std::make_unique<framer::LineFramer>(); })
                     .on_message([](const wrapper::MessageContext&) {})
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(server, nullptr);
 }

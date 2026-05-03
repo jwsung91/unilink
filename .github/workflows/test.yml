@@ -13,6 +13,14 @@ on:
       - 'LICENSE'
       - 'NOTICE'
       - '.gitignore'
+  pull_request:
+    branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - 'NOTICE'
+      - '.gitignore'
   workflow_call:
 
 env:
@@ -109,16 +117,16 @@ jobs:
     - name: Configure CMake
       run: |
         cmake -S . -B build-test \
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-          -DCMAKE_C_COMPILER=${{ env.CC }} \
-          -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
-          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DCMAKE_C_COMPILER=$CC \
+          -DCMAKE_CXX_COMPILER=$CXX \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -172,16 +180,16 @@ jobs:
     - name: Configure CMake
       run: |
         cmake -S . -B build-docs-snippets \
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
           -DCMAKE_C_COMPILER=gcc-13 \
           -DCMAKE_CXX_COMPILER=g++-13 \
-          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -234,17 +242,17 @@ jobs:
     - name: Configure CMake
       run: |
         cmake -S . -B build-integration \
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
           -DCMAKE_C_COMPILER=gcc-13 \
           -DCMAKE_CXX_COMPILER=g++-13 \
-          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -301,17 +309,17 @@ jobs:
     - name: Configure CMake
       run: |
         cmake -S . -B build-integration-arm64 \
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
           -DCMAKE_C_COMPILER=gcc-13 \
           -DCMAKE_CXX_COMPILER=g++-13 \
-          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -373,14 +381,14 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=gcc-13 \
           -DCMAKE_CXX_COMPILER=g++-13 \
-          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
@@ -433,8 +441,8 @@ jobs:
           -DUNILINK_ENABLE_SANITIZERS=ON \
           -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
           -DUNILINK_BUILD_TESTS=ON \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
           -DCMAKE_C_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined,leak" \
@@ -480,12 +488,12 @@ jobs:
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_C_COMPILER=gcc-13 \
             -DCMAKE_CXX_COMPILER=g++-13 \
-            -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+            -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_BUILD_EXAMPLES=OFF \
-            -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-            -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
+            -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
       - name: Build
         run: cmake --build build-e2e -j $(nproc)
       - name: Run E2E Tests
@@ -521,3 +529,4 @@ jobs:
         echo "| Performance Tests | ${{ needs.performance-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Memory Safety Tests | ${{ needs.memory-safety-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| E2E Tests | ${{ needs.e2e-tests.result == 'success' && '✅ Passed' || needs.e2e-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+P_SUMMARY

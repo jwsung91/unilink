@@ -66,8 +66,8 @@ jobs:
           -DCMAKE_CXX_STANDARD=20 \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_TESTS=ON \
-          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
-          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
 
     - name: Build
       run: cmake --build build -j $(nproc)
