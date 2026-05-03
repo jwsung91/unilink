@@ -61,6 +61,17 @@ if(WIN32 AND Python3_EXECUTABLE)
                   "Python release import library selected by Python3_EXECUTABLE"
                   FORCE
         )
+        set(_Python3_LIBRARY_RELEASE
+            "${_unilink_python_library}"
+            CACHE INTERNAL
+                  "Python release import library selected by Python3_EXECUTABLE"
+                  FORCE
+        )
+        set(_Python3_LIBRARY_DEBUG
+            "Python3_LIBRARY_DEBUG-NOTFOUND"
+            CACHE INTERNAL "Disable mismatched debug Python import library"
+                  FORCE
+        )
       endif()
     endif()
   endif()
@@ -157,9 +168,29 @@ if(CMAKE_CONFIGURATION_TYPES)
   endforeach()
 endif()
 
-# Link against the main library
+# Link against the main library. On Windows, avoid the imported Python3::Module
+# target when vcpkg has installed its own Python package; it can retain vcpkg's
+# python312.lib even when the interpreter comes from actions/setup-python.
+set(_unilink_python_module_link_target Python3::Module)
+if(WIN32
+   AND _unilink_python_library
+   AND EXISTS "${_unilink_python_library}"
+)
+  add_library(unilink_python_module INTERFACE)
+  target_link_libraries(
+    unilink_python_module INTERFACE "${_unilink_python_library}"
+  )
+  if(EXISTS "${_unilink_python_include_dir}/Python.h")
+    target_include_directories(
+      unilink_python_module INTERFACE "${_unilink_python_include_dir}"
+    )
+  endif()
+  set(_unilink_python_module_link_target unilink_python_module)
+endif()
+
 target_link_libraries(
-  unilink_py PRIVATE pybind11::headers unilink::unilink Python3::Module
+  unilink_py PRIVATE pybind11::headers unilink::unilink
+                     ${_unilink_python_module_link_target}
 )
 
 # Ensure extension builds use the same standard as the C++ library.
