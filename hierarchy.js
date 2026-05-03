@@ -7,28 +7,22 @@ var hierarchy =
     [ "spdlog::sinks::base_sink", null, [
       [ "unilink::diagnostics::callback_sink< Mutex >", "classunilink_1_1diagnostics_1_1callback__sink.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< T, Derived >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
-    [ "unilink::builder::BuilderInterface< wrapper::Serial, SerialBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html", null ]
+    [ "unilink::builder::BuilderInterface< T, Derived, State >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+      [ "unilink::builder::SerialBuilder< State >", "classunilink_1_1builder_1_1SerialBuilder.html", null ],
+      [ "unilink::builder::TcpClientBuilder< State >", "classunilink_1_1builder_1_1TcpClientBuilder.html", null ],
+      [ "unilink::builder::TcpServerBuilder< State >", "classunilink_1_1builder_1_1TcpServerBuilder.html", null ],
+      [ "unilink::builder::UdpClientBuilder< State >", "classunilink_1_1builder_1_1UdpClientBuilder.html", null ],
+      [ "unilink::builder::UdpServerBuilder< State >", "classunilink_1_1builder_1_1UdpServerBuilder.html", null ],
+      [ "unilink::builder::UdsClientBuilder< State >", "classunilink_1_1builder_1_1UdsClientBuilder.html", null ],
+      [ "unilink::builder::UdsServerBuilder< State >", "classunilink_1_1builder_1_1UdsServerBuilder.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::TcpClient, TcpClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html", null ]
-    ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::TcpServer, TcpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", null ]
-    ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::UdpClient, UdpClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html", null ]
-    ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::UdpServer, UdpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::UdpServerBuilder", "classunilink_1_1builder_1_1UdpServerBuilder.html", null ]
-    ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::UdsClient, UdsClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", null ]
-    ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::UdsServer, UdsServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", null ]
-    ] ],
+    [ "unilink::builder::BuilderInterface< wrapper::Serial, SerialBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::TcpClient, TcpClientBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::TcpServer, TcpServerBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdpClient, UdpClientBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdpServer, UdpServerBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdsClient, UdsClientBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdsServer, UdsServerBuilder< BuilderState::None >, BuilderState::None >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
     [ "unilink::interface::Channel", "classunilink_1_1interface_1_1Channel.html", [
       [ "unilink::transport::Serial", "classunilink_1_1transport_1_1Serial.html", null ],
       [ "unilink::transport::TcpClient", "classunilink_1_1transport_1_1TcpClient.html", null ],
@@ -112,7 +106,6 @@ var hierarchy =
       ] ]
     ] ],
     [ "unilink::memory::SafeDataBuffer", "classunilink_1_1memory_1_1SafeDataBuffer.html", null ],
-    [ "unilink::memory::SafeSpan< T >", "classunilink_1_1memory_1_1SafeSpan.html", null ],
     [ "unilink::memory::ScopedMemoryTracker", "classunilink_1_1memory_1_1ScopedMemoryTracker.html", null ],
     [ "unilink::config::SerialConfig", "structunilink_1_1config_1_1SerialConfig.html", null ],
     [ "unilink::interface::SerialPortInterface", "classunilink_1_1interface_1_1SerialPortInterface.html", [
@@ -124,6 +117,9 @@ var hierarchy =
       [ "unilink::wrapper::UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", null ]
     ] ],
     [ "unilink::wrapper::UdpServer::Impl::SessionEntry", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html", null ],
+    [ "std::span", null, [
+      [ "unilink::memory::SafeSpan< T, Extent >", "classunilink_1_1memory_1_1SafeSpan.html", null ]
+    ] ],
     [ "unilink::interface::TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", [
       [ "unilink::transport::BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", null ]
     ] ],

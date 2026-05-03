@@ -192,8 +192,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a96002f62a9485d000a255f338048924a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a245796d7c8210768be5b1d7f4ea60f47" id="r_a245796d7c8210768be5b1d7f4ea60f47"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1concurrency_1_1IoContextManager.html#a61c95a11c25f28acf3baf2aa39d38146">WorkGuard</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html#a245796d7c8210768be5b1d7f4ea60f47">work_guard_</a></td></tr>
 <tr class="separator:a245796d7c8210768be5b1d7f4ea60f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae718b2741288d187142e3caa30b5ee5e" id="r_ae718b2741288d187142e3caa30b5ee5e"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html#ae718b2741288d187142e3caa30b5ee5e">io_thread_</a></td></tr>
-<tr class="separator:ae718b2741288d187142e3caa30b5ee5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ef7d20f1a8a62bef9733e64b784b593" id="r_a3ef7d20f1a8a62bef9733e64b784b593"><td class="memItemLeft" align="right" valign="top">std::jthread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html#a3ef7d20f1a8a62bef9733e64b784b593">io_thread_</a></td></tr>
+<tr class="separator:a3ef7d20f1a8a62bef9733e64b784b593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2481e984e685514d97a3be5fcbe9e67" id="r_ae2481e984e685514d97a3be5fcbe9e67"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html#ae2481e984e685514d97a3be5fcbe9e67">running_</a> {false}</td></tr>
 <tr class="separator:ae2481e984e685514d97a3be5fcbe9e67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21fb819ee84619b0ba2d222bdfa508a0" id="r_a21fb819ee84619b0ba2d222bdfa508a0"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html#a21fb819ee84619b0ba2d222bdfa508a0">mutex_</a></td></tr>
@@ -205,7 +205,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00029">29</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00031">31</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="add926ddb9eba61dbafb80633743f3043" name="add926ddb9eba61dbafb80633743f3043"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add926ddb9eba61dbafb80633743f3043">&#9670;&#160;</a></span>Impl() <span class="overload">[1/3]</span></h2>
@@ -230,7 +230,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00039">39</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00041">41</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -265,7 +265,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00041">41</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00043">43</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -300,7 +300,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00045">45</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00047">47</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -327,7 +327,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00050">50</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00052">52</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -362,7 +362,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00060">60</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00059">59</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -386,23 +386,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00036">36</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00038">38</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
-<a id="ae718b2741288d187142e3caa30b5ee5e" name="ae718b2741288d187142e3caa30b5ee5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae718b2741288d187142e3caa30b5ee5e">&#9670;&#160;</a></span>io_thread_</h2>
+<a id="a3ef7d20f1a8a62bef9733e64b784b593" name="a3ef7d20f1a8a62bef9733e64b784b593"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ef7d20f1a8a62bef9733e64b784b593">&#9670;&#160;</a></span>io_thread_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::thread unilink::concurrency::IoContextManager::Impl::io_thread_</td>
+          <td class="memname">std::jthread unilink::concurrency::IoContextManager::Impl::io_thread_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00033">33</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00035">35</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00031">31</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00033">33</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -442,7 +442,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00035">35</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00037">37</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -458,7 +458,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00030">30</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00032">32</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -474,7 +474,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00034">34</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00036">36</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -490,7 +490,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00037">37</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00039">39</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -506,7 +506,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00032">32</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="io__context__manager_8cc_source.html#l00034">34</a> of file <a class="el" href="io__context__manager_8cc_source.html">io_context_manager.cc</a>.</p>
 
 </div>
 </div>
@@ -519,7 +519,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1concurrency.html">concurrency</a></li><li class="navelem"><a class="el" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a></li><li class="navelem"><a class="el" href="structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -276,32 +276,31 @@ Features</h2>
 </div><!-- fragment --><p><b>Mutation model:</b> Data is populated at construction; no in-place <code>write/append</code> helpers exist. Use <code>clear()/resize()/reserve()</code> only when you control the backing data size.</p>
 <hr  />
 <h2><a class="anchor" id="autotoc_md24"></a>
-Safe Span (C++17 Compatible)</h2>
+Safe Span</h2>
 <p>Lightweight, non-owning view of contiguous data:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__span_8hpp.html">unilink/memory/safe_span.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> process_data(<a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a> data) {</div>
 <div class="line">    <span class="comment">// Iteration (operator[] is unchecked)</span></div>
-<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; data.<a class="code hl_function" href="classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73">size</a>(); i++) {</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; data.size(); i++) {</div>
 <div class="line">        uint8_t <span class="keywordtype">byte</span> = data[i];</div>
 <div class="line">        process_byte(<span class="keywordtype">byte</span>);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Bounds-checked access</span></div>
-<div class="line">    <span class="keyword">auto</span> subset = data.<a class="code hl_function" href="classunilink_1_1memory_1_1SafeSpan.html#a6d8982f9ab7af4020233d9bb8f71e753">subspan</a>(1, 2);  <span class="comment">// throws on invalid ranges</span></div>
+<div class="line">    <span class="keyword">auto</span> subset = data.<a class="code hl_function" href="classunilink_1_1memory_1_1SafeSpan.html#a6c87d2a61c52511f87e8813fcbef5c9f">subspan</a>(1, 2);  <span class="comment">// throws on invalid ranges</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Usage</span></div>
 <div class="line">std::vector&lt;uint8_t&gt; buffer = {1, 2, 3, 4, 5};</div>
 <div class="line">process_data(<a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a>(buffer));</div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00038">safe_span.hpp:38</a></div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a0e63f52083142fa895b98ea38f51dc73"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73">unilink::memory::SafeSpan::size</a></div><div class="ttdeci">constexpr size_type size() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00081">safe_span.hpp:81</a></div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a6d8982f9ab7af4020233d9bb8f71e753"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a6d8982f9ab7af4020233d9bb8f71e753">unilink::memory::SafeSpan::subspan</a></div><div class="ttdeci">constexpr SafeSpan&lt; T &gt; subspan(size_type offset, size_type count=SIZE_MAX) const</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00105">safe_span.hpp:105</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">C++20 std::span based memory view.</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00033">safe_span.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a6c87d2a61c52511f87e8813fcbef5c9f"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a6c87d2a61c52511f87e8813fcbef5c9f">unilink::memory::SafeSpan::subspan</a></div><div class="ttdeci">constexpr SafeSpan&lt; T, std::dynamic_extent &gt; subspan(std::size_t offset, std::size_t count=std::dynamic_extent) const</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00053">safe_span.hpp:53</a></div></div>
 </div><!-- fragment --><p><b>Features:</b></p>
 <ul>
 <li>No ownership (lightweight)</li>
 <li><code>at()/subspan()</code> are checked; <code>operator[]</code> is unchecked</li>
-<li>C++17 compatible (pre-C++20 <code>std::span</code>)</li>
+<li>Project-local span abstraction retained for API stability</li>
 <li>Zero overhead in release builds</li>
 </ul>
 <hr  />
@@ -702,7 +701,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

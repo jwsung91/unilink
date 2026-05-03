@@ -44,12 +44,12 @@ var namespaceunilink =
     ] ],
     [ "ExponentialBackoff", "namespaceunilink.html#a770f4e845c9196d7c0791ed2c4ec3cb3", null ],
     [ "FixedInterval", "namespaceunilink.html#a12d62491e1b0b8e87eb1202f268af4ca", null ],
-    [ "serial", "namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9", null ],
-    [ "tcp_client", "namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac", null ],
-    [ "tcp_server", "namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956", null ],
+    [ "serial", "namespaceunilink.html#a1d0a99a790f1a6fd8fba2c04dc88797d", null ],
+    [ "tcp_client", "namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c", null ],
+    [ "tcp_server", "namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb", null ],
     [ "to_string", "namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355", null ],
-    [ "udp_client", "namespaceunilink.html#ae5558f59454b560328ecb7852f6b35a1", null ],
-    [ "udp_server", "namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd", null ],
-    [ "uds_client", "namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a", null ],
-    [ "uds_server", "namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80", null ]
+    [ "udp_client", "namespaceunilink.html#a7ec7731db73a5f3a703af2eb30b378e6", null ],
+    [ "udp_server", "namespaceunilink.html#acd1c7353a285192fac404d4d1f472aff", null ],
+    [ "uds_client", "namespaceunilink.html#acb04aca2f71cf23a3a3f25ec6bd6928c", null ],
+    [ "uds_server", "namespaceunilink.html#a8b48958811ee60e074923f0c615bc6ef", null ]
 ];

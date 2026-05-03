@@ -5,7 +5,7 @@ var searchData=
   ['wait_5ffor_5fstate_5fchange_2',['wait_for_state_change',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a3490a475b14d7bbb980d406abe3c31b6',1,'unilink::concurrency::ThreadSafeState']]],
   ['wait_5ffor_5ftrue_3',['wait_for_true',['../classunilink_1_1concurrency_1_1ThreadSafeFlag.html#a16d388557f9c6ff4c8a68730911c33fa',1,'unilink::concurrency::ThreadSafeFlag']]],
   ['want_20more_4',['Use The Full Example If You Want More',['../tutorial_01.html#autotoc_md806',1,'']]],
-  ['warning_5',['warning',['../namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b',1,'unilink::diagnostics::WARNING'],['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b',1,'unilink::diagnostics::WARNING'],['../classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116',1,'unilink::diagnostics::Logger::warning()']]],
+  ['warning_5',['warning',['../namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b',1,'unilink::diagnostics::WARNING'],['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b',1,'unilink::diagnostics::WARNING'],['../classunilink_1_1diagnostics_1_1Logger.html#a4ed0d7fe1aefad059c2252249631d792',1,'unilink::diagnostics::Logger::warning()']]],
   ['what_20asan_20detects_6',['What ASan Detects',['../contrib_arch_memory.html#autotoc_md54',1,'']]],
   ['what_20each_20area_20covers_7',['What Each Area Covers',['../contrib_test_structure.html#autotoc_md373',1,'']]],
   ['what_20is_20currently_20registered_8',['Inspect What Is Currently Registered',['../contrib_test_structure.html#autotoc_md379',1,'']]],

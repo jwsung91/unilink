@@ -38,7 +38,7 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "disconnect_handler_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a0996a4ce73a35697af7937c79adc7196", null ],
     [ "error_handler_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a7210d0d6f753746e15411d374e8ce029", null ],
     [ "external_ioc_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a40ee734d187bc646a931ed3785d62207", null ],
-    [ "external_thread_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a67de7c89ad8f76fb5b7952df9c442e0a", null ],
+    [ "external_thread_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aca836a0248e26560a6f2ee6630f831bd", null ],
     [ "framer_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a450c06bf9c21254b4a2f46529c6ed846", null ],
     [ "host_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aca0a60cb12164a233457b830bc2d2fb5", null ],
     [ "manage_external_context_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aeedd6f0db8dc4e156f799899a6a9e98f", null ],

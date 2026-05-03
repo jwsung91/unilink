@@ -177,19 +177,21 @@ Table of Contents</h1>
 Quick Build</h1>
 <h2><a class="anchor" id="autotoc_md260"></a>
 Basic Build (Recommended)</h2>
-<div class="fragment"><div class="line"># 1. Install dependencies</div>
-<div class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential cmake libboost-dev libboost-system-dev</div>
+<div class="fragment"><div class="line"># 1. Install build tools</div>
+<div class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential cmake ninja-build gcc-13 g++-13</div>
 <div class="line"> </div>
-<div class="line"># 2. Configure and build</div>
-<div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
-<div class="line">cmake --build build -j</div>
+<div class="line"># 2. Install vcpkg-managed dependencies and configure with the project preset</div>
+<div class="line">./scripts/setup_dev_env.sh</div>
+<div class="line">cmake --preset dev-linux-x64</div>
+<div class="line">cmake --build --preset dev-linux-x64</div>
 <div class="line"> </div>
 <div class="line"># 3. (Optional) Install for system-wide use</div>
-<div class="line">sudo cmake --install build</div>
+<div class="line">sudo cmake --install build/dev-linux-x64</div>
 <div class="line"> </div>
 <div class="line"># 4. (Optional) Install to custom prefix</div>
-<div class="line">cmake --install build --prefix /opt/unilink</div>
-</div><!-- fragment --><hr  />
+<div class="line">cmake --install build/dev-linux-x64 --prefix /opt/unilink</div>
+</div><!-- fragment --><p>The repository intentionally does not use a root <code>vcpkg.json</code> manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through <code>UNILINK_MIN_BOOST_VERSION</code>.</p>
+<hr  />
 <h1><a class="anchor" id="autotoc_md262"></a>
 Important Build Notes</h1>
 <p>To enhance build stability and reliability, <code>unilink</code>'s <code>CMakeLists.txt</code> no longer uses automatic file discovery (globbing). Source and header files are now explicitly listed.</p>
@@ -395,8 +397,8 @@ Example 5: Build with Specific Compiler</h2>
 <div class="line">cmake --build build -j</div>
 <div class="line"> </div>
 <div class="line"># Using specific GCC version</div>
-<div class="line">export CC=gcc-11</div>
-<div class="line">export CXX=g++-11</div>
+<div class="line">export CC=gcc-13</div>
+<div class="line">export CXX=g++-13</div>
 <div class="line"> </div>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build build -j</div>
@@ -407,39 +409,42 @@ Platform-Specific Builds</h1>
 Ubuntu 22.04 (Recommended)</h2>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo apt update &amp;&amp; apt install -y \</div>
-<div class="line">  build-essential cmake libboost-dev libboost-system-dev</div>
+<div class="line">  build-essential cmake</div>
+<div class="line">vcpkg install boost-asio boost-system spdlog</div>
 <div class="line"> </div>
 <div class="line"># Build</div>
-<div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
+<div class="line">cmake -S . -B build \</div>
+<div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
+<div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md295"></a>
 Ubuntu 20.04 Build</h2>
-<p>Ubuntu 20.04's default GCC 9.4 does not meet the C++17 requirements. You must install a newer compiler.</p>
+<p>Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.84.0+ through vcpkg or a custom dependency prefix.</p>
 <h3><a class="anchor" id="autotoc_md296"></a>
 Prerequisites</h3>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo apt update &amp;&amp; sudo apt install -y \</div>
 <div class="line">  build-essential \</div>
-<div class="line">  cmake \</div>
-<div class="line">  libboost-dev \</div>
-<div class="line">  libboost-system-dev</div>
+<div class="line">  cmake</div>
 <div class="line"> </div>
 <div class="line"># Install newer compiler</div>
-<div class="line">sudo apt install -y gcc-11 g++-11</div>
+<div class="line">sudo apt install -y gcc-13 g++-13</div>
+<div class="line">vcpkg install boost-asio boost-system spdlog</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md297"></a>
 Build Steps</h3>
 <div class="fragment"><div class="line"># 1. Set compiler environment</div>
-<div class="line">export CC=gcc-11</div>
-<div class="line">export CXX=g++-11</div>
+<div class="line">export CC=gcc-13</div>
+<div class="line">export CXX=g++-13</div>
 <div class="line"> </div>
 <div class="line"># 2. Configure CMake</div>
 <div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
-<div class="line">  -DCMAKE_CXX_STANDARD=17 \</div>
+<div class="line">  -DCMAKE_CXX_STANDARD=20 \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=ON \</div>
 <div class="line">  -DUNILINK_BUILD_EXAMPLES=ON \</div>
-<div class="line">  -DUNILINK_BUILD_TESTS=ON</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
+<div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 <div class="line"> </div>
 <div class="line"># 3. Build</div>
 <div class="line">cmake --build build -j $(nproc)</div>
@@ -459,10 +464,13 @@ Notes</h3>
 Debian 11+</h2>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo apt update &amp;&amp; apt install -y \</div>
-<div class="line">  build-essential cmake libboost-dev libboost-system-dev</div>
+<div class="line">  build-essential cmake</div>
+<div class="line">vcpkg install boost-asio boost-system spdlog</div>
 <div class="line"> </div>
 <div class="line"># Build (same as Ubuntu 22.04)</div>
-<div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
+<div class="line">cmake -S . -B build \</div>
+<div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
+<div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md302"></a>
@@ -563,16 +571,16 @@ Troubleshooting</h1>
 <h2><a class="anchor" id="autotoc_md322"></a>
 Problem: CMake Can't Find Boost</h2>
 <div class="fragment"><div class="line"># Specify Boost location</div>
-<div class="line">cmake -S . -B build -DBOOST_ROOT=/usr/local</div>
+<div class="line">cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.84</div>
 <div class="line"> </div>
-<div class="line"># Or install boost-dev</div>
-<div class="line">sudo apt install -y libboost-all-dev</div>
+<div class="line"># Or use vcpkg</div>
+<div class="line">vcpkg install boost-asio boost-system spdlog</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md323"></a>
 Problem: Compiler Not Found</h2>
 <div class="fragment"><div class="line"># Specify compiler explicitly</div>
 <div class="line">cmake -S . -B build \</div>
-<div class="line">  -DCMAKE_C_COMPILER=gcc-11 \</div>
-<div class="line">  -DCMAKE_CXX_COMPILER=g++-11</div>
+<div class="line">  -DCMAKE_C_COMPILER=gcc-13 \</div>
+<div class="line">  -DCMAKE_CXX_COMPILER=g++-13</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md324"></a>
 Problem: Out of Memory During Build</h2>
 <div class="fragment"><div class="line"># Reduce parallel jobs</div>
@@ -647,7 +655,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

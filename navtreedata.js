@@ -338,8 +338,8 @@ var NAVTREE =
               [ "2. Check Library Path", "user_troubleshooting.html#autotoc_md747", null ]
             ] ],
             [ "Problem: Boost Not Found", "user_troubleshooting.html#autotoc_md749", [
-              [ "Ubuntu/Debian", "user_troubleshooting.html#autotoc_md750", null ],
-              [ "macOS", "user_troubleshooting.html#autotoc_md751", null ],
+              [ "Recommended vcpkg setup", "user_troubleshooting.html#autotoc_md750", null ],
+              [ "System Boost setup", "user_troubleshooting.html#autotoc_md751", null ],
               [ "Windows (vcpkg)", "user_troubleshooting.html#autotoc_md752", null ],
               [ "Manual Boost Path", "user_troubleshooting.html#autotoc_md753", null ]
             ] ]
@@ -660,7 +660,7 @@ var NAVTREE =
                 [ "2. Safe Type Conversions", "contrib_arch_memory.html#autotoc_md20", null ],
                 [ "3. Memory Validation", "contrib_arch_memory.html#autotoc_md22", null ]
               ] ],
-              [ "Safe Span (C++17 Compatible)", "contrib_arch_memory.html#autotoc_md24", null ]
+              [ "Safe Span", "contrib_arch_memory.html#autotoc_md24", null ]
             ] ],
             [ "Thread-Safe State Management", "contrib_arch_memory.html#autotoc_md26", [
               [ "ThreadSafeState", "contrib_arch_memory.html#autotoc_md27", null ],
@@ -777,9 +777,11 @@ var NAVTREE =
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
+        [ "Enumerations", "namespacemembers_enum.html", null ],
+        [ "Enumerator", "namespacemembers_eval.html", null ]
       ] ]
     ] ],
+    [ "Concepts", "concepts.html", "concepts" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -789,7 +791,8 @@ var NAVTREE =
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Typedefs", "functions_type.html", null ],
-        [ "Enumerations", "functions_enum.html", null ]
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -805,27 +808,27 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1builder_1_1UdsClientBuilder.html#a1971b3d83368954ce49806a34093316b",
-"classunilink_1_1config_1_1ConfigManagerInterface.html#a713ae56f22e17e355df318fe516ae6d8",
-"classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9",
-"classunilink_1_1memory_1_1PooledBuffer.html#a0ccea8cdb16603073f8c98b888806e64",
-"classunilink_1_1transport_1_1BoostUdsSocket.html#a4863009ee43b24822c96ddcec0927bd8",
-"classunilink_1_1transport_1_1UdpChannel.html#ac8d803d37f6043351a29120b9184343a",
-"classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0",
-"classunilink_1_1wrapper_1_1TcpServer.html",
-"classunilink_1_1wrapper_1_1UdsClient.html#abaa7b607ba822465e3ec3f51a08b34bc",
-"contrib_arch_runtime.html#autotoc_md188",
-"error__handler_8cc.html#a09062defd8d7c3c8b916320c34338040",
-"memory__pool_8cc.html",
-"safe__data__buffer_8cc.html",
-"structunilink_1_1config_1_1UdsClientConfig.html#ac1af617333da4700f54e3f887fb441f9",
-"structunilink_1_1transport_1_1Serial_1_1Impl.html#a8e4c1ce19d7f10d8957363b528c9e2d5",
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a74cf807d4a6c8356a01fe48b8ddcfcb6",
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a3549f47719fd26bc24bf8b6975d10856",
-"structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a680e3b326aff018c7fc72496956c4aae",
-"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aef2d453ea13990a3b0bdcd088dd64c46",
-"thread__safe__state_8hpp.html#ac0964c4a3d030d1e14a45079d9aaec44",
-"user_performance.html#autotoc_md625"
+"classunilink_1_1builder_1_1UdpClientBuilder.html#a9381b8a20220656d7975b1b341783d85",
+"classunilink_1_1config_1_1ConfigFactory.html#a1349da1432ca59942141f42f10e1ddc6",
+"classunilink_1_1diagnostics_1_1UnilinkException.html#a3c36f441fc82009086269ad94dfbde6f",
+"classunilink_1_1memory_1_1MemoryPool.html#a514b2ebc34cef93d7e27ab3819882cc6",
+"classunilink_1_1transport_1_1BoostUdsAcceptor.html#a15cb855e374ad6f2800636175cbf3ae1",
+"classunilink_1_1transport_1_1UdpChannel.html#a637bdffee652fa414bc8b02ad3c8bff9",
+"classunilink_1_1wrapper_1_1ChannelInterface.html#a6b2212d41ed3f4ec66f7e783e607c22f",
+"classunilink_1_1wrapper_1_1TcpClient.html#abfd2fff029f6c241cd0b39b75ce92e43",
+"classunilink_1_1wrapper_1_1UdsClient.html#a5cf6a3326fdfa0d71c8a7ff190cb2478",
+"contrib_arch_memory.html#autotoc_md73",
+"dir_e4a9c84f290adef67ceee075c03178ea.html",
+"itimer_8hpp_source.html",
+"namespaceunilink_1_1memory_1_1memory__validator.html#a3a349f1dda39edf3f624186afc02aceb",
+"structunilink_1_1config_1_1UdpConfig.html",
+"structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#abf60064e70400d72150c48732e5ed75f",
+"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ae832b58382dd4d2340b06c66daad56b3",
+"structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acf1bbb97f672d58d3949d6bfabb3675c",
+"structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a05544bfff540abac6e60839c58294309",
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a637a2659d5fb199aa060f49c65964e05",
+"structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ab31b683faee586cf08b8f80f45926c1a",
+"user_api_guide.html#autotoc_md565"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

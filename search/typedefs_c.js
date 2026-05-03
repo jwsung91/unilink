@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['safedatahandler_0',['SafeDataHandler',['../namespaceunilink_1_1memory.html#ab24b0543c51948b5f6807fad9b3d94f6',1,'unilink::memory']]],
-  ['serial_1',['Serial',['../namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc',1,'unilink']]],
-  ['size_5ftype_2',['size_type',['../classunilink_1_1memory_1_1SafeSpan.html#a6ee274522125eea443c57cd6ccaf8bce',1,'unilink::memory::SafeSpan']]],
-  ['state_3',['state',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484',1,'unilink::concurrency::ThreadSafeState::State'],['../classunilink_1_1concurrency_1_1AtomicState.html#a71c0084af08e110dd52386ec7d151cd4',1,'unilink::concurrency::AtomicState::State']]],
-  ['statecallback_4',['StateCallback',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17',1,'unilink::concurrency::ThreadSafeState']]],
-  ['statecallbackhandle_5',['StateCallbackHandle',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481',1,'unilink::concurrency::ThreadSafeState']]]
+  ['udp_0',['udp',['../namespaceunilink_1_1transport.html#a9f33fafb245304040e53375c3eb6f30d',1,'unilink::transport']]],
+  ['udpclient_1',['UdpClient',['../namespaceunilink.html#ab426a050eecabe332b9a6469e984ea62',1,'unilink']]],
+  ['udpclientbuilderdefault_2',['UdpClientBuilderDefault',['../namespaceunilink_1_1builder.html#a8f26fcc0467f4495d6891c7b1ea1f8ca',1,'unilink::builder']]],
+  ['udpserver_3',['UdpServer',['../namespaceunilink.html#aae94ee39714235b4c0199dd8394bfad9',1,'unilink']]],
+  ['udpserverbuilderdefault_4',['UdpServerBuilderDefault',['../namespaceunilink_1_1builder.html#a1d219c1554cc9cee70dd0f21c01fab65',1,'unilink::builder']]],
+  ['uds_5',['uds',['../namespaceunilink_1_1transport.html#a2c518969e90be691097a4e47dafff14e',1,'unilink::transport']]],
+  ['udsclient_6',['UdsClient',['../namespaceunilink.html#a9b8ed9339c39013379280fecccd3a72c',1,'unilink']]],
+  ['udsclientbuilderdefault_7',['UdsClientBuilderDefault',['../namespaceunilink_1_1builder.html#a80104d09a7aa2fdc737fdbf35486a073',1,'unilink::builder']]],
+  ['udsreconnectlogicdecision_8',['UdsReconnectLogicDecision',['../namespaceunilink_1_1transport_1_1detail.html#a8817ba1dfd1f5e479f36de144d96449a',1,'unilink::transport::detail']]],
+  ['udsserver_9',['UdsServer',['../namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f',1,'unilink']]],
+  ['udsserverbuilderdefault_10',['UdsServerBuilderDefault',['../namespaceunilink_1_1builder.html#a332768bbf4f7b2a6ee3e78900509569d',1,'unilink::builder']]]
 ];

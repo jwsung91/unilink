@@ -158,14 +158,18 @@ $(document).ready(function(){initNavTree('ibuilder_8hpp.html',''); initResizable
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#concepts">Concepts</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">ibuilder.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;functional&gt;</code><br />
+<div class="textblock"><code>#include &lt;concepts&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;string_view&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="constants_8hpp_source.html">unilink/base/constants.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="visibility_8hpp_source.html">unilink/base/visibility.hpp</a>&quot;</code><br />
@@ -193,7 +197,7 @@ $(document).ready(function(){initNavTree('ibuilder_8hpp.html',''); initResizable
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface&lt; T, Derived, State &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic Builder interface for fluent API pattern.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -203,6 +207,26 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceunilink_1_1builder" id="r_namespaceunilink_1_1builder"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1builder.html">unilink::builder</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptunilink_1_1builder_1_1DataHandler.html">unilink::builder::DataHandler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concepts for mandatory handler validation. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptunilink_1_1builder_1_1ErrorHandler.html">unilink::builder::ErrorHandler</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="conceptunilink_1_1builder_1_1ConnectionHandler.html">unilink::builder::ConnectionHandler</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:aaaa1844bc1ccddbe03c66b32e48b9c3e" id="r_aaaa1844bc1ccddbe03c66b32e48b9c3e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1builder.html#aaaa1844bc1ccddbe03c66b32e48b9c3e">unilink::builder::BuilderState</a> : uint32_t { <a class="el" href="namespaceunilink_1_1builder.html#aaaa1844bc1ccddbe03c66b32e48b9c3ea2ad0a16cfdea5e0ae1f66927b4f3ed37">unilink::builder::None</a> = 0
+, <a class="el" href="namespaceunilink_1_1builder.html#aaaa1844bc1ccddbe03c66b32e48b9c3ea9262e50f848c466b4c28107ae73134a9">unilink::builder::HasData</a> = 1 &lt;&lt; 0
+, <a class="el" href="namespaceunilink_1_1builder.html#aaaa1844bc1ccddbe03c66b32e48b9c3ea4274d0291db8e5dea0bea7da05db4c49">unilink::builder::HasError</a> = 1 &lt;&lt; 1
+, <a class="el" href="namespaceunilink_1_1builder.html#aaaa1844bc1ccddbe03c66b32e48b9c3ea2aa66522e2ae14a52d343f9c42dbfb3b">unilink::builder::Ready</a> = HasData | HasError
+ }</td></tr>
+<tr class="memdesc:aaaa1844bc1ccddbe03c66b32e48b9c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder state bitmask for compile-time tracking.  <a href="namespaceunilink_1_1builder.html#aaaa1844bc1ccddbe03c66b32e48b9c3e">More...</a><br /></td></tr>
+<tr class="separator:aaaa1844bc1ccddbe03c66b32e48b9c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -210,7 +234,7 @@ Namespaces</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li><li class="navelem"><a class="el" href="ibuilder_8hpp.html">ibuilder.hpp</a></li>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

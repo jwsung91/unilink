@@ -166,8 +166,8 @@ $(document).ready(function(){initNavTree('user_tutorial_async.html',''); initRes
 <p>When you call <code>start()</code>, the library initiates the connection process (for clients) or port binding (for servers) in a background thread.</p>
 <h2><a class="anchor" id="autotoc_md876"></a>
 The Async Pattern</h2>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aef6afb1aad926719826706b41e137071">on_connect</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
+<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">on_connect</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Connected! This fires from a background thread.&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
@@ -177,9 +177,9 @@ The Async Pattern</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// You can do other initialization here</span></div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Waiting for connection in background...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_aef6afb1aad926719826706b41e137071"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#aef6afb1aad926719826706b41e137071">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00096">ibuilder.hpp:96</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ad8d6c30285a36b3a466a37d06f7460dd"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(F &amp;&amp;handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00099">ibuilder.hpp:99</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00072">context.hpp:72</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a3a4bdb4df1849be592d03452cb48278c"><div class="ttname"><a href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilderDefault tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md878"></a>
 2. Shared Ownership in Callbacks</h1>
@@ -191,23 +191,22 @@ Safe Capture Pattern</h2>
 <div class="line">std::shared_ptr&lt;unilink::wrapper::TcpClient&gt; client;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// 2. Capture the pointer in the builder (using a reference to the shared_ptr variable)</span></div>
-<div class="line"><span class="keyword">auto</span> builder = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aef6afb1aad926719826706b41e137071">on_connect</a>([&amp;client](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
+<div class="line"><span class="keyword">auto</span> builder = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
+<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">on_connect</a>([&amp;client](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
 <div class="line">        <span class="comment">// Safe to use client here because it&#39;s captured</span></div>
 <div class="line">        client-&gt;send(<span class="stringliteral">&quot;System Online&quot;</span>);</div>
 <div class="line">    });</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// 3. Move the built object into the shared pointer</span></div>
-<div class="line">client = builder.<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">client = builder.build();</div>
 <div class="line">client-&gt;start();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00042">tcp_client_builder.cc:42</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md881"></a>
 3. Parallel Initialization</h1>
 <p>Asynchronous startup allows you to initialize multiple connections simultaneously without waiting for each one to complete sequentially.</p>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> sensor1 = <a class="code hl_function" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>, 115200).<a class="code hl_function" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">build</a>();</div>
-<div class="line"><span class="keyword">auto</span> sensor2 = <a class="code hl_function" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB1&quot;</span>, 115200).<a class="code hl_function" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">build</a>();</div>
-<div class="line"><span class="keyword">auto</span> cloud_link = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;api.mycloud.com&quot;</span>, 80).<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> sensor1 = <a class="code hl_function" href="namespaceunilink.html#a1d0a99a790f1a6fd8fba2c04dc88797d">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>, 115200).<a class="code hl_function" href="classunilink_1_1builder_1_1SerialBuilder.html#aa804e78bd46394d49545000cca88c77a">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> sensor2 = <a class="code hl_function" href="namespaceunilink.html#a1d0a99a790f1a6fd8fba2c04dc88797d">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB1&quot;</span>, 115200).<a class="code hl_function" href="classunilink_1_1builder_1_1SerialBuilder.html#aa804e78bd46394d49545000cca88c77a">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> cloud_link = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;api.mycloud.com&quot;</span>, 80).<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">build</a>();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Start all three at once</span></div>
 <div class="line">sensor1-&gt;start();</div>
@@ -216,8 +215,9 @@ Safe Capture Pattern</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// None of the above blocked. The main thread can proceed to </span></div>
 <div class="line"><span class="comment">// setup the UI or other logic immediately.</span></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_aea59bfd17313e2607a96ea9f01c2dcda"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">unilink::builder::SerialBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::Serial &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="serial__builder_8cc_source.html#l00040">serial_builder.cc:40</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00121">unilink.hpp:121</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_aa804e78bd46394d49545000cca88c77a"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#aa804e78bd46394d49545000cca88c77a">unilink::builder::SerialBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::Serial &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="serial__builder_8cc_source.html#l00048">serial_builder.cc:48</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3209a5f18973c46d60299428afcc4e62"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00044">tcp_client_builder.cc:44</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a1d0a99a790f1a6fd8fba2c04dc88797d"><div class="ttname"><a href="namespaceunilink.html#a1d0a99a790f1a6fd8fba2c04dc88797d">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilderDefault serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00121">unilink.hpp:121</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md883"></a>
 4. When to Use Async vs Sync</h1>
@@ -248,7 +248,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

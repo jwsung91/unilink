@@ -28,7 +28,7 @@ var structunilink_1_1wrapper_1_1UdpServer_1_1Impl =
     [ "data_batch_queue_", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a6865e6ab72c1dfa4bdfb84158637ef59", null ],
     [ "endpoint_to_id", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a512bbd09b5b539bc62ff7c4a39797fb0", null ],
     [ "external_ioc", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a6b1bd018ecf73e66fe2b96bff2b8abe9", null ],
-    [ "external_thread", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a47073cf48d7864fb1fda7a2b267ca151", null ],
+    [ "external_thread", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aa03db5b2929fbdc0cc315a64cbecb357", null ],
     [ "framer_factory", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aca0c974620edf67db29ccc55a22dda50", null ],
     [ "is_alive", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9c52d4f986483b336bd81d36a94b4d96", null ],
     [ "is_listening", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a37f30f14f2b18e31fd62d6f44a371563", null ],

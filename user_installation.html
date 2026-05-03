@@ -164,10 +164,11 @@ $(document).ready(function(){initNavTree('user_installation.html',''); initResiz
 Prerequisites</h1>
 <ul>
 <li><b>CMake</b>: 3.12 or higher</li>
-<li><b>C++ Compiler</b>: C++17 compatible (GCC 11+, Clang 14+, MSVC 2019+)</li>
+<li><b>C++ Compiler</b>: C++20 compatible with <code>std::format</code> support (GCC 13+, recent Clang/libc++, MSVC 2022+)</li>
+<li><b>Boost</b>: 1.84.0 or higher</li>
 <li><b>Platform</b>: Linux, Windows, macOS</li>
 </ul>
-<p><b>Note:</b> When using a package manager (vcpkg), dependencies such as Boost are handled automatically.</p>
+<p><b>Dependency policy:</b> vcpkg is the recommended dependency supplier. CMake owns the version policy and rejects Boost versions older than 1.84.0. OS package manager Boost packages are supported only when they meet that minimum.</p>
 <h1><a class="anchor" id="autotoc_md596"></a>
 Installation Methods</h1>
 <h2><a class="anchor" id="autotoc_md597"></a>
@@ -187,16 +188,17 @@ Step 2: Use in your project</h3>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">    <span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080).<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">    <span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080).<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">build</a>();</div>
 <div class="line">    <span class="comment">// ...</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00042">tcp_client_builder.cc:42</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3209a5f18973c46d60299428afcc4e62"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00044">tcp_client_builder.cc:44</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a3a4bdb4df1849be592d03452cb48278c"><div class="ttname"><a href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilderDefault tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><p><b>Note:</b> The vcpkg port name is <code>jwsung91-unilink</code>, while the CMake package and target name remain <code>unilink</code>.</p>
 <h2><a class="anchor" id="autotoc_md600"></a>
 Method 2: Install from Source (CMake Package)</h2>
 <p>Use this method if you prefer not to rely on a package manager or need a custom build.</p>
+<p>Source builds still require Boost 1.84.0+. On Ubuntu 22.04/24.04, the default apt Boost package is older than this baseline, so use vcpkg or provide a custom Boost installation through <code>BOOST_ROOT</code>/<code>CMAKE_PREFIX_PATH</code>.</p>
 <h3><a class="anchor" id="autotoc_md601"></a>
 Step 1: Build and install</h3>
 <div class="fragment"><div class="line">git clone https://github.com/jwsung91/unilink.git</div>
@@ -307,7 +309,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

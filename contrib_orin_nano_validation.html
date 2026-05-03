@@ -205,13 +205,13 @@ Prerequisites</h1>
 <div class="line">  cmake \</div>
 <div class="line">  ccache \</div>
 <div class="line">  pkg-config \</div>
-<div class="line">  libboost-dev \</div>
-<div class="line">  libboost-system-dev \</div>
 <div class="line">  python3 \</div>
 <div class="line">  python3-dev \</div>
 <div class="line">  python3-pip \</div>
 <div class="line">  python3-venv \</div>
 <div class="line">  socat</div>
+</div><!-- fragment --><p>Install C++ dependencies through vcpkg so Boost 1.84.0+ is used consistently:</p>
+<div class="fragment"><div class="line">vcpkg install boost-asio boost-system spdlog pybind11 --triplet arm64-linux</div>
 </div><!-- fragment --><p>Install Python-side build and test helpers:</p>
 <div class="fragment"><div class="line">python3 -m pip install --user pybind11 pytest</div>
 </div><!-- fragment --><p>Check the expected environment:</p>
@@ -235,7 +235,9 @@ Configure And Build</h1>
 <div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
 <div class="line">  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \</div>
 <div class="line">  -DBUILD_PYTHON_BINDINGS=ON \</div>
-<div class="line">  -DPython3_EXECUTABLE=&quot;$(python3 -c &#39;import sys; print(sys.executable)&#39;)&quot;</div>
+<div class="line">  -DPython3_EXECUTABLE=&quot;$(python3 -c &#39;import sys; print(sys.executable)&#39;)&quot; \</div>
+<div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot; \</div>
+<div class="line">  -DVCPKG_TARGET_TRIPLET=arm64-linux</div>
 </div><!-- fragment --><div class="fragment"><div class="line">cmake --build build-orin -j&quot;$(nproc)&quot;</div>
 </div><!-- fragment --><p>If you only want a C++ validation pass and do not need Python bindings:</p>
 <div class="fragment"><div class="line">cmake -S . -B build-orin \</div>
@@ -244,7 +246,9 @@ Configure And Build</h1>
 <div class="line">  -DUNILINK_BUILD_DOCS=OFF \</div>
 <div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
 <div class="line">  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \</div>
-<div class="line">  -DBUILD_PYTHON_BINDINGS=OFF</div>
+<div class="line">  -DBUILD_PYTHON_BINDINGS=OFF \</div>
+<div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot; \</div>
+<div class="line">  -DVCPKG_TARGET_TRIPLET=arm64-linux</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md354"></a>
 Run C++ Tests</h1>
@@ -333,8 +337,8 @@ Pass Criteria</h1>
 Troubleshooting</h1>
 <h2><a class="anchor" id="autotoc_md366"></a>
 Boost Not Found</h2>
-<p>Check that the ARM64 Boost packages are installed:</p>
-<div class="fragment"><div class="line">dpkg -l | grep libboost</div>
+<p>Check that vcpkg installed the ARM64 Boost ports:</p>
+<div class="fragment"><div class="line">vcpkg list | grep boost</div>
 </div><!-- fragment --><p>If CMake still fails, clear the build directory and reconfigure:</p>
 <div class="fragment"><div class="line">rm -rf build-orin</div>
 <div class="line">cmake -S . -B build-orin ...</div>
@@ -380,7 +384,7 @@ Related Docs</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 2 2026 06:15:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

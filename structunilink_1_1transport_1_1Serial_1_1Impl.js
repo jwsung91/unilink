@@ -21,7 +21,7 @@ var structunilink_1_1transport_1_1Serial_1_1Impl =
     [ "cfg_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a0a7ca0ffee83e0aa678812e7edc9ef5c", null ],
     [ "current_write_buffer_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a718701d3df14f9cea59f1ade4744f5ba", null ],
     [ "ioc_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a4eb135e782278dc0d614a54fe14fc7f4", null ],
-    [ "ioc_thread_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a86ef2927fd6661fdbabfc7da990b6e6f", null ],
+    [ "ioc_thread_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a5f5ab9b13cb98a5d8be016b16f8b4bb2", null ],
     [ "on_bp_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a471eec5ec1d0a29098d2b457743dd058", null ],
     [ "on_bytes_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#af88981533657cc7968ea84f79944c52d", null ],
     [ "on_state_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a0467c0824620098701d1d88cb4e54e6f", null ],

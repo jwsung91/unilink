@@ -5,7 +5,7 @@ var searchData=
   ['_7eboostudsacceptor_2',['~BoostUdsAcceptor',['../classunilink_1_1transport_1_1BoostUdsAcceptor.html#a33f2dc44faf2b793e00eccd63a409d95',1,'unilink::transport::BoostUdsAcceptor']]],
   ['_7eboostudssocket_3',['~BoostUdsSocket',['../classunilink_1_1transport_1_1BoostUdsSocket.html#ac757a6f588479225a140b0e0d11e9343',1,'unilink::transport::BoostUdsSocket']]],
   ['_7ebuilderexception_4',['~BuilderException',['../classunilink_1_1diagnostics_1_1BuilderException.html#afcadc8064d1c24b5dbc6fa555051b728',1,'unilink::diagnostics::BuilderException']]],
-  ['_7ebuilderinterface_5',['~BuilderInterface',['../classunilink_1_1builder_1_1BuilderInterface.html#a4c9007f791048f912597ccd39fa99a76',1,'unilink::builder::BuilderInterface']]],
+  ['_7ebuilderinterface_5',['~BuilderInterface',['../classunilink_1_1builder_1_1BuilderInterface.html#ad6d2c2a1fea3d162442537b89798f8bf',1,'unilink::builder::BuilderInterface']]],
   ['_7echannel_6',['~Channel',['../classunilink_1_1interface_1_1Channel.html#aa69624945cfeb9b00145d9ea7aacd261',1,'unilink::interface::Channel']]],
   ['_7echannelinterface_7',['~ChannelInterface',['../classunilink_1_1wrapper_1_1ChannelInterface.html#abddae5fa4d73b824ca5ef57c0d6bd003',1,'unilink::wrapper::ChannelInterface']]],
   ['_7econfigmanager_8',['~ConfigManager',['../classunilink_1_1config_1_1ConfigManager.html#a8dae3b83f3a1426cf79b6817dbf9a98b',1,'unilink::config::ConfigManager']]],

@@ -1,31 +1,31 @@
-<map id="unilink::builder::BuilderInterface&lt; T, Derived &gt;" name="unilink::builder::BuilderInterface&lt; T, Derived &gt;">
-<area shape="rect" id="Node000001" title="Generic Builder interface for fluent API pattern." alt="" coords="716,5,924,500"/>
-<area shape="rect" id="Node000002" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="5,577,213,1087"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="704,295,593,339,466,401,402,439,340,481,281,528,227,579,216,592,212,589,223,575,277,524,336,477,399,434,464,397,590,334,702,290"/>
-<area shape="rect" id="Node000004" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="237,577,448,1087"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="707,335,644,384,579,442,517,508,462,579,450,597,446,595,458,576,512,504,575,438,641,380,703,331"/>
-<area shape="rect" id="Node000006" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="473,577,687,1087"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="712,436,669,525,649,578,644,576,664,523,707,434"/>
-<area shape="rect" id="Node000008" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="712,577,928,1087"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="823,514,823,577,817,577,817,514"/>
-<area shape="rect" id="Node000010" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="953,577,1173,1087"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="933,432,977,523,998,576,993,578,972,525,928,434"/>
-<area shape="rect" id="Node000012" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="1197,577,1411,1087"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="937,326,1002,375,1069,434,1133,502,1186,576,1199,597,1194,600,1182,579,1128,505,1065,438,998,379,934,330"/>
-<area shape="rect" id="Node000014" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="1436,577,1655,1087"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="938,289,1050,334,1179,396,1245,434,1309,477,1369,524,1425,575,1438,590,1434,594,1421,579,1366,528,1306,481,1242,439,1176,401,1048,339,936,294"/>
-<area shape="rect" id="Node000003" href="$classunilink_1_1builder_1_1SerialBuilder.html" title="Modernized Builder for Serial." alt="" coords="21,1146,197,1466"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,1101,112,1146,107,1146,107,1101"/>
-<area shape="rect" id="Node000005" href="$classunilink_1_1builder_1_1TcpClientBuilder.html" title="Modernized Builder for TcpClient." alt="" coords="253,1166,432,1446"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="345,1101,345,1166,340,1166,340,1101"/>
-<area shape="rect" id="Node000007" href="$classunilink_1_1builder_1_1TcpServerBuilder.html" title="Modernized Builder for TcpServer." alt="" coords="489,1136,671,1476"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="583,1100,583,1136,577,1136,577,1100"/>
-<area shape="rect" id="Node000009" href="$classunilink_1_1builder_1_1UdpClientBuilder.html" title="Modernized Builder for UdpClient." alt="" coords="729,1196,911,1416"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="823,1100,823,1196,817,1196,817,1100"/>
-<area shape="rect" id="Node000011" href="$classunilink_1_1builder_1_1UdpServerBuilder.html" title="Modernized Builder for UdpServer." alt="" coords="969,1206,1156,1406"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1065,1100,1065,1206,1060,1206,1060,1100"/>
-<area shape="rect" id="Node000013" href="$classunilink_1_1builder_1_1UdsClientBuilder.html" title="Modernized Builder for UdsClient." alt="" coords="1213,1206,1395,1406"/>
-<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="1307,1100,1307,1206,1301,1206,1301,1100"/>
-<area shape="rect" id="Node000015" href="$classunilink_1_1builder_1_1UdsServerBuilder.html" title="Modernized Builder for UdsServer." alt="" coords="1452,1206,1639,1406"/>
-<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="1548,1100,1548,1206,1543,1206,1543,1100"/>
+<map id="unilink::builder::BuilderInterface&lt; T, Derived, State &gt;" name="unilink::builder::BuilderInterface&lt; T, Derived, State &gt;">
+<area shape="rect" id="Node000001" title="Generic Builder interface for fluent API pattern." alt="" coords="1323,5,1531,515"/>
+<area shape="rect" id="Node000002" href="$classunilink_1_1builder_1_1SerialBuilder.html" title="Modernized Builder for Serial." alt="" coords="5,729,161,1009"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1310,282,1038,330,872,364,700,404,534,449,384,498,318,525,261,552,213,580,176,609,153,635,134,664,108,729,103,727,129,662,149,631,172,605,210,575,258,547,316,520,382,493,532,444,699,399,871,359,1037,325,1309,277"/>
+<area shape="rect" id="Node000003" href="$classunilink_1_1builder_1_1TcpClientBuilder.html" title="Modernized Builder for TcpClient." alt="" coords="186,739,365,999"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1310,271,1219,280,1111,296,991,319,863,352,733,396,606,452,545,486,486,523,430,564,379,609,354,637,333,669,303,740,299,737,328,667,349,634,375,605,427,559,483,518,542,481,603,448,731,391,862,347,990,314,1110,291,1219,275,1309,265"/>
+<area shape="rect" id="Node000004" href="$classunilink_1_1builder_1_1TcpServerBuilder.html" title="Modernized Builder for TcpServer with C++20 Concepts." alt="" coords="389,729,572,1009"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1311,282,1150,318,1056,346,957,381,856,424,759,476,667,537,625,571,585,609,563,635,544,665,515,730,510,727,539,663,558,632,581,605,621,567,664,533,756,471,854,419,955,376,1054,341,1149,313,1309,277"/>
+<area shape="rect" id="Node000005" href="$classunilink_1_1builder_1_1UdpClientBuilder.html" title="Modernized Builder for UdpClient." alt="" coords="596,699,779,1039"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1311,300,1191,346,1052,413,982,454,914,500,851,551,793,608,762,652,737,700,732,697,757,649,789,605,847,547,911,495,979,449,1050,408,1188,341,1309,295"/>
+<area shape="rect" id="Node000006" href="$classunilink_1_1builder_1_1UdpServerBuilder.html" title="Modernized Builder for UdpServer." alt="" coords="803,719,990,1019"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1313,334,1237,387,1155,451,1075,526,1004,608,971,662,944,720,939,717,966,659,1000,605,1071,522,1152,447,1234,382,1310,329"/>
+<area shape="rect" id="Node000007" href="$classunilink_1_1builder_1_1UdsClientBuilder.html" title="Modernized Builder for UdsClient." alt="" coords="1015,739,1197,999"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1318,426,1263,515,1212,608,1154,740,1150,738,1208,605,1259,513,1314,424"/>
+<area shape="rect" id="Node000008" href="$classunilink_1_1builder_1_1UdsServerBuilder.html" title="Modernized Builder for UdsServer." alt="" coords="1222,719,1409,1019"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1381,529,1345,719,1340,718,1375,528"/>
+<area shape="rect" id="Node000009" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="1433,607,1649,1131"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1480,528,1495,606,1489,607,1475,528"/>
+<area shape="rect" id="Node000010" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="1673,607,1891,1131"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1543,352,1627,437,1666,486,1699,537,1730,605,1725,607,1694,540,1661,489,1623,440,1540,356"/>
+<area shape="rect" id="Node000011" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="1916,607,2139,1131"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1545,295,1640,332,1743,384,1795,416,1844,452,1890,493,1931,537,1954,570,1973,605,1968,608,1949,573,1927,540,1886,496,1841,457,1792,421,1741,389,1637,337,1543,299"/>
+<area shape="rect" id="Node000012" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="2163,607,2385,1131"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1546,271,1688,297,1771,318,1856,346,1942,380,2025,423,2103,475,2172,537,2198,569,2219,605,2215,608,2194,572,2168,541,2100,479,2023,428,1940,385,1854,351,1769,323,1687,302,1545,276"/>
+<area shape="rect" id="Node000013" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="2410,607,2637,1131"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1545,278,1762,318,2020,377,2146,412,2259,451,2351,492,2388,514,2416,537,2444,569,2467,605,2462,608,2440,572,2412,541,2385,519,2349,497,2257,456,2144,417,2019,382,1761,323,1544,283"/>
+<area shape="rect" id="Node000014" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="2661,607,2884,1131"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="1545,270,1815,303,1979,327,2149,357,2314,393,2463,435,2528,458,2586,483,2633,509,2670,537,2699,569,2722,605,2718,608,2695,572,2667,541,2630,513,2583,487,2526,463,2462,440,2313,398,2148,363,1978,332,1814,308,1545,275"/>
+<area shape="rect" id="Node000015" href="$classunilink_1_1builder_1_1BuilderInterface.html" title=" " alt="" coords="2909,607,3135,1131"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="1546,265,1865,290,2065,312,2275,340,2479,376,2664,420,2745,445,2816,473,2875,504,2921,537,2950,568,2973,605,2969,608,2946,572,2918,541,2872,508,2813,478,2743,450,2662,425,2478,381,2274,345,2065,317,1864,296,1545,271"/>
 </map>
