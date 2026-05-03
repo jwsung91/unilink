@@ -484,15 +484,11 @@ bool TcpServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);
 }
 
-bool TcpServer::broadcast_line(std::string_view line) {
-  return broadcast(std::string(line) + "\n");
-}
+bool TcpServer::broadcast_line(std::string_view line) { return broadcast(std::string(line) + "\n"); }
 bool TcpServer::send_to_line(ClientId client_id, std::string_view line) {
   return send_to(client_id, std::string(line) + "\n");
 }
-bool TcpServer::try_broadcast_line(std::string_view line) {
-  return try_broadcast(std::string(line) + "\n");
-}
+bool TcpServer::try_broadcast_line(std::string_view line) { return try_broadcast(std::string(line) + "\n"); }
 bool TcpServer::try_send_to_line(ClientId client_id, std::string_view line) {
   return try_send_to(client_id, std::string(line) + "\n");
 }
