@@ -19,7 +19,7 @@ if(WIN32 AND Python3_EXECUTABLE)
   execute_process(
     COMMAND
       "${Python3_EXECUTABLE}" -c
-      "import sys, sysconfig; include = sysconfig.get_path('include') or ''; libdir = sysconfig.get_config_var('LIBDIR') or ''; libname = sysconfig.get_config_var('LDLIBRARY') or sysconfig.get_config_var('LIBRARY') or f'python{sys.version_info.major}{sys.version_info.minor}.lib'; print(include); print(libdir); print(libname)"
+      "import pathlib, sys, sysconfig; exe_dir = pathlib.Path(sys.executable).resolve().parent; include = sysconfig.get_path('include') or str(exe_dir / 'Include'); libname = sysconfig.get_config_var('LDLIBRARY') or sysconfig.get_config_var('LIBRARY') or f'python{sys.version_info.major}{sys.version_info.minor}.lib'; candidates = [sysconfig.get_config_var('LIBDIR'), sysconfig.get_config_var('LIBPL'), str(pathlib.Path(sys.base_prefix) / 'libs'), str(pathlib.Path(sys.prefix) / 'libs'), str(exe_dir / 'libs')]; libs = [str(pathlib.Path(p) / libname) for p in candidates if p]; existing = next((p for p in libs if pathlib.Path(p).exists()), libs[0] if libs else ''); print(include); print(existing)"
     OUTPUT_VARIABLE _unilink_python_probe
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE _unilink_python_probe_result
@@ -32,12 +32,11 @@ if(WIN32 AND Python3_EXECUTABLE)
     )
     list(LENGTH _unilink_python_probe_lines _unilink_python_probe_count)
 
-    if(_unilink_python_probe_count GREATER_EQUAL 3)
+    if(_unilink_python_probe_count GREATER_EQUAL 2)
       list(GET _unilink_python_probe_lines 0 _unilink_python_include_dir)
-      list(GET _unilink_python_probe_lines 1 _unilink_python_library_dir)
-      list(GET _unilink_python_probe_lines 2 _unilink_python_library_name)
-      set(_unilink_python_library
-          "${_unilink_python_library_dir}/${_unilink_python_library_name}"
+      list(GET _unilink_python_probe_lines 1 _unilink_python_library)
+      get_filename_component(
+        _unilink_python_library_dir "${_unilink_python_library}" DIRECTORY
       )
 
       if(EXISTS "${_unilink_python_include_dir}/Python.h")
@@ -82,6 +81,15 @@ find_package(
   COMPONENTS Interpreter Development.Module
   REQUIRED
 )
+
+if(WIN32
+   AND _unilink_python_library
+   AND EXISTS "${_unilink_python_library}"
+)
+  set(Python3_LIBRARIES "${_unilink_python_library}")
+  set(Python3_LIBRARY_DIRS "${_unilink_python_library_dir}")
+endif()
+
 find_package(pybind11 CONFIG QUIET)
 
 if(NOT pybind11_FOUND)
@@ -176,6 +184,17 @@ if(WIN32
    AND _unilink_python_library
    AND EXISTS "${_unilink_python_library}"
 )
+  get_target_property(_unilink_py_link_libraries unilink_py LINK_LIBRARIES)
+  if(_unilink_py_link_libraries)
+    list(REMOVE_ITEM _unilink_py_link_libraries Python3::Module)
+    list(FILTER _unilink_py_link_libraries EXCLUDE REGEX
+         "([Pp]ython[0-9]+(_d)?\\.lib|Python3::Module)"
+    )
+    set_target_properties(
+      unilink_py PROPERTIES LINK_LIBRARIES "${_unilink_py_link_libraries}"
+    )
+  endif()
+
   add_library(unilink_python_module INTERFACE)
   target_link_libraries(
     unilink_python_module INTERFACE "${_unilink_python_library}"
