@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 10:29:24</td>
+            <td class="headerValue">2026-05-03 13:22:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -280,12 +280,12 @@
 <span id="L202"><span class="lineNum">     202</span>                 :             :   void debug(std::string_view component, std::string_view operation, std::string_view message,</span>
 <span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">        2234 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span id="L204"><span class="lineNum">     204</span>                 :             :   void info(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L205"><span class="lineNum">     205</span>   [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         750 :             const std::source_location&amp; loc = std::source_location::current());</span></span>
+<span id="L205"><span class="lineNum">     205</span>   [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         754 :             const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L206"><span class="lineNum">     206</span>                 :             :   void warning(std::string_view component, std::string_view operation, std::string_view message,</span>
 <span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          14 :                const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span id="L208"><span class="lineNum">     208</span>                 :             :   void error(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L209"><span class="lineNum">     209</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          96 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
+<span id="L209"><span class="lineNum">     209</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          92 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaGBC" title="Branch 12 was taken 3 times"> + </span> 
 <span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 13 was not taken"> - </span>]
@@ -363,15 +363,15 @@
 <span id="L281"><span class="lineNum">     281</span>                 :             :           ? std::chrono::high_resolution_clock::now()                                             \</span>
 <span id="L282"><span class="lineNum">     282</span>                 :             :           : std::chrono::high_resolution_clock::time_point()</span>
 <span id="L283"><span class="lineNum">     283</span>                 :             : </span>
-<span id="L284"><span class="lineNum">     284</span>                 :             : #define UNILINK_LOG_PERF_END(component, operation)                                                     \</span>
-<span id="L285"><span class="lineNum">     285</span>                 :             :   do {                                                                                                 \</span>
-<span id="L286"><span class="lineNum">     286</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {   \</span>
-<span id="L287"><span class="lineNum">     287</span>                 :             :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                          \</span>
-<span id="L288"><span class="lineNum">     288</span>                 :             :       using _us_t = std::chrono::microseconds;                                                         \</span>
-<span id="L289"><span class="lineNum">     289</span>                 :             :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                        \</span>
-<span id="L290"><span class="lineNum">     290</span>                 :             :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();  \</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : #define UNILINK_LOG_PERF_END(component, operation)                                                         \</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :   do {                                                                                                     \</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {       \</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                              \</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :       using _us_t = std::chrono::microseconds;                                                             \</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                            \</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();      \</span>
 <span id="L291"><span class="lineNum">     291</span>                 :             :       UNILINK_LOG_DEBUG(component, operation, std::format(&quot;Duration: {} μs&quot;, _perf_duration_##operation)); \</span>
-<span id="L292"><span class="lineNum">     292</span>                 :             :     }                                                                                                  \</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :     }                                                                                                      \</span>
 <span id="L293"><span class="lineNum">     293</span>                 :             :   } while (0)</span>
 <span id="L294"><span class="lineNum">     294</span>                 :             : </span>
 <span id="L295"><span class="lineNum">     295</span>                 :             : }  // namespace diagnostics</span>

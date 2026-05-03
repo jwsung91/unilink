@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 10:29:24</td>
+            <td class="headerValue">2026-05-03 13:22:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">83.3&nbsp;%</td>
@@ -136,7 +136,7 @@
 <span id="L58"><span class="lineNum">      58</span>                 :             : </span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :     // If we haven't processed everything, append the remainder to the buffer</span>
 <span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1006 times"> + </span>]:<span class="tlaGNC">        1009 :     if (processed_count &lt; data.size()) {</span></span>
-<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :       buffer_.insert(buffer_.end(), data.begin() + processed_count, data.end());</span></span>
+<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :       buffer_.insert(buffer_.end(), data.begin() + static_cast&lt;std::ptrdiff_t&gt;(processed_count), data.end());</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">           3 :       scanned_idx_ = buffer_.size();  // We scanned all of it</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : </span>
 <span id="L64"><span class="lineNum">      64</span>                 :             :       // DoS protection for partial message overflow</span>
