@@ -70,18 +70,18 @@ class UNILINK_API Serial : public ChannelInterface {
   bool try_send_line(std::string_view line) override;
   bool connected() const override;
 
-  ChannelInterface& on_data(MessageHandler handler) override;
-  ChannelInterface& on_data_batch(BatchMessageHandler handler) override;
-  ChannelInterface& on_connect(ConnectionHandler handler) override;
-  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
-  ChannelInterface& on_error(ErrorHandler handler) override;
-  ChannelInterface& on_backpressure(std::function<void(size_t)> handler) override;
+  Serial& on_data(MessageHandler handler) override;
+  Serial& on_data_batch(BatchMessageHandler handler) override;
+  Serial& on_connect(ConnectionHandler handler) override;
+  Serial& on_disconnect(ConnectionHandler handler) override;
+  Serial& on_error(ErrorHandler handler) override;
+  Serial& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
-  ChannelInterface& on_message(MessageHandler handler) override;
-  ChannelInterface& on_message_batch(BatchMessageHandler handler) override;
+  Serial& framer(std::unique_ptr<framer::IFramer> framer) override;
+  Serial& on_message(MessageHandler handler) override;
+  Serial& on_message_batch(BatchMessageHandler handler) override;
 
-  ChannelInterface& auto_start(bool manage = true) override;
+  Serial& auto_start(bool manage = true) override;
 
   // Serial-specific methods
   Serial& baud_rate(uint32_t baud_rate);

@@ -463,52 +463,52 @@ bool TcpClient::send_blocking(std::string_view data) { return impl_->send_blocki
 bool TcpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool TcpClient::connected() const { return get_impl()->connected(); }
 
-ChannelInterface& TcpClient::on_data(MessageHandler h) {
+TcpClient& TcpClient::on_data(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(h);
   return *this;
 }
-ChannelInterface& TcpClient::on_data_batch(BatchMessageHandler h) {
+TcpClient& TcpClient::on_data_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_batch_handler_ = std::move(h);
   return *this;
 }
-ChannelInterface& TcpClient::on_connect(ConnectionHandler h) {
+TcpClient& TcpClient::on_connect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler_ = std::move(h);
   return *this;
 }
-ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
+TcpClient& TcpClient::on_disconnect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler_ = std::move(h);
   return *this;
 }
-ChannelInterface& TcpClient::on_error(ErrorHandler h) {
+TcpClient& TcpClient::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(h);
   return *this;
 }
 
-ChannelInterface& TcpClient::on_backpressure(std::function<void(size_t)> h) {
+TcpClient& TcpClient::on_backpressure(std::function<void(size_t)> h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->bp_handler_ = std::move(h);
   return *this;
 }
 
-ChannelInterface& TcpClient::framer(std::unique_ptr<framer::IFramer> f) {
+TcpClient& TcpClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }
-ChannelInterface& TcpClient::on_message(MessageHandler h) {
+TcpClient& TcpClient::on_message(MessageHandler h) {
   impl_->on_message(std::move(h));
   return *this;
 }
-ChannelInterface& TcpClient::on_message_batch(BatchMessageHandler h) {
+TcpClient& TcpClient::on_message_batch(BatchMessageHandler h) {
   impl_->on_message_batch(std::move(h));
   return *this;
 }
 
-ChannelInterface& TcpClient::auto_start(bool m) {
+TcpClient& TcpClient::auto_start(bool m) {
   impl_->auto_start_.store(m);
   if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;

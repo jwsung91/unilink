@@ -459,52 +459,52 @@ bool Serial::connected() const {
   return impl_->channel && impl_->channel->is_connected();
 }
 
-ChannelInterface& Serial::on_data(MessageHandler h) {
+Serial& Serial::on_data(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler = std::move(h);
   return *this;
 }
-ChannelInterface& Serial::on_data_batch(BatchMessageHandler h) {
+Serial& Serial::on_data_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_batch_handler_ = std::move(h);
   return *this;
 }
-ChannelInterface& Serial::on_connect(ConnectionHandler h) {
+Serial& Serial::on_connect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler = std::move(h);
   return *this;
 }
-ChannelInterface& Serial::on_disconnect(ConnectionHandler h) {
+Serial& Serial::on_disconnect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler = std::move(h);
   return *this;
 }
-ChannelInterface& Serial::on_error(ErrorHandler h) {
+Serial& Serial::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler = std::move(h);
   return *this;
 }
 
-ChannelInterface& Serial::on_backpressure(std::function<void(size_t)> h) {
+Serial& Serial::on_backpressure(std::function<void(size_t)> h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->bp_handler = std::move(h);
   return *this;
 }
 
-ChannelInterface& Serial::framer(std::unique_ptr<framer::IFramer> f) {
+Serial& Serial::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }
-ChannelInterface& Serial::on_message(MessageHandler h) {
+Serial& Serial::on_message(MessageHandler h) {
   impl_->on_message(std::move(h));
   return *this;
 }
-ChannelInterface& Serial::on_message_batch(BatchMessageHandler h) {
+Serial& Serial::on_message_batch(BatchMessageHandler h) {
   impl_->on_message_batch(std::move(h));
   return *this;
 }
 
-ChannelInterface& Serial::auto_start(bool m) {
+Serial& Serial::auto_start(bool m) {
   impl_->auto_start_.store(m);
   if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;

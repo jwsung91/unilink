@@ -140,6 +140,10 @@ class UNILINK_API ChannelInterface {
   /**
    * @brief Register a callback to be notified when send queue congestion changes.
    * @param handler Callback receiving the current number of queued bytes.
+   *
+   * Default implementation is a no-op. Concrete implementations that support
+   * backpressure reporting must override this method; otherwise the handler
+   * is silently discarded.
    */
   virtual ChannelInterface& on_backpressure(std::function<void(size_t)> handler) {
     (void)handler;

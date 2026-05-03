@@ -457,58 +457,58 @@ bool UdsClient::connected() const {
   return impl_->channel_ && impl_->channel_->is_connected();
 }
 
-ChannelInterface& UdsClient::on_data(MessageHandler handler) {
+UdsClient& UdsClient::on_data(MessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(handler);
   return *this;
 }
 
-ChannelInterface& UdsClient::on_data_batch(BatchMessageHandler h) {
+UdsClient& UdsClient::on_data_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_batch_handler_ = std::move(h);
   return *this;
 }
 
-ChannelInterface& UdsClient::on_connect(ConnectionHandler handler) {
+UdsClient& UdsClient::on_connect(ConnectionHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler_ = std::move(handler);
   return *this;
 }
 
-ChannelInterface& UdsClient::on_disconnect(ConnectionHandler handler) {
+UdsClient& UdsClient::on_disconnect(ConnectionHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler_ = std::move(handler);
   return *this;
 }
 
-ChannelInterface& UdsClient::on_error(ErrorHandler h) {
+UdsClient& UdsClient::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(h);
   return *this;
 }
 
-ChannelInterface& UdsClient::on_backpressure(std::function<void(size_t)> h) {
+UdsClient& UdsClient::on_backpressure(std::function<void(size_t)> h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->bp_handler_ = std::move(h);
   return *this;
 }
 
-ChannelInterface& UdsClient::framer(std::unique_ptr<framer::IFramer> f) {
+UdsClient& UdsClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }
 
-ChannelInterface& UdsClient::on_message(MessageHandler h) {
+UdsClient& UdsClient::on_message(MessageHandler h) {
   impl_->on_message(std::move(h));
   return *this;
 }
 
-ChannelInterface& UdsClient::on_message_batch(BatchMessageHandler h) {
+UdsClient& UdsClient::on_message_batch(BatchMessageHandler h) {
   impl_->on_message_batch(std::move(h));
   return *this;
 }
 
-ChannelInterface& UdsClient::auto_start(bool manage) {
+UdsClient& UdsClient::auto_start(bool manage) {
   impl_->auto_start_.store(manage);
   if (impl_->auto_start_.load() && !impl_->started_.load()) {
     start();

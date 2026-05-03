@@ -41,7 +41,10 @@ class MessageContext {
   ClientId client_id() const { return client_id_; }
 
   /**
-   * @brief Get the received data as a view
+   * @brief Get the received data as a view.
+   *
+   * The returned view is only valid for the lifetime of this MessageContext.
+   * Do not store it past the callback's return — use data_as_string() instead.
    */
   std::string_view data() const { return std::string_view(reinterpret_cast<const char*>(data_.data()), data_.size()); }
 

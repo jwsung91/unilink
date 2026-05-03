@@ -85,6 +85,8 @@ struct UdpServer::Impl {
   std::chrono::milliseconds session_timeout{30000};  // Default 30s
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
   std::atomic<bool> auto_start{false};
+  std::atomic<bool> client_limit_enabled{false};
+  std::atomic<size_t> max_clients_limit{0};
 
   ConnectionHandler on_connect{nullptr};
   ConnectionHandler on_disconnect{nullptr};
@@ -233,6 +235,9 @@ struct UdpServer::Impl {
         std::unique_lock<std::shared_mutex> lock(mutex);
         auto it = endpoint_to_id.find(ep);
         if (it == endpoint_to_id.end()) {
+          if (client_limit_enabled.load() && sessions.size() >= max_clients_limit.load()) {
+            return;
+          }
           client_id = next_client_id++;
           endpoint_to_id[ep] = client_id;
           SessionEntry entry;
@@ -531,49 +536,62 @@ bool UdpServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);
 }
 
-ServerInterface& UdpServer::on_connect(ConnectionHandler h) {
+bool UdpServer::broadcast_line(std::string_view line) {
+  return broadcast(std::string(line) + "\n");
+}
+bool UdpServer::send_to_line(ClientId client_id, std::string_view line) {
+  return send_to(client_id, std::string(line) + "\n");
+}
+bool UdpServer::try_broadcast_line(std::string_view line) {
+  return try_broadcast(std::string(line) + "\n");
+}
+bool UdpServer::try_send_to_line(ClientId client_id, std::string_view line) {
+  return try_send_to(client_id, std::string(line) + "\n");
+}
+
+UdpServer& UdpServer::on_connect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_connect = std::move(h);
   return *this;
 }
 
-ServerInterface& UdpServer::on_disconnect(ConnectionHandler h) {
+UdpServer& UdpServer::on_disconnect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_disconnect = std::move(h);
   return *this;
 }
 
-ServerInterface& UdpServer::on_data(MessageHandler h) {
+UdpServer& UdpServer::on_data(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_data = std::move(h);
   return *this;
 }
 
-ServerInterface& UdpServer::on_data_batch(BatchMessageHandler h) {
+UdpServer& UdpServer::on_data_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_data_batch_ = std::move(h);
   return *this;
 }
 
-ServerInterface& UdpServer::on_error(ErrorHandler h) {
+UdpServer& UdpServer::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_error = std::move(h);
   return *this;
 }
 
-ServerInterface& UdpServer::framer(FramerFactory factory) {
+UdpServer& UdpServer::framer(FramerFactory factory) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->framer_factory = std::move(factory);
   return *this;
 }
 
-ServerInterface& UdpServer::on_message(MessageHandler h) {
+UdpServer& UdpServer::on_message(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_message = std::move(h);
   return *this;
 }
 
-ServerInterface& UdpServer::on_message_batch(BatchMessageHandler h) {
+UdpServer& UdpServer::on_message_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->on_message_batch_ = std::move(h);
   return *this;
@@ -602,7 +620,7 @@ UdpServer& UdpServer::auto_start(bool m) {
   return *this;
 }
 
-UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
+UdpServer& UdpServer::idle_timeout(std::chrono::milliseconds timeout) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
   return *this;
@@ -611,6 +629,17 @@ UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
 UdpServer& UdpServer::on_backpressure(std::function<void(size_t)> handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->bp_handler = std::move(handler);
+  return *this;
+}
+
+UdpServer& UdpServer::max_clients(size_t max) {
+  impl_->client_limit_enabled.store(true);
+  impl_->max_clients_limit.store(max);
+  return *this;
+}
+
+UdpServer& UdpServer::unlimited_clients() {
+  impl_->client_limit_enabled.store(false);
   return *this;
 }
 

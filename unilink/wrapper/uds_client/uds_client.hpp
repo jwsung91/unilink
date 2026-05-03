@@ -70,18 +70,18 @@ class UNILINK_API UdsClient : public ChannelInterface {
   bool try_send_line(std::string_view line) override;
   bool connected() const override;
 
-  ChannelInterface& on_data(MessageHandler handler) override;
-  ChannelInterface& on_data_batch(BatchMessageHandler handler) override;
-  ChannelInterface& on_connect(ConnectionHandler handler) override;
-  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
-  ChannelInterface& on_error(ErrorHandler handler) override;
-  ChannelInterface& on_backpressure(std::function<void(size_t)> handler) override;
+  UdsClient& on_data(MessageHandler handler) override;
+  UdsClient& on_data_batch(BatchMessageHandler handler) override;
+  UdsClient& on_connect(ConnectionHandler handler) override;
+  UdsClient& on_disconnect(ConnectionHandler handler) override;
+  UdsClient& on_error(ErrorHandler handler) override;
+  UdsClient& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
-  ChannelInterface& on_message(MessageHandler handler) override;
-  ChannelInterface& on_message_batch(BatchMessageHandler handler) override;
+  UdsClient& framer(std::unique_ptr<framer::IFramer> framer) override;
+  UdsClient& on_message(MessageHandler handler) override;
+  UdsClient& on_message_batch(BatchMessageHandler handler) override;
 
-  ChannelInterface& auto_start(bool manage = true) override;
+  UdsClient& auto_start(bool manage = true) override;
 
   // Configuration
   UdsClient& retry_interval(std::chrono::milliseconds interval);

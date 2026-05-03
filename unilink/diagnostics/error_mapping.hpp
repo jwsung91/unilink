@@ -87,8 +87,7 @@ inline bool is_retryable_tcp_connect_error(const boost::system::error_code& ec) 
   // Aborted usually means stopped by user, not retryable automatically
   if (ec == boost::asio::error::operation_aborted) return false;
 
-  // Default to true for unknown errors in network context to be resilient?
-  // Or false? The requirement says "PR2는 보수적으로 true로 둬도 됨" (conservative to keep retrying)
+  // Unknown network errors are treated as transient to err on the side of resilience.
   return true;
 }
 
