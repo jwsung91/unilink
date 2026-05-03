@@ -243,12 +243,12 @@ Logger::~Logger() = default;
 Logger::Logger(Logger&&) noexcept = default;
 Logger& Logger::operator=(Logger&&) noexcept = default;
 
-Logger& Logger::default_logger() {
-  static Logger* instance = new Logger();
-  return *instance;
+Logger& Logger::instance() {
+  static Logger* inst = new Logger();
+  return *inst;
 }
 
-Logger& Logger::instance() { return default_logger(); }
+Logger& Logger::default_logger() { return instance(); }
 
 void Logger::set_level(LogLevel level) {
   impl_->current_level_.store(level);

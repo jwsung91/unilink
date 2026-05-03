@@ -30,12 +30,12 @@ namespace diagnostics {
 ErrorHandler::ErrorHandler() = default;
 ErrorHandler::~ErrorHandler() = default;
 
-ErrorHandler& ErrorHandler::default_handler() {
-  static ErrorHandler instance;
-  return instance;
+ErrorHandler& ErrorHandler::instance() {
+  static ErrorHandler inst;
+  return inst;
 }
 
-ErrorHandler& ErrorHandler::instance() { return default_handler(); }
+ErrorHandler& ErrorHandler::default_handler() { return instance(); }
 
 void ErrorHandler::report_error(const ErrorInfo& error) {
   if (!enabled_.load()) {
