@@ -36,7 +36,7 @@ class CoreIntegratedTest : public ::testing::Test {
 };
 
 TEST_F(CoreIntegratedTest, BasicLifecycle) {
-  auto server = tcp_server(port_).build();
+  auto server = tcp_server(port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
   EXPECT_TRUE(server->start().get());
   EXPECT_TRUE(server->listening());
   server->stop();

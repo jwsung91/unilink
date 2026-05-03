@@ -25,8 +25,10 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <deque>
+#include <format>
 #include <memory>
 #include <mutex>
+#include <stop_token>
 #include <thread>
 
 #include "unilink/base/constants.hpp"
@@ -54,7 +56,7 @@ struct UdsClient::Impl {
   net::io_context* ioc_ = nullptr;
   net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
-  std::thread ioc_thread_;
+  std::jthread ioc_thread_;
   std::atomic<uint64_t> current_seq_{0};
   std::unique_ptr<interface::UdsSocketInterface> socket_;
   UdsClientConfig cfg_;
@@ -140,10 +142,11 @@ struct UdsClient::Impl {
     }
 
     if (ioc_ && owns_ioc_ && ioc_thread_.joinable()) {
-      if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-        ioc_thread_.join();
-      } else {
+      if (std::this_thread::get_id() == ioc_thread_.get_id()) {
         ioc_thread_.detach();
+      } else {
+        ioc_thread_.request_stop();
+        ioc_thread_.join();
       }
     }
   }
@@ -203,8 +206,9 @@ void UdsClient::start() {
     }
     impl_->work_guard_ =
         std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(net::make_work_guard(*impl_->ioc_));
-    impl_->ioc_thread_ = std::thread([ioc = impl_->owned_ioc_]() {
+    impl_->ioc_thread_ = std::jthread([ioc = impl_->owned_ioc_](std::stop_token st) {
       try {
+        std::stop_callback cb(st, [ioc] { ioc->stop(); });
         ioc->run();
       } catch (...) {
       }
@@ -257,7 +261,7 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
     impl_->maybe_flush_for_keep_latest(added);
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
       UNILINK_LOG_ERROR("uds_client", "write",
-                        "Queue limit exceeded (" + std::to_string(impl_->queue_bytes_ + added) + " bytes)");
+                        std::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
       impl_->report_backpressure(impl_->queue_bytes_ + added);
       return;
     }
@@ -278,7 +282,7 @@ bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     impl_->maybe_flush_for_keep_latest(added);
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
       UNILINK_LOG_ERROR("uds_client", "write",
-                        "Queue limit exceeded (" + std::to_string(impl_->queue_bytes_ + added) + " bytes)");
+                        std::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
       impl_->report_backpressure(impl_->queue_bytes_ + added);
       return;
     }
@@ -521,8 +525,7 @@ void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
     try {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
-                        "Exception in backpressure callback: " + std::string(e.what()));
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
@@ -531,8 +534,7 @@ void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
     try {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
-                        "Exception in backpressure callback: " + std::string(e.what()));
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
     }

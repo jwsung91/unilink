@@ -32,33 +32,33 @@ namespace diagnostics {
  * @brief Maps boost::system::error_code to Unilink ErrorCode
  */
 inline ErrorCode to_unilink_error_code(const boost::system::error_code& ec) {
-  if (!ec) {
+  if (!ec) [[likely]] {
     return ErrorCode::Success;
   }
 
   // Check specific boost error codes
-  if (ec == boost::asio::error::connection_refused) {
+  if (ec == boost::asio::error::connection_refused) [[unlikely]] {
     return ErrorCode::ConnectionRefused;
   }
-  if (ec == boost::asio::error::timed_out) {
+  if (ec == boost::asio::error::timed_out) [[unlikely]] {
     return ErrorCode::TimedOut;
   }
-  if (ec == boost::asio::error::connection_reset) {
+  if (ec == boost::asio::error::connection_reset) [[unlikely]] {
     return ErrorCode::ConnectionReset;
   }
-  if (ec == boost::asio::error::connection_aborted) {
+  if (ec == boost::asio::error::connection_aborted) [[unlikely]] {
     return ErrorCode::ConnectionAborted;
   }
-  if (ec == boost::asio::error::network_unreachable || ec == boost::asio::error::host_unreachable) {
+  if (ec == boost::asio::error::network_unreachable || ec == boost::asio::error::host_unreachable) [[unlikely]] {
     return ErrorCode::NotConnected;
   }
-  if (ec == boost::asio::error::already_connected) {
+  if (ec == boost::asio::error::already_connected) [[unlikely]] {
     return ErrorCode::AlreadyConnected;
   }
-  if (ec == boost::asio::error::address_in_use) {
+  if (ec == boost::asio::error::address_in_use) [[unlikely]] {
     return ErrorCode::PortInUse;
   }
-  if (ec == boost::asio::error::access_denied) {
+  if (ec == boost::asio::error::access_denied) [[unlikely]] {
     return ErrorCode::AccessDenied;
   }
 
@@ -70,7 +70,8 @@ inline ErrorCode to_unilink_error_code(const boost::system::error_code& ec) {
  * @brief Determines if a TCP connection error is retryable
  */
 inline bool is_retryable_tcp_connect_error(const boost::system::error_code& ec) {
-  if (!ec) return false;
+  if (!ec) [[likely]]
+    return false;
 
   // Connection refused is temporary (server might be starting up)
   if (ec == boost::asio::error::connection_refused) return true;

@@ -11,7 +11,7 @@ Unilink provides a Python package (`unilink`) backed by the C++ Wrapper API. Thi
 1. **Prerequisites**:
    - Python 3.8+
    - `pybind11` — install via pip (`pip install pybind11`) or apt (`sudo apt install python3-pybind11 pybind11-dev`)
-   - CMake and a C++17 compiler
+   - CMake and a C++20 compiler with `std::format`
 
 2. **Build**:
    ```bash

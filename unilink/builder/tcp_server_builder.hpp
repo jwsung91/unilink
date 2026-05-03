@@ -18,7 +18,7 @@
 
 #include <chrono>
 #include <cstdint>
-#include <functional>
+#include <string>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/builder/ibuilder.hpp"
@@ -27,84 +27,87 @@
 namespace unilink {
 namespace builder {
 
-/**
- * @brief Modernized Builder for TcpServer
- */
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer, TcpServerBuilder> {
+
+/**
+ * @brief Modernized Builder for TcpServer with C++20 Concepts
+ */
+template <uint32_t State = BuilderState::None>
+class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer, TcpServerBuilder<State>, State> {
  public:
+  template <uint32_t NewState>
+  using Rebind = TcpServerBuilder<NewState>;
+
   explicit TcpServerBuilder(uint16_t port);
 
-  // Delete copy, allow move
+  // Allow conversion between states
+  template <uint32_t OtherState>
+  TcpServerBuilder(TcpServerBuilder<OtherState>&& other) noexcept
+      : port_(other.port_),
+        bind_address_(std::move(other.bind_address_)),
+        auto_start_(other.auto_start_),
+        independent_context_(other.independent_context_),
+        max_clients_(other.max_clients_),
+        client_limit_enabled_(other.client_limit_enabled_),
+        port_retry_enabled_(other.port_retry_enabled_),
+        max_port_retries_(other.max_port_retries_),
+        port_retry_interval_ms_(other.port_retry_interval_ms_),
+        idle_timeout_(other.idle_timeout_) {
+    this->on_data_ = std::move(other.on_data_);
+    this->on_error_ = std::move(other.on_error_);
+    this->on_connect_ = std::move(other.on_connect_);
+    this->on_disconnect_ = std::move(other.on_disconnect_);
+    this->on_message_ = std::move(other.on_message_);
+    this->framer_factory_ = std::move(other.framer_factory_);
+    this->bp_strategy_ = other.bp_strategy_;
+    this->bp_threshold_ = other.bp_threshold_;
+    this->bp_strategy_set_ = other.bp_strategy_set_;
+    this->bp_threshold_set_ = other.bp_threshold_set_;
+  }
+
+  // Delete copy
   TcpServerBuilder(const TcpServerBuilder&) = delete;
   TcpServerBuilder& operator=(const TcpServerBuilder&) = delete;
-  TcpServerBuilder(TcpServerBuilder&&) = default;
-  TcpServerBuilder& operator=(TcpServerBuilder&&) = default;
 
-  /**
-   * @brief Build and return the configured TcpServer
-   * @return std::unique_ptr<wrapper::TcpServer> The configured server instance
-   */
   std::unique_ptr<wrapper::TcpServer> build() override;
 
-  /**
-   * @brief Enable auto-manage functionality
-   * @param auto_start Whether to automatically manage the server lifecycle
-   * @return TcpServerBuilder& Reference to this builder
-   */
-  TcpServerBuilder& auto_start(bool auto_start = true) override;
-
-  /**
-   * @brief Use independent IoContext for this server
-   */
-  TcpServerBuilder& independent_context(bool use_independent = true);
-
-  /**
-   * @brief Enable port binding retry on failure
-   */
-  TcpServerBuilder& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
-
-  /**
-   * @brief Set idle connection timeout
-   */
-  TcpServerBuilder& idle_timeout(std::chrono::milliseconds timeout);
-
-  /**
-   * @brief Set maximum number of clients
-   */
-  TcpServerBuilder& max_clients(size_t max);
-
-  /**
-   * @brief Configure server for single client mode
-   */
-  TcpServerBuilder& single_client();
-
-  /**
-   * @brief Configure server for multi-client mode with limit
-   */
-  TcpServerBuilder& multi_client(size_t max);
-
-  /**
-   * @brief Configure server for unlimited multi-client mode
-   */
-  TcpServerBuilder& unlimited_clients();
+  TcpServerBuilder<State>& auto_start(bool auto_start = true) override;
+  TcpServerBuilder<State>& bind_address(const std::string& address);
+  TcpServerBuilder<State>& independent_context(bool use_independent = true);
+  TcpServerBuilder<State>& max_clients(uint32_t max_clients);
+  TcpServerBuilder<State>& enable_port_retry(bool enable = true);
+  TcpServerBuilder<State>& max_port_retries(uint32_t max_retries);
+  TcpServerBuilder<State>& port_retry_interval(std::chrono::milliseconds interval);
+  
+  // Backward compatibility methods
+  TcpServerBuilder<State>& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
+  TcpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
+  TcpServerBuilder<State>& single_client();
+  TcpServerBuilder<State>& multi_client(size_t max);
+  TcpServerBuilder<State>& unlimited_clients();
 
  private:
+  template <uint32_t S>
+  friend class TcpServerBuilder;
+
   uint16_t port_;
+  std::string bind_address_;
   bool auto_start_;
   bool independent_context_;
 
-  // Configuration
-  bool enable_port_retry_;
-  int max_port_retries_;
-  int port_retry_interval_ms_;
+  uint32_t max_clients_;
+  bool client_limit_enabled_;
+
+  bool port_retry_enabled_;
+  uint32_t max_port_retries_;
+  uint32_t port_retry_interval_ms_;
   std::chrono::milliseconds idle_timeout_;
-  size_t max_clients_;
-  bool client_limit_set_;
 };
+
+using TcpServerBuilderDefault = TcpServerBuilder<BuilderState::None>;
 
 #ifdef _MSC_VER
 #pragma warning(pop)

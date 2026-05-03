@@ -45,9 +45,11 @@ TEST_F(UnifiedBuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
                       received_msg = std::string(ctx.data());
                       data_received = true;
                     })
+                    .on_error([](auto&&) {})
                     .build();
 
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port_).build();
+  auto client =
+      builder::UnifiedBuilder::tcp_client("127.0.0.1", port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   auto start_f = server->start();
   ASSERT_TRUE(start_f.get());
@@ -70,7 +72,11 @@ TEST_F(UnifiedBuilderIntegrationTest, BuilderConfigurationAffectsCommunication) 
   // Use a unique port for this sub-test
   uint16_t p = TestUtils::getAvailableTestPort();
 
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p).retry_interval(100ms).build();
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p)
+                    .retry_interval(100ms)
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   // Start client without server
   auto f = client->start();
@@ -78,7 +84,7 @@ TEST_F(UnifiedBuilderIntegrationTest, BuilderConfigurationAffectsCommunication) 
 
   TestUtils::waitFor(300);
 
-  auto server = builder::UnifiedBuilder::tcp_server(p).build();
+  auto server = builder::UnifiedBuilder::tcp_server(p).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   server->start();
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 5000));

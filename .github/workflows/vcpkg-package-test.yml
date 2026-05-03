@@ -33,7 +33,7 @@ jobs:
             triplet: x64-windows
           - os: windows-2022
             triplet: x64-windows-static
-          - os: macos-14
+          - os: macos-26
             triplet: arm64-osx
 
     env:
@@ -161,7 +161,7 @@ jobs:
           cat > "${WORKDIR}/CMakeLists.txt" <<'EOF'
           cmake_minimum_required(VERSION 3.15)
           project(unilink_consumer LANGUAGES CXX)
-          set(CMAKE_CXX_STANDARD 17)
+          set(CMAKE_CXX_STANDARD 20)
           find_package(unilink CONFIG REQUIRED)
 
           add_executable(vcpkg_consumer main.cpp)
@@ -207,7 +207,7 @@ jobs:
           @"
           cmake_minimum_required(VERSION 3.15)
           project(unilink_consumer LANGUAGES CXX)
-          set(CMAKE_CXX_STANDARD 17)
+          set(CMAKE_CXX_STANDARD 20)
           find_package(unilink CONFIG REQUIRED)
 
           add_executable(vcpkg_consumer main.cpp)

@@ -101,7 +101,21 @@ def main() -> int:
         _print_section("DLL Directories")
         if package_path.is_dir():
             _dll_dir_handles.append(os.add_dll_directory(str(package_path.resolve())))
-            print(f"added: {package_path.resolve()}")
+            print(f"added (package): {package_path.resolve()}")
+        
+        # Also add relevant PATH entries as fallback for dependencies
+        for path_str in os.environ.get("PATH", "").split(";"):
+            if not path_str:
+                continue
+            path = Path(path_str)
+            path_lower = path_str.lower()
+            if "vcpkg" in path_lower or "bin" in path_lower or "unilink" in path_lower:
+                if path.is_dir():
+                    try:
+                        _dll_dir_handles.append(os.add_dll_directory(str(path.resolve())))
+                        print(f"added (PATH): {path.resolve()}")
+                    except Exception as e:
+                        print(f"failed to add {path}: {e}")
 
     _sanitize_import_path(install_path)
 

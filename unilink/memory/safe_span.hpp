@@ -17,109 +17,51 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 #include <stdexcept>
-#include <type_traits>
 
 namespace unilink {
 namespace memory {
 
 /**
- * @brief A C++17 compatible span-like class for safe array access
+ * @brief C++20 std::span based memory view
  *
- * This provides a lightweight, non-owning view over a contiguous sequence of objects.
- * Similar to std::span (C++20) but fully compatible with C++17 environments.
- *
- * Design Intent:
- * - Zero-copy memory safety: Avoids unnecessary data copying.
- * - Bounds safety: Provides safe access to underlying memory.
- * - Interface compatibility: Mimics std::span for future upgradability.
+ * SafeSpan is now a specialized version of std::span that maintains
+ * backward compatibility for at() and ensures subspan returns SafeSpan.
  */
-template <typename T>
-class SafeSpan {
+template <typename T, std::size_t Extent = std::dynamic_extent>
+class SafeSpan : public std::span<T, Extent> {
  public:
-  using element_type = T;
-  using value_type = std::remove_cv_t<T>;
-  using size_type = std::size_t;
-  using difference_type = std::ptrdiff_t;
-  using pointer = T*;
-  using const_pointer = const T*;
-  using reference = T&;
-  using const_reference = const T&;
-  using iterator = T*;
-  using const_iterator = const T*;
-  using reverse_iterator = std::reverse_iterator<iterator>;
-  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using Base = std::span<T, Extent>;
+  using Base::Base;
 
-  // Constructors
-  constexpr SafeSpan() noexcept : data_(nullptr), size_(0) {}
+  // Polyfill for C++17 pointer+size constructor (std::span requires contiguous_iterator)
+  constexpr SafeSpan(T* data, std::size_t size) noexcept : Base(data, size) {}
 
-  constexpr SafeSpan(pointer data, size_type size) noexcept : data_(data), size_(size) {}
+  // Constructor from std::span
+  constexpr SafeSpan(Base s) noexcept : Base(s) {}
 
-  template <typename Container>
-  constexpr SafeSpan(Container& container) noexcept : data_(container.data()), size_(container.size()) {}
-
-  template <typename Container>
-  constexpr SafeSpan(const Container& container) noexcept
-      : data_(const_cast<pointer>(container.data())), size_(container.size()) {}
-
-  // Access methods
-  constexpr reference operator[](size_type index) const { return data_[index]; }
-
-  constexpr reference at(size_type index) const {
-    if (index >= size_) {
+  // Polyfill for at() which is missing in std::span
+  constexpr typename Base::reference at(std::size_t index) const {
+    if (index >= this->size()) {
       throw std::out_of_range("SafeSpan index out of range");
     }
-    return data_[index];
+    return (*this)[index];
   }
 
-  constexpr reference front() const { return data_[0]; }
-
-  constexpr reference back() const { return data_[size_ - 1]; }
-
-  constexpr pointer data() const noexcept { return data_; }
-
-  constexpr size_type size() const noexcept { return size_; }
-
-  constexpr size_type size_bytes() const noexcept { return size_ * sizeof(T); }
-
-  constexpr bool empty() const noexcept { return size_ == 0; }
-
-  // Iterator support
-  constexpr iterator begin() const noexcept { return data_; }
-
-  constexpr iterator end() const noexcept { return data_ + size_; }
-
-  constexpr const_iterator cbegin() const noexcept { return data_; }
-
-  constexpr const_iterator cend() const noexcept { return data_ + size_; }
-
-  constexpr reverse_iterator rbegin() const noexcept { return reverse_iterator(end()); }
-
-  constexpr reverse_iterator rend() const noexcept { return reverse_iterator(begin()); }
-
-  constexpr const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
-
-  constexpr const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
-
-  // Subspan operations
-  constexpr SafeSpan<T> subspan(size_type offset, size_type count = SIZE_MAX) const {
-    if (offset > size_) {
-      throw std::out_of_range("SafeSpan subspan offset out of range");
-    }
-    size_type actual_count = (count == SIZE_MAX) ? (size_ - offset) : count;
-    if (offset + actual_count > size_) {
-      throw std::out_of_range("SafeSpan subspan count out of range");
-    }
-    return SafeSpan<T>(data_ + offset, actual_count);
+  // Override subspan to return SafeSpan instead of std::span
+  constexpr SafeSpan<T, std::dynamic_extent> subspan(std::size_t offset,
+                                                     std::size_t count = std::dynamic_extent) const {
+    return SafeSpan<T, std::dynamic_extent>(Base::subspan(offset, count));
   }
 
-  constexpr SafeSpan<T> first(size_type count) const { return subspan(0, count); }
+  constexpr SafeSpan<T, std::dynamic_extent> first(std::size_t count) const {
+    return SafeSpan<T, std::dynamic_extent>(Base::first(count));
+  }
 
-  constexpr SafeSpan<T> last(size_type count) const { return subspan(size_ - count, count); }
-
- private:
-  pointer data_;
-  size_type size_;
+  constexpr SafeSpan<T, std::dynamic_extent> last(std::size_t count) const {
+    return SafeSpan<T, std::dynamic_extent>(Base::last(count));
+  }
 };
 
 // Type aliases for common types

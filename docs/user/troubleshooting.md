@@ -267,22 +267,24 @@ CMake Error: Could not find Boost
 
 **Solutions:**
 
-#### Ubuntu/Debian
+#### Recommended vcpkg setup
 
 ```bash
-sudo apt install libboost-all-dev
+vcpkg install boost-asio boost-system spdlog
+cmake -S . -B build \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 ```
 
-#### macOS
+#### System Boost setup
 
 ```bash
-brew install boost
+cmake -S . -B build -DBOOST_ROOT=/path/to/boost-1.84-or-newer
 ```
 
 #### Windows (vcpkg)
 
 ```bash
-vcpkg install boost
+vcpkg install boost-asio boost-system spdlog
 ```
 
 #### Manual Boost Path

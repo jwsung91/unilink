@@ -37,11 +37,12 @@ class StableCoreIntegrationTest : public ::testing::Test {
 
 TEST_F(StableCoreIntegrationTest, ServerClientStability) {
   std::atomic<int> msg_count{0};
-  auto server = tcp_server(port_).on_data([&](const wrapper::MessageContext&) { msg_count++; }).build();
+  auto server =
+      tcp_server(port_).on_data([&](const wrapper::MessageContext&) { msg_count++; }).on_error([](auto&&) {}).build();
 
   ASSERT_TRUE(server->start().get());
 
-  auto client = tcp_client("127.0.0.1", port_).auto_start(true).build();
+  auto client = tcp_client("127.0.0.1", port_).auto_start(true).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 2000));
 

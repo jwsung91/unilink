@@ -1,0 +1,47 @@
+name: setup-vcpkg
+description: Install explicitly listed project dependencies from vcpkg
+inputs:
+  triplet:
+    description: vcpkg target triplet
+    required: true
+  packages:
+    description: Space-separated vcpkg ports to install
+    required: false
+    default: boost-asio boost-system spdlog
+  vcpkg-root:
+    description: vcpkg checkout directory
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        VCPKG_ROOT="${{ inputs.vcpkg-root }}"
+        if [ -z "${VCPKG_ROOT}" ]; then
+          VCPKG_ROOT="${GITHUB_WORKSPACE}/vcpkg"
+        fi
+        if [ ! -d "${VCPKG_ROOT}/.git" ]; then
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
+        fi
+        "${VCPKG_ROOT}/bootstrap-vcpkg.sh" -disableMetrics
+        retry_vcpkg_install() {
+          local attempt
+          for attempt in 1 2 3; do
+            if "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --clean-after-build; then
+              return 0
+            fi
+            if [ "${attempt}" -eq 3 ]; then
+              return 1
+            fi
+            echo "vcpkg install failed; retrying attempt $((attempt + 1)) of 3..."
+            sleep $((attempt * 10))
+          done
+        }
+        retry_vcpkg_install
+        {
+          echo "VCPKG_ROOT=${VCPKG_ROOT}"
+          echo "VCPKG_TARGET_TRIPLET=${{ inputs.triplet }}"
+          echo "CMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        } >> "$GITHUB_ENV"

@@ -16,76 +16,151 @@
 
 #pragma once
 
+#include <chrono>
+#include <cstddef>
 #include <cstdint>
-#include <functional>
-#include <memory>
 #include <string>
 #include <vector>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/builder/ibuilder.hpp"
-#include "unilink/config/udp_config.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
 #include "unilink/wrapper/udp/udp_server.hpp"
 
 namespace unilink {
 namespace builder {
 
-/**
- * @brief Modernized Builder for UdpClient
- */
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient, UdpClientBuilder> {
+
+/**
+ * @brief Modernized Builder for UdpClient
+ */
+template <uint32_t State = BuilderState::None>
+class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient, UdpClientBuilder<State>, State> {
  public:
-  explicit UdpClientBuilder(uint16_t local_port = 0);
+  template <uint32_t NewState>
+  using Rebind = UdpClientBuilder<NewState>;
+
+  UdpClientBuilder();
+  explicit UdpClientBuilder(uint16_t local_port);
+
+  // Allow conversion between states
+  template <uint32_t OtherState>
+  UdpClientBuilder(UdpClientBuilder<OtherState>&& other) noexcept
+      : local_port_(other.local_port_),
+        local_address_(std::move(other.local_address_)),
+        remote_host_(std::move(other.remote_host_)),
+        remote_port_(other.remote_port_),
+        auto_start_(other.auto_start_),
+        independent_context_(other.independent_context_),
+        enable_broadcast_(other.enable_broadcast_),
+        reuse_address_(other.reuse_address_) {
+    this->on_data_ = std::move(other.on_data_);
+    this->on_error_ = std::move(other.on_error_);
+    this->on_connect_ = std::move(other.on_connect_);
+    this->on_disconnect_ = std::move(other.on_disconnect_);
+    this->on_message_ = std::move(other.on_message_);
+    this->framer_factory_ = std::move(other.framer_factory_);
+    this->bp_strategy_ = other.bp_strategy_;
+    this->bp_threshold_ = other.bp_threshold_;
+    this->bp_strategy_set_ = other.bp_strategy_set_;
+    this->bp_threshold_set_ = other.bp_threshold_set_;
+  }
+
+  // Delete copy
+  UdpClientBuilder(const UdpClientBuilder&) = delete;
+  UdpClientBuilder& operator=(const UdpClientBuilder&) = delete;
 
   std::unique_ptr<wrapper::UdpClient> build() override;
 
-  UdpClientBuilder& auto_start(bool auto_start = true) override;
-
-  UdpClientBuilder& local_port(uint16_t port);
-  UdpClientBuilder& remote(const std::string& address, uint16_t port);
-  UdpClientBuilder& independent_context(bool use_independent = true);
-  UdpClientBuilder& broadcast(bool enable = true);
-  UdpClientBuilder& reuse_address(bool enable = true);
+  UdpClientBuilder<State>& auto_start(bool auto_start = true) override;
+  UdpClientBuilder<State>& local_port(uint16_t port);
+  UdpClientBuilder<State>& local_address(const std::string& address);
+  UdpClientBuilder<State>& remote_endpoint(const std::string& host, uint16_t port);
+  UdpClientBuilder<State>& remote(const std::string& host, uint16_t port) { return remote_endpoint(host, port); }
+  UdpClientBuilder<State>& broadcast(bool enable = true);
+  UdpClientBuilder<State>& reuse_address(bool enable = true);
+  UdpClientBuilder<State>& independent_context(bool use_independent = true);
 
  private:
-  config::UdpConfig cfg_;
+  template <uint32_t S>
+  friend class UdpClientBuilder;
+
+  uint16_t local_port_;
+  std::string local_address_;
+  std::string remote_host_;
+  uint16_t remote_port_;
   bool auto_start_;
   bool independent_context_;
+  bool enable_broadcast_;
+  bool reuse_address_;
 };
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+
+using UdpClientBuilderDefault = UdpClientBuilder<BuilderState::None>;
 
 /**
  * @brief Modernized Builder for UdpServer
  */
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4251)
-#endif
-class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer, UdpServerBuilder> {
+template <uint32_t State = BuilderState::None>
+class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer, UdpServerBuilder<State>, State> {
  public:
-  explicit UdpServerBuilder(uint16_t local_port = 0);
+  template <uint32_t NewState>
+  using Rebind = UdpServerBuilder<NewState>;
+
+  UdpServerBuilder();
+  explicit UdpServerBuilder(uint16_t local_port);
+
+  // Allow conversion between states
+  template <uint32_t OtherState>
+  UdpServerBuilder(UdpServerBuilder<OtherState>&& other) noexcept
+      : local_port_(other.local_port_),
+        local_address_(std::move(other.local_address_)),
+        auto_start_(other.auto_start_),
+        independent_context_(other.independent_context_),
+        enable_broadcast_(other.enable_broadcast_),
+        reuse_address_(other.reuse_address_) {
+    this->on_data_ = std::move(other.on_data_);
+    this->on_error_ = std::move(other.on_error_);
+    this->on_connect_ = std::move(other.on_connect_);
+    this->on_disconnect_ = std::move(other.on_disconnect_);
+    this->on_message_ = std::move(other.on_message_);
+    this->framer_factory_ = std::move(other.framer_factory_);
+    this->bp_strategy_ = other.bp_strategy_;
+    this->bp_threshold_ = other.bp_threshold_;
+    this->bp_strategy_set_ = other.bp_strategy_set_;
+    this->bp_threshold_set_ = other.bp_threshold_set_;
+  }
+
+  // Delete copy
+  UdpServerBuilder(const UdpServerBuilder&) = delete;
+  UdpServerBuilder& operator=(const UdpServerBuilder&) = delete;
 
   std::unique_ptr<wrapper::UdpServer> build() override;
 
-  UdpServerBuilder& auto_start(bool auto_start = true) override;
-
-  UdpServerBuilder& local_port(uint16_t port);
-  UdpServerBuilder& independent_context(bool use_independent = true);
-  UdpServerBuilder& broadcast(bool enable = true);
-  UdpServerBuilder& reuse_address(bool enable = true);
+  UdpServerBuilder<State>& auto_start(bool auto_start = true) override;
+  UdpServerBuilder<State>& local_port(uint16_t port);
+  UdpServerBuilder<State>& local_address(const std::string& address);
+  UdpServerBuilder<State>& broadcast(bool enable = true);
+  UdpServerBuilder<State>& reuse_address(bool enable = true);
+  UdpServerBuilder<State>& independent_context(bool use_independent = true);
 
  private:
-  config::UdpConfig cfg_;
+  template <uint32_t S>
+  friend class UdpServerBuilder;
+
+  uint16_t local_port_;
+  std::string local_address_;
   bool auto_start_;
   bool independent_context_;
+  bool enable_broadcast_;
+  bool reuse_address_;
 };
+
+using UdpServerBuilderDefault = UdpServerBuilder<BuilderState::None>;
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

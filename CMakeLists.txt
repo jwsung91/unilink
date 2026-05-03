@@ -257,7 +257,7 @@ if(TARGET unilink_shared)
     PUBLIC unilink_dependencies
     PRIVATE spdlog::spdlog
   )
-  target_compile_features(unilink_shared PUBLIC cxx_std_17)
+  target_compile_features(unilink_shared PUBLIC cxx_std_20)
   target_include_directories(
     unilink_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                           $<INSTALL_INTERFACE:include>
@@ -269,7 +269,7 @@ if(TARGET unilink_static)
     PUBLIC unilink_dependencies
     PRIVATE spdlog::spdlog
   )
-  target_compile_features(unilink_static PUBLIC cxx_std_17)
+  target_compile_features(unilink_static PUBLIC cxx_std_20)
   target_include_directories(
     unilink_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                           $<INSTALL_INTERFACE:include>
@@ -284,7 +284,7 @@ if(TARGET unilink
     PUBLIC unilink_dependencies
     PRIVATE spdlog::spdlog
   )
-  target_compile_features(unilink PUBLIC cxx_std_17)
+  target_compile_features(unilink PUBLIC cxx_std_20)
   target_include_directories(
     unilink PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                    $<INSTALL_INTERFACE:include>

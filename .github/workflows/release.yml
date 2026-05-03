@@ -25,20 +25,23 @@ jobs:
         include:
           - os: ubuntu-24.04
             label: Linux (Ubuntu 24.04)
+            triplet: x64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
             release_files: |
               build/package/unilink-*.tar.gz
 
-          - os: ubuntu-22.04-arm
-            label: Linux ARM64 (Ubuntu 22.04)
+          - os: ubuntu-24.04-arm
+            label: Linux ARM64 (Ubuntu 24.04)
+            triplet: arm64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
             release_files: |
               build/package/unilink-*.tar.gz
 
-          - os: macos-14
-            label: macOS 14
+          - os: macos-26
+            label: macOS 26
+            triplet: arm64-osx
             cmake_generator: "Ninja"
             cpack_generator: "TGZ;DragNDrop"
             release_files: |
@@ -62,12 +65,18 @@ jobs:
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
-          sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev libspdlog-dev
+          sudo apt-get install -y build-essential cmake ninja-build
 
       - name: Set up C++ toolchain (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install cmake ninja boost spdlog
+          brew install cmake ninja
+
+      - name: Install dependencies with vcpkg (Unix)
+        if: runner.os != 'Windows'
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: ${{ matrix.triplet }}
 
       - name: Prepare Keychain (macOS)
         if: runner.os == 'macOS'
@@ -82,7 +91,7 @@ jobs:
         shell: pwsh
         run: |
           choco install ninja --no-progress -y
-          & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows
+          & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows spdlog:x64-windows
 
       - name: Configure
         shell: bash
@@ -99,7 +108,9 @@ jobs:
               -DCMAKE_BUILD_TYPE=Release \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
-              -DUNILINK_ENABLE_EXPORT_HEADER=ON
+              -DUNILINK_ENABLE_EXPORT_HEADER=ON \
+              -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
           fi
 
       - name: Build

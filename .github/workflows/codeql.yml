@@ -24,7 +24,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     permissions:
       actions: read
@@ -40,14 +40,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v6
 
-    - name: Cache CodeQL build
-      uses: actions/cache@v5
-      with:
-        path: build
-        key: codeql-build-${{ runner.os }}-${{ matrix.language }}-${{ hashFiles('**/CMakeLists.txt') }}
-        restore-keys: |
-          codeql-build-${{ runner.os }}-${{ matrix.language }}-
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
@@ -57,15 +49,25 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake libboost-dev libboost-system-dev libspdlog-dev"
+        packages: "build-essential cmake gcc-13 g++-13"
+
+    - name: Install dependencies with vcpkg
+      uses: ./.github/actions/setup-vcpkg
+      with:
+        triplet: x64-linux
 
     - name: Configure CMake
       run: |
         cmake -S . -B build \
           -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=gcc-13 \
+          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+          -DCMAKE_CXX_STANDARD=20 \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DUNILINK_BUILD_TESTS=ON
+          -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+          -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
 
     - name: Build
       run: cmake --build build -j $(nproc)

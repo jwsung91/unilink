@@ -16,62 +16,61 @@
 
 #pragma once
 
-#include <cstdint>
 #include <string>
 
-#include "unilink/base/visibility.hpp"
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/tcp_server_builder.hpp"
 #include "unilink/builder/udp_builder.hpp"
+#include "unilink/builder/uds_builder.hpp"
 
 namespace unilink {
 namespace builder {
 
 /**
- * @brief Unified Builder for creating all types of wrapper instances
+ * @brief Main entry point for creating communication builders
  *
- * Provides a single entry point for creating TcpServer, TcpClient, and Serial
- * wrapper instances using a consistent fluent API pattern.
+ * UnifiedBuilder provides a static interface for creating various
+ * types of communication builders (TCP, UDP, UDS, Serial).
  */
 class UNILINK_API UnifiedBuilder {
  public:
   /**
    * @brief Create a TcpServer builder
-   * @param port The port number for the server
-   * @return TcpServerBuilder A configured builder for TcpServer
+   * @param port The port to listen on
+   * @return TcpServerBuilderDefault A configured builder for TCP server
    */
-  static TcpServerBuilder tcp_server(uint16_t port);
+  static TcpServerBuilderDefault tcp_server(uint16_t port);
 
   /**
    * @brief Create a TcpClient builder
    * @param host The host address to connect to
    * @param port The port number to connect to
-   * @return TcpClientBuilder A configured builder for TcpClient
+   * @return TcpClientBuilderDefault A configured builder for TcpClient
    */
-  static TcpClientBuilder tcp_client(const std::string& host, uint16_t port);
+  static TcpClientBuilderDefault tcp_client(const std::string& host, uint16_t port);
 
   /**
    * @brief Create a Serial builder
    * @param device The serial device path (e.g., "/dev/ttyUSB0")
    * @param baud_rate The baud rate for serial communication
-   * @return SerialBuilder A configured builder for Serial
+   * @return SerialBuilderDefault A configured builder for serial communication
    */
-  static SerialBuilder serial(const std::string& device, uint32_t baud_rate);
+  static SerialBuilderDefault serial(const std::string& device, uint32_t baud_rate);
 
   /**
-   * @brief Create a UDP client builder
+   * @brief Create a UdpClient builder
    * @param local_port The local port to bind
-   * @return UdpClientBuilder A configured builder for UDP communication
+   * @return UdpClientBuilderDefault A configured builder for UDP communication
    */
-  static UdpClientBuilder udp_client(uint16_t local_port);
+  static UdpClientBuilderDefault udp_client(uint16_t local_port);
 
   /**
-   * @brief Create a UDP server builder
+   * @brief Create a UdpServer builder
    * @param local_port The local port to bind
-   * @return UdpServerBuilder A configured builder for UDP communication
+   * @return UdpServerBuilderDefault A configured builder for UDP communication
    */
-  static UdpServerBuilder udp_server(uint16_t local_port);
+  static UdpServerBuilderDefault udp_server(uint16_t local_port);
 };
 
 }  // namespace builder

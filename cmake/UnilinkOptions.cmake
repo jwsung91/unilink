@@ -81,11 +81,39 @@ endif()
 
 # Set default C++ standard
 set(CMAKE_CXX_STANDARD
-    17
+    20
     CACHE STRING "C++ standard"
 )
+set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS 20 23)
+if(CMAKE_CXX_STANDARD LESS 20)
+  message(
+    FATAL_ERROR
+      "unilink requires C++20 or newer. Configure with -DCMAKE_CXX_STANDARD=20."
+  )
+endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(CheckCXXSourceCompiles)
+check_cxx_source_compiles(
+  [[
+    #include <format>
+    #include <string>
+    int main() {
+      const std::string value = std::format("{}", 42);
+      return value == "42" ? 0 : 1;
+    }
+  ]]
+  UNILINK_HAS_STD_FORMAT
+)
+if(NOT UNILINK_HAS_STD_FORMAT)
+  message(
+    FATAL_ERROR
+      "unilink uses std::format and requires a C++20 standard library that "
+      "implements it. Use GCC 13+, a recent MSVC toolset, or a recent "
+      "AppleClang/libc++ toolchain."
+  )
+endif()
 
 # Enable position independent code
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

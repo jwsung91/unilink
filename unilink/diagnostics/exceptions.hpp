@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <format>
 #include <stdexcept>
 #include <string>
 
@@ -42,14 +43,16 @@ class UNILINK_API UnilinkException : public std::runtime_error {
   const std::string& operation() const noexcept { return operation_; }
 
   std::string full_message() const {
-    std::string full_msg = what();
-    if (!component_.empty()) {
-      full_msg = "[" + component_ + "] " + full_msg;
+    if (component_.empty() && operation_.empty()) {
+      return what();
     }
-    if (!operation_.empty()) {
-      full_msg += " (operation: " + operation_ + ")";
+    if (operation_.empty()) {
+      return std::format("[{}] {}", component_, what());
     }
-    return full_msg;
+    if (component_.empty()) {
+      return std::format("{} (operation: {})", what(), operation_);
+    }
+    return std::format("[{}] {} (operation: {})", component_, what(), operation_);
   }
 
  private:
@@ -74,11 +77,10 @@ class UNILINK_API BuilderException : public UnilinkException {
   const std::string& builder_type() const noexcept { return builder_type_; }
 
   std::string full_message() const {
-    std::string full_msg = UnilinkException::full_message();
-    if (!builder_type_.empty()) {
-      full_msg = "[" + builder_type_ + "] " + full_msg;
+    if (builder_type_.empty()) {
+      return UnilinkException::full_message();
     }
-    return full_msg;
+    return std::format("[{}] {}", builder_type_, UnilinkException::full_message());
   }
 
  private:
@@ -103,14 +105,16 @@ class UNILINK_API ValidationException : public UnilinkException {
   const std::string& expected() const noexcept { return expected_; }
 
   std::string full_message() const {
-    std::string full_msg = UnilinkException::full_message();
-    if (!parameter_.empty()) {
-      full_msg += " (parameter: " + parameter_ + ")";
+    if (parameter_.empty() && expected_.empty()) {
+      return UnilinkException::full_message();
     }
-    if (!expected_.empty()) {
-      full_msg += " (expected: " + expected_ + ")";
+    if (expected_.empty()) {
+      return std::format("{} (parameter: {})", UnilinkException::full_message(), parameter_);
     }
-    return full_msg;
+    if (parameter_.empty()) {
+      return std::format("{} (expected: {})", UnilinkException::full_message(), expected_);
+    }
+    return std::format("{} (parameter: {}) (expected: {})", UnilinkException::full_message(), parameter_, expected_);
   }
 
  private:
@@ -134,11 +138,10 @@ class UNILINK_API MemoryException : public UnilinkException {
   size_t size() const noexcept { return size_; }
 
   std::string full_message() const {
-    std::string full_msg = UnilinkException::full_message();
-    if (size_ > 0) {
-      full_msg += " (size: " + std::to_string(size_) + " bytes)";
+    if (size_ == 0) {
+      return UnilinkException::full_message();
     }
-    return full_msg;
+    return std::format("{} (size: {} bytes)", UnilinkException::full_message(), size_);
   }
 
  private:
@@ -162,11 +165,10 @@ class UNILINK_API ConnectionException : public UnilinkException {
   const std::string& connection_type() const noexcept { return connection_type_; }
 
   std::string full_message() const {
-    std::string full_msg = UnilinkException::full_message();
-    if (!connection_type_.empty()) {
-      full_msg = "[" + connection_type_ + "] " + full_msg;
+    if (connection_type_.empty()) {
+      return UnilinkException::full_message();
     }
-    return full_msg;
+    return std::format("[{}] {}", connection_type_, UnilinkException::full_message());
   }
 
  private:
@@ -190,11 +192,10 @@ class UNILINK_API ConfigurationException : public UnilinkException {
   const std::string& config_section() const noexcept { return config_section_; }
 
   std::string full_message() const {
-    std::string full_msg = UnilinkException::full_message();
-    if (!config_section_.empty()) {
-      full_msg += " (section: " + config_section_ + ")";
+    if (config_section_.empty()) {
+      return UnilinkException::full_message();
     }
-    return full_msg;
+    return std::format("{} (section: {})", UnilinkException::full_message(), config_section_);
   }
 
  private:

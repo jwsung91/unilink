@@ -19,14 +19,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
+        os: [ubuntu-24.04]
         include:
-          - os: ubuntu-20.04
-            boost_version: "1.65"
-          - os: ubuntu-22.04
-            boost_version: "1.74"
           - os: ubuntu-24.04
-            boost_version: "1.82"
+            triplet: x64-linux
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -37,24 +33,25 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
           sudo apt-get install -y build-essential cmake ninja-build
+          sudo apt-get install -y gcc-13 g++-13
 
-          # Install Ubuntu version-specific Boost and spdlog
-          # Ubuntu 20.04 ships spdlog 1.5.0 which is too old; skip it and let CMake FetchContent handle it
-          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-            sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
-          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev libspdlog-dev
-          else
-            sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev libspdlog-dev
-          fi
+      - name: Install dependencies with vcpkg
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: ${{ matrix.triplet }}
 
       - name: Configure
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=gcc-13 \
+            -DCMAKE_CXX_COMPILER=g++-13 \
+            -DCMAKE_CXX_STANDARD=20 \
             -DUNILINK_ENABLE_INSTALL=ON \
             -DUNILINK_ENABLE_PKGCONFIG=ON \
-            -DUNILINK_ENABLE_EXPORT_HEADER=ON
+            -DUNILINK_ENABLE_EXPORT_HEADER=ON \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.CMAKE_TOOLCHAIN_FILE }} \
+            -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
 
       - name: Build
         run: cmake --build build --config Release -- -v
@@ -86,6 +83,6 @@ jobs:
           echo "✅ Build: Success" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
           echo "✅ Package: Created" >> $GITHUB_STEP_SUMMARY
-          echo "🔧 Boost Version: ${{ matrix.boost_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "🔧 Dependencies: vcpkg (${{ matrix.triplet }}), Boost 1.84+" >> $GITHUB_STEP_SUMMARY
           echo "📦 Package files:" >> $GITHUB_STEP_SUMMARY
           ls -la build/package/ >> $GITHUB_STEP_SUMMARY

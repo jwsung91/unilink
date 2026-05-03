@@ -109,7 +109,7 @@ class SerialWrapperAdvancedTest : public ::testing::Test {
 };
 
 TEST_F(SerialWrapperAdvancedTest, AutoManageStartsAndStopsChannel) {
-  auto serial = unilink::serial(device_, 9600).auto_start(true).build();
+  auto serial = unilink::serial(device_, 9600).auto_start(true).on_data([](auto&&){}).on_error([](auto&&){}).build();
 
   std::atomic<bool> connected{false};
   std::atomic<bool> disconnected{false};

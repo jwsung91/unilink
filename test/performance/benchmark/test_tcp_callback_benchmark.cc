@@ -34,8 +34,8 @@ class TcpCallbackBenchmark : public ::testing::Test {
  protected:
   void SetUp() override {
     port_ = TestUtils::getAvailableTestPort();
-    server_ = tcp_server(port_).build();
-    client_ = tcp_client("127.0.0.1", port_).build();
+    server_ = tcp_server(port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+    client_ = tcp_client("127.0.0.1", port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
     auto f1 = server_->start();
     auto f2 = client_->start();
     f1.get();

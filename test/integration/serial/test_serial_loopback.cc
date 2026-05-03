@@ -43,7 +43,10 @@ class SerialLoopbackTest : public ::testing::Test {
 
 TEST_F(SerialLoopbackTest, LoopbackCommunication) {
   std::atomic<bool> data_received{false};
-  auto ul = serial(device_, 9600).on_data([&](const wrapper::MessageContext& ctx) { data_received = true; }).build();
+  auto ul = serial(device_, 9600)
+                .on_data([&](const wrapper::MessageContext& ctx) { data_received = true; })
+                .on_error([](auto&&) {})
+                .build();
 
   ul->start();
 

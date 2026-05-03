@@ -52,13 +52,17 @@ sudo apt install -y \
   cmake \
   ccache \
   pkg-config \
-  libboost-dev \
-  libboost-system-dev \
   python3 \
   python3-dev \
   python3-pip \
   python3-venv \
   socat
+```
+
+Install C++ dependencies through vcpkg so Boost 1.84.0+ is used consistently:
+
+```bash
+vcpkg install boost-asio boost-system spdlog pybind11 --triplet arm64-linux
 ```
 
 Install Python-side build and test helpers:
@@ -95,7 +99,9 @@ cmake -S . -B build-orin \
   -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
   -DBUILD_PYTHON_BINDINGS=ON \
-  -DPython3_EXECUTABLE="$(python3 -c 'import sys; print(sys.executable)')"
+  -DPython3_EXECUTABLE="$(python3 -c 'import sys; print(sys.executable)')" \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
+  -DVCPKG_TARGET_TRIPLET=arm64-linux
 ```
 
 ```bash
@@ -111,7 +117,9 @@ cmake -S . -B build-orin \
   -DUNILINK_BUILD_DOCS=OFF \
   -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-  -DBUILD_PYTHON_BINDINGS=OFF
+  -DBUILD_PYTHON_BINDINGS=OFF \
+  -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
+  -DVCPKG_TARGET_TRIPLET=arm64-linux
 ```
 
 ---
@@ -243,10 +251,10 @@ For a stronger “generic Ubuntu ARM64” claim, add:
 
 ### Boost Not Found
 
-Check that the ARM64 Boost packages are installed:
+Check that vcpkg installed the ARM64 Boost ports:
 
 ```bash
-dpkg -l | grep libboost
+vcpkg list | grep boost
 ```
 
 If CMake still fails, clear the build directory and reconfigure:

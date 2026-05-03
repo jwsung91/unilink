@@ -245,7 +245,7 @@ foreach(doc_entry IN LISTS _unilink_doc_snippets)
   add_executable(${doc_target} ${doc_generated_source})
   target_link_libraries(${doc_target} PRIVATE ${_unilink_test_lib})
   target_include_directories(${doc_target} PRIVATE ${CMAKE_SOURCE_DIR})
-  target_compile_features(${doc_target} PRIVATE cxx_std_17)
+  target_compile_features(${doc_target} PRIVATE cxx_std_20)
   unilink_set_test_warning_options(${doc_target})
 
   list(APPEND _unilink_doc_targets ${doc_target})

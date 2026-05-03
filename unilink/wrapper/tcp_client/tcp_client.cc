@@ -48,7 +48,7 @@ struct TcpClient::Impl {
   std::shared_ptr<boost::asio::io_context> external_ioc_;
   std::atomic<bool> use_external_context_{false};
   std::atomic<bool> manage_external_context_{false};
-  std::thread external_thread_;
+  std::jthread external_thread_;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
   std::vector<std::promise<bool>> pending_promises_;
@@ -189,9 +189,9 @@ struct TcpClient::Impl {
       }
       work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
           external_ioc_->get_executor());
-      external_thread_ = std::thread([this, ioc = external_ioc_]() {
+      external_thread_ = std::jthread([this, ioc = external_ioc_](std::stop_token st) {
         try {
-          while (started_.load() && !ioc->stopped()) {
+          while (!st.stop_requested() && started_.load() && !ioc->stopped()) {
             if (ioc->run_one_for(std::chrono::milliseconds(50)) == 0) {
               std::this_thread::yield();
             }
@@ -237,7 +237,12 @@ struct TcpClient::Impl {
     }
     if (should_join && external_thread_.joinable()) {
       try {
-        external_thread_.join();
+        if (std::this_thread::get_id() != external_thread_.get_id()) {
+          external_thread_.request_stop();
+          external_thread_.join();
+        } else {
+          external_thread_.detach();
+        }
       } catch (...) {
       }
     }

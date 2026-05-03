@@ -19,9 +19,11 @@
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
+#include <format>
 #include <iostream>
 #include <mutex>
 #include <shared_mutex>
+#include <stop_token>
 #include <thread>
 #include <unordered_map>
 #include <vector>
@@ -61,7 +63,7 @@ struct UdpServer::Impl {
   std::shared_ptr<boost::asio::io_context> external_ioc;
   std::atomic<bool> use_external_context{false};
   std::atomic<bool> manage_external_context{false};
-  std::thread external_thread;
+  std::jthread external_thread;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
   mutable std::shared_mutex mutex;
@@ -198,7 +200,7 @@ struct UdpServer::Impl {
       for (auto it = sessions.begin(); it != sessions.end();) {
         if (now - it->second.last_seen > session_timeout) {
           std::string info =
-              it->second.endpoint.address().to_string() + ":" + std::to_string(it->second.endpoint.port());
+              std::format("{}:{}", it->second.endpoint.address().to_string(), it->second.endpoint.port());
           endpoint_to_id.erase(it->second.endpoint);
           to_remove_with_info.push_back({it->first, info});
           it = sessions.erase(it);
@@ -276,7 +278,8 @@ struct UdpServer::Impl {
       }
 
       if (is_new && connect_handler_copy) {
-        connect_handler_copy(ConnectionContext(client_id, ep.address().to_string() + ":" + std::to_string(ep.port())));
+        connect_handler_copy(
+            ConnectionContext(client_id, std::format("{}:{}", ep.address().to_string(), ep.port())));
       }
 
       {
@@ -373,8 +376,9 @@ struct UdpServer::Impl {
       if (external_ioc->stopped()) external_ioc->restart();
       work_guard = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
           external_ioc->get_executor());
-      external_thread = std::thread([ioc = external_ioc]() {
+      external_thread = std::jthread([ioc = external_ioc](std::stop_token st) {
         try {
+          std::stop_callback cb(st, [ioc] { ioc->stop(); });
           ioc->run();
         } catch (...) {
         }
@@ -433,6 +437,7 @@ struct UdpServer::Impl {
     if (should_join && external_thread.joinable()) {
       try {
         if (std::this_thread::get_id() != external_thread.get_id()) {
+          external_thread.request_stop();
           external_thread.join();
         } else {
           external_thread.detach();

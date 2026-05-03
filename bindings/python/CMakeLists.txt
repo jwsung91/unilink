@@ -15,11 +15,81 @@ if(WIN32)
   set(Python3_FIND_ABI OFF ANY ANY)
 endif()
 
+if(WIN32 AND Python3_EXECUTABLE)
+  execute_process(
+    COMMAND
+      "${Python3_EXECUTABLE}" -c
+      "import pathlib, sys, sysconfig; exe_dir = pathlib.Path(sys.executable).resolve().parent; include = sysconfig.get_path('include') or str(exe_dir / 'Include'); libname = sysconfig.get_config_var('LDLIBRARY') or sysconfig.get_config_var('LIBRARY') or f'python{sys.version_info.major}{sys.version_info.minor}.lib'; candidates = [sysconfig.get_config_var('LIBDIR'), sysconfig.get_config_var('LIBPL'), str(pathlib.Path(sys.base_prefix) / 'libs'), str(pathlib.Path(sys.prefix) / 'libs'), str(exe_dir / 'libs')]; libs = [str(pathlib.Path(p) / libname) for p in candidates if p]; existing = next((p for p in libs if pathlib.Path(p).exists()), libs[0] if libs else ''); print(include); print(existing)"
+    OUTPUT_VARIABLE _unilink_python_probe
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE _unilink_python_probe_result
+  )
+
+  if(_unilink_python_probe_result EQUAL 0)
+    string(REPLACE "\r\n" "\n" _unilink_python_probe "${_unilink_python_probe}")
+    string(REPLACE "\n" ";" _unilink_python_probe_lines
+                   "${_unilink_python_probe}"
+    )
+    list(LENGTH _unilink_python_probe_lines _unilink_python_probe_count)
+
+    if(_unilink_python_probe_count GREATER_EQUAL 2)
+      list(GET _unilink_python_probe_lines 0 _unilink_python_include_dir)
+      list(GET _unilink_python_probe_lines 1 _unilink_python_library)
+      get_filename_component(
+        _unilink_python_library_dir "${_unilink_python_library}" DIRECTORY
+      )
+
+      if(EXISTS "${_unilink_python_include_dir}/Python.h")
+        set(Python3_INCLUDE_DIR
+            "${_unilink_python_include_dir}"
+            CACHE PATH
+                  "Python include directory selected by Python3_EXECUTABLE"
+                  FORCE
+        )
+      endif()
+
+      if(EXISTS "${_unilink_python_library}")
+        set(Python3_LIBRARY
+            "${_unilink_python_library}"
+            CACHE FILEPATH
+                  "Python import library selected by Python3_EXECUTABLE" FORCE
+        )
+        set(Python3_LIBRARY_RELEASE
+            "${_unilink_python_library}"
+            CACHE FILEPATH
+                  "Python release import library selected by Python3_EXECUTABLE"
+                  FORCE
+        )
+        set(_Python3_LIBRARY_RELEASE
+            "${_unilink_python_library}"
+            CACHE INTERNAL
+                  "Python release import library selected by Python3_EXECUTABLE"
+                  FORCE
+        )
+        set(_Python3_LIBRARY_DEBUG
+            "Python3_LIBRARY_DEBUG-NOTFOUND"
+            CACHE INTERNAL "Disable mismatched debug Python import library"
+                  FORCE
+        )
+      endif()
+    endif()
+  endif()
+endif()
+
 find_package(
   Python3
   COMPONENTS Interpreter Development.Module
   REQUIRED
 )
+
+if(WIN32
+   AND _unilink_python_library
+   AND EXISTS "${_unilink_python_library}"
+)
+  set(Python3_LIBRARIES "${_unilink_python_library}")
+  set(Python3_LIBRARY_DIRS "${_unilink_python_library_dir}")
+endif()
+
 find_package(pybind11 CONFIG QUIET)
 
 if(NOT pybind11_FOUND)
@@ -106,13 +176,44 @@ if(CMAKE_CONFIGURATION_TYPES)
   endforeach()
 endif()
 
-# Link against the main library
+# Link against the main library. On Windows, avoid the imported Python3::Module
+# target when vcpkg has installed its own Python package; it can retain vcpkg's
+# python312.lib even when the interpreter comes from actions/setup-python.
+set(_unilink_python_module_link_target Python3::Module)
+if(WIN32
+   AND _unilink_python_library
+   AND EXISTS "${_unilink_python_library}"
+)
+  get_target_property(_unilink_py_link_libraries unilink_py LINK_LIBRARIES)
+  if(_unilink_py_link_libraries)
+    list(REMOVE_ITEM _unilink_py_link_libraries Python3::Module)
+    list(FILTER _unilink_py_link_libraries EXCLUDE REGEX
+         "([Pp]ython[0-9]+(_d)?\\.lib|Python3::Module)"
+    )
+    set_target_properties(
+      unilink_py PROPERTIES LINK_LIBRARIES "${_unilink_py_link_libraries}"
+    )
+  endif()
+
+  add_library(unilink_python_module INTERFACE)
+  target_link_libraries(
+    unilink_python_module INTERFACE "${_unilink_python_library}"
+  )
+  if(EXISTS "${_unilink_python_include_dir}/Python.h")
+    target_include_directories(
+      unilink_python_module INTERFACE "${_unilink_python_include_dir}"
+    )
+  endif()
+  set(_unilink_python_module_link_target unilink_python_module)
+endif()
+
 target_link_libraries(
-  unilink_py PRIVATE pybind11::headers unilink::unilink Python3::Module
+  unilink_py PRIVATE pybind11::headers unilink::unilink
+                     ${_unilink_python_module_link_target}
 )
 
-# Ensure we use C++17
-target_compile_features(unilink_py PUBLIC cxx_std_17)
+# Ensure extension builds use the same standard as the C++ library.
+target_compile_features(unilink_py PUBLIC cxx_std_20)
 
 get_target_property(_unilink_py_suffix unilink_py SUFFIX)
 get_target_property(_unilink_py_debug_postfix unilink_py DEBUG_POSTFIX)

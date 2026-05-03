@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdint>
+#include <format>
 #include <regex>
 #include <string>
 #include <string_view>
@@ -90,15 +91,16 @@ class UNILINK_API InputValidator {
 // Inline implementations for simple validations
 inline void InputValidator::validate_non_empty_string(const std::string& str, const std::string& field_name) {
   if (str.empty()) {
-    throw diagnostics::ValidationException(field_name + " cannot be empty", field_name, "non-empty string");
+    throw diagnostics::ValidationException(std::format("{} cannot be empty", field_name), field_name,
+                                           "non-empty string");
   }
 }
 
 inline void InputValidator::validate_string_length(const std::string& str, size_t max_length,
                                                    const std::string& field_name) {
   if (str.length() > max_length) {
-    throw diagnostics::ValidationException(field_name + " length exceeds maximum allowed length", field_name,
-                                           "length <= " + std::to_string(max_length));
+    throw diagnostics::ValidationException(std::format("{} length exceeds maximum allowed length", field_name),
+                                           field_name, std::format("length <= {}", max_length));
   }
 }
 
@@ -110,15 +112,15 @@ inline void InputValidator::validate_positive_number(int64_t value, const std::s
 
 inline void InputValidator::validate_range(int64_t value, int64_t min, int64_t max, const std::string& field_name) {
   if (value < min || value > max) {
-    throw diagnostics::ValidationException(field_name + " out of range", field_name,
-                                           std::to_string(min) + " <= value <= " + std::to_string(max));
+    throw diagnostics::ValidationException(std::format("{} out of range", field_name), field_name,
+                                           std::format("{} <= value <= {}", min, max));
   }
 }
 
 inline void InputValidator::validate_range(size_t value, size_t min, size_t max, const std::string& field_name) {
   if (value < min || value > max) {
-    throw diagnostics::ValidationException(field_name + " out of range", field_name,
-                                           std::to_string(min) + " <= value <= " + std::to_string(max));
+    throw diagnostics::ValidationException(std::format("{} out of range", field_name), field_name,
+                                           std::format("{} <= value <= {}", min, max));
   }
 }
 
@@ -142,9 +144,9 @@ inline void InputValidator::validate_retry_count(int retry_count) {
     return;
   }
   if (retry_count < FINITE_MIN_RETRY_COUNT || retry_count > FINITE_MAX_RETRY_COUNT) {
-    throw diagnostics::ValidationException("retry_count out of range", "retry_count",
-                                           std::to_string(FINITE_MIN_RETRY_COUNT) + " <= retry_count <= " +
-                                               std::to_string(FINITE_MAX_RETRY_COUNT) + " or -1 for infinite");
+    throw diagnostics::ValidationException(
+        "retry_count out of range", "retry_count",
+        std::format("{} <= retry_count <= {} or -1 for infinite", FINITE_MIN_RETRY_COUNT, FINITE_MAX_RETRY_COUNT));
   }
 }
 
@@ -178,7 +180,7 @@ inline void InputValidator::validate_memory_alignment(const void* ptr, size_t al
   uintptr_t address = reinterpret_cast<uintptr_t>(ptr);
   if (address % alignment != 0) {
     throw diagnostics::ValidationException("memory pointer not properly aligned", "ptr",
-                                           "aligned to " + std::to_string(alignment) + " bytes");
+                                           std::format("aligned to {} bytes", alignment));
   }
 }
 

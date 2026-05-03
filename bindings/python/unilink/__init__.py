@@ -9,26 +9,45 @@ _registered_dll_dirs = set()
 def _register_windows_dll_directory(directory: Path) -> None:
     if os.name != "nt" or not hasattr(os, "add_dll_directory"):
         return
-    if not directory.is_dir():
-        return
+    
+    try:
+        resolved_dir = str(directory.resolve())
+        if not os.path.isdir(resolved_dir):
+            return
+            
+        if resolved_dir in _registered_dll_dirs:
+            return
 
-    resolved_dir = str(directory.resolve())
-    if resolved_dir in _registered_dll_dirs:
-        return
-
-    _dll_dir_handles.append(os.add_dll_directory(resolved_dir))
-    _registered_dll_dirs.add(resolved_dir)
+        # Keep handle to ensure the directory remains in the search path
+        handle = os.add_dll_directory(resolved_dir)
+        _dll_dir_handles.append(handle)
+        _registered_dll_dirs.add(resolved_dir)
+    except Exception:
+        # Best effort - skip invalid paths or permission issues
+        pass
 
 
 def _add_windows_dll_directory(package_dir: Path) -> None:
     if os.name != "nt" or not hasattr(os, "add_dll_directory"):
         return
 
-    if not package_dir.is_dir():
-        return
-
-    if any(package_dir.glob("unilink*.dll")) or any(package_dir.glob("unilink_py*.pyd")):
+    # 1. Add the package directory itself (contains unilink.dll and unilink_py.pyd)
+    if package_dir.is_dir():
         _register_windows_dll_directory(package_dir)
+
+    # 2. Add directories from PATH as fallback. Python 3.8+ ignores PATH for DLL 
+    # loading, but many users and CI environments rely on it. Scoping to 
+    # directories that actually exist to minimize overhead.
+    for path_str in os.environ.get("PATH", "").split(os.pathsep):
+        if not path_str:
+            continue
+        path = Path(path_str)
+        # Only add if it looks like it might contain dependencies (e.g., contains 'vcpkg' or 'bin')
+        # or if it's the directory we're currently looking at.
+        path_lower = path_str.lower()
+        if "vcpkg" in path_lower or "bin" in path_lower or "unilink" in path_lower:
+            if path.is_dir():
+                _register_windows_dll_directory(path)
 
 
 def _candidate_package_dirs():

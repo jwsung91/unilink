@@ -16,28 +16,42 @@
 
 #include "unilink/builder/serial_builder.hpp"
 
+#include <algorithm>
 #include <boost/asio/io_context.hpp>
+#include <cctype>
 
 #include "unilink/builder/auto_initializer.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace builder {
 
-SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
+template <uint32_t State>
+SerialBuilder<State>::SerialBuilder(const std::string& device, uint32_t baud_rate)
     : device_(device),
       baud_rate_(baud_rate),
       auto_start_(false),
       independent_context_(false),
-      data_bits_(8),
+      retry_interval_ms_(3000),
+      char_size_(8),
       stop_bits_(1),
-      parity_("none"),
-      flow_control_("none"),
-      retry_interval_(3000) {
+      parity_(config::SerialConfig::Parity::None),
+      flow_(config::SerialConfig::Flow::None),
+      reopen_on_error_(true) {
+  if (device.empty()) throw diagnostics::BuilderException("Device path cannot be empty");
+
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
 
-std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
+template <uint32_t State>
+std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
+#if __cplusplus >= 202002L
+  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
+    throw diagnostics::BuilderException("SerialBuilder: Mandatory handlers (on_data and on_error) must be set.");
+  }
+#endif
+
   std::unique_ptr<wrapper::Serial> serial;
   if (independent_context_) {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_, std::make_shared<boost::asio::io_context>());
@@ -46,25 +60,36 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_);
   }
 
-  if (on_data_) serial->on_data(on_data_);
-  if (on_connect_) serial->on_connect(on_connect_);
-  if (on_disconnect_) serial->on_disconnect(on_disconnect_);
-  if (on_error_) serial->on_error(on_error_);
+  if (this->on_data_) serial->on_data(this->on_data_);
+  if (this->on_connect_) serial->on_connect(this->on_connect_);
+  if (this->on_disconnect_) serial->on_disconnect(this->on_disconnect_);
+  if (this->on_error_) serial->on_error(this->on_error_);
 
-  serial->data_bits(data_bits_);
-  serial->stop_bits(stop_bits_);
-  serial->parity(parity_);
-  serial->flow_control(flow_control_);
-  serial->retry_interval(retry_interval_);
+  // Note: wrapper::Serial setters use strings for enum types
+  std::string p_str = "none";
+  if (parity_ == config::SerialConfig::Parity::Even)
+    p_str = "even";
+  else if (parity_ == config::SerialConfig::Parity::Odd)
+    p_str = "odd";
+  serial->parity(p_str);
 
-  if (bp_strategy_set_) serial->backpressure_strategy(bp_strategy_);
-  serial->backpressure_threshold(get_effective_backpressure_threshold());
+  std::string f_str = "none";
+  if (flow_ == config::SerialConfig::Flow::Software)
+    f_str = "software";
+  else if (flow_ == config::SerialConfig::Flow::Hardware)
+    f_str = "hardware";
+  serial->flow_control(f_str);
 
-  if (framer_factory_) {
-    serial->framer(framer_factory_());
+  serial->retry_interval(std::chrono::milliseconds(retry_interval_ms_));
+
+  if (this->bp_strategy_set_) serial->backpressure_strategy(this->bp_strategy_);
+  serial->backpressure_threshold(this->get_effective_backpressure_threshold());
+
+  if (this->framer_factory_) {
+    serial->framer(this->framer_factory_());
   }
-  if (on_message_) {
-    serial->on_message(std::move(on_message_));
+  if (this->on_message_) {
+    serial->on_message(std::move(this->on_message_));
   }
 
   if (auto_start_) {
@@ -74,40 +99,91 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   return serial;
 }
 
-SerialBuilder& SerialBuilder::auto_start(bool auto_start) {
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::auto_start(bool auto_start) {
   auto_start_ = auto_start;
   return *this;
 }
 
-SerialBuilder& SerialBuilder::data_bits(int bits) {
-  data_bits_ = bits;
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::char_size(unsigned int size) {
+  char_size_ = size;
   return *this;
 }
 
-SerialBuilder& SerialBuilder::stop_bits(int bits) {
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::stop_bits(unsigned int bits) {
   stop_bits_ = bits;
   return *this;
 }
 
-SerialBuilder& SerialBuilder::parity(const std::string& p) {
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::parity(config::SerialConfig::Parity p) {
   parity_ = p;
   return *this;
 }
 
-SerialBuilder& SerialBuilder::flow_control(const std::string& flow) {
-  flow_control_ = flow;
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::parity(const std::string& p) {
+  std::string value = p;
+  std::transform(value.begin(), value.end(), value.begin(),
+                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+  if (value == "even") {
+    parity_ = config::SerialConfig::Parity::Even;
+  } else if (value == "odd") {
+    parity_ = config::SerialConfig::Parity::Odd;
+  } else {
+    parity_ = config::SerialConfig::Parity::None;
+  }
   return *this;
 }
 
-SerialBuilder& SerialBuilder::retry_interval(std::chrono::milliseconds interval) {
-  retry_interval_ = interval;
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::flow_control(config::SerialConfig::Flow f) {
+  flow_ = f;
   return *this;
 }
 
-SerialBuilder& SerialBuilder::independent_context(bool use_independent) {
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::flow_control(const std::string& f) {
+  std::string value = f;
+  std::transform(value.begin(), value.end(), value.begin(),
+                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+  if (value == "software") {
+    flow_ = config::SerialConfig::Flow::Software;
+  } else if (value == "hardware") {
+    flow_ = config::SerialConfig::Flow::Hardware;
+  } else {
+    flow_ = config::SerialConfig::Flow::None;
+  }
+  return *this;
+}
+
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::reopen_on_error(bool enable) {
+  reopen_on_error_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::retry_interval(std::chrono::milliseconds interval) {
+  retry_interval_ms_ = static_cast<uint32_t>(interval.count());
+  return *this;
+}
+
+template <uint32_t State>
+SerialBuilder<State>& SerialBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
   return *this;
 }
+
+// Explicit template instantiations
+template class SerialBuilder<BuilderState::None>;
+template class SerialBuilder<BuilderState::HasData>;
+template class SerialBuilder<BuilderState::HasError>;
+template class SerialBuilder<BuilderState::Ready>;
 
 }  // namespace builder
 }  // namespace unilink

@@ -48,6 +48,8 @@ TEST_F(TcpServerChaosTest, GhostClient) {
   auto server = tcp_server(test_port_)
                     .unlimited_clients()
                     .on_connect([&](const wrapper::ConnectionContext&) { connect_count++; })
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
                     .build();
 
   ASSERT_TRUE(server->start().get());
@@ -74,6 +76,7 @@ TEST_F(TcpServerChaosTest, SlowLoris) {
                       received_data += ctx.data();
                       if (received_data.find("Hello World") != std::string::npos) done = true;
                     })
+                    .on_error([](auto&&) {})
                     .build();
 
   ASSERT_TRUE(server->start().get());
@@ -102,6 +105,7 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
   std::atomic<size_t> total_bytes{0};
   auto server = tcp_server(test_port_)
                     .on_data([&](const wrapper::MessageContext& ctx) { total_bytes += ctx.data().size(); })
+                    .on_error([](auto&&) {})
                     .build();
 
   ASSERT_TRUE(server->start().get());
@@ -126,7 +130,7 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
 }
 
 TEST_F(TcpServerChaosTest, MaxConnections) {
-  auto server = tcp_server(test_port_).multi_client(2).build();
+  auto server = tcp_server(test_port_).multi_client(2).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_TRUE(server->start().get());
 
   auto connect_one = [&]() {

@@ -22,43 +22,22 @@ on:
       - 'NOTICE'
       - '.gitignore'
 
-# This is now a coordination workflow that triggers other specialized workflows
+# This is a lightweight coordination workflow. Specialized workflows are
+# triggered directly by the same events and report their own required checks.
 jobs:
-  # Trigger all other workflows
   trigger-workflows:
     name: Trigger CI Workflows
     runs-on: ubuntu-22.04
-    outputs:
-      should-run-security: ${{ github.ref == 'refs/heads/main' || github.event_name == 'schedule' }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v6
 
-  # Test workflow
-  test:
-    name: Test
-    needs: trigger-workflows
-    uses: ./.github/workflows/test.yml
-
-  # Code Quality workflow
-  code-quality:
-    name: Code Quality
-    needs: trigger-workflows
-    uses: ./.github/workflows/code-quality.yml
-
-  # Security workflow
-  security:
-    name: Security
-    needs: trigger-workflows
-    if: needs.trigger-workflows.outputs.should-run-security == 'true'
-    uses: ./.github/workflows/security.yml
-
   # Overall CI Summary
   ci-summary:
     name: CI Summary
     runs-on: ubuntu-22.04
-    needs: [trigger-workflows, test, code-quality, security]
+    needs: trigger-workflows
     if: always()
 
     steps:
@@ -67,9 +46,9 @@ jobs:
         echo "## CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
         echo "| Workflow | Status |" >> $GITHUB_STEP_SUMMARY
         echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Test | ${{ needs.test.result == 'success' && '✅ Passed' || needs.test.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Code Quality | ${{ needs.code-quality.result == 'success' && '✅ Passed' || needs.code-quality.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Security | ${{ needs.security.result == 'success' && '✅ Passed' || needs.security.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Test | See the dedicated Test workflow checks |" >> $GITHUB_STEP_SUMMARY
+        echo "| Code Quality | See the dedicated Code Quality workflow checks |" >> $GITHUB_STEP_SUMMARY
+        echo "| Security | Runs on main, scheduled, or manual dispatch |" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
         echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY

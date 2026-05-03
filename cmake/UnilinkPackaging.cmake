@@ -58,7 +58,7 @@ elseif(UNIX)
   set(CPACK_DEBIAN_PACKAGE_SECTION "libs")
   set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
   set(CPACK_DEBIAN_PACKAGE_DEPENDS
-      "libboost-system1.70.0 | libboost-system1.74.0 | libboost-system1.83.0"
+      "libboost-system-dev (>= ${UNILINK_MIN_BOOST_VERSION})"
   )
   set(CPACK_DEBIAN_PACKAGE_SUGGESTS "cmake, pkg-config")
   set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libc6-dev")
@@ -67,7 +67,7 @@ elseif(UNIX)
   set(CPACK_RPM_PACKAGE_LICENSE "Apache-2.0")
   set(CPACK_RPM_PACKAGE_GROUP "Development/Libraries")
   set(CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_HOMEPAGE_URL}")
-  set(CPACK_RPM_PACKAGE_REQUIRES "boost-system >= 1.70.0")
+  set(CPACK_RPM_PACKAGE_REQUIRES "boost-system >= ${UNILINK_MIN_BOOST_VERSION}")
   set(CPACK_RPM_PACKAGE_SUGGESTS "cmake, pkg-config")
   set(CPACK_RPM_PACKAGE_RECOMMENDS "glibc-devel")
 

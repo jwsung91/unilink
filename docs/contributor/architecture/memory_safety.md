@@ -123,7 +123,7 @@ buffer.validate();
 
 ---
 
-### Safe Span (C++17 Compatible)
+### Safe Span
 
 Lightweight, non-owning view of contiguous data:
 
@@ -150,7 +150,7 @@ process_data(unilink::memory::ConstByteSpan(buffer));
 
 - No ownership (lightweight)
 - `at()/subspan()` are checked; `operator[]` is unchecked
-- C++17 compatible (pre-C++20 `std::span`)
+- Project-local span abstraction retained for API stability
 - Zero overhead in release builds
 
 ---

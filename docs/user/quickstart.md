@@ -8,8 +8,8 @@ Get started with unilink in 5 minutes!
 
 ```bash
 # Ubuntu/Debian
-sudo apt update && sudo apt install -y \
-  build-essential cmake libboost-dev libboost-system-dev
+sudo apt update && sudo apt install -y build-essential cmake
+vcpkg install boost-asio boost-system spdlog
 ```
 
 ### Build & Install
