@@ -10,39 +10,39 @@
 
 <body>
 
-  <table width="100%" border=0 cellspacing=0 cellpadding=0>
-    <tr><td class="title">LCOV - code coverage report</td></tr>
-    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
 
-    <tr>
-      <td width="100%">
-        <table cellpadding=1 border=0 width="100%">
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
           <tr>
             <td width="10%" class="headerItem">Current view:</td>
-            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">unilink</a> - unilink.hpp<span style="font-size: 80%;"> (source / <a href="unilink.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="10%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">unilink</a> - unilink.hpp<span style="font-size: 80%;"> (source / <a href="unilink.hpp.func-c.html">functions</a>)</span></td>
             <td width="5%"></td>
-            <td width="15%"></td>
-            <td width="10%" class="headerCovTableHead">Hit</td>
-            <td width="10%" class="headerCovTableHead">Total</td>
-            <td width="15%" class="headerCovTableHead">Coverage</td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
           </tr>
           <tr>
             <td class="headerItem">Test:</td>
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">11</td>
           </tr>
           <tr>
-            <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-05-02 06:23:10</td>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-05-03 10:29:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">6</td>
             <td class="headerCovTableEntry">6</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,176 +56,180 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
           </tr>
-          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
-        </table>
-      </td>
-    </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
 
-    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
-  </table>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
 
-  <table cellpadding=0 cellspacing=0 border=0>
-    <tr>
-      <td><br></td>
-    </tr>
-    <tr>
-      <td>
-<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
 <pre class="source">
-<a name="1"><span class="lineNum">       1 </span>                :            : /*</a>
-<a name="2"><span class="lineNum">       2 </span>                :            :  * Copyright 2025 Jinwoo Sung</a>
-<a name="3"><span class="lineNum">       3 </span>                :            :  *</a>
-<a name="4"><span class="lineNum">       4 </span>                :            :  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</a>
-<a name="5"><span class="lineNum">       5 </span>                :            :  * you may not use this file except in compliance with the License.</a>
-<a name="6"><span class="lineNum">       6 </span>                :            :  * You may obtain a copy of the License at</a>
-<a name="7"><span class="lineNum">       7 </span>                :            :  *</a>
-<a name="8"><span class="lineNum">       8 </span>                :            :  *     http://www.apache.org/licenses/LICENSE-2.0</a>
-<a name="9"><span class="lineNum">       9 </span>                :            :  *</a>
-<a name="10"><span class="lineNum">      10 </span>                :            :  * Unless required by applicable law or agreed to in writing, software</a>
-<a name="11"><span class="lineNum">      11 </span>                :            :  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</a>
-<a name="12"><span class="lineNum">      12 </span>                :            :  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</a>
-<a name="13"><span class="lineNum">      13 </span>                :            :  * See the License for the specific language governing permissions and</a>
-<a name="14"><span class="lineNum">      14 </span>                :            :  * limitations under the License.</a>
-<a name="15"><span class="lineNum">      15 </span>                :            :  */</a>
-<a name="16"><span class="lineNum">      16 </span>                :            : </a>
-<a name="17"><span class="lineNum">      17 </span>                :            : #pragma once</a>
-<a name="18"><span class="lineNum">      18 </span>                :            : </a>
-<a name="19"><span class="lineNum">      19 </span>                :            : #include &lt;memory&gt;</a>
-<a name="20"><span class="lineNum">      20 </span>                :            : #include &lt;variant&gt;</a>
-<a name="21"><span class="lineNum">      21 </span>                :            : </a>
-<a name="22"><span class="lineNum">      22 </span>                :            : #include &quot;unilink/base/error_codes.hpp&quot;</a>
-<a name="23"><span class="lineNum">      23 </span>                :            : #include &quot;unilink/base/platform.hpp&quot;</a>
-<a name="24"><span class="lineNum">      24 </span>                :            : #include &quot;unilink/base/visibility.hpp&quot;</a>
-<a name="25"><span class="lineNum">      25 </span>                :            : </a>
-<a name="26"><span class="lineNum">      26 </span>                :            : // Public API Context and Interface headers</a>
-<a name="27"><span class="lineNum">      27 </span>                :            : #include &quot;unilink/wrapper/context.hpp&quot;</a>
-<a name="28"><span class="lineNum">      28 </span>                :            : #include &quot;unilink/wrapper/ichannel.hpp&quot;</a>
-<a name="29"><span class="lineNum">      29 </span>                :            : #include &quot;unilink/wrapper/iserver.hpp&quot;</a>
-<a name="30"><span class="lineNum">      30 </span>                :            : </a>
-<a name="31"><span class="lineNum">      31 </span>                :            : // Wrapper implementations</a>
-<a name="32"><span class="lineNum">      32 </span>                :            : #include &quot;unilink/wrapper/serial/serial.hpp&quot;</a>
-<a name="33"><span class="lineNum">      33 </span>                :            : #include &quot;unilink/wrapper/tcp_client/tcp_client.hpp&quot;</a>
-<a name="34"><span class="lineNum">      34 </span>                :            : #include &quot;unilink/wrapper/tcp_server/tcp_server.hpp&quot;</a>
-<a name="35"><span class="lineNum">      35 </span>                :            : #include &quot;unilink/wrapper/udp/udp.hpp&quot;</a>
-<a name="36"><span class="lineNum">      36 </span>                :            : #include &quot;unilink/wrapper/udp/udp_server.hpp&quot;</a>
-<a name="37"><span class="lineNum">      37 </span>                :            : #include &quot;unilink/wrapper/uds_client/uds_client.hpp&quot;</a>
-<a name="38"><span class="lineNum">      38 </span>                :            : #include &quot;unilink/wrapper/uds_server/uds_server.hpp&quot;</a>
-<a name="39"><span class="lineNum">      39 </span>                :            : </a>
-<a name="40"><span class="lineNum">      40 </span>                :            : // High-level Builder API includes</a>
-<a name="41"><span class="lineNum">      41 </span>                :            : #include &quot;unilink/builder/ibuilder.hpp&quot;</a>
-<a name="42"><span class="lineNum">      42 </span>                :            : #include &quot;unilink/builder/serial_builder.hpp&quot;</a>
-<a name="43"><span class="lineNum">      43 </span>                :            : #include &quot;unilink/builder/tcp_client_builder.hpp&quot;</a>
-<a name="44"><span class="lineNum">      44 </span>                :            : #include &quot;unilink/builder/tcp_server_builder.hpp&quot;</a>
-<a name="45"><span class="lineNum">      45 </span>                :            : #include &quot;unilink/builder/udp_builder.hpp&quot;</a>
-<a name="46"><span class="lineNum">      46 </span>                :            : #include &quot;unilink/builder/uds_builder.hpp&quot;</a>
-<a name="47"><span class="lineNum">      47 </span>                :            : #include &quot;unilink/builder/unified_builder.hpp&quot;</a>
-<a name="48"><span class="lineNum">      48 </span>                :            : </a>
-<a name="49"><span class="lineNum">      49 </span>                :            : // Configuration Management API includes (optional)</a>
-<a name="50"><span class="lineNum">      50 </span>                :            : #ifdef UNILINK_ENABLE_CONFIG</a>
-<a name="51"><span class="lineNum">      51 </span>                :            : #include &quot;unilink/config/config_factory.hpp&quot;</a>
-<a name="52"><span class="lineNum">      52 </span>                :            : #include &quot;unilink/config/config_manager.hpp&quot;</a>
-<a name="53"><span class="lineNum">      53 </span>                :            : #include &quot;unilink/config/iconfig_manager.hpp&quot;</a>
-<a name="54"><span class="lineNum">      54 </span>                :            : #endif</a>
-<a name="55"><span class="lineNum">      55 </span>                :            : </a>
-<a name="56"><span class="lineNum">      56 </span>                :            : // Error handling and logging system includes</a>
-<a name="57"><span class="lineNum">      57 </span>                :            : #include &quot;unilink/diagnostics/error_handler.hpp&quot;</a>
-<a name="58"><span class="lineNum">      58 </span>                :            : #include &quot;unilink/diagnostics/logger.hpp&quot;</a>
-<a name="59"><span class="lineNum">      59 </span>                :            : </a>
-<a name="60"><span class="lineNum">      60 </span>                :            : namespace unilink {</a>
-<a name="61"><span class="lineNum">      61 </span>                :            : </a>
-<a name="62"><span class="lineNum">      62 </span>                :            : // === Public Facade Aliases ===</a>
-<a name="63"><span class="lineNum">      63 </span>                :            : </a>
-<a name="64"><span class="lineNum">      64 </span>                :            : // Core communication classes</a>
-<a name="65"><span class="lineNum">      65 </span>                :            : using TcpClient = wrapper::TcpClient;</a>
-<a name="66"><span class="lineNum">      66 </span>                :            : using TcpServer = wrapper::TcpServer;</a>
-<a name="67"><span class="lineNum">      67 </span>                :            : using Serial = wrapper::Serial;</a>
-<a name="68"><span class="lineNum">      68 </span>                :            : using UdpClient = wrapper::UdpClient;</a>
-<a name="69"><span class="lineNum">      69 </span>                :            : using UdpServer = wrapper::UdpServer;</a>
-<a name="70"><span class="lineNum">      70 </span>                :            : using UdsClient = wrapper::UdsClient;</a>
-<a name="71"><span class="lineNum">      71 </span>                :            : using UdsServer = wrapper::UdsServer;</a>
-<a name="72"><span class="lineNum">      72 </span>                :            : </a>
-<a name="73"><span class="lineNum">      73 </span>                :            : // Context classes for callbacks</a>
-<a name="74"><span class="lineNum">      74 </span>                :            : using MessageContext = wrapper::MessageContext;</a>
-<a name="75"><span class="lineNum">      75 </span>                :            : using ConnectionContext = wrapper::ConnectionContext;</a>
-<a name="76"><span class="lineNum">      76 </span>                :            : using ErrorContext = wrapper::ErrorContext;</a>
-<a name="77"><span class="lineNum">      77 </span>                :            : </a>
-<a name="78"><span class="lineNum">      78 </span>                :            : // === Public Builder API Convenience Functions ===</a>
-<a name="79"><span class="lineNum">      79 </span>                :            : </a>
-<a name="80"><span class="lineNum">      80 </span>                :            : /**</a>
-<a name="81"><span class="lineNum">      81 </span>                :            :  * @brief Create a TCP server builder</a>
-<a name="82"><span class="lineNum">      82 </span>                :            :  * @param port The port number for the server</a>
-<a name="83"><span class="lineNum">      83 </span>                :            :  * @return TcpServerBuilder A configured builder for TcpServer</a>
-<a name="84"><span class="lineNum">      84 </span>                :            :  */</a>
-<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">         69 : inline builder::TcpServerBuilder tcp_server(uint16_t port) { return builder::TcpServerBuilder(port); }</span></a>
-<a name="86"><span class="lineNum">      86 </span>                :            : </a>
-<a name="87"><span class="lineNum">      87 </span>                :            : /**</a>
-<a name="88"><span class="lineNum">      88 </span>                :            :  * @brief Create a TCP client builder</a>
-<a name="89"><span class="lineNum">      89 </span>                :            :  * @param host The host address to connect to</a>
-<a name="90"><span class="lineNum">      90 </span>                :            :  * @param port The port number to connect to</a>
-<a name="91"><span class="lineNum">      91 </span>                :            :  * @return TcpClientBuilder A configured builder for TcpClient</a>
-<a name="92"><span class="lineNum">      92 </span>                :            :  */</a>
-<a name="93"><span class="lineNum">      93 </span>                :<span class="lineCov">         53 : inline builder::TcpClientBuilder tcp_client(const std::string&amp; host, uint16_t port) {</span></a>
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">         53 :   return builder::TcpClientBuilder(host, port);</span></a>
-<a name="95"><span class="lineNum">      95 </span>                :            : }</a>
-<a name="96"><span class="lineNum">      96 </span>                :            : </a>
-<a name="97"><span class="lineNum">      97 </span>                :            : /**</a>
-<a name="98"><span class="lineNum">      98 </span>                :            :  * @brief Create a UDS server builder</a>
-<a name="99"><span class="lineNum">      99 </span>                :            :  * @param socket_path The path to the Unix Domain Socket file</a>
-<a name="100"><span class="lineNum">     100 </span>                :            :  * @return UdsServerBuilder A configured builder for UdsServer</a>
-<a name="101"><span class="lineNum">     101 </span>                :            :  */</a>
-<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">          3 : inline builder::UdsServerBuilder uds_server(const std::string&amp; socket_path) {</span></a>
-<a name="103"><span class="lineNum">     103 </span>                :<span class="lineCov">          3 :   return builder::UdsServerBuilder(socket_path);</span></a>
-<a name="104"><span class="lineNum">     104 </span>                :            : }</a>
-<a name="105"><span class="lineNum">     105 </span>                :            : </a>
-<a name="106"><span class="lineNum">     106 </span>                :            : /**</a>
-<a name="107"><span class="lineNum">     107 </span>                :            :  * @brief Create a UDS client builder</a>
-<a name="108"><span class="lineNum">     108 </span>                :            :  * @param socket_path The path to the Unix Domain Socket file</a>
-<a name="109"><span class="lineNum">     109 </span>                :            :  * @return UdsClientBuilder A configured builder for UdsClient</a>
-<a name="110"><span class="lineNum">     110 </span>                :            :  */</a>
-<a name="111"><span class="lineNum">     111 </span>                :<span class="lineCov">          4 : inline builder::UdsClientBuilder uds_client(const std::string&amp; socket_path) {</span></a>
-<a name="112"><span class="lineNum">     112 </span>                :<span class="lineCov">          4 :   return builder::UdsClientBuilder(socket_path);</span></a>
-<a name="113"><span class="lineNum">     113 </span>                :            : }</a>
-<a name="114"><span class="lineNum">     114 </span>                :            : </a>
-<a name="115"><span class="lineNum">     115 </span>                :            : /**</a>
-<a name="116"><span class="lineNum">     116 </span>                :            :  * @brief Create a Serial port builder</a>
-<a name="117"><span class="lineNum">     117 </span>                :            :  * @param device The serial device path (e.g., &quot;/dev/ttyUSB0&quot;)</a>
-<a name="118"><span class="lineNum">     118 </span>                :            :  * @param baud_rate The baud rate for serial communication</a>
-<a name="119"><span class="lineNum">     119 </span>                :            :  * @return SerialBuilder A configured builder for Serial</a>
-<a name="120"><span class="lineNum">     120 </span>                :            :  */</a>
-<a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">          7 : inline builder::SerialBuilder serial(const std::string&amp; device, uint32_t baud_rate) {</span></a>
-<a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">          7 :   return builder::SerialBuilder(device, baud_rate);</span></a>
-<a name="123"><span class="lineNum">     123 </span>                :            : }</a>
-<a name="124"><span class="lineNum">     124 </span>                :            : </a>
-<a name="125"><span class="lineNum">     125 </span>                :            : /**</a>
-<a name="126"><span class="lineNum">     126 </span>                :            :  * @brief Create a UDP client builder</a>
-<a name="127"><span class="lineNum">     127 </span>                :            :  * @param local_port The local port to bind</a>
-<a name="128"><span class="lineNum">     128 </span>                :            :  * @return UdpClientBuilder A configured builder for UDP Client</a>
-<a name="129"><span class="lineNum">     129 </span>                :            :  */</a>
-<a name="130"><span class="lineNum">     130 </span>                :<span class="lineCov">          2 : inline builder::UdpClientBuilder udp_client(uint16_t local_port) { return builder::UdpClientBuilder(local_port); }</span></a>
-<a name="131"><span class="lineNum">     131 </span>                :            : </a>
-<a name="132"><span class="lineNum">     132 </span>                :            : /**</a>
-<a name="133"><span class="lineNum">     133 </span>                :            :  * @brief Create a UDP server builder (Virtual sessions)</a>
-<a name="134"><span class="lineNum">     134 </span>                :            :  * @param local_port The local port to bind</a>
-<a name="135"><span class="lineNum">     135 </span>                :            :  * @return UdpServerBuilder A configured builder for UDP Server</a>
-<a name="136"><span class="lineNum">     136 </span>                :            :  */</a>
-<a name="137"><span class="lineNum">     137 </span>                :            : inline builder::UdpServerBuilder udp_server(uint16_t local_port) { return builder::UdpServerBuilder(local_port); }</a>
-<a name="138"><span class="lineNum">     138 </span>                :            : </a>
-<a name="139"><span class="lineNum">     139 </span>                :            : }  // namespace unilink</a>
-</pre>
-      </td>
-    </tr>
-  </table>
-  <br>
+<span id="L1"><span class="lineNum">       1</span>                 :             : /*</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright 2025 Jinwoo Sung</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * you may not use this file except in compliance with the License.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  * You may obtain a copy of the License at</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  *</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  *     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  *</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  * Unless required by applicable law or agreed to in writing, software</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             :  * See the License for the specific language governing permissions and</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             :  * limitations under the License.</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             :  */</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : </span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #pragma once</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;variant&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;unilink/base/error_codes.hpp&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;unilink/base/platform.hpp&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;unilink/base/visibility.hpp&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : // Public API Context and Interface headers</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &quot;unilink/wrapper/context.hpp&quot;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &quot;unilink/wrapper/ichannel.hpp&quot;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &quot;unilink/wrapper/iserver.hpp&quot;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : // Wrapper implementations</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &quot;unilink/wrapper/serial/serial.hpp&quot;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &quot;unilink/wrapper/tcp_client/tcp_client.hpp&quot;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : #include &quot;unilink/wrapper/tcp_server/tcp_server.hpp&quot;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #include &quot;unilink/wrapper/udp/udp.hpp&quot;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : #include &quot;unilink/wrapper/udp/udp_server.hpp&quot;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : #include &quot;unilink/wrapper/uds_client/uds_client.hpp&quot;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : #include &quot;unilink/wrapper/uds_server/uds_server.hpp&quot;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : // High-level Builder API includes</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : #include &quot;unilink/builder/ibuilder.hpp&quot;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : #include &quot;unilink/builder/serial_builder.hpp&quot;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : #include &quot;unilink/builder/tcp_client_builder.hpp&quot;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : #include &quot;unilink/builder/tcp_server_builder.hpp&quot;</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : #include &quot;unilink/builder/udp_builder.hpp&quot;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : #include &quot;unilink/builder/uds_builder.hpp&quot;</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : #include &quot;unilink/builder/unified_builder.hpp&quot;</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : // Configuration Management API includes (optional)</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : #ifdef UNILINK_ENABLE_CONFIG</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : #include &quot;unilink/config/config_factory.hpp&quot;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : #include &quot;unilink/config/config_manager.hpp&quot;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : #include &quot;unilink/config/iconfig_manager.hpp&quot;</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : #endif</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : </span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : // Error handling and logging system includes</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : #include &quot;unilink/diagnostics/error_handler.hpp&quot;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : #include &quot;unilink/diagnostics/logger.hpp&quot;</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : </span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : namespace unilink {</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : // === Public Facade Aliases ===</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : </span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : // Core communication classes</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : using TcpClient = wrapper::TcpClient;</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : using TcpServer = wrapper::TcpServer;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : using Serial = wrapper::Serial;</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : using UdpClient = wrapper::UdpClient;</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : using UdpServer = wrapper::UdpServer;</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : using UdsClient = wrapper::UdsClient;</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : using UdsServer = wrapper::UdsServer;</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : </span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : // Context classes for callbacks</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : using MessageContext = wrapper::MessageContext;</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : using ConnectionContext = wrapper::ConnectionContext;</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : using ErrorContext = wrapper::ErrorContext;</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : </span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : // === Public Builder API Convenience Functions ===</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : </span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : /**</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :  * @brief Create a TCP server builder</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :  * @param port The port number for the server</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :  * @return TcpServerBuilderDefault A configured builder for TcpServer</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :  */</span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC tlaBgGNC">          68 : inline builder::TcpServerBuilderDefault tcp_server(uint16_t port) { return builder::TcpServerBuilderDefault(port); }</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : </span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : /**</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :  * @brief Create a TCP client builder</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :  * @param host The host address to connect to</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :  * @param port The port number to connect to</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :  * @return TcpClientBuilderDefault A configured builder for TcpClient</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :  */</span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">          51 : inline builder::TcpClientBuilderDefault tcp_client(const std::string&amp; host, uint16_t port) {</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">          51 :   return builder::TcpClientBuilderDefault(host, port);</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : }</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : </span>
+<span id="L97"><span class="lineNum">      97</span>                 :             : /**</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :  * @brief Create a UDS server builder</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :  * @param socket_path The path to the Unix Domain Socket file</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :  * @return UdsServerBuilderDefault A configured builder for UdsServer</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :  */</span>
+<span id="L102"><span class="lineNum">     102</span>                 :<span class="tlaGNC">           3 : inline builder::UdsServerBuilderDefault uds_server(const std::string&amp; socket_path) {</span></span>
+<span id="L103"><span class="lineNum">     103</span>                 :<span class="tlaGNC">           3 :   return builder::UdsServerBuilderDefault(socket_path);</span></span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : }</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             : </span>
+<span id="L106"><span class="lineNum">     106</span>                 :             : /**</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :  * @brief Create a UDS client builder</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :  * @param socket_path The path to the Unix Domain Socket file</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :  * @return UdsClientBuilderDefault A configured builder for UdsClient</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :  */</span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">           4 : inline builder::UdsClientBuilderDefault uds_client(const std::string&amp; socket_path) {</span></span>
+<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">           4 :   return builder::UdsClientBuilderDefault(socket_path);</span></span>
+<span id="L113"><span class="lineNum">     113</span>                 :             : }</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : </span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : /**</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :  * @brief Create a Serial port builder</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :  * @param device The serial device path (e.g., &quot;/dev/ttyUSB0&quot;)</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :  * @param baud_rate The baud rate for serial communication</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :  * @return SerialBuilderDefault A configured builder for Serial</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :  */</span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">           7 : inline builder::SerialBuilderDefault serial(const std::string&amp; device, uint32_t baud_rate) {</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">           7 :   return builder::SerialBuilderDefault(device, baud_rate);</span></span>
+<span id="L123"><span class="lineNum">     123</span>                 :             : }</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             : </span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : /**</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :  * @brief Create a UDP client builder</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :  * @param local_port The local port to bind</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :  * @return UdpClientBuilderDefault A configured builder for UDP Client</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :  */</span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           2 : inline builder::UdpClientBuilderDefault udp_client(uint16_t local_port) {</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">           2 :   return builder::UdpClientBuilderDefault(local_port);</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : }</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : </span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : /**</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :  * @brief Create a UDP server builder (Virtual sessions)</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :  * @param local_port The local port to bind</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :  * @return UdpServerBuilderDefault A configured builder for UDP Server</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :  */</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             : inline builder::UdpServerBuilderDefault udp_server(uint16_t local_port) {</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :   return builder::UdpServerBuilderDefault(local_port);</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : }</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : </span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : }  // namespace unilink</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
 
-  <table width="100%" border=0 cellspacing=0 cellpadding=0>
-    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
-    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
-  </table>
-  <br>
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
 
 </body>
 </html>
