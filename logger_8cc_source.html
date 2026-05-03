@@ -606,8 +606,8 @@ $(document).ready(function(){initNavTree('logger_8cc_source.html',''); initResiz
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>  }</div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>  <span class="comment">// Incorporate source location information into the payload</span></div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>  std::string payload =</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>      std::format(<span class="stringliteral">&quot;[{}] [{}] [{}:{}:{}] {}&quot;</span>, component, operation, loc.file_name(), loc.line(), loc.function_name(), message);</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>  std::string payload = std::format(<span class="stringliteral">&quot;[{}] [{}] [{}:{}:{}] {}&quot;</span>, component, operation, loc.file_name(), loc.line(),</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                                    loc.function_name(), message);</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span> </div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>  impl_-&gt;spd_logger_-&gt;log(<a class="code hl_function" href="structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a9be6d32b91caf51b6ed1e6c7ccaec4b8">Impl::to_spdlog_level</a>(<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a4a88b05c250af04b01f2a3d94473d0e3">level</a>), payload);</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>}</div>
@@ -728,7 +728,7 @@ $(document).ready(function(){initNavTree('logger_8cc_source.html',''); initResiz
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8cc.html">logger.cc</a></li>
-    <li class="footer">Generated on Sun May 3 2026 10:23:05 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

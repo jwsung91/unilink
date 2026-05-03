@@ -741,34 +741,36 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>    <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>      on_bp(queued_bytes);</div>
 <div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, std::format(<span class="stringliteral">&quot;Exception in backpressure callback: {}&quot;</span>, e.what()));</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>    }</div>
-<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
-<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>    backpressure_active_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>      on_bp(queued_bytes);</div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, std::format(<span class="stringliteral">&quot;Exception in backpressure callback: {}&quot;</span>, e.what()));</div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>    }</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>  }</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>}</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>                        std::format(<span class="stringliteral">&quot;Exception in backpressure callback: {}&quot;</span>, e.what()));</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>    }</div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    backpressure_active_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>      on_bp(queued_bytes);</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>                        std::format(<span class="stringliteral">&quot;Exception in backpressure callback: {}&quot;</span>, e.what()));</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>    }</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>  }</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>}</div>
 </div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span> </div>
-<div class="foldopen" id="foldopen00544" data-start="{" data-end="}">
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">  544</a></span><span class="keywordtype">void</span> UdsClient::Impl::record_error(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat,</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>                                   std::string_view operation, <span class="keyword">const</span> boost::system::error_code&amp; ec,</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>                                   std::string_view msg, <span class="keywordtype">bool</span> retryable, uint32_t) {</div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>  std::lock_guard&lt;std::mutex&gt; lock(last_err_mtx_);</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>  last_error_info_ = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>(lvl, cat, <span class="stringliteral">&quot;uds_client&quot;</span>, operation, msg, ec, retryable);</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>}</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span> </div>
+<div class="foldopen" id="foldopen00546" data-start="{" data-end="}">
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">  546</a></span><span class="keywordtype">void</span> UdsClient::Impl::record_error(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat,</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                                   std::string_view operation, <span class="keyword">const</span> boost::system::error_code&amp; ec,</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>                                   std::string_view msg, <span class="keywordtype">bool</span> retryable, uint32_t) {</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>  std::lock_guard&lt;std::mutex&gt; lock(last_err_mtx_);</div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>  last_error_info_ = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>(lvl, cat, <span class="stringliteral">&quot;uds_client&quot;</span>, operation, msg, ec, retryable);</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>}</div>
 </div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span> </div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span> </div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__uds__socket_8hpp_html"><div class="ttname"><a href="boost__uds__socket_8hpp.html">boost_uds_socket.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_aa2fe2bd2caca7544431ff59e0c8a111d"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">unilink::interface::Channel::OnState</a></div><div class="ttdeci">std::function&lt; void(base::LinkState)&gt; OnState</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00032">channel.hpp:32</a></div></div>
@@ -863,7 +865,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="transport_2uds_2uds__client_8cc.html">uds_client.cc</a></li>
-    <li class="footer">Generated on Sun May 3 2026 10:23:05 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

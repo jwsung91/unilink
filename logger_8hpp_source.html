@@ -387,15 +387,15 @@ $(document).ready(function(){initNavTree('logger_8hpp_source.html',''); initResi
 </div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
 <div class="foldopen" id="foldopen00284" data-start="" data-end="">
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aa8aed21d2fc4d95311ed6f292df6dd56">  284</a></span><span class="preprocessor">#define UNILINK_LOG_PERF_END(component, operation)                                                     \</span></div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="preprocessor">  do {                                                                                                 \</span></div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {   \</span></div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="preprocessor">      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                          \</span></div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="preprocessor">      using _us_t = std::chrono::microseconds;                                                         \</span></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="preprocessor">      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                        \</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="preprocessor">      auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();  \</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aa8aed21d2fc4d95311ed6f292df6dd56">  284</a></span><span class="preprocessor">#define UNILINK_LOG_PERF_END(component, operation)                                                         \</span></div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="preprocessor">  do {                                                                                                     \</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {       \</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="preprocessor">      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                              \</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="preprocessor">      using _us_t = std::chrono::microseconds;                                                             \</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="preprocessor">      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                            \</span></div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="preprocessor">      auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();      \</span></div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">      UNILINK_LOG_DEBUG(component, operation, std::format(&quot;Duration: {} μs&quot;, _perf_duration_##operation)); \</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">    }                                                                                                  \</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">    }                                                                                                      \</span></div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">  } while (0)</span></div>
 </div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
@@ -440,7 +440,7 @@ $(document).ready(function(){initNavTree('logger_8hpp_source.html',''); initResi
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8hpp.html">logger.hpp</a></li>
-    <li class="footer">Generated on Sun May 3 2026 10:23:05 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

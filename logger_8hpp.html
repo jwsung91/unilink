@@ -535,14 +535,14 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                 \</div>
-<div class="line">    if (<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code hl_enumvalue" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) {   \</div>
-<div class="line">      <span class="keyword">auto</span> _perf_end_##operation = std::chrono::high_resolution_clock::now();                          \</div>
-<div class="line">      <span class="keyword">using </span>_us_t = std::chrono::microseconds;                                                         \</div>
-<div class="line">      <span class="keyword">auto</span> _diff_##operation = _perf_end_##operation - _perf_start_##operation;                        \</div>
-<div class="line">      <span class="keyword">auto</span> _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();  \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                     \</div>
+<div class="line">    if (<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code hl_enumvalue" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) {       \</div>
+<div class="line">      <span class="keyword">auto</span> _perf_end_##operation = std::chrono::high_resolution_clock::now();                              \</div>
+<div class="line">      <span class="keyword">using </span>_us_t = std::chrono::microseconds;                                                             \</div>
+<div class="line">      <span class="keyword">auto</span> _diff_##operation = _perf_end_##operation - _perf_start_##operation;                            \</div>
+<div class="line">      <span class="keyword">auto</span> _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();      \</div>
 <div class="line">      UNILINK_LOG_DEBUG(component, operation, std::format(<span class="stringliteral">&quot;Duration: {} μs&quot;</span>, _perf_duration_##operation)); \</div>
-<div class="line">    }                                                                                                  \</div>
+<div class="line">    }                                                                                                      \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00284">284</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
@@ -634,7 +634,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8hpp.html">logger.hpp</a></li>
-    <li class="footer">Generated on Sun May 3 2026 10:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
