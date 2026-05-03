@@ -18,6 +18,41 @@ job_count() {
 
 JOBS="$(job_count)"
 
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
+SKIP_FORMAT=0
+SKIP_DOCS=0
+
+for arg in "$@"; do
+  case "$arg" in
+    --tests-only|-t)
+      SKIP_FORMAT=1
+      SKIP_DOCS=1
+      ;;
+    --skip-format)
+      SKIP_FORMAT=1
+      ;;
+    --skip-docs)
+      SKIP_DOCS=1
+      ;;
+    --help|-h)
+      echo "Usage: $0 [options]"
+      echo ""
+      echo "Options:"
+      echo "  --tests-only, -t   Skip formatting and doc snippets; run build + tests only"
+      echo "  --skip-format      Skip clang-format / cmake-format step"
+      echo "  --skip-docs        Skip documentation snippet compilation"
+      echo "  --help, -h         Show this help message"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      exit 1
+      ;;
+  esac
+done
+
 if [[ -z "${UNILINK_VERIFY_PRESET:-}" ]]; then
   # Detect host platform and suggest a preset
   OS="$(uname -s)"
@@ -41,9 +76,13 @@ fi
 # ---------------------------------------------------------------------------
 # Step 1: Format
 # ---------------------------------------------------------------------------
-section "Step 1: Formatting code"
-./scripts/apply_clang_format.sh
-./scripts/apply_cmake_format.sh
+if [[ "${SKIP_FORMAT}" -eq 0 ]]; then
+  section "Step 1: Formatting code"
+  ./scripts/apply_clang_format.sh
+  ./scripts/apply_cmake_format.sh
+else
+  section "Step 1: Formatting code [SKIPPED]"
+fi
 
 # ---------------------------------------------------------------------------
 # Step 2: Build library + examples
@@ -70,8 +109,12 @@ cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
 # ---------------------------------------------------------------------------
 # Step 3: Compile documentation snippets
 # ---------------------------------------------------------------------------
-section "Step 3: Compiling documentation snippets"
-cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --target doc_snippets_smoke
+if [[ "${SKIP_DOCS}" -eq 0 ]]; then
+  section "Step 3: Compiling documentation snippets"
+  cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --target doc_snippets_smoke
+else
+  section "Step 3: Compiling documentation snippets [SKIPPED]"
+fi
 
 # ---------------------------------------------------------------------------
 # Step 4: Unit tests
