@@ -15,6 +15,57 @@ if(WIN32)
   set(Python3_FIND_ABI OFF ANY ANY)
 endif()
 
+if(WIN32 AND Python3_EXECUTABLE)
+  execute_process(
+    COMMAND
+      "${Python3_EXECUTABLE}" -c
+      "import sys, sysconfig; include = sysconfig.get_path('include') or ''; libdir = sysconfig.get_config_var('LIBDIR') or ''; libname = sysconfig.get_config_var('LDLIBRARY') or sysconfig.get_config_var('LIBRARY') or f'python{sys.version_info.major}{sys.version_info.minor}.lib'; print(include); print(libdir); print(libname)"
+    OUTPUT_VARIABLE _unilink_python_probe
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE _unilink_python_probe_result
+  )
+
+  if(_unilink_python_probe_result EQUAL 0)
+    string(REPLACE "\r\n" "\n" _unilink_python_probe "${_unilink_python_probe}")
+    string(REPLACE "\n" ";" _unilink_python_probe_lines
+                   "${_unilink_python_probe}"
+    )
+    list(LENGTH _unilink_python_probe_lines _unilink_python_probe_count)
+
+    if(_unilink_python_probe_count GREATER_EQUAL 3)
+      list(GET _unilink_python_probe_lines 0 _unilink_python_include_dir)
+      list(GET _unilink_python_probe_lines 1 _unilink_python_library_dir)
+      list(GET _unilink_python_probe_lines 2 _unilink_python_library_name)
+      set(_unilink_python_library
+          "${_unilink_python_library_dir}/${_unilink_python_library_name}"
+      )
+
+      if(EXISTS "${_unilink_python_include_dir}/Python.h")
+        set(Python3_INCLUDE_DIR
+            "${_unilink_python_include_dir}"
+            CACHE PATH
+                  "Python include directory selected by Python3_EXECUTABLE"
+                  FORCE
+        )
+      endif()
+
+      if(EXISTS "${_unilink_python_library}")
+        set(Python3_LIBRARY
+            "${_unilink_python_library}"
+            CACHE FILEPATH
+                  "Python import library selected by Python3_EXECUTABLE" FORCE
+        )
+        set(Python3_LIBRARY_RELEASE
+            "${_unilink_python_library}"
+            CACHE FILEPATH
+                  "Python release import library selected by Python3_EXECUTABLE"
+                  FORCE
+        )
+      endif()
+    endif()
+  endif()
+endif()
+
 find_package(
   Python3
   COMPONENTS Interpreter Development.Module
