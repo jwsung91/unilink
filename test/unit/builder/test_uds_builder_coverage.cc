@@ -40,7 +40,9 @@ TEST(UdsBuilderCoverageTest, UdsClientBuilderSetters) {
                     .on_error([](const wrapper::ErrorContext&) {})
                     .framer([]() { return std::make_unique<framer::LineFramer>(); })
                     .on_message([](const wrapper::MessageContext&) {})
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(client, nullptr);
 }
@@ -58,7 +60,9 @@ TEST(UdsBuilderCoverageTest, UdsServerBuilderSetters) {
                     .on_error([](const wrapper::ErrorContext&) {})
                     .framer([]() { return std::make_unique<framer::LineFramer>(); })
                     .on_message([](const wrapper::MessageContext&) {})
-                    .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
   ASSERT_NE(server, nullptr);
 }

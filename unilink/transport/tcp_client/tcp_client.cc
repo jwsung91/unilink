@@ -634,8 +634,8 @@ void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self, uint64_t seq) 
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "on_bytes", std::format("Exception in on_bytes callback: {}", e.what()));
         self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "on_bytes",
-                                  boost::asio::error::connection_aborted, std::format("Exception in on_bytes: {}", e.what()),
-                                  false, 0);
+                                  boost::asio::error::connection_aborted,
+                                  std::format("Exception in on_bytes: {}", e.what()), false, 0);
         self->impl_->handle_close(self, seq, make_error_code(boost::asio::error::connection_aborted));
         return;
       } catch (...) {
@@ -814,7 +814,8 @@ void TcpClient::Impl::report_backpressure(size_t queued_bytes) {
     try {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
+      UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
+                        std::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
@@ -823,7 +824,8 @@ void TcpClient::Impl::report_backpressure(size_t queued_bytes) {
     try {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
+      UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
+                        std::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
@@ -965,8 +967,8 @@ void TcpClient::Impl::reset_io_objects() {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", std::format("Reset error: {}", e.what()));
     record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::SYSTEM, "reset_io_objects", {},
                  std::format("Reset error: {}", e.what()), false, 0);
-    diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
-                                                      std::format("Exception while resetting io objects: {}", e.what()));
+    diagnostics::error_reporting::report_system_error(
+        "tcp_client", "reset_io_objects", std::format("Exception while resetting io objects: {}", e.what()));
   } catch (...) {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", "Unknown reset error");
     diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",

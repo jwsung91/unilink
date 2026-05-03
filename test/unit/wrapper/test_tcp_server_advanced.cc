@@ -53,7 +53,7 @@ class AdvancedTcpServerCoverageTest : public ::testing::Test {
 };
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   for (int i = 0; i < 3; ++i) {
     auto f = server_->start();
     EXPECT_TRUE(f.get());
@@ -116,7 +116,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   std::vector<size_t> ids;
   std::mutex ids_mutex;
 
-  server_ = unilink::tcp_server(test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   server_->on_connect([&](const wrapper::ConnectionContext& ctx) {
     std::lock_guard<std::mutex> lk(ids_mutex);
     ids.push_back(ctx.client_id());
@@ -124,8 +124,8 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   auto server_start_fut = server_->start();
   ASSERT_TRUE(server_start_fut.get());
 
-  auto client1 = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
-  auto client2 = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto client1 = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  auto client2 = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   std::atomic<int> client_received{0};
   client1->on_data([&](const wrapper::MessageContext&) { client_received++; });
@@ -173,14 +173,15 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
-  server_ = unilink::tcp_server(test_port_).port_retry(true, 5, 100).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ =
+      unilink::tcp_server(test_port_).port_retry(true, 5, 100).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   auto f = server_->start();
   EXPECT_TRUE(f.get());
   EXPECT_TRUE(server_->listening());
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
-  server_ = unilink::tcp_server(test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   std::vector<std::thread> threads;
   for (int i = 0; i < 2; ++i) {  // Reduced count for stability
     threads.emplace_back([this]() {
@@ -197,12 +198,12 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
 
 TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   std::atomic<int> count{0};
-  server_ = unilink::tcp_server(test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   server_->on_connect([&](const wrapper::ConnectionContext&) { count = 1; });
   server_->on_connect([&](const wrapper::ConnectionContext&) { count = 2; });
 
   auto f = server_->start();
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   client->start();
 
   TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000);

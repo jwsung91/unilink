@@ -278,8 +278,7 @@ struct UdpServer::Impl {
       }
 
       if (is_new && connect_handler_copy) {
-        connect_handler_copy(
-            ConnectionContext(client_id, std::format("{}:{}", ep.address().to_string(), ep.port())));
+        connect_handler_copy(ConnectionContext(client_id, std::format("{}:{}", ep.address().to_string(), ep.port())));
       }
 
       {

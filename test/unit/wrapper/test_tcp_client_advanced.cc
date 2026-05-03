@@ -53,7 +53,7 @@ class AdvancedTcpClientCoverageTest : public ::testing::Test {
 };
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
-  client_ = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   for (int i = 0; i < 3; ++i) {
     auto f = client_->start();
     EXPECT_TRUE(f.get());
@@ -115,7 +115,9 @@ TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) 
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(true)
                 .on_connect([&](const wrapper::ConnectionContext&) { connected = true; })
-                .on_data([](auto&&){}).on_error([](auto&&){}).build();
+                .on_data([](auto&&) {})
+                .on_error([](auto&&) {})
+                .build();
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 10000));
 }
@@ -125,7 +127,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
   // Ensure handler is registered BEFORE anything starts
   server_->on_data([&](const wrapper::MessageContext&) { received++; });
 
-  client_ = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   client_->start();
 
   ASSERT_TRUE(TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000));

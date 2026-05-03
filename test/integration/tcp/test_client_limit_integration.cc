@@ -82,7 +82,7 @@ class ClientLimitIntegrationTest : public ::testing::Test {
 
 TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).single_client().on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port).single_client().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_NE(server_, nullptr);
   ASSERT_TRUE(server_->start().get());
 
@@ -101,7 +101,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
 TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).multi_client(2).on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port).multi_client(2).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_NE(server_, nullptr);
   ASSERT_TRUE(server_->start().get());
 
@@ -119,7 +119,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
 
 TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&){}).on_error([](auto&&){}).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_NE(server_, nullptr);
   ASSERT_TRUE(server_->start().get());
 
@@ -134,5 +134,9 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
 TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
   uint16_t test_port = getTestPort();
-  EXPECT_THROW({ server_ = unilink::tcp_server(test_port).multi_client(0).on_data([](auto&&){}).on_error([](auto&&){}).build(); }, std::invalid_argument);
+  EXPECT_THROW(
+      {
+        server_ = unilink::tcp_server(test_port).multi_client(0).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+      },
+      std::invalid_argument);
 }

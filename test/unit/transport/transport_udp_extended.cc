@@ -45,14 +45,6 @@ bool wait_for_condition(boost::asio::io_context& ioc, Pred pred, std::chrono::mi
   }
   return pred();
 }
-
-void pump_io(boost::asio::io_context& ioc, std::chrono::milliseconds duration, std::chrono::milliseconds step = 5ms) {
-  auto deadline = std::chrono::steady_clock::now() + duration;
-  while (std::chrono::steady_clock::now() < deadline) {
-    ioc.run_for(step);
-    ioc.restart();
-  }
-}
 }  // namespace
 
 TEST(TransportUdpExtendedTest, AsyncWriteMove) {

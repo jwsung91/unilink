@@ -525,7 +525,8 @@ void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
     try {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("uds_client", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                        std::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
@@ -534,7 +535,8 @@ void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
     try {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("uds_client", "on_backpressure", std::format("Exception in backpressure callback: {}", e.what()));
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                        std::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
