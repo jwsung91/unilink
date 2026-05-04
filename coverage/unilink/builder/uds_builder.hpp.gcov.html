@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-04 11:55:50</td>
+            <td class="headerValue">2026-05-04 12:49:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -221,31 +221,33 @@
 <span id="L143"><span class="lineNum">     143</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; independent_context(bool use_independent = true);</span>
 <span id="L144"><span class="lineNum">     144</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; idle_timeout(std::chrono::milliseconds timeout);</span>
 <span id="L145"><span class="lineNum">     145</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; max_clients(uint32_t max_clients);</span>
-<span id="L146"><span class="lineNum">     146</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; single_client();</span>
-<span id="L147"><span class="lineNum">     147</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; multi_client(size_t max);</span>
-<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
-<span id="L149"><span class="lineNum">     149</span>                 :             :  private:</span>
-<span id="L150"><span class="lineNum">     150</span>                 :             :   template &lt;uint32_t S&gt;</span>
-<span id="L151"><span class="lineNum">     151</span>                 :             :   friend class UdsServerBuilder;</span>
-<span id="L152"><span class="lineNum">     152</span>                 :             : </span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :   std::string socket_path_;</span>
-<span id="L154"><span class="lineNum">     154</span>                 :             :   bool auto_start_;</span>
-<span id="L155"><span class="lineNum">     155</span>                 :             :   bool independent_context_;</span>
-<span id="L156"><span class="lineNum">     156</span>                 :             : </span>
-<span id="L157"><span class="lineNum">     157</span>                 :             :   uint32_t max_clients_;</span>
-<span id="L158"><span class="lineNum">     158</span>                 :             :   bool client_limit_enabled_;</span>
-<span id="L159"><span class="lineNum">     159</span>                 :             :   std::chrono::milliseconds idle_timeout_;</span>
-<span id="L160"><span class="lineNum">     160</span>                 :             :   bool idle_timeout_set_;</span>
-<span id="L161"><span class="lineNum">     161</span>                 :             : };</span>
-<span id="L162"><span class="lineNum">     162</span>                 :             : </span>
-<span id="L163"><span class="lineNum">     163</span>                 :             : using UdsServerBuilderDefault = UdsServerBuilder&lt;BuilderState::None&gt;;</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :   [[deprecated(&quot;Use max_clients(1) instead&quot;)]]</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; single_client();</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :   [[deprecated(&quot;Use max_clients(max) instead&quot;)]]</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :   UdsServerBuilder&lt;State&gt;&amp; multi_client(size_t max);</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : </span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :  private:</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :   template &lt;uint32_t S&gt;</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :   friend class UdsServerBuilder;</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             : </span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :   std::string socket_path_;</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :   bool auto_start_;</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :   bool independent_context_;</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :   uint32_t max_clients_;</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :   bool client_limit_enabled_;</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :   std::chrono::milliseconds idle_timeout_;</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :   bool idle_timeout_set_;</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : };</span>
 <span id="L164"><span class="lineNum">     164</span>                 :             : </span>
-<span id="L165"><span class="lineNum">     165</span>                 :             : #ifdef _MSC_VER</span>
-<span id="L166"><span class="lineNum">     166</span>                 :             : #pragma warning(pop)</span>
-<span id="L167"><span class="lineNum">     167</span>                 :             : #endif</span>
-<span id="L168"><span class="lineNum">     168</span>                 :             : </span>
-<span id="L169"><span class="lineNum">     169</span>                 :             : }  // namespace builder</span>
-<span id="L170"><span class="lineNum">     170</span>                 :             : }  // namespace unilink</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             : using UdsServerBuilderDefault = UdsServerBuilder&lt;BuilderState::None&gt;;</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : #ifdef _MSC_VER</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             : #pragma warning(pop)</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             : #endif</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             : </span>
+<span id="L171"><span class="lineNum">     171</span>                 :             : }  // namespace builder</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

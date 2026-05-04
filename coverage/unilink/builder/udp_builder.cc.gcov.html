@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">89.5&nbsp;%</td>
-            <td class="headerCovTableEntry">124</td>
-            <td class="headerCovTableEntry">111</td>
+            <td class="headerCovTableEntryMed">86.2&nbsp;%</td>
+            <td class="headerCovTableEntry">130</td>
+            <td class="headerCovTableEntry">112</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-04 11:55:50</td>
+            <td class="headerValue">2026-05-04 12:49:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">22.4&nbsp;%</td>
-            <td class="headerCovTableEntry">76</td>
+            <td class="headerCovTableEntryLo">21.2&nbsp;%</td>
+            <td class="headerCovTableEntry">80</td>
             <td class="headerCovTableEntry">17</td>
           </tr>
           <tr>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">40.9&nbsp;%</td>
-            <td class="headerCovTableEntry">176</td>
-            <td class="headerCovTableEntry">72</td>
+            <td class="headerCovTableEntryLo">40.6&nbsp;%</td>
+            <td class="headerCovTableEntry">180</td>
+            <td class="headerCovTableEntry">73</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -110,7 +110,7 @@
 <span id="L32"><span class="lineNum">      32</span>                 :             : template &lt;uint32_t State&gt;</span>
 <span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">           5 : UdpClientBuilder&lt;State&gt;::UdpClientBuilder(uint16_t local_port)</span></span>
 <span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">           5 :     : local_port_(local_port),</span></span>
-<span id="L35"><span class="lineNum">      35</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :       local_address_(&quot;0.0.0.0&quot;),</span></span>
+<span id="L35"><span class="lineNum">      35</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :       bind_address_(&quot;0.0.0.0&quot;),</span></span>
 <span id="L36"><span class="lineNum">      36</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :       remote_host_(&quot;&quot;),</span></span>
 <span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">           5 :       remote_port_(0),</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">           5 :       auto_start_(false),</span></span>
@@ -132,7 +132,7 @@
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>
 <span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC tlaBgGNC">           4 :   std::unique_ptr&lt;wrapper::UdpClient&gt; client;</span></span>
 <span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   config::UdpConfig cfg;</span></span>
-<span id="L56"><span class="lineNum">      56</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   cfg.local_address = local_address_;</span></span>
+<span id="L56"><span class="lineNum">      56</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   cfg.bind_address = bind_address_;</span></span>
 <span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">           4 :   cfg.local_port = local_port_;</span></span>
 <span id="L58"><span class="lineNum">      58</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   cfg.remote_address = remote_host_;</span></span>
 <span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">           4 :   cfg.remote_port = remote_port_;</span></span>
@@ -192,8 +192,8 @@
 <span id="L107"><span class="lineNum">     107</span>                 :             : }</span>
 <span id="L108"><span class="lineNum">     108</span>                 :             : </span>
 <span id="L109"><span class="lineNum">     109</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpClientBuilder&lt;State&gt;&amp; UdpClientBuilder&lt;State&gt;::local_address(const std::string&amp; address) {</span></span>
-<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaUNC">           0 :   local_address_ = address;</span></span>
+<span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpClientBuilder&lt;State&gt;&amp; UdpClientBuilder&lt;State&gt;::bind_address(const std::string&amp; address) {</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaUNC">           0 :   bind_address_ = address;</span></span>
 <span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L113"><span class="lineNum">     113</span>                 :             : }</span>
 <span id="L114"><span class="lineNum">     114</span>                 :             : </span>
@@ -230,7 +230,7 @@
 <span id="L145"><span class="lineNum">     145</span>                 :             : template &lt;uint32_t State&gt;</span>
 <span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">           2 : UdpServerBuilder&lt;State&gt;::UdpServerBuilder(uint16_t local_port)</span></span>
 <span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">           2 :     : local_port_(local_port),</span></span>
-<span id="L148"><span class="lineNum">     148</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :       local_address_(&quot;0.0.0.0&quot;),</span></span>
+<span id="L148"><span class="lineNum">     148</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :       bind_address_(&quot;0.0.0.0&quot;),</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">           2 :       auto_start_(false),</span></span>
 <span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">           2 :       independent_context_(false),</span></span>
 <span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">           2 :       enable_broadcast_(false),</span></span>
@@ -250,7 +250,7 @@
 <span id="L164"><span class="lineNum">     164</span>                 :             : </span>
 <span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC tlaBgGNC">           1 :   std::unique_ptr&lt;wrapper::UdpServer&gt; server;</span></span>
 <span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   config::UdpConfig cfg;</span></span>
-<span id="L167"><span class="lineNum">     167</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   cfg.local_address = local_address_;</span></span>
+<span id="L167"><span class="lineNum">     167</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   cfg.bind_address = bind_address_;</span></span>
 <span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">           1 :   cfg.local_port = local_port_;</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">           1 :   cfg.enable_broadcast = enable_broadcast_;</span></span>
 <span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">           1 :   cfg.reuse_address = reuse_address_;</span></span>
@@ -279,71 +279,81 @@
 <span id="L187"><span class="lineNum">     187</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   server-&gt;backpressure_threshold(this-&gt;get_effective_backpressure_threshold());</span></span>
 <span id="L188"><span class="lineNum">     188</span>                 :             : </span>
 <span id="L189"><span class="lineNum">     189</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   if (this-&gt;framer_factory_) {</span></span>
-<span id="L190"><span class="lineNum">     190</span>                 :             :     // Corrected: ServerInterface::framer expects std::function factory</span>
-<span id="L191"><span class="lineNum">     191</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;framer(this-&gt;framer_factory_);</span></span>
-<span id="L192"><span class="lineNum">     192</span>                 :             :   }</span>
-<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   if (this-&gt;on_message_) {</span></span>
-<span id="L194"><span class="lineNum">     194</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;on_message(std::move(this-&gt;on_message_));</span></span>
-<span id="L195"><span class="lineNum">     195</span>                 :             :   }</span>
-<span id="L196"><span class="lineNum">     196</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           1 :   if (this-&gt;on_message_batch_) {</span></span>
-<span id="L197"><span class="lineNum">     197</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server-&gt;on_message_batch(std::move(this-&gt;on_message_batch_));</span></span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :   }</span>
-<span id="L199"><span class="lineNum">     199</span>                 :             : </span>
-<span id="L200"><span class="lineNum">     200</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC tlaBgGNC">           1 :   if (auto_start_) {</span></span>
-<span id="L201"><span class="lineNum">     201</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server-&gt;auto_start(true);</span></span>
-<span id="L202"><span class="lineNum">     202</span>                 :             :   }</span>
-<span id="L203"><span class="lineNum">     203</span>                 :             : </span>
-<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC tlaBgGNC">           2 :   return server;</span></span>
-<span id="L205"><span class="lineNum">     205</span>                 :<span class="tlaGNC">           1 : }</span></span>
+<span id="L190"><span class="lineNum">     190</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;framer(this-&gt;framer_factory_);</span></span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :   }</span>
+<span id="L192"><span class="lineNum">     192</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   if (this-&gt;on_message_) {</span></span>
+<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;on_message(std::move(this-&gt;on_message_));</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :   }</span>
+<span id="L195"><span class="lineNum">     195</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           1 :   if (this-&gt;on_message_batch_) {</span></span>
+<span id="L196"><span class="lineNum">     196</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server-&gt;on_message_batch(std::move(this-&gt;on_message_batch_));</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :   }</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : </span>
+<span id="L199"><span class="lineNum">     199</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC tlaBgGNC">           1 :   if (client_limit_enabled_) {</span></span>
+<span id="L200"><span class="lineNum">     200</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server-&gt;max_clients(max_clients_);</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :   }</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             : </span>
+<span id="L203"><span class="lineNum">     203</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC tlaBgGNC">           1 :   if (auto_start_) {</span></span>
+<span id="L204"><span class="lineNum">     204</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server-&gt;auto_start(true);</span></span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :   }</span>
 <span id="L206"><span class="lineNum">     206</span>                 :             : </span>
-<span id="L207"><span class="lineNum">     207</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">           1 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::auto_start(bool auto_start) {</span></span>
-<span id="L209"><span class="lineNum">     209</span>                 :<span class="tlaGNC">           1 :   auto_start_ = auto_start;</span></span>
-<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
-<span id="L211"><span class="lineNum">     211</span>                 :             : }</span>
-<span id="L212"><span class="lineNum">     212</span>                 :             : </span>
-<span id="L213"><span class="lineNum">     213</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">           1 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::local_port(uint16_t port) {</span></span>
-<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">           1 :   local_port_ = port;</span></span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
-<span id="L217"><span class="lineNum">     217</span>                 :             : }</span>
-<span id="L218"><span class="lineNum">     218</span>                 :             : </span>
-<span id="L219"><span class="lineNum">     219</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::local_address(const std::string&amp; address) {</span></span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaUNC">           0 :   local_address_ = address;</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L223"><span class="lineNum">     223</span>                 :             : }</span>
-<span id="L224"><span class="lineNum">     224</span>                 :             : </span>
-<span id="L225"><span class="lineNum">     225</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC tlaBgGNC">           2 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::broadcast(bool enable) {</span></span>
-<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">           2 :   enable_broadcast_ = enable;</span></span>
-<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
-<span id="L229"><span class="lineNum">     229</span>                 :             : }</span>
-<span id="L230"><span class="lineNum">     230</span>                 :             : </span>
-<span id="L231"><span class="lineNum">     231</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">           2 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::reuse_address(bool enable) {</span></span>
-<span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaGNC">           2 :   reuse_address_ = enable;</span></span>
-<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
-<span id="L235"><span class="lineNum">     235</span>                 :             : }</span>
-<span id="L236"><span class="lineNum">     236</span>                 :             : </span>
-<span id="L237"><span class="lineNum">     237</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">           1 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::independent_context(bool use_independent) {</span></span>
-<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">           1 :   independent_context_ = use_independent;</span></span>
-<span id="L240"><span class="lineNum">     240</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
-<span id="L241"><span class="lineNum">     241</span>                 :             : }</span>
-<span id="L242"><span class="lineNum">     242</span>                 :             : </span>
-<span id="L243"><span class="lineNum">     243</span>                 :             : // Explicit template instantiations</span>
-<span id="L244"><span class="lineNum">     244</span>                 :             : template class UdpClientBuilder&lt;BuilderState::None&gt;;</span>
-<span id="L245"><span class="lineNum">     245</span>                 :             : template class UdpClientBuilder&lt;BuilderState::HasData&gt;;</span>
-<span id="L246"><span class="lineNum">     246</span>                 :             : template class UdpClientBuilder&lt;BuilderState::HasError&gt;;</span>
-<span id="L247"><span class="lineNum">     247</span>                 :             : template class UdpClientBuilder&lt;BuilderState::Ready&gt;;</span>
-<span id="L248"><span class="lineNum">     248</span>                 :             : template class UdpServerBuilder&lt;BuilderState::None&gt;;</span>
-<span id="L249"><span class="lineNum">     249</span>                 :             : template class UdpServerBuilder&lt;BuilderState::HasData&gt;;</span>
-<span id="L250"><span class="lineNum">     250</span>                 :             : template class UdpServerBuilder&lt;BuilderState::HasError&gt;;</span>
-<span id="L251"><span class="lineNum">     251</span>                 :             : template class UdpServerBuilder&lt;BuilderState::Ready&gt;;</span>
+<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC tlaBgGNC">           2 :   return server;</span></span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">           1 : }</span></span>
+<span id="L209"><span class="lineNum">     209</span>                 :             : </span>
+<span id="L210"><span class="lineNum">     210</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           1 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::auto_start(bool auto_start) {</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           1 :   auto_start_ = auto_start;</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :             : }</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">           1 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::local_port(uint16_t port) {</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">           1 :   local_port_ = port;</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :             : }</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             : </span>
+<span id="L222"><span class="lineNum">     222</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::bind_address(const std::string&amp; address) {</span></span>
+<span id="L224"><span class="lineNum">     224</span>                 :<span class="tlaUNC">           0 :   bind_address_ = address;</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :             : }</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             : </span>
+<span id="L228"><span class="lineNum">     228</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaUNC">           0 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::max_clients(size_t max) {</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaUNC">           0 :   max_clients_ = max;</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaUNC">           0 :   client_limit_enabled_ = true;</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : }</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             : </span>
+<span id="L235"><span class="lineNum">     235</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L236"><span class="lineNum">     236</span>                 :<span class="tlaGNC tlaBgGNC">           2 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::broadcast(bool enable) {</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">           2 :   enable_broadcast_ = enable;</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
+<span id="L239"><span class="lineNum">     239</span>                 :             : }</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : </span>
+<span id="L241"><span class="lineNum">     241</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L242"><span class="lineNum">     242</span>                 :<span class="tlaGNC">           2 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::reuse_address(bool enable) {</span></span>
+<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">           2 :   reuse_address_ = enable;</span></span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :             : }</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             : </span>
+<span id="L247"><span class="lineNum">     247</span>                 :             : template &lt;uint32_t State&gt;</span>
+<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">           1 : UdpServerBuilder&lt;State&gt;&amp; UdpServerBuilder&lt;State&gt;::independent_context(bool use_independent) {</span></span>
+<span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">           1 :   independent_context_ = use_independent;</span></span>
+<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L251"><span class="lineNum">     251</span>                 :             : }</span>
 <span id="L252"><span class="lineNum">     252</span>                 :             : </span>
-<span id="L253"><span class="lineNum">     253</span>                 :             : }  // namespace builder</span>
-<span id="L254"><span class="lineNum">     254</span>                 :             : }  // namespace unilink</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             : // Explicit template instantiations</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             : template class UdpClientBuilder&lt;BuilderState::None&gt;;</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             : template class UdpClientBuilder&lt;BuilderState::HasData&gt;;</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             : template class UdpClientBuilder&lt;BuilderState::HasError&gt;;</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : template class UdpClientBuilder&lt;BuilderState::Ready&gt;;</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             : template class UdpServerBuilder&lt;BuilderState::None&gt;;</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             : template class UdpServerBuilder&lt;BuilderState::HasData&gt;;</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             : template class UdpServerBuilder&lt;BuilderState::HasError&gt;;</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             : template class UdpServerBuilder&lt;BuilderState::Ready&gt;;</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             : </span>
+<span id="L263"><span class="lineNum">     263</span>                 :             : }  // namespace builder</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

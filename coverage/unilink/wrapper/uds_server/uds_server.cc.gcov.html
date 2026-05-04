@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-04 11:55:50</td>
+            <td class="headerValue">2026-05-04 12:49:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">57.4&nbsp;%</td>
@@ -115,7 +115,7 @@
 <span id="L37"><span class="lineNum">      37</span>                 :             :   // Configuration</span>
 <span id="L38"><span class="lineNum">      38</span>                 :             :   std::atomic&lt;bool&gt; auto_start_{false};</span>
 <span id="L39"><span class="lineNum">      39</span>                 :             :   std::atomic&lt;int&gt; idle_timeout_ms_{0};</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :   std::atomic&lt;size_t&gt; max_clients_{base::constants::DEFAULT_MAX_CONNECTIONS};</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :   std::atomic&lt;size_t&gt; max_clients_{0};</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :   std::atomic&lt;size_t&gt; backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};</span>
 <span id="L42"><span class="lineNum">      42</span>                 :             :   std::atomic&lt;base::constants::BackpressureStrategy&gt; backpressure_strategy_{</span>
 <span id="L43"><span class="lineNum">      43</span>                 :             :       base::constants::BackpressureStrategy::Reliable};</span>
