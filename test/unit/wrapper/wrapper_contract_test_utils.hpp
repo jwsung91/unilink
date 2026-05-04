@@ -190,7 +190,7 @@ class UdpServerLoopbackHarness {
 
   std::shared_ptr<wrapper::UdpServer> start_server() {
     config::UdpConfig server_cfg;
-    server_cfg.local_address = "127.0.0.1";
+    server_cfg.bind_address = "127.0.0.1";
     server_cfg.local_port = port_;
 
     server_ = std::make_shared<wrapper::UdpServer>(server_cfg);
@@ -206,7 +206,7 @@ class UdpServerLoopbackHarness {
 
   std::shared_ptr<wrapper::UdpClient> start_sender() {
     config::UdpConfig client_cfg;
-    client_cfg.local_address = "127.0.0.1";
+    client_cfg.bind_address = "127.0.0.1";
     client_cfg.local_port = 0;
     client_cfg.remote_address = std::string("127.0.0.1");
     client_cfg.remote_port = port_;

@@ -586,7 +586,11 @@ TcpServer& TcpServer::idle_timeout(std::chrono::milliseconds timeout) {
 TcpServer& TcpServer::max_clients(size_t max) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->max_clients_.store(max);
-  impl_->client_limit_enabled_.store(true);
+  if (max == 0) {
+    impl_->client_limit_enabled_.store(false);
+  } else {
+    impl_->client_limit_enabled_.store(true);
+  }
   if (impl_->transport_cache_) impl_->transport_cache_->set_client_limit(max);
   return *this;
 }

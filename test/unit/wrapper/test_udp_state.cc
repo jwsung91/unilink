@@ -43,7 +43,7 @@ TEST_F(UdpStateTest, BindConflict) {
   const uint16_t port = occupied_socket.local_endpoint().port();
 
   UdpConfig cfg2;
-  cfg2.local_address = "127.0.0.1";
+  cfg2.bind_address = "127.0.0.1";
   cfg2.local_port = port;  // Same port already occupied by a live UDP socket
   UdpClient udp2(cfg2);
 

@@ -164,20 +164,15 @@ auto server = unilink::tcp_server(8080)
     .build();
 ```
 
-### Pattern 3: Single vs Multi-Client Server (optional)
+### Pattern 3: Connection Limits (optional)
 
 ```cpp
-// Single client only (reject others)
+// Set an explicit client limit
 auto server = unilink::tcp_server(8080)
-    .single_client()
+    .max_clients(8)  // allow up to 8 clients
     .build();
 
-// Multiple clients (set an explicit limit)
-auto server = unilink::tcp_server(8080)
-    .multi_client(8)  // allow up to 8 clients
-    .build();
-
-// Default bounded client limit
+// Default unlimited client limit
 auto server = unilink::tcp_server(8080)
     .build();
 ```
@@ -224,6 +219,11 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
 ## Support
 
 - **GitHub Issues**: https://github.com/jwsung91/unilink/issues
+- **Documentation**: `docs/` directory
+- **Examples**: `examples/` directory
+
+Happy coding! 🚀
+ttps://github.com/jwsung91/unilink/issues
 - **Documentation**: `docs/` directory
 - **Examples**: `examples/` directory
 

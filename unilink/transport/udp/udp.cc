@@ -150,9 +150,9 @@ struct UdpChannel::Impl {
     if (stopping_.load() || stop_requested_.load()) return;
 
     boost::system::error_code ec;
-    auto address = net::ip::make_address(cfg_.local_address, ec);
+    auto address = net::ip::make_address(cfg_.bind_address, ec);
     if (ec) {
-      UNILINK_LOG_ERROR("udp", "bind", std::format("Invalid local address: {}", cfg_.local_address));
+      UNILINK_LOG_ERROR("udp", "bind", std::format("Invalid bind address: {}", cfg_.bind_address));
       transition_to(LinkState::Error, ec);
       return;
     }

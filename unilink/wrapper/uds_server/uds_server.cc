@@ -37,7 +37,7 @@ struct UdsServer::Impl {
   // Configuration
   std::atomic<bool> auto_start_{false};
   std::atomic<int> idle_timeout_ms_{0};
-  std::atomic<size_t> max_clients_{base::constants::DEFAULT_MAX_CONNECTIONS};
+  std::atomic<size_t> max_clients_{0};
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
       base::constants::BackpressureStrategy::Reliable};

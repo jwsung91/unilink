@@ -620,6 +620,12 @@ UdpServer& UdpServer::auto_start(bool m) {
   return *this;
 }
 
+UdpServer& UdpServer::bind_address(const std::string& address) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.bind_address = address;
+  return *this;
+}
+
 UdpServer& UdpServer::idle_timeout(std::chrono::milliseconds timeout) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
@@ -633,8 +639,13 @@ UdpServer& UdpServer::on_backpressure(std::function<void(size_t)> handler) {
 }
 
 UdpServer& UdpServer::max_clients(size_t max) {
-  impl_->client_limit_enabled.store(true);
-  impl_->max_clients_limit.store(max);
+  if (max == 0) {
+    impl_->client_limit_enabled.store(false);
+    impl_->max_clients_limit.store(0);
+  } else {
+    impl_->client_limit_enabled.store(true);
+    impl_->max_clients_limit.store(max);
+  }
   return *this;
 }
 

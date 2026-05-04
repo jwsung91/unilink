@@ -79,7 +79,7 @@ TEST_F(UdpOptionsTest, AutoManageStartsInjectedTransport) {
   sender_cfg.remote_port = receiver_port;
 
   UdpConfig receiver_cfg;
-  receiver_cfg.local_address = "127.0.0.1";
+  receiver_cfg.bind_address = "127.0.0.1";
   receiver_cfg.local_port = receiver_port;
 
   boost::asio::io_context sender_ioc;
@@ -113,7 +113,7 @@ TEST_F(UdpOptionsTest, StartFutureReflectsBindFailure) {
   occupied_socket.bind({boost::asio::ip::make_address("127.0.0.1"), 0});
 
   UdpConfig cfg;
-  cfg.local_address = "127.0.0.1";
+  cfg.bind_address = "127.0.0.1";
   cfg.local_port = occupied_socket.local_endpoint().port();
 
   UdpClient udp(cfg);

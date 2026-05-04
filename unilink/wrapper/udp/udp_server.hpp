@@ -85,6 +85,7 @@ class UNILINK_API UdpServer : public ServerInterface {
 
   // Configuration (Fluent API)
   UdpServer& auto_start(bool manage = true) override;
+  UdpServer& bind_address(const std::string& address);
   UdpServer& idle_timeout(std::chrono::milliseconds timeout);
   UdpServer& max_clients(size_t max);
   UdpServer& backpressure_threshold(size_t threshold);

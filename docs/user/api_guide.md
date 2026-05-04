@@ -313,11 +313,13 @@ unilink::tcp_server(uint16_t port)
 
 | Method                      | Parameters                   | Description                                                          |
 | --------------------------- | ---------------------------- | -------------------------------------------------------------------- |
-| `single_client()`           | None                         | Accept only one client (required to choose a limit before `build()`) |
-| `multi_client(max)`         | `size_t (>=2)`               | Accept up to `max` clients                                           |
-| `port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
+| `max_clients(n)`            | `size_t`                     | Set maximum concurrent clients (0 = unlimited, default)              |
+| `bind_address(address)`     | `string`                     | Bind to a specific network interface (e.g., "127.0.0.1")             |
+| `port_retry()`              | `bool, retries, interval_ms` | Retry if port is in use                                              |
 | `independent_context()`     | `bool`                       | Run on a dedicated `io_context` thread managed by unilink            |
-| `auto_start()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
+| `auto_start()`              | `bool`                       | Auto-start immediately and stop on destruction                       |
+
+> **Note**: `single_client()` and `multi_client(max)` are deprecated in favor of `max_clients(n)`.
 
 Multi-client callbacks use the standard `ConnectionContext` and `MessageContext` which contain `client_id()` and `client_info()` accessors.
 
@@ -570,13 +572,15 @@ unilink::udp_server(uint16_t local_port)
 
 #### Builder Methods (UdpServer)
 
-| Method                      | Parameters | Description                       |
-| --------------------------- | ---------- | --------------------------------- |
-| `local_port(port)`          | `uint16_t` | Bind to a specific local port     |
-| `broadcast(enable)`         | `bool`     | Enable broadcast receives         |
-| `reuse_address(enable)`     | `bool`     | Enable SO_REUSEADDR on the socket |
-| `independent_context()`     | `bool`     | Run on dedicated IO thread        |
-| `auto_start()`              | `bool`     | Auto-start/stop lifecycle         |
+| Method                      | Parameters         | Description                                                          |
+| --------------------------- | ------------------ | -------------------------------------------------------------------- |
+| `local_port(port)`          | `uint16_t`         | Bind to a specific local port                                        |
+| `bind_address(address)`     | `string`           | Bind to a specific network interface (e.g., "127.0.0.1")             |
+| `max_clients(n)`            | `size_t`           | Set maximum concurrent clients (0 = unlimited, default)              |
+| `broadcast(enable)`         | `bool`             | Enable broadcast receives                                            |
+| `reuse_address(enable)`     | `bool`             | Enable SO_REUSEADDR on the socket                                    |
+| `independent_context()`     | `bool`             | Run on dedicated IO thread                                           |
+| `auto_start()`              | `bool`             | Auto-start/stop lifecycle                                            |
 
 #### Instance Methods (UdpClient)
 
@@ -668,11 +672,13 @@ unilink::uds_client(const std::string& socket_path)
 
 #### Builder Methods (UDS Server)
 
-| Method                      | Parameters | Description                          |
-| --------------------------- | ---------- | ------------------------------------ |
-| `max_clients(max)`          | `size_t`   | Allow up to `max` concurrent clients |
-| `independent_context()`     | `bool`     | Run on dedicated IO thread           |
-| `auto_start()`             | `bool`     | Auto-start/stop lifecycle            |
+| Method                      | Parameters | Description                                             |
+| --------------------------- | ---------- | ------------------------------------------------------- |
+| `max_clients(n)`            | `size_t`   | Set maximum concurrent clients (0 = unlimited, default) |
+| `independent_context()`     | `bool`     | Run on dedicated IO thread                              |
+| `auto_start()`              | `bool`     | Auto-start/stop lifecycle                               |
+
+> **Note**: `single_client()` and `multi_client(max)` are deprecated in favor of `max_clients(n)`.
 
 #### Builder Methods (UDS Client)
 

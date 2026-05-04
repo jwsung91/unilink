@@ -30,7 +30,7 @@ using namespace std::chrono_literals;
 
 TEST(UdpServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   config::UdpConfig cfg;
-  cfg.local_address = "127.0.0.1";
+  cfg.bind_address = "127.0.0.1";
   cfg.local_port = 0;
 
   boost::asio::io_context ioc;
@@ -52,7 +52,7 @@ TEST(UdpServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
   occupied_socket.bind({boost::asio::ip::make_address("127.0.0.1"), 0});
 
   config::UdpConfig cfg;
-  cfg.local_address = "127.0.0.1";
+  cfg.bind_address = "127.0.0.1";
   cfg.local_port = occupied_socket.local_endpoint().port();
 
   wrapper::UdpServer server(cfg);

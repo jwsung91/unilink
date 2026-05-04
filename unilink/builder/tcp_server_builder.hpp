@@ -88,7 +88,9 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   // Backward compatibility methods
   TcpServerBuilder<State>& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
   TcpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
+  [[deprecated("Use max_clients(1) instead")]]
   TcpServerBuilder<State>& single_client();
+  [[deprecated("Use max_clients(max) instead")]]
   TcpServerBuilder<State>& multi_client(size_t max);
 
  private:

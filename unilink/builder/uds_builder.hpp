@@ -143,7 +143,9 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   UdsServerBuilder<State>& independent_context(bool use_independent = true);
   UdsServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
   UdsServerBuilder<State>& max_clients(uint32_t max_clients);
+  [[deprecated("Use max_clients(1) instead")]]
   UdsServerBuilder<State>& single_client();
+  [[deprecated("Use max_clients(max) instead")]]
   UdsServerBuilder<State>& multi_client(size_t max);
 
  private:
