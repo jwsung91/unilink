@@ -60,6 +60,9 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
     this->on_connect_ = std::move(other.on_connect_);
     this->on_disconnect_ = std::move(other.on_disconnect_);
     this->on_message_ = std::move(other.on_message_);
+    this->on_data_batch_ = std::move(other.on_data_batch_);
+    this->on_message_batch_ = std::move(other.on_message_batch_);
+    this->on_backpressure_ = std::move(other.on_backpressure_);
     this->framer_factory_ = std::move(other.framer_factory_);
     this->bp_strategy_ = other.bp_strategy_;
     this->bp_threshold_ = other.bp_threshold_;
@@ -120,6 +123,9 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
     this->on_connect_ = std::move(other.on_connect_);
     this->on_disconnect_ = std::move(other.on_disconnect_);
     this->on_message_ = std::move(other.on_message_);
+    this->on_data_batch_ = std::move(other.on_data_batch_);
+    this->on_message_batch_ = std::move(other.on_message_batch_);
+    this->on_backpressure_ = std::move(other.on_backpressure_);
     this->framer_factory_ = std::move(other.framer_factory_);
     this->bp_strategy_ = other.bp_strategy_;
     this->bp_threshold_ = other.bp_threshold_;
@@ -139,7 +145,6 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   UdsServerBuilder<State>& max_clients(uint32_t max_clients);
   UdsServerBuilder<State>& single_client();
   UdsServerBuilder<State>& multi_client(size_t max);
-  UdsServerBuilder<State>& unlimited_clients();
 
  private:
   template <uint32_t S>

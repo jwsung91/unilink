@@ -61,9 +61,11 @@ std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
   }
 
   if (this->on_data_) serial->on_data(this->on_data_);
+  if (this->on_data_batch_) serial->on_data_batch(this->on_data_batch_);
   if (this->on_connect_) serial->on_connect(this->on_connect_);
   if (this->on_disconnect_) serial->on_disconnect(this->on_disconnect_);
   if (this->on_error_) serial->on_error(this->on_error_);
+  if (this->on_backpressure_) serial->on_backpressure(this->on_backpressure_);
 
   // Note: wrapper::Serial setters use strings for enum types
   std::string p_str = "none";
@@ -90,6 +92,9 @@ std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
   }
   if (this->on_message_) {
     serial->on_message(std::move(this->on_message_));
+  }
+  if (this->on_message_batch_) {
+    serial->on_message_batch(std::move(this->on_message_batch_));
   }
 
   if (auto_start_) {

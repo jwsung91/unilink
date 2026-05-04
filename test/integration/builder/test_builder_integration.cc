@@ -40,7 +40,6 @@ TEST_F(UnifiedBuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
   std::string received_msg;
 
   auto server = builder::UnifiedBuilder::tcp_server(port_)
-                    .unlimited_clients()
                     .on_data([&](const wrapper::MessageContext& ctx) {
                       received_msg = std::string(ctx.data());
                       data_received = true;

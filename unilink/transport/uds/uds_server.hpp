@@ -79,6 +79,7 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   bool send_to_client(ClientId client_id, memory::ConstByteSpan data);
   size_t client_count() const;
   std::vector<ClientId> connected_clients() const;
+  void set_client_limit(size_t max_clients);
 
   using MultiClientConnectHandler = std::function<void(ClientId client_id, const std::string& client_info)>;
   using MultiClientDataHandler = std::function<void(ClientId client_id, memory::ConstByteSpan data)>;

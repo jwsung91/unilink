@@ -42,6 +42,9 @@ template <typename T>
 concept DataHandler = std::invocable<T, const wrapper::MessageContext&>;
 
 template <typename T>
+concept BatchDataHandler = std::invocable<T, const std::vector<wrapper::MessageContext>&>;
+
+template <typename T>
 concept ErrorHandler = std::invocable<T, const wrapper::ErrorContext&>;
 
 template <typename T>
@@ -81,6 +84,15 @@ class BuilderInterface {
   template <DataHandler F>
   auto on_data(F&& handler) {
     on_data_ = std::forward<F>(handler);
+    return typename Derived::template Rebind<State | BuilderState::HasData>(std::move(static_cast<Derived&>(*this)));
+  }
+
+  /**
+   * @brief Set batched data handler callback
+   */
+  template <BatchDataHandler F>
+  auto on_data_batch(F&& handler) {
+    on_data_batch_ = std::forward<F>(handler);
     return typename Derived::template Rebind<State | BuilderState::HasData>(std::move(static_cast<Derived&>(*this)));
   }
 
@@ -186,6 +198,23 @@ class BuilderInterface {
   }
 
   /**
+   * @brief Set batched framed-message handler callback
+   */
+  template <BatchDataHandler F>
+  auto on_message_batch(F&& handler) {
+    on_message_batch_ = std::forward<F>(handler);
+    return typename Derived::template Rebind<State | BuilderState::HasData>(std::move(static_cast<Derived&>(*this)));
+  }
+
+  /**
+   * @brief Set backpressure notification callback
+   */
+  Derived& on_backpressure(std::function<void(size_t)> handler) {
+    on_backpressure_ = std::move(handler);
+    return static_cast<Derived&>(*this);
+  }
+
+  /**
    * @brief Set message handler callback using member function pointer
    */
   template <typename U, typename F>
@@ -228,6 +257,9 @@ class BuilderInterface {
   std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
   std::function<void(const wrapper::ErrorContext&)> on_error_;
   std::function<void(const wrapper::MessageContext&)> on_message_;
+  std::function<void(const std::vector<wrapper::MessageContext>&)> on_data_batch_;
+  std::function<void(const std::vector<wrapper::MessageContext>&)> on_message_batch_;
+  std::function<void(size_t)> on_backpressure_;
 
   base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_threshold_{0};

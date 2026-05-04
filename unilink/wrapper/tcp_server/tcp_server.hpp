@@ -93,10 +93,10 @@ class UNILINK_API TcpServer : public ServerInterface {
 
   // Configuration (Fluent API)
   TcpServer& auto_start(bool manage = true) override;
+  TcpServer& bind_address(const std::string& address);
   TcpServer& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
   TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& max_clients(size_t max);
-  TcpServer& unlimited_clients();
   TcpServer& backpressure_threshold(size_t threshold);
   TcpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   TcpServer& manage_external_context(bool manage);

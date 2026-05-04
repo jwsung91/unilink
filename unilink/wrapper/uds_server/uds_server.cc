@@ -1,5 +1,6 @@
 #include "unilink/wrapper/uds_server/uds_server.hpp"
 
+#include <algorithm>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -36,7 +37,7 @@ struct UdsServer::Impl {
   // Configuration
   std::atomic<bool> auto_start_{false};
   std::atomic<int> idle_timeout_ms_{0};
-  std::atomic<size_t> max_clients_{1000000};
+  std::atomic<size_t> max_clients_{base::constants::DEFAULT_MAX_CONNECTIONS};
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
       base::constants::BackpressureStrategy::Reliable};
@@ -51,7 +52,7 @@ struct UdsServer::Impl {
   MessageHandler on_message_{nullptr};
   BatchMessageHandler on_message_batch_{nullptr};
 
-  std::unordered_map<ClientId, std::unique_ptr<framer::IFramer>> framers_;
+  std::unordered_map<ClientId, std::shared_ptr<framer::IFramer>> framers_;
 
   // Batching logic
   std::vector<MessageContext> data_batch_queue_;
@@ -190,6 +191,8 @@ struct UdsServer::Impl {
       config::UdsServerConfig config;
       config.socket_path = socket_path_;
       config.idle_timeout_ms = idle_timeout_ms_.load();
+      config.max_connections =
+          static_cast<int>(std::min(max_clients_.load(), static_cast<size_t>(base::constants::MAX_MAX_CONNECTIONS)));
       config.backpressure_threshold = backpressure_threshold_.load();
       config.backpressure_strategy = backpressure_strategy_.load();
       server_ = factory::ChannelFactory::create(config, external_ioc_);
@@ -293,6 +296,7 @@ struct UdsServer::Impl {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
+        std::shared_ptr<framer::IFramer> framer_to_push;
         std::unique_lock<std::shared_mutex> lock(mutex_);
         if (data_batch_handler_) {
           data_batch_queue_.emplace_back(id, memory::SafeDataBuffer(data_span));
@@ -317,8 +321,10 @@ struct UdsServer::Impl {
 
         auto it = framers_.find(id);
         if (it != framers_.end()) {
-          it->second->push_bytes(data_span);
+          framer_to_push = it->second;
         }
+        lock.unlock();
+        if (framer_to_push) framer_to_push->push_bytes(data_span);
       });
       transport_server->on_multi_disconnect([this, weak_alive](ClientId id) {
         auto alive = weak_alive.lock();
@@ -337,8 +343,12 @@ struct UdsServer::Impl {
         bp_cv_.notify_all();
         auto alive = weak_alive.lock();
         if (!alive) return;
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (on_backpressure_) on_backpressure_(queued);
+        std::function<void(size_t)> handler;
+        {
+          std::shared_lock<std::shared_mutex> lock(mutex_);
+          handler = on_backpressure_;
+        }
+        if (handler) handler(queued);
       });
     }
 
@@ -514,11 +524,9 @@ UdsServer& UdsServer::idle_timeout(std::chrono::milliseconds timeout) {
 
 UdsServer& UdsServer::max_clients(size_t max) {
   impl_->max_clients_.store(max);
-  return *this;
-}
-
-UdsServer& UdsServer::unlimited_clients() {
-  impl_->max_clients_.store(1000000);
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  auto ts = std::dynamic_pointer_cast<transport::UdsServer>(impl_->server_);
+  if (ts) ts->set_client_limit(max);
   return *this;
 }
 

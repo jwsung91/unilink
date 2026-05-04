@@ -63,6 +63,9 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
     this->on_connect_ = std::move(other.on_connect_);
     this->on_disconnect_ = std::move(other.on_disconnect_);
     this->on_message_ = std::move(other.on_message_);
+    this->on_data_batch_ = std::move(other.on_data_batch_);
+    this->on_message_batch_ = std::move(other.on_message_batch_);
+    this->on_backpressure_ = std::move(other.on_backpressure_);
     this->framer_factory_ = std::move(other.framer_factory_);
     this->bp_strategy_ = other.bp_strategy_;
     this->bp_threshold_ = other.bp_threshold_;
@@ -127,6 +130,9 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
     this->on_connect_ = std::move(other.on_connect_);
     this->on_disconnect_ = std::move(other.on_disconnect_);
     this->on_message_ = std::move(other.on_message_);
+    this->on_data_batch_ = std::move(other.on_data_batch_);
+    this->on_message_batch_ = std::move(other.on_message_batch_);
+    this->on_backpressure_ = std::move(other.on_backpressure_);
     this->framer_factory_ = std::move(other.framer_factory_);
     this->bp_strategy_ = other.bp_strategy_;
     this->bp_threshold_ = other.bp_threshold_;

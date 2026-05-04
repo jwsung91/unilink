@@ -71,7 +71,7 @@ struct Serial::Impl {
   MessageHandler message_handler{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
-  std::unique_ptr<framer::IFramer> framer{nullptr};
+  std::shared_ptr<framer::IFramer> framer{nullptr};
 
   // Batching logic
   std::vector<MessageContext> data_batch_queue_;
@@ -284,6 +284,7 @@ struct Serial::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      std::shared_ptr<framer::IFramer> framer_to_push;
       std::unique_lock<std::shared_mutex> lock(mutex_);
       if (data_batch_handler_) {
         data_batch_queue_.emplace_back(0, memory::SafeDataBuffer(data));
@@ -307,16 +308,22 @@ struct Serial::Impl {
       }
 
       if (framer) {
-        framer->push_bytes(data);
+        framer_to_push = framer;
       }
+      lock.unlock();
+      if (framer_to_push) framer_to_push->push_bytes(data);
     });
 
     channel->on_backpressure([this, weak_alive](size_t queued) {
       bp_cv_.notify_all();
       auto alive = weak_alive.lock();
       if (!alive) return;
-      std::shared_lock<std::shared_mutex> lock(mutex_);
-      if (bp_handler) bp_handler(queued);
+      std::function<void(size_t)> handler;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        handler = bp_handler;
+      }
+      if (handler) handler(queued);
     });
 
     channel->on_state([this, weak_alive](base::LinkState state) {
@@ -390,7 +397,7 @@ struct Serial::Impl {
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     std::unique_lock<std::shared_mutex> lock(mutex_);
-    framer = std::move(f);
+    framer = std::shared_ptr<framer::IFramer>(std::move(f));
     if (framer && (message_handler || message_batch_handler_)) attach_framer_callback();
   }
 
@@ -554,6 +561,10 @@ Serial& Serial::backpressure_threshold(size_t threshold) {
 Serial& Serial::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->backpressure_strategy = strategy;
+  if (impl_->channel) {
+    auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);
+    if (ts) ts->set_backpressure_strategy(strategy);
+  }
   return *this;
 }
 

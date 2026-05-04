@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
   std::shared_ptr<unilink::wrapper::TcpServer> server;
 
   auto builder = unilink::tcp_server(port);
-  builder.unlimited_clients()
+  builder
       .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "[Server] Client connected: ID=" << ctx.client_id() << "\n";
       })

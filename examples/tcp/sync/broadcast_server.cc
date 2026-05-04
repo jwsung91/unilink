@@ -28,7 +28,6 @@ class BroadcastServer {
 
   bool start() {
     server_ = unilink::tcp_server(port_)
-                  .unlimited_clients()
                   .on_connect([this](const unilink::ConnectionContext& ctx) {
                     std::string msg = "client " + std::to_string(ctx.client_id()) + " joined";
                     std::cout << "[connect] " << msg << " from " << ctx.client_info() << "\n";

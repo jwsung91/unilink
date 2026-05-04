@@ -91,7 +91,6 @@ class UNILINK_API TcpServer : public interface::Channel, public std::enable_shar
   void on_multi_disconnect(MultiClientDisconnectHandler handler);
 
   void set_client_limit(size_t max_clients);
-  void set_unlimited_clients();
 
   base::LinkState state() const;
 

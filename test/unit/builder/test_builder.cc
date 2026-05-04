@@ -131,7 +131,6 @@ TEST_F(BuilderTest, UdpBuilderBasic) {
 TEST_F(BuilderTest, BuilderChaining) {
   server_ =
       tcp_server(test_port_)
-          .unlimited_clients()
           .port_retry(true, 5, 500)
           .on_data([this](const wrapper::MessageContext& ctx) { data_received_.push_back(std::string(ctx.data())); })
           .on_data([](auto&&) {})
@@ -179,8 +178,7 @@ TEST_F(BuilderTest, CallbackRegistration) {
 TEST_F(BuilderTest, BuilderReuse) {
   builder::TcpServerBuilder builder(test_port_);
 
-  auto server1 =
-      builder.unlimited_clients().on_data([](const wrapper::MessageContext& ctx) {}).on_error([](auto&&) {}).build();
+  auto server1 = builder.on_data([](const wrapper::MessageContext& ctx) {}).on_error([](auto&&) {}).build();
   ASSERT_NE(server1, nullptr);
 
   auto server2 = builder.on_connect([](const wrapper::ConnectionContext& ctx) {})

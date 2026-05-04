@@ -25,6 +25,7 @@
 #include "test/mocks/mock_uds_acceptor.hpp"
 #include "test/mocks/mock_uds_socket.hpp"
 #include "test_utils.hpp"
+#include "unilink/framer/line_framer.hpp"
 #include "unilink/transport/uds/uds_client.hpp"
 #include "unilink/transport/uds/uds_server.hpp"
 #include "unilink/wrapper/uds_client/uds_client.hpp"
@@ -196,6 +197,21 @@ TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   server.stop();
   EXPECT_TRUE(ioc->stopped());
   test::TestUtils::removeFileIfExists(socket_path);
+}
+
+TEST(UdsServerWrapperAdvancedTest, FramedMessageDoesNotDeadlock) {
+  test::wrapper_support::UdsServerLoopbackHarness harness("uws-framer");
+  auto server = harness.start_server();
+  std::atomic<int> messages{0};
+
+  server->framer([]() { return std::make_unique<framer::LineFramer>(); });
+  server->on_message([&](const MessageContext&) { messages++; });
+
+  auto client = harness.connect_client();
+  ASSERT_TRUE(harness.wait_for_client_count(1));
+  ASSERT_TRUE(client->send_line("hello"));
+
+  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return messages.load() == 1; }, 5000));
 }
 
 TEST(UdsClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {

@@ -31,7 +31,7 @@ struct TcpServerConfig {
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
   bool enable_memory_pool = true;
-  int max_connections = 100;  // Maximum concurrent connections
+  int max_connections = static_cast<int>(base::constants::DEFAULT_MAX_CONNECTIONS);
 
   // Port binding retry configuration
   bool enable_port_retry = false;     // Enable port binding retry
@@ -58,6 +58,8 @@ struct TcpServerConfig {
 
     if (max_connections <= 0) {
       max_connections = 1;
+    } else if (max_connections > static_cast<int>(base::constants::MAX_MAX_CONNECTIONS)) {
+      max_connections = static_cast<int>(base::constants::MAX_MAX_CONNECTIONS);
     }
 
     if (idle_timeout_ms < 0) {

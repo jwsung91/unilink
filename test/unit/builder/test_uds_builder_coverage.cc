@@ -53,7 +53,6 @@ TEST(UdsBuilderCoverageTest, UdsServerBuilderSetters) {
                     .independent_context(true)
                     .idle_timeout(5000ms)
                     .max_clients(50)
-                    .unlimited_clients()
                     .on_data([](const wrapper::MessageContext&) {})
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_disconnect([](const wrapper::ConnectionContext&) {})

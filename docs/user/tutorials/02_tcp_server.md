@@ -33,7 +33,6 @@ class EchoServerApp {
 public:
     void start(uint16_t port) {
         server_ = unilink::tcp_server(port)
-            .unlimited_clients()
             .port_retry(true)
             .on_connect([this](const unilink::ConnectionContext& ctx) {
                 std::cout << "[Connect] client=" << ctx.client_id()
@@ -130,10 +129,10 @@ Choose a client-limit mode before `build()`:
 ```cpp
 unilink::tcp_server(8080).single_client();
 unilink::tcp_server(8080).multi_client(8);
-unilink::tcp_server(8080).unlimited_clients();
+unilink::tcp_server(8080);
 ```
 
-For tutorial simplicity, the example above uses `unlimited_clients()`.
+For tutorial simplicity, the example above uses the default bounded client limit.
 
 ---
 

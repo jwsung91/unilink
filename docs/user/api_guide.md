@@ -78,7 +78,7 @@ To take ownership of the data, use:
 
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
 - `TcpServerBuilder`: `.port_retry(enable, max_retries, retry_interval_ms)`
-- `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` (Defaults to `unlimited_clients()` if not specified)
+- `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, or `.max_clients(n)` (defaults to a bounded connection limit)
 - TCP server callbacks use the same Context-based signatures. Use `ctx.client_id()` and `ctx.client_info()` to distinguish clients.
 
 ### Framed Message Handling
@@ -266,7 +266,6 @@ Accept multiple client connections with thread-safe operations.
 #include "unilink/unilink.hpp"
 
 auto server = unilink::tcp_server(8080)
-    .unlimited_clients()
     .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Client " << ctx.client_id() << " connected from " << ctx.client_info() << std::endl;
     })
@@ -300,7 +299,7 @@ if (listening && server->listening()) {
 server->stop();
 ```
 
-**Note:** If none of `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` is called before `build()`, the server defaults to unlimited clients.
+**Note:** If no client limit method is called before `build()`, the server uses the library default bounded limit.
 
 ### API Reference
 
@@ -316,7 +315,6 @@ unilink::tcp_server(uint16_t port)
 | --------------------------- | ---------------------------- | -------------------------------------------------------------------- |
 | `single_client()`           | None                         | Accept only one client (required to choose a limit before `build()`) |
 | `multi_client(max)`         | `size_t (>=2)`               | Accept up to `max` clients                                           |
-| `unlimited_clients()`       | None                         | Accept unlimited clients                                             |
 | `port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
 | `independent_context()`     | `bool`                       | Run on a dedicated `io_context` thread managed by unilink            |
 | `auto_start()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
@@ -368,7 +366,6 @@ auto server = unilink::tcp_server(8080)
 
 ```cpp
 auto server = unilink::tcp_server(8080)
-    .unlimited_clients()
     .build();
 
 server->on_data([&server](const unilink::MessageContext& ctx) {
@@ -629,7 +626,6 @@ High-performance local inter-process communication (IPC) using Unix Domain Socke
 #include "unilink/unilink.hpp"
 
 auto server = unilink::uds_server("/tmp/my_service.sock")
-    .unlimited_clients()
     .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Client connected!" << std::endl;
     })
@@ -675,7 +671,6 @@ unilink::uds_client(const std::string& socket_path)
 | Method                      | Parameters | Description                          |
 | --------------------------- | ---------- | ------------------------------------ |
 | `max_clients(max)`          | `size_t`   | Allow up to `max` concurrent clients |
-| `unlimited_clients()`       | None       | Allow unlimited clients              |
 | `independent_context()`     | `bool`     | Run on dedicated IO thread           |
 | `auto_start()`             | `bool`     | Auto-start/stop lifecycle            |
 
@@ -1101,4 +1096,3 @@ auto server = unilink::tcp_server(8080)
     .multi_client(100)  // max 100 clients
     .build();
 ```
-

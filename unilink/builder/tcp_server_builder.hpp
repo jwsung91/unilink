@@ -61,6 +61,9 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
     this->on_connect_ = std::move(other.on_connect_);
     this->on_disconnect_ = std::move(other.on_disconnect_);
     this->on_message_ = std::move(other.on_message_);
+    this->on_data_batch_ = std::move(other.on_data_batch_);
+    this->on_message_batch_ = std::move(other.on_message_batch_);
+    this->on_backpressure_ = std::move(other.on_backpressure_);
     this->framer_factory_ = std::move(other.framer_factory_);
     this->bp_strategy_ = other.bp_strategy_;
     this->bp_threshold_ = other.bp_threshold_;
@@ -87,7 +90,6 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
   TcpServerBuilder<State>& single_client();
   TcpServerBuilder<State>& multi_client(size_t max);
-  TcpServerBuilder<State>& unlimited_clients();
 
  private:
   template <uint32_t S>

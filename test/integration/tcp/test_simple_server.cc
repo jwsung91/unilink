@@ -57,7 +57,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
 
   // Create server
   server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()  // No client limit
+                // No client limit
                 .on_data([](auto&&) {})
                 .on_error([](auto&&) {})
                 .build();
@@ -83,12 +83,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Testing auto-start server with port: " << test_port << std::endl;
 
   // Create server (auto-manage triggers start)
-  server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()
-                .auto_start(true)
-                .on_data([](auto&&) {})
-                .on_error([](auto&&) {})
-                .build();
+  server_ = unilink::tcp_server(test_port).auto_start(true).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created with auto-start" << std::endl;
@@ -114,7 +109,6 @@ TEST_F(SimpleServerTest, ServerWithCallbacks) {
 
   // Create server
   server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()
                 .on_connect([connect_called](const wrapper::ConnectionContext& ctx) {
                   std::cout << "Connect callback called for client: " << ctx.client_id() << std::endl;
                   connect_called->store(true);
@@ -141,7 +135,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing server state check, port: " << test_port << std::endl;
 
-  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  server_ = unilink::tcp_server(test_port).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -180,11 +174,11 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
 }
 
 /**
- * @brief Client Limit Feature Test - Unlimited Clients
+ * @brief Client Limit Feature Test - Default Limit
  */
-TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
+TEST_F(SimpleServerTest, ClientLimitDefaultAllowsServerCreation) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  server_ = unilink::tcp_server(test_port).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());

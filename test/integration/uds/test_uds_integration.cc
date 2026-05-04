@@ -47,8 +47,7 @@ class UdsIntegrationTest : public ::testing::Test {
 };
 
 TEST_F(UdsIntegrationTest, BuilderPatternIntegration) {
-  auto server =
-      unilink::uds_server(socket_path_).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  auto server = unilink::uds_server(socket_path_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   EXPECT_NE(server, nullptr);
 
   auto client = unilink::uds_client(socket_path_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
@@ -116,7 +115,6 @@ TEST_F(UdsIntegrationTest, MultiClientCommunication) {
   std::condition_variable cv;
 
   auto server = unilink::uds_server(socket_path_)
-                    .unlimited_clients()
                     .independent_context(true)
                     .on_connect([&connections](const wrapper::ConnectionContext&) { connections++; })
                     .on_data([&](const wrapper::MessageContext& ctx) { messages_received++; })

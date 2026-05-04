@@ -62,7 +62,7 @@ struct UdpClient::Impl {
   MessageHandler message_handler{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
-  std::unique_ptr<framer::IFramer> framer{nullptr};
+  std::shared_ptr<framer::IFramer> framer{nullptr};
 
   // Batching logic
   std::vector<MessageContext> data_batch_queue_;
@@ -268,6 +268,7 @@ struct UdpClient::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      std::shared_ptr<framer::IFramer> framer_to_push;
       std::unique_lock<std::shared_mutex> lock(mutex_);
       if (data_batch_handler_) {
         data_batch_queue_.emplace_back(0, memory::SafeDataBuffer(data));
@@ -291,16 +292,22 @@ struct UdpClient::Impl {
       }
 
       if (framer) {
-        framer->push_bytes(data);
+        framer_to_push = framer;
       }
+      lock.unlock();
+      if (framer_to_push) framer_to_push->push_bytes(data);
     });
 
     channel->on_backpressure([this, weak_alive](size_t queued) {
       bp_cv_.notify_all();
       auto alive = weak_alive.lock();
       if (!alive) return;
-      std::shared_lock<std::shared_mutex> lock(mutex_);
-      if (bp_handler) bp_handler(queued);
+      std::function<void(size_t)> handler;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        handler = bp_handler;
+      }
+      if (handler) handler(queued);
     });
 
     channel->on_state([this, weak_alive](base::LinkState state) {
@@ -375,7 +382,7 @@ struct UdpClient::Impl {
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     std::unique_lock<std::shared_mutex> lock(mutex_);
-    framer = std::move(f);
+    framer = std::shared_ptr<framer::IFramer>(std::move(f));
     if (framer && (message_handler || message_batch_handler_)) attach_framer_callback();
   }
 
@@ -457,8 +464,7 @@ UdpClient& UdpClient::on_message(MessageHandler h) {
   return *this;
 }
 UdpClient& UdpClient::on_message_batch(BatchMessageHandler h) {
-  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->message_batch_handler_ = std::move(h);
+  impl_->on_message_batch(std::move(h));
   return *this;
 }
 

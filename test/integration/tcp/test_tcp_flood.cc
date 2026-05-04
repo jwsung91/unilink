@@ -39,7 +39,6 @@ class TcpFloodTest : public ::testing::Test {
 TEST_F(TcpFloodTest, FloodServer) {
   std::atomic<size_t> received_bytes{0};
   auto server = tcp_server(test_port_)
-                    .unlimited_clients()
                     .on_data([&](const wrapper::MessageContext& ctx) { received_bytes += ctx.data().size(); })
                     .on_error([](auto&&) {})
                     .build();

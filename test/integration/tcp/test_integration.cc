@@ -44,8 +44,7 @@ class TcpIntegrationTest : public ::testing::Test {
 // ============================================================================
 
 TEST_F(TcpIntegrationTest, BuilderPatternIntegration) {
-  auto server =
-      unilink::tcp_server(test_port_).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  auto server = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   EXPECT_NE(server, nullptr);
 
   auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
@@ -79,12 +78,8 @@ TEST_F(TcpIntegrationTest, IndependentContext) {
                     .build();
   EXPECT_NE(client, nullptr);
 
-  auto server = unilink::tcp_server(test_port_)
-                    .unlimited_clients()
-                    .independent_context(false)
-                    .on_data([](auto&&) {})
-                    .on_error([](auto&&) {})
-                    .build();
+  auto server =
+      unilink::tcp_server(test_port_).independent_context(false).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   EXPECT_NE(server, nullptr);
 }
 
@@ -101,7 +96,6 @@ TEST_F(TcpIntegrationTest, BasicCommunication) {
   std::string received_data;
 
   auto server = unilink::tcp_server(comm_port)
-                    .unlimited_clients()
                     .on_connect([&server_connected](const wrapper::ConnectionContext&) { server_connected = true; })
                     .on_data([&data_received, &received_data](const wrapper::MessageContext& ctx) {
                       received_data = std::string(ctx.data());
@@ -178,7 +172,6 @@ TEST_F(TcpIntegrationTest, MultipleClientConnections) {
   std::atomic<int> connection_count{0};
 
   auto server = unilink::tcp_server(comm_port)
-                    .unlimited_clients()
                     .on_connect([&connection_count](const wrapper::ConnectionContext&) { connection_count++; })
                     .on_data([](auto&&) {})
                     .on_error([](auto&&) {})
@@ -214,7 +207,6 @@ TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
   EXPECT_NE(client, nullptr);
 
   auto server = unilink::tcp_server(test_port_)
-                    .unlimited_clients()
                     .auto_start(false)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})

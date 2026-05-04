@@ -325,8 +325,12 @@ struct UdpServer::Impl {
 
     channel->on_backpressure([this](size_t queued) {
       bp_cv_.notify_all();
-      std::shared_lock<std::shared_mutex> lock(mutex);
-      if (bp_handler) bp_handler(queued);
+      std::function<void(size_t)> handler;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex);
+        handler = bp_handler;
+      }
+      if (handler) handler(queued);
     });
 
     channel->on_state([this](base::LinkState state) {
@@ -631,11 +635,6 @@ UdpServer& UdpServer::on_backpressure(std::function<void(size_t)> handler) {
 UdpServer& UdpServer::max_clients(size_t max) {
   impl_->client_limit_enabled.store(true);
   impl_->max_clients_limit.store(max);
-  return *this;
-}
-
-UdpServer& UdpServer::unlimited_clients() {
-  impl_->client_limit_enabled.store(false);
   return *this;
 }
 

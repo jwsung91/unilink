@@ -16,6 +16,7 @@
 
 #include "unilink/transport/uds/uds_server.hpp"
 
+#include <algorithm>
 #include <atomic>
 #include <boost/asio.hpp>
 #include <cstdio>
@@ -334,6 +335,12 @@ std::vector<ClientId> UdsServer::connected_clients() const {
   return ids;
 }
 
+void UdsServer::set_client_limit(size_t max_clients) {
+  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  impl_->cfg_.max_connections =
+      static_cast<int>(std::min(max_clients, static_cast<size_t>(base::constants::MAX_MAX_CONNECTIONS)));
+}
+
 void UdsServer::on_multi_connect(MultiClientConnectHandler handler) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   impl_->on_multi_connect_ = std::move(handler);
@@ -357,13 +364,25 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
 
     if (!ec) {
       ClientId client_id;
+      {
+        std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
+        if (self->impl_->cfg_.max_connections > 0 &&
+            self->impl_->sessions_.size() >= static_cast<size_t>(self->impl_->cfg_.max_connections)) {
+          boost::system::error_code ignored;
+          socket.close(ignored);
+          auto* impl = self->impl_.get();
+          impl->do_accept(self);
+          return;
+        }
+        client_id = self->impl_->next_client_id_++;
+      }
+
       auto session = std::make_shared<UdsServerSession>(
           *self->impl_->ioc_, std::move(socket), self->impl_->cfg_.backpressure_threshold,
           self->impl_->cfg_.idle_timeout_ms, self->impl_->cfg_.backpressure_strategy);
 
       {
         std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
-        client_id = self->impl_->next_client_id_++;
         self->impl_->sessions_[client_id] = session;
       }
 
