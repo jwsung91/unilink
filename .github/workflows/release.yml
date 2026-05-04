@@ -39,8 +39,8 @@ jobs:
             release_files: |
               build/package/unilink-*.tar.gz
 
-          - os: macos-26
-            label: macOS 26
+          - os: macos-15
+            label: macOS 15
             triplet: arm64-osx
             cmake_generator: "Ninja"
             cpack_generator: "TGZ;DragNDrop"
@@ -48,7 +48,7 @@ jobs:
               build/package/unilink-*.tar.gz
               build/package/unilink-*.dmg
 
-          - os: windows-latest
+          - os: windows-2022
             label: Windows (VS 2022)
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "x64"
