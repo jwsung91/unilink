@@ -120,13 +120,9 @@ jobs:
       with:
         triplet: ${{ matrix.triplet }}
 
-    - name: Configure CMake
+    - name: Configure CMake (Linux)
+      if: runner.os == 'Linux'
       run: |
-        EXTRA_ARGS=()
-        if [ "${{ runner.os }}" = "macOS" ]; then
-          EXTRA_ARGS+=("-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0")
-        fi
-
         cmake -S . -B build-test \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
           -DCMAKE_C_COMPILER=$CC \
@@ -139,8 +135,27 @@ jobs:
           -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
           -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          "${EXTRA_ARGS[@]}"
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+    - name: Configure CMake (macOS)
+      if: runner.os == 'macOS'
+      env:
+        MACOSX_DEPLOYMENT_TARGET: "15.0"
+      run: |
+        cmake -S . -B build-test \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DCMAKE_C_COMPILER=$CC \
+          -DCMAKE_CXX_COMPILER=$CXX \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build tests
       run: cmake --build build-test -j ${CORE_COUNT:-4}

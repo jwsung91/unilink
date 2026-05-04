@@ -95,6 +95,8 @@ jobs:
 
       - name: Configure
         shell: bash
+        env:
+          MACOSX_DEPLOYMENT_TARGET: "15.0"
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" -A "${{ matrix.cmake_arch }}" \
@@ -103,6 +105,15 @@ jobs:
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON
+          elif [ "${{ runner.os }}" = "macOS" ]; then
+            cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+              -DUNILINK_ENABLE_INSTALL=ON \
+              -DUNILINK_ENABLE_PKGCONFIG=ON \
+              -DUNILINK_ENABLE_EXPORT_HEADER=ON \
+              -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
           else
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
