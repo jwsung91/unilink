@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">69.2&nbsp;%</td>
+            <td class="headerCovTableEntryLo">68.4&nbsp;%</td>
             <td class="headerCovTableEntry">133</td>
-            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntry">91</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 13:22:56</td>
+            <td class="headerValue">2026-05-04 01:13:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">75.9&nbsp;%</td>
+            <td class="headerCovTableEntryLo">72.4&nbsp;%</td>
             <td class="headerCovTableEntry">29</td>
-            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">21</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -108,15 +108,15 @@
 <span id="L30"><span class="lineNum">      30</span>         [<span class="tlaGBC" title="Branch 0 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          24 : ErrorHandler::ErrorHandler() = default;</span></span>
 <span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          24 : ErrorHandler::~ErrorHandler() = default;</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :             : </span>
-<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">          82 : ErrorHandler&amp; ErrorHandler::default_handler() {</span></span>
-<span id="L34"><span class="lineNum">      34</span>   [<span class="tlaGBC" title="Branch 0 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 58 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          82 :   static ErrorHandler instance;</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">          82 : ErrorHandler&amp; ErrorHandler::instance() {</span></span>
+<span id="L34"><span class="lineNum">      34</span>   [<span class="tlaGBC" title="Branch 0 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 58 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          82 :   static ErrorHandler inst;</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
-<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">          82 :   return instance;</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">          82 :   return inst;</span></span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : }</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             : </span>
-<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">          82 : ErrorHandler&amp; ErrorHandler::instance() { return default_handler(); }</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ErrorHandler&amp; ErrorHandler::default_handler() { return instance(); }</span></span>
 <span id="L39"><span class="lineNum">      39</span>                 :             : </span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">          48 : void ErrorHandler::report_error(const ErrorInfo&amp; error) {</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC tlaBgGNC">          48 : void ErrorHandler::report_error(const ErrorInfo&amp; error) {</span></span>
 <span id="L41"><span class="lineNum">      41</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 47 times"> + </span>]:<span class="tlaGNC">          48 :   if (!enabled_.load()) {</span></span>
 <span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">           2 :     return;</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             :   }</span>

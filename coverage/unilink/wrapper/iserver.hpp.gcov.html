@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 13:22:56</td>
+            <td class="headerValue">2026-05-04 01:13:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">25.0&nbsp;%</td>
@@ -193,48 +193,72 @@
 <span id="L115"><span class="lineNum">     115</span>                 :             :    */</span>
 <span id="L116"><span class="lineNum">     116</span>                 :             :   virtual bool try_broadcast(std::string_view data) = 0;</span>
 <span id="L117"><span class="lineNum">     117</span>                 :             : </span>
-<span id="L118"><span class="lineNum">     118</span>                 :             :   // Event handlers</span>
-<span id="L119"><span class="lineNum">     119</span>                 :             :   virtual ServerInterface&amp; on_connect(ConnectionHandler handler) = 0;</span>
-<span id="L120"><span class="lineNum">     120</span>                 :             :   virtual ServerInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</span>
-<span id="L121"><span class="lineNum">     121</span>                 :             :   virtual ServerInterface&amp; on_data(MessageHandler handler) = 0;</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :   /**</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :    * @brief Send a line (data + &quot;\n&quot;) to all clients, honouring the backpressure strategy.</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :    */</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :   virtual bool broadcast_line(std::string_view line) = 0;</span>
 <span id="L122"><span class="lineNum">     122</span>                 :             : </span>
-<span id="L123"><span class="lineNum">     123</span>                 :             :   /** @brief Register a callback for batched data reception */</span>
-<span id="L124"><span class="lineNum">     124</span>                 :             :   virtual ServerInterface&amp; on_data_batch(BatchMessageHandler handler) = 0;</span>
-<span id="L125"><span class="lineNum">     125</span>                 :             : </span>
-<span id="L126"><span class="lineNum">     126</span>                 :             :   virtual ServerInterface&amp; on_error(ErrorHandler handler) = 0;</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :   /**</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :    * @brief Send a line (data + &quot;\n&quot;) to a specific client, honouring the backpressure strategy.</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :    */</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :   virtual bool send_to_line(ClientId client_id, std::string_view line) = 0;</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             : </span>
 <span id="L128"><span class="lineNum">     128</span>                 :             :   /**</span>
-<span id="L129"><span class="lineNum">     129</span>                 :             :    * @brief Register a callback to be notified when send queue congestion changes.</span>
-<span id="L130"><span class="lineNum">     130</span>                 :             :    * @param handler Callback receiving the current number of queued bytes.</span>
-<span id="L131"><span class="lineNum">     131</span>                 :             :    */</span>
-<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaUNC">           0 :   virtual ServerInterface&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) {</span></span>
-<span id="L133"><span class="lineNum">     133</span>                 :             :     (void)handler;</span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaUNC">           0 :     return *this;</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :             :   }</span>
-<span id="L136"><span class="lineNum">     136</span>                 :             : </span>
-<span id="L137"><span class="lineNum">     137</span>                 :             :   /**</span>
-<span id="L138"><span class="lineNum">     138</span>                 :             :    * @brief Set a factory function to create a new framer for each client connection.</span>
-<span id="L139"><span class="lineNum">     139</span>                 :             :    * @param factory Function that returns a unique_ptr to a new framer.</span>
-<span id="L140"><span class="lineNum">     140</span>                 :             :    */</span>
-<span id="L141"><span class="lineNum">     141</span>                 :             :   virtual ServerInterface&amp; framer(FramerFactory factory) = 0;</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :    * @brief Non-blocking broadcast_line that always drops on a full queue, ignoring strategy.</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :    */</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :   virtual bool try_broadcast_line(std::string_view line) = 0;</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : </span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :   /**</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :    * @brief Non-blocking send_to_line that always drops on a full queue, ignoring strategy.</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :    */</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :   virtual bool try_send_to_line(ClientId client_id, std::string_view line) = 0;</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             : </span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :   // Event handlers</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :   virtual ServerInterface&amp; on_connect(ConnectionHandler handler) = 0;</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :   virtual ServerInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :   virtual ServerInterface&amp; on_data(MessageHandler handler) = 0;</span>
 <span id="L142"><span class="lineNum">     142</span>                 :             : </span>
-<span id="L143"><span class="lineNum">     143</span>                 :             :   /**</span>
-<span id="L144"><span class="lineNum">     144</span>                 :             :    * @brief Set a handler for complete messages extracted by the framer.</span>
-<span id="L145"><span class="lineNum">     145</span>                 :             :    * @param handler callback taking MessageContext (where data is the framed payload).</span>
-<span id="L146"><span class="lineNum">     146</span>                 :             :    */</span>
-<span id="L147"><span class="lineNum">     147</span>                 :             :   virtual ServerInterface&amp; on_message(MessageHandler handler) = 0;</span>
-<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
-<span id="L149"><span class="lineNum">     149</span>                 :             :   /** @brief Register a callback for batched framed message reception */</span>
-<span id="L150"><span class="lineNum">     150</span>                 :             :   virtual ServerInterface&amp; on_message_batch(BatchMessageHandler handler) = 0;</span>
-<span id="L151"><span class="lineNum">     151</span>                 :             : </span>
-<span id="L152"><span class="lineNum">     152</span>                 :             :   // Management</span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :   virtual ServerInterface&amp; auto_start(bool manage = true) = 0;</span>
-<span id="L154"><span class="lineNum">     154</span>                 :             :   virtual size_t client_count() const = 0;</span>
-<span id="L155"><span class="lineNum">     155</span>                 :             :   virtual std::vector&lt;ClientId&gt; connected_clients() const = 0;</span>
-<span id="L156"><span class="lineNum">     156</span>                 :             : };</span>
-<span id="L157"><span class="lineNum">     157</span>                 :             : </span>
-<span id="L158"><span class="lineNum">     158</span>                 :             : }  // namespace wrapper</span>
-<span id="L159"><span class="lineNum">     159</span>                 :             : }  // namespace unilink</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :   /** @brief Register a callback for batched data reception */</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :   virtual ServerInterface&amp; on_data_batch(BatchMessageHandler handler) = 0;</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :   virtual ServerInterface&amp; on_error(ErrorHandler handler) = 0;</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : </span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :   /**</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :    * @brief Register a callback to be notified when send queue congestion changes.</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :    * @param handler Callback receiving the current number of queued bytes.</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :    *</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :    * Default implementation is a no-op. Concrete implementations that support</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :    * backpressure reporting must override this method; otherwise the handler</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :    * is silently discarded.</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :    */</span>
+<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaUNC">           0 :   virtual ServerInterface&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) {</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     (void)handler;</span>
+<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaUNC">           0 :     return *this;</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :   }</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             : </span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :   /**</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :    * @brief Set a factory function to create a new framer for each client connection.</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :    * @param factory Function that returns a unique_ptr to a new framer.</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :    */</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :   virtual ServerInterface&amp; framer(FramerFactory factory) = 0;</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :   /**</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :    * @brief Set a handler for complete messages extracted by the framer.</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :    * @param handler callback taking MessageContext (where data is the framed payload).</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :    */</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :   virtual ServerInterface&amp; on_message(MessageHandler handler) = 0;</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :   /** @brief Register a callback for batched framed message reception */</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :   virtual ServerInterface&amp; on_message_batch(BatchMessageHandler handler) = 0;</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             : </span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :   // Management</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :   virtual ServerInterface&amp; auto_start(bool manage = true) = 0;</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :   virtual size_t client_count() const = 0;</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :   virtual std::vector&lt;ClientId&gt; connected_clients() const = 0;</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : };</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             : </span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : }  // namespace wrapper</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

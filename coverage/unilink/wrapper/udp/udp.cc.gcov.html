@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 13:22:56</td>
+            <td class="headerValue">2026-05-04 01:13:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">70.9&nbsp;%</td>
@@ -510,53 +510,53 @@
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 2 times"> + </span>]
 <span id="L417"><span class="lineNum">     417</span>                 :<span class="tlaGNC">           7 : }</span></span>
 <span id="L418"><span class="lineNum">     418</span>                 :             : </span>
-<span id="L419"><span class="lineNum">     419</span>                 :<span class="tlaGNC">           5 : ChannelInterface&amp; UdpClient::on_data(MessageHandler h) {</span></span>
+<span id="L419"><span class="lineNum">     419</span>                 :<span class="tlaGNC">           5 : UdpClient&amp; UdpClient::on_data(MessageHandler h) {</span></span>
 <span id="L420"><span class="lineNum">     420</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">           5 :   impl_-&gt;data_handler = std::move(h);</span></span>
 <span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">           5 :   return *this;</span></span>
 <span id="L423"><span class="lineNum">     423</span>                 :<span class="tlaGNC">           5 : }</span></span>
-<span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ChannelInterface&amp; UdpClient::on_data_batch(BatchMessageHandler h) {</span></span>
+<span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpClient&amp; UdpClient::on_data_batch(BatchMessageHandler h) {</span></span>
 <span id="L425"><span class="lineNum">     425</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L426"><span class="lineNum">     426</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;data_batch_handler_ = std::move(h);</span></span>
 <span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L429"><span class="lineNum">     429</span>                 :<span class="tlaGNC tlaBgGNC">           2 : ChannelInterface&amp; UdpClient::on_connect(ConnectionHandler h) {</span></span>
+<span id="L429"><span class="lineNum">     429</span>                 :<span class="tlaGNC tlaBgGNC">           2 : UdpClient&amp; UdpClient::on_connect(ConnectionHandler h) {</span></span>
 <span id="L430"><span class="lineNum">     430</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L431"><span class="lineNum">     431</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;connect_handler = std::move(h);</span></span>
 <span id="L432"><span class="lineNum">     432</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
 <span id="L433"><span class="lineNum">     433</span>                 :<span class="tlaGNC">           2 : }</span></span>
-<span id="L434"><span class="lineNum">     434</span>                 :<span class="tlaGNC">           1 : ChannelInterface&amp; UdpClient::on_disconnect(ConnectionHandler h) {</span></span>
+<span id="L434"><span class="lineNum">     434</span>                 :<span class="tlaGNC">           1 : UdpClient&amp; UdpClient::on_disconnect(ConnectionHandler h) {</span></span>
 <span id="L435"><span class="lineNum">     435</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;disconnect_handler = std::move(h);</span></span>
 <span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
 <span id="L438"><span class="lineNum">     438</span>                 :<span class="tlaGNC">           1 : }</span></span>
-<span id="L439"><span class="lineNum">     439</span>                 :<span class="tlaGNC">           4 : ChannelInterface&amp; UdpClient::on_error(ErrorHandler h) {</span></span>
+<span id="L439"><span class="lineNum">     439</span>                 :<span class="tlaGNC">           4 : UdpClient&amp; UdpClient::on_error(ErrorHandler h) {</span></span>
 <span id="L440"><span class="lineNum">     440</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L441"><span class="lineNum">     441</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;error_handler = std::move(h);</span></span>
 <span id="L442"><span class="lineNum">     442</span>                 :<span class="tlaGNC">           4 :   return *this;</span></span>
 <span id="L443"><span class="lineNum">     443</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L444"><span class="lineNum">     444</span>                 :             : </span>
-<span id="L445"><span class="lineNum">     445</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ChannelInterface&amp; UdpClient::on_backpressure(std::function&lt;void(size_t)&gt; h) {</span></span>
+<span id="L445"><span class="lineNum">     445</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpClient&amp; UdpClient::on_backpressure(std::function&lt;void(size_t)&gt; h) {</span></span>
 <span id="L446"><span class="lineNum">     446</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L447"><span class="lineNum">     447</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;bp_handler = std::move(h);</span></span>
 <span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L449"><span class="lineNum">     449</span>                 :<span class="tlaUNC">           0 : }</span></span>
 <span id="L450"><span class="lineNum">     450</span>                 :             : </span>
-<span id="L451"><span class="lineNum">     451</span>                 :<span class="tlaGNC tlaBgGNC">           2 : ChannelInterface&amp; UdpClient::framer(std::unique_ptr&lt;framer::IFramer&gt; f) {</span></span>
+<span id="L451"><span class="lineNum">     451</span>                 :<span class="tlaGNC tlaBgGNC">           2 : UdpClient&amp; UdpClient::framer(std::unique_ptr&lt;framer::IFramer&gt; f) {</span></span>
 <span id="L452"><span class="lineNum">     452</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   impl_-&gt;set_framer(std::move(f));</span></span>
 <span id="L453"><span class="lineNum">     453</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
 <span id="L454"><span class="lineNum">     454</span>                 :             : }</span>
-<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">           2 : ChannelInterface&amp; UdpClient::on_message(MessageHandler h) {</span></span>
+<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">           2 : UdpClient&amp; UdpClient::on_message(MessageHandler h) {</span></span>
 <span id="L456"><span class="lineNum">     456</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   impl_-&gt;on_message(std::move(h));</span></span>
 <span id="L457"><span class="lineNum">     457</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
 <span id="L458"><span class="lineNum">     458</span>                 :             : }</span>
-<span id="L459"><span class="lineNum">     459</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ChannelInterface&amp; UdpClient::on_message_batch(BatchMessageHandler h) {</span></span>
+<span id="L459"><span class="lineNum">     459</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpClient&amp; UdpClient::on_message_batch(BatchMessageHandler h) {</span></span>
 <span id="L460"><span class="lineNum">     460</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L461"><span class="lineNum">     461</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;message_batch_handler_ = std::move(h);</span></span>
 <span id="L462"><span class="lineNum">     462</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L463"><span class="lineNum">     463</span>                 :<span class="tlaUNC">           0 : }</span></span>
 <span id="L464"><span class="lineNum">     464</span>                 :             : </span>
-<span id="L465"><span class="lineNum">     465</span>                 :<span class="tlaGNC tlaBgGNC">           4 : ChannelInterface&amp; UdpClient::auto_start(bool m) {</span></span>
+<span id="L465"><span class="lineNum">     465</span>                 :<span class="tlaGNC tlaBgGNC">           4 : UdpClient&amp; UdpClient::auto_start(bool m) {</span></span>
 <span id="L466"><span class="lineNum">     466</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;auto_start_.store(m);</span></span>
 <span id="L467"><span class="lineNum">     467</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :   if (impl_-&gt;auto_start_.load() &amp;&amp; !impl_-&gt;started_.load()) start();</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]

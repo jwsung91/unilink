@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">74.9&nbsp;%</td>
+            <td class="headerCovTableEntryLo">74.5&nbsp;%</td>
             <td class="headerCovTableEntry">231</td>
-            <td class="headerCovTableEntry">173</td>
+            <td class="headerCovTableEntry">172</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 13:22:56</td>
+            <td class="headerValue">2026-05-04 01:13:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">82.5&nbsp;%</td>
+            <td class="headerCovTableEntryMed">80.0&nbsp;%</td>
             <td class="headerCovTableEntry">40</td>
-            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntry">32</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -304,16 +304,16 @@
 <span id="L219"><span class="lineNum">     219</span>                 :             :   }</span>
 <span id="L220"><span class="lineNum">     220</span>                 :             : </span>
 <span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">        1823 :   static spdlog::level::level_enum to_spdlog_level(LogLevel level) {</span></span>
-<span id="L222"><span class="lineNum">     222</span>   [<span class="tlaGBC" title="Branch 0 was taken 1380 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 384 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 48 times"> + </span> :<span class="tlaGNC">        1823 :     switch (level) {</span></span>
+<span id="L222"><span class="lineNum">     222</span>   [<span class="tlaGBC" title="Branch 0 was taken 1380 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 383 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 49 times"> + </span> :<span class="tlaGNC">        1823 :     switch (level) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">        1380 :       case LogLevel::DEBUG:</span></span>
 <span id="L224"><span class="lineNum">     224</span>                 :<span class="tlaGNC">        1380 :         return spdlog::level::debug;</span></span>
-<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">         384 :       case LogLevel::INFO:</span></span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">         384 :         return spdlog::level::info;</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">         383 :       case LogLevel::INFO:</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">         383 :         return spdlog::level::info;</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">           8 :       case LogLevel::WARNING:</span></span>
 <span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">           8 :         return spdlog::level::warn;</span></span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          48 :       case LogLevel::ERROR:</span></span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          48 :         return spdlog::level::err;</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          49 :       case LogLevel::ERROR:</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          49 :         return spdlog::level::err;</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">           3 :       case LogLevel::CRITICAL:</span></span>
 <span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">           3 :         return spdlog::level::critical;</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       default:</span></span>
@@ -329,16 +329,16 @@
 <span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaUNC">           0 : Logger::Logger(Logger&amp;&amp;) noexcept = default;</span></span>
 <span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaUNC">           0 : Logger&amp; Logger::operator=(Logger&amp;&amp;) noexcept = default;</span></span>
 <span id="L245"><span class="lineNum">     245</span>                 :             : </span>
-<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC tlaBgGNC">        3498 : Logger&amp; Logger::default_logger() {</span></span>
-<span id="L247"><span class="lineNum">     247</span>   [<span class="tlaGBC" title="Branch 0 was taken 206 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3292 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 206 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        3498 :   static Logger* instance = new Logger();</span></span>
+<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC tlaBgGNC">        3498 : Logger&amp; Logger::instance() {</span></span>
+<span id="L247"><span class="lineNum">     247</span>   [<span class="tlaGBC" title="Branch 0 was taken 206 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3292 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 206 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        3498 :   static Logger* inst = new Logger();</span></span>
 <span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 206 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 206 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span>]
-<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">        3498 :   return *instance;</span></span>
+<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">        3498 :   return *inst;</span></span>
 <span id="L249"><span class="lineNum">     249</span>                 :             : }</span>
 <span id="L250"><span class="lineNum">     250</span>                 :             : </span>
-<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC">        3498 : Logger&amp; Logger::instance() { return default_logger(); }</span></span>
+<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaUNC tlaBgUNC">           0 : Logger&amp; Logger::default_logger() { return instance(); }</span></span>
 <span id="L252"><span class="lineNum">     252</span>                 :             : </span>
-<span id="L253"><span class="lineNum">     253</span>                 :<span class="tlaGNC">          58 : void Logger::set_level(LogLevel level) {</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :<span class="tlaGNC tlaBgGNC">          58 : void Logger::set_level(LogLevel level) {</span></span>
 <span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">          58 :   impl_-&gt;current_level_.store(level);</span></span>
 <span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">          58 :   impl_-&gt;spd_logger_-&gt;set_level(Impl::to_spdlog_level(level));</span></span>
 <span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC">          58 : }</span></span>
@@ -514,20 +514,20 @@
 <span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">        1117 :   log(LogLevel::DEBUG, component, operation, message, loc);</span></span>
 <span id="L423"><span class="lineNum">     423</span>                 :<span class="tlaGNC">        1117 : }</span></span>
 <span id="L424"><span class="lineNum">     424</span>                 :             : </span>
-<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">         378 : void Logger::info(std::string_view component, std::string_view operation, std::string_view message,</span></span>
+<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">         377 : void Logger::info(std::string_view component, std::string_view operation, std::string_view message,</span></span>
 <span id="L426"><span class="lineNum">     426</span>                 :             :                   const std::source_location&amp; loc) {</span>
-<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">         378 :   log(LogLevel::INFO, component, operation, message, loc);</span></span>
-<span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">         378 : }</span></span>
+<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">         377 :   log(LogLevel::INFO, component, operation, message, loc);</span></span>
+<span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">         377 : }</span></span>
 <span id="L429"><span class="lineNum">     429</span>                 :             : </span>
 <span id="L430"><span class="lineNum">     430</span>                 :<span class="tlaGNC">           7 : void Logger::warning(std::string_view component, std::string_view operation, std::string_view message,</span></span>
 <span id="L431"><span class="lineNum">     431</span>                 :             :                      const std::source_location&amp; loc) {</span>
 <span id="L432"><span class="lineNum">     432</span>                 :<span class="tlaGNC">           7 :   log(LogLevel::WARNING, component, operation, message, loc);</span></span>
 <span id="L433"><span class="lineNum">     433</span>                 :<span class="tlaGNC">           7 : }</span></span>
 <span id="L434"><span class="lineNum">     434</span>                 :             : </span>
-<span id="L435"><span class="lineNum">     435</span>                 :<span class="tlaGNC">          46 : void Logger::error(std::string_view component, std::string_view operation, std::string_view message,</span></span>
+<span id="L435"><span class="lineNum">     435</span>                 :<span class="tlaGNC">          47 : void Logger::error(std::string_view component, std::string_view operation, std::string_view message,</span></span>
 <span id="L436"><span class="lineNum">     436</span>                 :             :                    const std::source_location&amp; loc) {</span>
-<span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">          46 :   log(LogLevel::ERROR, component, operation, message, loc);</span></span>
-<span id="L438"><span class="lineNum">     438</span>                 :<span class="tlaGNC">          46 : }</span></span>
+<span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">          47 :   log(LogLevel::ERROR, component, operation, message, loc);</span></span>
+<span id="L438"><span class="lineNum">     438</span>                 :<span class="tlaGNC">          47 : }</span></span>
 <span id="L439"><span class="lineNum">     439</span>                 :             : </span>
 <span id="L440"><span class="lineNum">     440</span>                 :<span class="tlaGNC">           2 : void Logger::critical(std::string_view component, std::string_view operation, std::string_view message,</span></span>
 <span id="L441"><span class="lineNum">     441</span>                 :             :                       const std::source_location&amp; loc) {</span>

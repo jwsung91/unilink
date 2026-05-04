@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 13:22:56</td>
+            <td class="headerValue">2026-05-04 01:13:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">62.9&nbsp;%</td>
@@ -376,11 +376,11 @@
 <span id="L289"><span class="lineNum">     289</span>   [<span class="tlaGBC" title="Branch 0 was taken 1000 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1000 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        3000 :   bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + &quot;\n&quot;); }</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1000 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L290"><span class="lineNum">     290</span>                 :             : </span>
-<span id="L291"><span class="lineNum">     291</span>                 :<span class="tlaGNC">          32 :   bool connected() const {</span></span>
-<span id="L292"><span class="lineNum">     292</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          32 :     std::shared_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
-<span id="L293"><span class="lineNum">     293</span>   [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          64 :     return channel_ &amp;&amp; channel_-&gt;is_connected();</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 12 times"> + </span>]
-<span id="L294"><span class="lineNum">     294</span>                 :<span class="tlaGNC">          32 :   }</span></span>
+<span id="L291"><span class="lineNum">     291</span>                 :<span class="tlaGNC">          31 :   bool connected() const {</span></span>
+<span id="L292"><span class="lineNum">     292</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          31 :     std::shared_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
+<span id="L293"><span class="lineNum">     293</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          62 :     return channel_ &amp;&amp; channel_-&gt;is_connected();</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 11 times"> + </span>]
+<span id="L294"><span class="lineNum">     294</span>                 :<span class="tlaGNC">          31 :   }</span></span>
 <span id="L295"><span class="lineNum">     295</span>                 :             : </span>
 <span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">          53 :   void setup_internal_handlers() {</span></span>
 <span id="L297"><span class="lineNum">     297</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 53 times"> + </span>]:<span class="tlaGNC">          53 :     if (!channel_) return;</span></span>
@@ -422,14 +422,14 @@
 <span id="L332"><span class="lineNum">     332</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           5 :     });</span></span>
 <span id="L333"><span class="lineNum">     333</span>                 :             : </span>
 <span id="L334"><span class="lineNum">     334</span>   [<span class="tlaGBC" title="Branch 0 was taken 53 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 53 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          53 :     channel_-&gt;on_state([this, weak_alive](base::LinkState state) {</span></span>
-<span id="L335"><span class="lineNum">     335</span>                 :<span class="tlaGNC">         106 :       auto alive = weak_alive.lock();</span></span>
-<span id="L336"><span class="lineNum">     336</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 106 times"> + </span>]:<span class="tlaGNC">         106 :       if (!alive) return;</span></span>
-<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">         106 :       ConnectionHandler connect_handler;</span></span>
-<span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">         106 :       ConnectionHandler disconnect_handler;</span></span>
-<span id="L339"><span class="lineNum">     339</span>                 :<span class="tlaGNC">         106 :       ErrorHandler error_handler;</span></span>
-<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">         106 :       std::shared_ptr&lt;interface::Channel&gt; channel_snapshot;</span></span>
+<span id="L335"><span class="lineNum">     335</span>                 :<span class="tlaGNC">         108 :       auto alive = weak_alive.lock();</span></span>
+<span id="L336"><span class="lineNum">     336</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 108 times"> + </span>]:<span class="tlaGNC">         108 :       if (!alive) return;</span></span>
+<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">         108 :       ConnectionHandler connect_handler;</span></span>
+<span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">         108 :       ConnectionHandler disconnect_handler;</span></span>
+<span id="L339"><span class="lineNum">     339</span>                 :<span class="tlaGNC">         108 :       ErrorHandler error_handler;</span></span>
+<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">         108 :       std::shared_ptr&lt;interface::Channel&gt; channel_snapshot;</span></span>
 <span id="L341"><span class="lineNum">     341</span>                 :             : </span>
-<span id="L342"><span class="lineNum">     342</span>         [<span class="tlaGBC" title="Branch 0 was taken 46 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 60 times"> + </span>]:<span class="tlaGNC">         106 :       if (state == base::LinkState::Connected) {</span></span>
+<span id="L342"><span class="lineNum">     342</span>         [<span class="tlaGBC" title="Branch 0 was taken 46 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 62 times"> + </span>]:<span class="tlaGNC">         108 :       if (state == base::LinkState::Connected) {</span></span>
 <span id="L343"><span class="lineNum">     343</span>                 :             :         {</span>
 <span id="L344"><span class="lineNum">     344</span>         [<span class="tlaGBC" title="Branch 0 was taken 46 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          46 :           std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
 <span id="L345"><span class="lineNum">     345</span>         [<span class="tlaGBC" title="Branch 0 was taken 46 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          46 :           fulfill_all_locked(true);</span></span>
@@ -447,7 +447,7 @@
 <span id="L357"><span class="lineNum">     357</span>                 :<span class="tlaGNC tlaBgGNC">          46 :         }</span></span>
 <span id="L358"><span class="lineNum">     358</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          54 :         if (connect_handler) connect_handler(ConnectionContext(0));</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L359"><span class="lineNum">     359</span>   [<span class="tlaGBC" title="Branch 0 was taken 60 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 57 times"> + </span>]:<span class="tlaGNC">          60 :       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {</span></span>
+<span id="L359"><span class="lineNum">     359</span>   [<span class="tlaGBC" title="Branch 0 was taken 62 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 59 times"> + </span>]:<span class="tlaGNC">          62 :       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {</span></span>
 <span id="L360"><span class="lineNum">     360</span>                 :             :         {</span>
 <span id="L361"><span class="lineNum">     361</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :           std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
 <span id="L362"><span class="lineNum">     362</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :           fulfill_all_locked(false);</span></span>
@@ -475,7 +475,7 @@
 <span id="L382"><span class="lineNum">     382</span>                 :             :           }</span>
 <span id="L383"><span class="lineNum">     383</span>                 :             :         }</span>
 <span id="L384"><span class="lineNum">     384</span>                 :             :       }</span>
-<span id="L385"><span class="lineNum">     385</span>         [<span class="tlaGBC" title="Branch 0 was taken 106 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         106 :     });</span></span>
+<span id="L385"><span class="lineNum">     385</span>         [<span class="tlaGBC" title="Branch 0 was taken 108 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         108 :     });</span></span>
 <span id="L386"><span class="lineNum">     386</span>                 :             : </span>
 <span id="L387"><span class="lineNum">     387</span>   [<span class="tlaGBC" title="Branch 0 was taken 53 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 53 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          53 :     channel_-&gt;on_backpressure([this, weak_alive](size_t queued) {</span></span>
 <span id="L388"><span class="lineNum">     388</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       bp_cv_.notify_all();</span></span>
@@ -557,54 +557,54 @@
 <span id="L461"><span class="lineNum">     461</span>                 :<span class="tlaUNC tlaBgUNC">           0 : bool TcpClient::try_send_line(std::string_view line) { return impl_-&gt;try_send_line(line); }</span></span>
 <span id="L462"><span class="lineNum">     462</span>                 :<span class="tlaUNC">           0 : bool TcpClient::send_blocking(std::string_view data) { return impl_-&gt;send_blocking(data); }</span></span>
 <span id="L463"><span class="lineNum">     463</span>                 :<span class="tlaUNC">           0 : bool TcpClient::send_line_blocking(std::string_view line) { return impl_-&gt;send_line_blocking(line); }</span></span>
-<span id="L464"><span class="lineNum">     464</span>                 :<span class="tlaGNC tlaBgGNC">          32 : bool TcpClient::connected() const { return get_impl()-&gt;connected(); }</span></span>
+<span id="L464"><span class="lineNum">     464</span>                 :<span class="tlaGNC tlaBgGNC">          31 : bool TcpClient::connected() const { return get_impl()-&gt;connected(); }</span></span>
 <span id="L465"><span class="lineNum">     465</span>                 :             : </span>
-<span id="L466"><span class="lineNum">     466</span>                 :<span class="tlaGNC">          62 : ChannelInterface&amp; TcpClient::on_data(MessageHandler h) {</span></span>
+<span id="L466"><span class="lineNum">     466</span>                 :<span class="tlaGNC">          62 : TcpClient&amp; TcpClient::on_data(MessageHandler h) {</span></span>
 <span id="L467"><span class="lineNum">     467</span>         [<span class="tlaGBC" title="Branch 0 was taken 62 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          62 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L468"><span class="lineNum">     468</span>                 :<span class="tlaGNC">          62 :   impl_-&gt;data_handler_ = std::move(h);</span></span>
 <span id="L469"><span class="lineNum">     469</span>                 :<span class="tlaGNC">          62 :   return *this;</span></span>
 <span id="L470"><span class="lineNum">     470</span>                 :<span class="tlaGNC">          62 : }</span></span>
-<span id="L471"><span class="lineNum">     471</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ChannelInterface&amp; TcpClient::on_data_batch(BatchMessageHandler h) {</span></span>
+<span id="L471"><span class="lineNum">     471</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpClient&amp; TcpClient::on_data_batch(BatchMessageHandler h) {</span></span>
 <span id="L472"><span class="lineNum">     472</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L473"><span class="lineNum">     473</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;data_batch_handler_ = std::move(h);</span></span>
 <span id="L474"><span class="lineNum">     474</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L475"><span class="lineNum">     475</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L476"><span class="lineNum">     476</span>                 :<span class="tlaGNC tlaBgGNC">           9 : ChannelInterface&amp; TcpClient::on_connect(ConnectionHandler h) {</span></span>
+<span id="L476"><span class="lineNum">     476</span>                 :<span class="tlaGNC tlaBgGNC">           9 : TcpClient&amp; TcpClient::on_connect(ConnectionHandler h) {</span></span>
 <span id="L477"><span class="lineNum">     477</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L478"><span class="lineNum">     478</span>                 :<span class="tlaGNC">           9 :   impl_-&gt;connect_handler_ = std::move(h);</span></span>
 <span id="L479"><span class="lineNum">     479</span>                 :<span class="tlaGNC">           9 :   return *this;</span></span>
 <span id="L480"><span class="lineNum">     480</span>                 :<span class="tlaGNC">           9 : }</span></span>
-<span id="L481"><span class="lineNum">     481</span>                 :<span class="tlaGNC">           2 : ChannelInterface&amp; TcpClient::on_disconnect(ConnectionHandler h) {</span></span>
+<span id="L481"><span class="lineNum">     481</span>                 :<span class="tlaGNC">           2 : TcpClient&amp; TcpClient::on_disconnect(ConnectionHandler h) {</span></span>
 <span id="L482"><span class="lineNum">     482</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L483"><span class="lineNum">     483</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;disconnect_handler_ = std::move(h);</span></span>
 <span id="L484"><span class="lineNum">     484</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
 <span id="L485"><span class="lineNum">     485</span>                 :<span class="tlaGNC">           2 : }</span></span>
-<span id="L486"><span class="lineNum">     486</span>                 :<span class="tlaGNC">          62 : ChannelInterface&amp; TcpClient::on_error(ErrorHandler h) {</span></span>
+<span id="L486"><span class="lineNum">     486</span>                 :<span class="tlaGNC">          62 : TcpClient&amp; TcpClient::on_error(ErrorHandler h) {</span></span>
 <span id="L487"><span class="lineNum">     487</span>         [<span class="tlaGBC" title="Branch 0 was taken 62 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          62 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L488"><span class="lineNum">     488</span>                 :<span class="tlaGNC">          62 :   impl_-&gt;error_handler_ = std::move(h);</span></span>
 <span id="L489"><span class="lineNum">     489</span>                 :<span class="tlaGNC">          62 :   return *this;</span></span>
 <span id="L490"><span class="lineNum">     490</span>                 :<span class="tlaGNC">          62 : }</span></span>
 <span id="L491"><span class="lineNum">     491</span>                 :             : </span>
-<span id="L492"><span class="lineNum">     492</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ChannelInterface&amp; TcpClient::on_backpressure(std::function&lt;void(size_t)&gt; h) {</span></span>
+<span id="L492"><span class="lineNum">     492</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpClient&amp; TcpClient::on_backpressure(std::function&lt;void(size_t)&gt; h) {</span></span>
 <span id="L493"><span class="lineNum">     493</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
 <span id="L494"><span class="lineNum">     494</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;bp_handler_ = std::move(h);</span></span>
 <span id="L495"><span class="lineNum">     495</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L496"><span class="lineNum">     496</span>                 :<span class="tlaUNC">           0 : }</span></span>
 <span id="L497"><span class="lineNum">     497</span>                 :             : </span>
-<span id="L498"><span class="lineNum">     498</span>                 :<span class="tlaUNC">           0 : ChannelInterface&amp; TcpClient::framer(std::unique_ptr&lt;framer::IFramer&gt; f) {</span></span>
+<span id="L498"><span class="lineNum">     498</span>                 :<span class="tlaUNC">           0 : TcpClient&amp; TcpClient::framer(std::unique_ptr&lt;framer::IFramer&gt; f) {</span></span>
 <span id="L499"><span class="lineNum">     499</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   impl_-&gt;set_framer(std::move(f));</span></span>
 <span id="L500"><span class="lineNum">     500</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L501"><span class="lineNum">     501</span>                 :             : }</span>
-<span id="L502"><span class="lineNum">     502</span>                 :<span class="tlaUNC">           0 : ChannelInterface&amp; TcpClient::on_message(MessageHandler h) {</span></span>
+<span id="L502"><span class="lineNum">     502</span>                 :<span class="tlaUNC">           0 : TcpClient&amp; TcpClient::on_message(MessageHandler h) {</span></span>
 <span id="L503"><span class="lineNum">     503</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   impl_-&gt;on_message(std::move(h));</span></span>
 <span id="L504"><span class="lineNum">     504</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L505"><span class="lineNum">     505</span>                 :             : }</span>
-<span id="L506"><span class="lineNum">     506</span>                 :<span class="tlaUNC">           0 : ChannelInterface&amp; TcpClient::on_message_batch(BatchMessageHandler h) {</span></span>
+<span id="L506"><span class="lineNum">     506</span>                 :<span class="tlaUNC">           0 : TcpClient&amp; TcpClient::on_message_batch(BatchMessageHandler h) {</span></span>
 <span id="L507"><span class="lineNum">     507</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   impl_-&gt;on_message_batch(std::move(h));</span></span>
 <span id="L508"><span class="lineNum">     508</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L509"><span class="lineNum">     509</span>                 :             : }</span>
 <span id="L510"><span class="lineNum">     510</span>                 :             : </span>
-<span id="L511"><span class="lineNum">     511</span>                 :<span class="tlaGNC tlaBgGNC">           8 : ChannelInterface&amp; TcpClient::auto_start(bool m) {</span></span>
+<span id="L511"><span class="lineNum">     511</span>                 :<span class="tlaGNC tlaBgGNC">           8 : TcpClient&amp; TcpClient::auto_start(bool m) {</span></span>
 <span id="L512"><span class="lineNum">     512</span>                 :<span class="tlaGNC">           8 :   impl_-&gt;auto_start_.store(m);</span></span>
 <span id="L513"><span class="lineNum">     513</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           8 :   if (impl_-&gt;auto_start_.load() &amp;&amp; !impl_-&gt;started_.load()) start();</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]

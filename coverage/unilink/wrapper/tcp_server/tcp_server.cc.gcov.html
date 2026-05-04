@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">63.3&nbsp;%</td>
-            <td class="headerCovTableEntry">417</td>
+            <td class="headerCovTableEntryLo">62.4&nbsp;%</td>
+            <td class="headerCovTableEntry">423</td>
             <td class="headerCovTableEntry">264</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-03 13:22:56</td>
+            <td class="headerValue">2026-05-04 01:13:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">62.1&nbsp;%</td>
-            <td class="headerCovTableEntry">58</td>
+            <td class="headerCovTableEntryLo">58.1&nbsp;%</td>
+            <td class="headerCovTableEntry">62</td>
             <td class="headerCovTableEntry">36</td>
           </tr>
           <tr>
@@ -56,8 +56,8 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">39.5&nbsp;%</td>
-            <td class="headerCovTableEntry">474</td>
+            <td class="headerCovTableEntryLo">37.6&nbsp;%</td>
+            <td class="headerCovTableEntry">498</td>
             <td class="headerCovTableEntry">187</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -501,18 +501,18 @@
 <span id="L415"><span class="lineNum">     415</span>   [<span class="tlaGBC" title="Branch 0 was taken 1000 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 898 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1000 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        1898 :         if (framer) framer-&gt;push_bytes(data_span);</span></span>
 <span id="L416"><span class="lineNum">     416</span>         [<span class="tlaGBC" title="Branch 0 was taken 1898 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1898 :       });</span></span>
 <span id="L417"><span class="lineNum">     417</span>   [<span class="tlaGBC" title="Branch 0 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          76 :       transport_server-&gt;on_multi_disconnect([this, weak_alive](ClientId id) {</span></span>
-<span id="L418"><span class="lineNum">     418</span>                 :<span class="tlaGNC">          60 :         auto alive = weak_alive.lock();</span></span>
-<span id="L419"><span class="lineNum">     419</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 60 times"> + </span>]:<span class="tlaGNC">          60 :         if (!alive) return;</span></span>
+<span id="L418"><span class="lineNum">     418</span>                 :<span class="tlaGNC">          61 :         auto alive = weak_alive.lock();</span></span>
+<span id="L419"><span class="lineNum">     419</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 61 times"> + </span>]:<span class="tlaGNC">          61 :         if (!alive) return;</span></span>
 <span id="L420"><span class="lineNum">     420</span>                 :             : </span>
-<span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">          60 :         ConnectionHandler handler;</span></span>
+<span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">          61 :         ConnectionHandler handler;</span></span>
 <span id="L422"><span class="lineNum">     422</span>                 :             :         {</span>
-<span id="L423"><span class="lineNum">     423</span>         [<span class="tlaGBC" title="Branch 0 was taken 60 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          60 :           std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
-<span id="L424"><span class="lineNum">     424</span>         [<span class="tlaGBC" title="Branch 0 was taken 60 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          60 :           framers_.erase(id);</span></span>
-<span id="L425"><span class="lineNum">     425</span>         [<span class="tlaGBC" title="Branch 0 was taken 60 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          60 :           handler = on_disconnect_;</span></span>
-<span id="L426"><span class="lineNum">     426</span>                 :<span class="tlaGNC">          60 :         }</span></span>
-<span id="L427"><span class="lineNum">     427</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 59 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          62 :         if (handler) handler(ConnectionContext(id));</span></span>
+<span id="L423"><span class="lineNum">     423</span>         [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          61 :           std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
+<span id="L424"><span class="lineNum">     424</span>         [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          61 :           framers_.erase(id);</span></span>
+<span id="L425"><span class="lineNum">     425</span>         [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          61 :           handler = on_disconnect_;</span></span>
+<span id="L426"><span class="lineNum">     426</span>                 :<span class="tlaGNC">          61 :         }</span></span>
+<span id="L427"><span class="lineNum">     427</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 60 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          63 :         if (handler) handler(ConnectionContext(id));</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L428"><span class="lineNum">     428</span>         [<span class="tlaGBC" title="Branch 0 was taken 60 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          60 :       });</span></span>
+<span id="L428"><span class="lineNum">     428</span>         [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          61 :       });</span></span>
 <span id="L429"><span class="lineNum">     429</span>                 :             : </span>
 <span id="L430"><span class="lineNum">     430</span>   [<span class="tlaGBC" title="Branch 0 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          76 :       transport_server-&gt;on_backpressure([this, weak_alive](size_t queued) {</span></span>
 <span id="L431"><span class="lineNum">     431</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         bp_cv_.notify_all();</span></span>
@@ -572,119 +572,132 @@
 <span id="L484"><span class="lineNum">     484</span>                 :<span class="tlaUNC">           0 :   return impl_-&gt;send_to_blocking(client_id, data);</span></span>
 <span id="L485"><span class="lineNum">     485</span>                 :             : }</span>
 <span id="L486"><span class="lineNum">     486</span>                 :             : </span>
-<span id="L487"><span class="lineNum">     487</span>                 :<span class="tlaGNC tlaBgGNC">          13 : ServerInterface&amp; TcpServer::on_connect(ConnectionHandler h) {</span></span>
-<span id="L488"><span class="lineNum">     488</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L489"><span class="lineNum">     489</span>                 :<span class="tlaGNC">          13 :   impl_-&gt;on_client_connect_ = std::move(h);</span></span>
-<span id="L490"><span class="lineNum">     490</span>                 :<span class="tlaGNC">          13 :   return *this;</span></span>
-<span id="L491"><span class="lineNum">     491</span>                 :<span class="tlaGNC">          13 : }</span></span>
-<span id="L492"><span class="lineNum">     492</span>                 :<span class="tlaGNC">           4 : ServerInterface&amp; TcpServer::on_disconnect(ConnectionHandler h) {</span></span>
-<span id="L493"><span class="lineNum">     493</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L494"><span class="lineNum">     494</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;on_disconnect_ = std::move(h);</span></span>
-<span id="L495"><span class="lineNum">     495</span>                 :<span class="tlaGNC">           4 :   return *this;</span></span>
-<span id="L496"><span class="lineNum">     496</span>                 :<span class="tlaGNC">           4 : }</span></span>
-<span id="L497"><span class="lineNum">     497</span>                 :<span class="tlaGNC">          72 : ServerInterface&amp; TcpServer::on_data(MessageHandler h) {</span></span>
-<span id="L498"><span class="lineNum">     498</span>         [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          72 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">          72 :   impl_-&gt;on_data_ = std::move(h);</span></span>
-<span id="L500"><span class="lineNum">     500</span>                 :<span class="tlaGNC">          72 :   return *this;</span></span>
-<span id="L501"><span class="lineNum">     501</span>                 :<span class="tlaGNC">          72 : }</span></span>
-<span id="L502"><span class="lineNum">     502</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ServerInterface&amp; TcpServer::on_data_batch(BatchMessageHandler h) {</span></span>
-<span id="L503"><span class="lineNum">     503</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L504"><span class="lineNum">     504</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;data_batch_handler_ = std::move(h);</span></span>
-<span id="L505"><span class="lineNum">     505</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L506"><span class="lineNum">     506</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L507"><span class="lineNum">     507</span>                 :<span class="tlaGNC tlaBgGNC">          71 : ServerInterface&amp; TcpServer::on_error(ErrorHandler h) {</span></span>
-<span id="L508"><span class="lineNum">     508</span>         [<span class="tlaGBC" title="Branch 0 was taken 71 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          71 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L509"><span class="lineNum">     509</span>                 :<span class="tlaGNC">          71 :   impl_-&gt;on_error_ = std::move(h);</span></span>
-<span id="L510"><span class="lineNum">     510</span>                 :<span class="tlaGNC">          71 :   return *this;</span></span>
-<span id="L511"><span class="lineNum">     511</span>                 :<span class="tlaGNC">          71 : }</span></span>
-<span id="L512"><span class="lineNum">     512</span>                 :             : </span>
-<span id="L513"><span class="lineNum">     513</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ServerInterface&amp; TcpServer::on_backpressure(std::function&lt;void(size_t)&gt; h) {</span></span>
-<span id="L514"><span class="lineNum">     514</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L515"><span class="lineNum">     515</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;on_backpressure_ = std::move(h);</span></span>
-<span id="L516"><span class="lineNum">     516</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L517"><span class="lineNum">     517</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L518"><span class="lineNum">     518</span>                 :             : </span>
-<span id="L519"><span class="lineNum">     519</span>                 :<span class="tlaGNC tlaBgGNC">           1 : ServerInterface&amp; TcpServer::framer(FramerFactory factory) {</span></span>
-<span id="L520"><span class="lineNum">     520</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L521"><span class="lineNum">     521</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;framer_factory_ = std::move(factory);</span></span>
-<span id="L522"><span class="lineNum">     522</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
-<span id="L523"><span class="lineNum">     523</span>                 :<span class="tlaGNC">           1 : }</span></span>
-<span id="L524"><span class="lineNum">     524</span>                 :             : </span>
-<span id="L525"><span class="lineNum">     525</span>                 :<span class="tlaGNC">           1 : ServerInterface&amp; TcpServer::on_message(MessageHandler handler) {</span></span>
-<span id="L526"><span class="lineNum">     526</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L527"><span class="lineNum">     527</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;on_message_ = std::move(handler);</span></span>
-<span id="L528"><span class="lineNum">     528</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
-<span id="L529"><span class="lineNum">     529</span>                 :<span class="tlaGNC">           1 : }</span></span>
-<span id="L530"><span class="lineNum">     530</span>                 :             : </span>
-<span id="L531"><span class="lineNum">     531</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ServerInterface&amp; TcpServer::on_message_batch(BatchMessageHandler h) {</span></span>
-<span id="L532"><span class="lineNum">     532</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L533"><span class="lineNum">     533</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;message_batch_handler_ = std::move(h);</span></span>
-<span id="L534"><span class="lineNum">     534</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L535"><span class="lineNum">     535</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L536"><span class="lineNum">     536</span>                 :             : </span>
-<span id="L537"><span class="lineNum">     537</span>                 :<span class="tlaGNC tlaBgGNC">          63 : size_t TcpServer::client_count() const {</span></span>
-<span id="L538"><span class="lineNum">     538</span>         [<span class="tlaGBC" title="Branch 0 was taken 63 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          63 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L539"><span class="lineNum">     539</span>                 :<span class="tlaGNC">          63 :   const auto&amp; ts = get_impl()-&gt;transport_cache_;</span></span>
-<span id="L540"><span class="lineNum">     540</span>   [<span class="tlaGBC" title="Branch 0 was taken 63 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 63 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         126 :   return ts ? ts-&gt;client_count() : 0;</span></span>
-<span id="L541"><span class="lineNum">     541</span>                 :<span class="tlaGNC">          63 : }</span></span>
-<span id="L542"><span class="lineNum">     542</span>                 :             : </span>
-<span id="L543"><span class="lineNum">     543</span>                 :<span class="tlaUNC tlaBgUNC">           0 : std::vector&lt;ClientId&gt; TcpServer::connected_clients() const {</span></span>
-<span id="L544"><span class="lineNum">     544</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L545"><span class="lineNum">     545</span>                 :<span class="tlaUNC">           0 :   const auto&amp; ts = get_impl()-&gt;transport_cache_;</span></span>
-<span id="L546"><span class="lineNum">     546</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :   return ts ? ts-&gt;connected_clients() : std::vector&lt;ClientId&gt;();</span></span>
-<span id="L547"><span class="lineNum">     547</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L548"><span class="lineNum">     548</span>                 :             : </span>
-<span id="L549"><span class="lineNum">     549</span>                 :<span class="tlaGNC tlaBgGNC">           1 : TcpServer&amp; TcpServer::auto_start(bool m) {</span></span>
-<span id="L550"><span class="lineNum">     550</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;auto_start_.store(m);</span></span>
-<span id="L551"><span class="lineNum">     551</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           1 :   if (impl_-&gt;auto_start_.load() &amp;&amp; !impl_-&gt;started_.load()) start();</span></span>
+<span id="L487"><span class="lineNum">     487</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 : bool TcpServer::broadcast_line(std::string_view line) { return broadcast(std::string(line) + &quot;\n&quot;); }</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
+<span id="L488"><span class="lineNum">     488</span>                 :<span class="tlaUNC">           0 : bool TcpServer::send_to_line(ClientId client_id, std::string_view line) {</span></span>
+<span id="L489"><span class="lineNum">     489</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :   return send_to(client_id, std::string(line) + &quot;\n&quot;);</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
+<span id="L490"><span class="lineNum">     490</span>                 :             : }</span>
+<span id="L491"><span class="lineNum">     491</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 : bool TcpServer::try_broadcast_line(std::string_view line) { return try_broadcast(std::string(line) + &quot;\n&quot;); }</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
+<span id="L492"><span class="lineNum">     492</span>                 :<span class="tlaUNC">           0 : bool TcpServer::try_send_to_line(ClientId client_id, std::string_view line) {</span></span>
+<span id="L493"><span class="lineNum">     493</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :   return try_send_to(client_id, std::string(line) + &quot;\n&quot;);</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span>]
+<span id="L494"><span class="lineNum">     494</span>                 :             : }</span>
+<span id="L495"><span class="lineNum">     495</span>                 :             : </span>
+<span id="L496"><span class="lineNum">     496</span>                 :<span class="tlaGNC tlaBgGNC">          13 : TcpServer&amp; TcpServer::on_connect(ConnectionHandler h) {</span></span>
+<span id="L497"><span class="lineNum">     497</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L498"><span class="lineNum">     498</span>                 :<span class="tlaGNC">          13 :   impl_-&gt;on_client_connect_ = std::move(h);</span></span>
+<span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">          13 :   return *this;</span></span>
+<span id="L500"><span class="lineNum">     500</span>                 :<span class="tlaGNC">          13 : }</span></span>
+<span id="L501"><span class="lineNum">     501</span>                 :<span class="tlaGNC">           4 : TcpServer&amp; TcpServer::on_disconnect(ConnectionHandler h) {</span></span>
+<span id="L502"><span class="lineNum">     502</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L503"><span class="lineNum">     503</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;on_disconnect_ = std::move(h);</span></span>
+<span id="L504"><span class="lineNum">     504</span>                 :<span class="tlaGNC">           4 :   return *this;</span></span>
+<span id="L505"><span class="lineNum">     505</span>                 :<span class="tlaGNC">           4 : }</span></span>
+<span id="L506"><span class="lineNum">     506</span>                 :<span class="tlaGNC">          72 : TcpServer&amp; TcpServer::on_data(MessageHandler h) {</span></span>
+<span id="L507"><span class="lineNum">     507</span>         [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          72 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L508"><span class="lineNum">     508</span>                 :<span class="tlaGNC">          72 :   impl_-&gt;on_data_ = std::move(h);</span></span>
+<span id="L509"><span class="lineNum">     509</span>                 :<span class="tlaGNC">          72 :   return *this;</span></span>
+<span id="L510"><span class="lineNum">     510</span>                 :<span class="tlaGNC">          72 : }</span></span>
+<span id="L511"><span class="lineNum">     511</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::on_data_batch(BatchMessageHandler h) {</span></span>
+<span id="L512"><span class="lineNum">     512</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L513"><span class="lineNum">     513</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;data_batch_handler_ = std::move(h);</span></span>
+<span id="L514"><span class="lineNum">     514</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L515"><span class="lineNum">     515</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L516"><span class="lineNum">     516</span>                 :<span class="tlaGNC tlaBgGNC">          71 : TcpServer&amp; TcpServer::on_error(ErrorHandler h) {</span></span>
+<span id="L517"><span class="lineNum">     517</span>         [<span class="tlaGBC" title="Branch 0 was taken 71 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          71 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L518"><span class="lineNum">     518</span>                 :<span class="tlaGNC">          71 :   impl_-&gt;on_error_ = std::move(h);</span></span>
+<span id="L519"><span class="lineNum">     519</span>                 :<span class="tlaGNC">          71 :   return *this;</span></span>
+<span id="L520"><span class="lineNum">     520</span>                 :<span class="tlaGNC">          71 : }</span></span>
+<span id="L521"><span class="lineNum">     521</span>                 :             : </span>
+<span id="L522"><span class="lineNum">     522</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::on_backpressure(std::function&lt;void(size_t)&gt; h) {</span></span>
+<span id="L523"><span class="lineNum">     523</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L524"><span class="lineNum">     524</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;on_backpressure_ = std::move(h);</span></span>
+<span id="L525"><span class="lineNum">     525</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L526"><span class="lineNum">     526</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L527"><span class="lineNum">     527</span>                 :             : </span>
+<span id="L528"><span class="lineNum">     528</span>                 :<span class="tlaGNC tlaBgGNC">           1 : TcpServer&amp; TcpServer::framer(FramerFactory factory) {</span></span>
+<span id="L529"><span class="lineNum">     529</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L530"><span class="lineNum">     530</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;framer_factory_ = std::move(factory);</span></span>
+<span id="L531"><span class="lineNum">     531</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L532"><span class="lineNum">     532</span>                 :<span class="tlaGNC">           1 : }</span></span>
+<span id="L533"><span class="lineNum">     533</span>                 :             : </span>
+<span id="L534"><span class="lineNum">     534</span>                 :<span class="tlaGNC">           1 : TcpServer&amp; TcpServer::on_message(MessageHandler handler) {</span></span>
+<span id="L535"><span class="lineNum">     535</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L536"><span class="lineNum">     536</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;on_message_ = std::move(handler);</span></span>
+<span id="L537"><span class="lineNum">     537</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L538"><span class="lineNum">     538</span>                 :<span class="tlaGNC">           1 : }</span></span>
+<span id="L539"><span class="lineNum">     539</span>                 :             : </span>
+<span id="L540"><span class="lineNum">     540</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::on_message_batch(BatchMessageHandler h) {</span></span>
+<span id="L541"><span class="lineNum">     541</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L542"><span class="lineNum">     542</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;message_batch_handler_ = std::move(h);</span></span>
+<span id="L543"><span class="lineNum">     543</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L544"><span class="lineNum">     544</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L545"><span class="lineNum">     545</span>                 :             : </span>
+<span id="L546"><span class="lineNum">     546</span>                 :<span class="tlaGNC tlaBgGNC">          63 : size_t TcpServer::client_count() const {</span></span>
+<span id="L547"><span class="lineNum">     547</span>         [<span class="tlaGBC" title="Branch 0 was taken 63 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          63 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L548"><span class="lineNum">     548</span>                 :<span class="tlaGNC">          63 :   const auto&amp; ts = get_impl()-&gt;transport_cache_;</span></span>
+<span id="L549"><span class="lineNum">     549</span>   [<span class="tlaGBC" title="Branch 0 was taken 63 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 63 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         126 :   return ts ? ts-&gt;client_count() : 0;</span></span>
+<span id="L550"><span class="lineNum">     550</span>                 :<span class="tlaGNC">          63 : }</span></span>
+<span id="L551"><span class="lineNum">     551</span>                 :             : </span>
+<span id="L552"><span class="lineNum">     552</span>                 :<span class="tlaUNC tlaBgUNC">           0 : std::vector&lt;ClientId&gt; TcpServer::connected_clients() const {</span></span>
+<span id="L553"><span class="lineNum">     553</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L554"><span class="lineNum">     554</span>                 :<span class="tlaUNC">           0 :   const auto&amp; ts = get_impl()-&gt;transport_cache_;</span></span>
+<span id="L555"><span class="lineNum">     555</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :   return ts ? ts-&gt;connected_clients() : std::vector&lt;ClientId&gt;();</span></span>
+<span id="L556"><span class="lineNum">     556</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L557"><span class="lineNum">     557</span>                 :             : </span>
+<span id="L558"><span class="lineNum">     558</span>                 :<span class="tlaGNC tlaBgGNC">           1 : TcpServer&amp; TcpServer::auto_start(bool m) {</span></span>
+<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaGNC">           1 :   impl_-&gt;auto_start_.store(m);</span></span>
+<span id="L560"><span class="lineNum">     560</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           1 :   if (impl_-&gt;auto_start_.load() &amp;&amp; !impl_-&gt;started_.load()) start();</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
-<span id="L552"><span class="lineNum">     552</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
-<span id="L553"><span class="lineNum">     553</span>                 :             : }</span>
-<span id="L554"><span class="lineNum">     554</span>                 :             : </span>
-<span id="L555"><span class="lineNum">     555</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::port_retry(bool e, int m, int i) {</span></span>
-<span id="L556"><span class="lineNum">     556</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;port_retry_enabled_.store(e);</span></span>
-<span id="L557"><span class="lineNum">     557</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;max_port_retries_.store(m);</span></span>
-<span id="L558"><span class="lineNum">     558</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;port_retry_interval_ms_.store(i);</span></span>
-<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L560"><span class="lineNum">     560</span>                 :             : }</span>
-<span id="L561"><span class="lineNum">     561</span>                 :             : </span>
-<span id="L562"><span class="lineNum">     562</span>                 :<span class="tlaUNC">           0 : TcpServer&amp; TcpServer::idle_timeout(std::chrono::milliseconds timeout) {</span></span>
-<span id="L563"><span class="lineNum">     563</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;idle_timeout_ms_.store(static_cast&lt;int&gt;(timeout.count()));</span></span>
-<span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L565"><span class="lineNum">     565</span>                 :             : }</span>
-<span id="L566"><span class="lineNum">     566</span>                 :             : </span>
-<span id="L567"><span class="lineNum">     567</span>                 :<span class="tlaGNC tlaBgGNC">           8 : TcpServer&amp; TcpServer::max_clients(size_t max) {</span></span>
-<span id="L568"><span class="lineNum">     568</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L569"><span class="lineNum">     569</span>                 :<span class="tlaGNC">           8 :   impl_-&gt;max_clients_.store(max);</span></span>
-<span id="L570"><span class="lineNum">     570</span>                 :<span class="tlaGNC">           8 :   impl_-&gt;client_limit_enabled_.store(true);</span></span>
-<span id="L571"><span class="lineNum">     571</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           8 :   if (impl_-&gt;transport_cache_) impl_-&gt;transport_cache_-&gt;set_client_limit(max);</span></span>
-<span id="L572"><span class="lineNum">     572</span>                 :<span class="tlaGNC">           8 :   return *this;</span></span>
-<span id="L573"><span class="lineNum">     573</span>                 :<span class="tlaGNC">           8 : }</span></span>
-<span id="L574"><span class="lineNum">     574</span>                 :             : </span>
-<span id="L575"><span class="lineNum">     575</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::unlimited_clients() {</span></span>
-<span id="L576"><span class="lineNum">     576</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L577"><span class="lineNum">     577</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;client_limit_enabled_.store(false);</span></span>
-<span id="L578"><span class="lineNum">     578</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :   if (impl_-&gt;transport_cache_) impl_-&gt;transport_cache_-&gt;set_unlimited_clients();</span></span>
-<span id="L579"><span class="lineNum">     579</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L580"><span class="lineNum">     580</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L581"><span class="lineNum">     581</span>                 :             : </span>
-<span id="L582"><span class="lineNum">     582</span>                 :<span class="tlaGNC tlaBgGNC">          70 : TcpServer&amp; TcpServer::backpressure_threshold(size_t threshold) {</span></span>
-<span id="L583"><span class="lineNum">     583</span>                 :<span class="tlaGNC">          70 :   impl_-&gt;backpressure_threshold_.store(threshold);</span></span>
-<span id="L584"><span class="lineNum">     584</span>                 :<span class="tlaGNC">          70 :   return *this;</span></span>
-<span id="L585"><span class="lineNum">     585</span>                 :             : }</span>
-<span id="L586"><span class="lineNum">     586</span>                 :             : </span>
-<span id="L587"><span class="lineNum">     587</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {</span></span>
-<span id="L588"><span class="lineNum">     588</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;backpressure_strategy_.store(strategy);</span></span>
-<span id="L589"><span class="lineNum">     589</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
-<span id="L590"><span class="lineNum">     590</span>                 :             : }</span>
-<span id="L591"><span class="lineNum">     591</span>                 :             : </span>
-<span id="L592"><span class="lineNum">     592</span>                 :<span class="tlaGNC tlaBgGNC">           2 : TcpServer&amp; TcpServer::manage_external_context(bool m) {</span></span>
-<span id="L593"><span class="lineNum">     593</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;manage_external_context_.store(m);</span></span>
-<span id="L594"><span class="lineNum">     594</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
-<span id="L595"><span class="lineNum">     595</span>                 :             : }</span>
-<span id="L596"><span class="lineNum">     596</span>                 :             : </span>
-<span id="L597"><span class="lineNum">     597</span>                 :             : }  // namespace wrapper</span>
-<span id="L598"><span class="lineNum">     598</span>                 :             : }  // namespace unilink</span>
+<span id="L561"><span class="lineNum">     561</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L562"><span class="lineNum">     562</span>                 :             : }</span>
+<span id="L563"><span class="lineNum">     563</span>                 :             : </span>
+<span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::port_retry(bool e, int m, int i) {</span></span>
+<span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;port_retry_enabled_.store(e);</span></span>
+<span id="L566"><span class="lineNum">     566</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;max_port_retries_.store(m);</span></span>
+<span id="L567"><span class="lineNum">     567</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;port_retry_interval_ms_.store(i);</span></span>
+<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L569"><span class="lineNum">     569</span>                 :             : }</span>
+<span id="L570"><span class="lineNum">     570</span>                 :             : </span>
+<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaUNC">           0 : TcpServer&amp; TcpServer::idle_timeout(std::chrono::milliseconds timeout) {</span></span>
+<span id="L572"><span class="lineNum">     572</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;idle_timeout_ms_.store(static_cast&lt;int&gt;(timeout.count()));</span></span>
+<span id="L573"><span class="lineNum">     573</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L574"><span class="lineNum">     574</span>                 :             : }</span>
+<span id="L575"><span class="lineNum">     575</span>                 :             : </span>
+<span id="L576"><span class="lineNum">     576</span>                 :<span class="tlaGNC tlaBgGNC">           8 : TcpServer&amp; TcpServer::max_clients(size_t max) {</span></span>
+<span id="L577"><span class="lineNum">     577</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L578"><span class="lineNum">     578</span>                 :<span class="tlaGNC">           8 :   impl_-&gt;max_clients_.store(max);</span></span>
+<span id="L579"><span class="lineNum">     579</span>                 :<span class="tlaGNC">           8 :   impl_-&gt;client_limit_enabled_.store(true);</span></span>
+<span id="L580"><span class="lineNum">     580</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           8 :   if (impl_-&gt;transport_cache_) impl_-&gt;transport_cache_-&gt;set_client_limit(max);</span></span>
+<span id="L581"><span class="lineNum">     581</span>                 :<span class="tlaGNC">           8 :   return *this;</span></span>
+<span id="L582"><span class="lineNum">     582</span>                 :<span class="tlaGNC">           8 : }</span></span>
+<span id="L583"><span class="lineNum">     583</span>                 :             : </span>
+<span id="L584"><span class="lineNum">     584</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::unlimited_clients() {</span></span>
+<span id="L585"><span class="lineNum">     585</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L586"><span class="lineNum">     586</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;client_limit_enabled_.store(false);</span></span>
+<span id="L587"><span class="lineNum">     587</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :   if (impl_-&gt;transport_cache_) impl_-&gt;transport_cache_-&gt;set_unlimited_clients();</span></span>
+<span id="L588"><span class="lineNum">     588</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L589"><span class="lineNum">     589</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L590"><span class="lineNum">     590</span>                 :             : </span>
+<span id="L591"><span class="lineNum">     591</span>                 :<span class="tlaGNC tlaBgGNC">          70 : TcpServer&amp; TcpServer::backpressure_threshold(size_t threshold) {</span></span>
+<span id="L592"><span class="lineNum">     592</span>                 :<span class="tlaGNC">          70 :   impl_-&gt;backpressure_threshold_.store(threshold);</span></span>
+<span id="L593"><span class="lineNum">     593</span>                 :<span class="tlaGNC">          70 :   return *this;</span></span>
+<span id="L594"><span class="lineNum">     594</span>                 :             : }</span>
+<span id="L595"><span class="lineNum">     595</span>                 :             : </span>
+<span id="L596"><span class="lineNum">     596</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServer&amp; TcpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {</span></span>
+<span id="L597"><span class="lineNum">     597</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;backpressure_strategy_.store(strategy);</span></span>
+<span id="L598"><span class="lineNum">     598</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L599"><span class="lineNum">     599</span>                 :             : }</span>
+<span id="L600"><span class="lineNum">     600</span>                 :             : </span>
+<span id="L601"><span class="lineNum">     601</span>                 :<span class="tlaGNC tlaBgGNC">           2 : TcpServer&amp; TcpServer::manage_external_context(bool m) {</span></span>
+<span id="L602"><span class="lineNum">     602</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;manage_external_context_.store(m);</span></span>
+<span id="L603"><span class="lineNum">     603</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
+<span id="L604"><span class="lineNum">     604</span>                 :             : }</span>
+<span id="L605"><span class="lineNum">     605</span>                 :             : </span>
+<span id="L606"><span class="lineNum">     606</span>                 :             : }  // namespace wrapper</span>
+<span id="L607"><span class="lineNum">     607</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
