@@ -102,7 +102,8 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
       )
     endif()
     # Belt-and-suspenders: directly add the flag so it overrides any earlier
-    # -mmacosx-version-min that CMake or vcpkg already wrote into the build rules.
+    # -mmacosx-version-min that CMake or vcpkg already wrote into the build
+    # rules.
     add_compile_options(-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET})
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_compile_definitions(UNILINK_PLATFORM_LINUX=1)
