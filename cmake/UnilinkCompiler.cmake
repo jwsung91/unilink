@@ -75,13 +75,13 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   endif()
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
-                                              VERSION_LESS "13.0"
+                                              VERSION_LESS "10.0"
   )
-    message(FATAL_ERROR "GCC 13.0+ is required for unilink's std::format usage")
+    message(FATAL_ERROR "GCC 10.0+ is required for unilink's C++20 features")
   elseif(UNILINK_COMPILER_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS
                                     "14.0"
   )
-    message(FATAL_ERROR "Clang 14.0+ is required for unilink's C++20 API")
+    message(FATAL_ERROR "Clang 14.0+ is required for unilink's C++20 features")
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")

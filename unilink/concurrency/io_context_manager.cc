@@ -16,9 +16,10 @@
 
 #include "unilink/concurrency/io_context_manager.hpp"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <atomic>
 #include <condition_variable>
-#include <format>
 #include <mutex>
 #include <stop_token>
 #include <thread>
@@ -150,7 +151,7 @@ void IoContextManager::start() {
         std::stop_callback cb(st, [context] { context->stop(); });
         context->run();
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("io_context_manager", "run", std::format("Thread error: {}", e.what()));
+        UNILINK_LOG_ERROR("io_context_manager", "run", fmt::format("Thread error: {}", e.what()));
       } catch (...) {
       }
       impl_->running_.store(false);

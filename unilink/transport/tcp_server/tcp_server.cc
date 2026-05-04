@@ -16,9 +16,10 @@
 
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <atomic>
 #include <boost/asio.hpp>
-#include <format>
 #include <future>
 #include <iostream>
 #include <mutex>
@@ -136,7 +137,7 @@ struct TcpServer::Impl {
     auto address = net::ip::make_address(cfg_.bind_address, ec);
     if (ec) {
       UNILINK_LOG_ERROR("tcp_server", "bind",
-                        std::format("Invalid bind address: {}, {}", cfg_.bind_address, ec.message()));
+                        fmt::format("Invalid bind address: {}, {}", cfg_.bind_address, ec.message()));
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
@@ -145,7 +146,7 @@ struct TcpServer::Impl {
     if (!acceptor_->is_open()) {
       acceptor_->open(address.is_v6() ? tcp::v6() : tcp::v4(), ec);
       if (ec) {
-        UNILINK_LOG_ERROR("tcp_server", "open", std::format("Failed to open acceptor: {}", ec.message()));
+        UNILINK_LOG_ERROR("tcp_server", "open", fmt::format("Failed to open acceptor: {}", ec.message()));
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -167,7 +168,7 @@ struct TcpServer::Impl {
         });
         return;
       } else {
-        UNILINK_LOG_ERROR("tcp_server", "bind", std::format("Failed to bind to port {}: {}", cfg_.port, ec.message()));
+        UNILINK_LOG_ERROR("tcp_server", "bind", fmt::format("Failed to bind to port {}: {}", cfg_.port, ec.message()));
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -177,7 +178,7 @@ struct TcpServer::Impl {
     acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     if (ec) {
       UNILINK_LOG_ERROR("tcp_server", "listen",
-                        std::format("Failed to listen on port {}: {}", cfg_.port, ec.message()));
+                        fmt::format("Failed to listen on port {}: {}", cfg_.port, ec.message()));
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
@@ -218,7 +219,7 @@ struct TcpServer::Impl {
       auto rep = sock.remote_endpoint(ep_ec);
       std::string client_info = "unknown";
       if (!ep_ec) {
-        client_info = std::format("{}:{}", rep.address().to_string(), rep.port());
+        client_info = fmt::format("{}:{}", rep.address().to_string(), rep.port());
       }
 
       if (accept_impl->client_limit_enabled_) {

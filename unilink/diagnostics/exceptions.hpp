@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <format>
 #include <stdexcept>
 #include <string>
 
@@ -47,12 +46,12 @@ class UNILINK_API UnilinkException : public std::runtime_error {
       return what();
     }
     if (operation_.empty()) {
-      return std::format("[{}] {}", component_, what());
+      return "[" + component_ + "] " + what();
     }
     if (component_.empty()) {
-      return std::format("{} (operation: {})", what(), operation_);
+      return std::string(what()) + " (operation: " + operation_ + ")";
     }
-    return std::format("[{}] {} (operation: {})", component_, what(), operation_);
+    return "[" + component_ + "] " + what() + " (operation: " + operation_ + ")";
   }
 
  private:
@@ -80,7 +79,7 @@ class UNILINK_API BuilderException : public UnilinkException {
     if (builder_type_.empty()) {
       return UnilinkException::full_message();
     }
-    return std::format("[{}] {}", builder_type_, UnilinkException::full_message());
+    return "[" + builder_type_ + "] " + UnilinkException::full_message();
   }
 
  private:
@@ -109,12 +108,12 @@ class UNILINK_API ValidationException : public UnilinkException {
       return UnilinkException::full_message();
     }
     if (expected_.empty()) {
-      return std::format("{} (parameter: {})", UnilinkException::full_message(), parameter_);
+      return UnilinkException::full_message() + " (parameter: " + parameter_ + ")";
     }
     if (parameter_.empty()) {
-      return std::format("{} (expected: {})", UnilinkException::full_message(), expected_);
+      return UnilinkException::full_message() + " (expected: " + expected_ + ")";
     }
-    return std::format("{} (parameter: {}) (expected: {})", UnilinkException::full_message(), parameter_, expected_);
+    return UnilinkException::full_message() + " (parameter: " + parameter_ + ") (expected: " + expected_ + ")";
   }
 
  private:
@@ -141,7 +140,7 @@ class UNILINK_API MemoryException : public UnilinkException {
     if (size_ == 0) {
       return UnilinkException::full_message();
     }
-    return std::format("{} (size: {} bytes)", UnilinkException::full_message(), size_);
+    return UnilinkException::full_message() + " (size: " + std::to_string(size_) + " bytes)";
   }
 
  private:
@@ -168,7 +167,7 @@ class UNILINK_API ConnectionException : public UnilinkException {
     if (connection_type_.empty()) {
       return UnilinkException::full_message();
     }
-    return std::format("[{}] {}", connection_type_, UnilinkException::full_message());
+    return "[" + connection_type_ + "] " + UnilinkException::full_message();
   }
 
  private:
@@ -195,7 +194,7 @@ class UNILINK_API ConfigurationException : public UnilinkException {
     if (config_section_.empty()) {
       return UnilinkException::full_message();
     }
-    return std::format("{} (section: {})", UnilinkException::full_message(), config_section_);
+    return UnilinkException::full_message() + " (section: " + config_section_ + ")";
   }
 
  private:

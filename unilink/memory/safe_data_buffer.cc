@@ -16,9 +16,10 @@
 
 #include "unilink/memory/safe_data_buffer.hpp"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <algorithm>
 #include <cstring>
-#include <format>
 
 namespace unilink {
 namespace memory {
@@ -106,7 +107,7 @@ void SafeDataBuffer::validate() const {
 // Private helper methods
 void SafeDataBuffer::validate_index(size_t index) const {
   if (index >= data_.size()) {
-    throw std::out_of_range(std::format("Index {} is out of range for buffer of size {}", index, data_.size()));
+    throw std::out_of_range(fmt::format("Index {} is out of range for buffer of size {}", index, data_.size()));
   }
 }
 

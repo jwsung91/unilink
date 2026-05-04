@@ -20,12 +20,13 @@
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #endif
 
+#include <spdlog/fmt/fmt.h>
+
 #include <algorithm>
 #include <array>
 #include <atomic>
 #include <boost/asio.hpp>
 #include <deque>
-#include <format>
 #include <memory>
 #include <mutex>
 #include <stop_token>
@@ -261,7 +262,7 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
     impl_->maybe_flush_for_keep_latest(added);
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
       UNILINK_LOG_ERROR("uds_client", "write",
-                        std::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
+                        fmt::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
       impl_->report_backpressure(impl_->queue_bytes_ + added);
       return;
     }
@@ -282,7 +283,7 @@ bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     impl_->maybe_flush_for_keep_latest(added);
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
       UNILINK_LOG_ERROR("uds_client", "write",
-                        std::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
+                        fmt::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
       impl_->report_backpressure(impl_->queue_bytes_ + added);
       return;
     }
@@ -526,7 +527,7 @@ void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure",
-                        std::format("Exception in backpressure callback: {}", e.what()));
+                        fmt::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
@@ -536,7 +537,7 @@ void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
       on_bp(queued_bytes);
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure",
-                        std::format("Exception in backpressure callback: {}", e.what()));
+                        fmt::format("Exception in backpressure callback: {}", e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
     }
