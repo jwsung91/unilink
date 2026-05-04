@@ -115,6 +115,26 @@ class UNILINK_API ServerInterface {
    */
   virtual bool try_broadcast(std::string_view data) = 0;
 
+  /**
+   * @brief Send a line (data + "\n") to all clients, honouring the backpressure strategy.
+   */
+  virtual bool broadcast_line(std::string_view line) = 0;
+
+  /**
+   * @brief Send a line (data + "\n") to a specific client, honouring the backpressure strategy.
+   */
+  virtual bool send_to_line(ClientId client_id, std::string_view line) = 0;
+
+  /**
+   * @brief Non-blocking broadcast_line that always drops on a full queue, ignoring strategy.
+   */
+  virtual bool try_broadcast_line(std::string_view line) = 0;
+
+  /**
+   * @brief Non-blocking send_to_line that always drops on a full queue, ignoring strategy.
+   */
+  virtual bool try_send_to_line(ClientId client_id, std::string_view line) = 0;
+
   // Event handlers
   virtual ServerInterface& on_connect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_disconnect(ConnectionHandler handler) = 0;
@@ -128,6 +148,10 @@ class UNILINK_API ServerInterface {
   /**
    * @brief Register a callback to be notified when send queue congestion changes.
    * @param handler Callback receiving the current number of queued bytes.
+   *
+   * Default implementation is a no-op. Concrete implementations that support
+   * backpressure reporting must override this method; otherwise the handler
+   * is silently discarded.
    */
   virtual ServerInterface& on_backpressure(std::function<void(size_t)> handler) {
     (void)handler;

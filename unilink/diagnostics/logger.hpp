@@ -105,6 +105,7 @@ class UNILINK_API Logger {
    * @brief Get singleton instance
    */
   static Logger& instance();
+  [[deprecated("Use Logger::instance() instead")]]
   static Logger& default_logger();
 
   Logger();
@@ -256,24 +257,11 @@ class UNILINK_API Logger {
   } while (0)
 
 /**
- * @brief Conditional logging macros (only evaluate message if level is enabled)
- */
-#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                          \
-  do {                                                                                               \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) { \
-      UNILINK_LOG_DEBUG(component, operation, message);                                              \
-    }                                                                                                \
-  } while (0)
-
-#define UNILINK_LOG_INFO_IF(component, operation, message)                                          \
-  do {                                                                                              \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::INFO) { \
-      UNILINK_LOG_INFO(component, operation, message);                                              \
-    }                                                                                               \
-  } while (0)
-
-/**
- * @brief Performance logging macros for expensive operations
+ * @brief Performance logging macros for expensive operations.
+ *
+ * Usage: UNILINK_LOG_PERF_START and UNILINK_LOG_PERF_END must use the same
+ * `component` and `operation` tokens, and each `operation` token must be
+ * unique within its enclosing scope (the token becomes part of a variable name).
  */
 #define UNILINK_LOG_PERF_START(component, operation)                                              \
   auto _perf_start_##operation =                                                                  \

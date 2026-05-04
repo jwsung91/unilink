@@ -44,6 +44,7 @@ class UNILINK_API ErrorHandler {
    * @brief Get singleton instance
    */
   static ErrorHandler& instance();
+  [[deprecated("Use ErrorHandler::instance() instead")]]
   static ErrorHandler& default_handler();
 
   ErrorHandler();

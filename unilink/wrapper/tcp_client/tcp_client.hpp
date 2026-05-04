@@ -70,18 +70,18 @@ class UNILINK_API TcpClient : public ChannelInterface {
   bool try_send_line(std::string_view line) override;
   bool connected() const override;
 
-  ChannelInterface& on_data(MessageHandler handler) override;
-  ChannelInterface& on_data_batch(BatchMessageHandler handler) override;
-  ChannelInterface& on_connect(ConnectionHandler handler) override;
-  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
-  ChannelInterface& on_error(ErrorHandler handler) override;
-  ChannelInterface& on_backpressure(std::function<void(size_t)> handler) override;
+  TcpClient& on_data(MessageHandler handler) override;
+  TcpClient& on_data_batch(BatchMessageHandler handler) override;
+  TcpClient& on_connect(ConnectionHandler handler) override;
+  TcpClient& on_disconnect(ConnectionHandler handler) override;
+  TcpClient& on_error(ErrorHandler handler) override;
+  TcpClient& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
-  ChannelInterface& on_message(MessageHandler handler) override;
-  ChannelInterface& on_message_batch(BatchMessageHandler handler) override;
+  TcpClient& framer(std::unique_ptr<framer::IFramer> framer) override;
+  TcpClient& on_message(MessageHandler handler) override;
+  TcpClient& on_message_batch(BatchMessageHandler handler) override;
 
-  ChannelInterface& auto_start(bool manage = true) override;
+  TcpClient& auto_start(bool manage = true) override;
 
   // Configuration
   TcpClient& batch_size(size_t size);

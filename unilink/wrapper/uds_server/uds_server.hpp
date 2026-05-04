@@ -71,18 +71,22 @@ class UNILINK_API UdsServer : public ServerInterface {
   bool send_to_blocking(ClientId client_id, std::string_view data) override;
   bool try_send_to(ClientId client_id, std::string_view data) override;
   bool try_broadcast(std::string_view data) override;
+  bool broadcast_line(std::string_view line) override;
+  bool send_to_line(ClientId client_id, std::string_view line) override;
+  bool try_broadcast_line(std::string_view line) override;
+  bool try_send_to_line(ClientId client_id, std::string_view line) override;
 
   // Event handlers
-  ServerInterface& on_connect(ConnectionHandler handler) override;
-  ServerInterface& on_disconnect(ConnectionHandler handler) override;
-  ServerInterface& on_data(MessageHandler handler) override;
-  ServerInterface& on_data_batch(BatchMessageHandler handler) override;
-  ServerInterface& on_error(ErrorHandler handler) override;
-  ServerInterface& on_backpressure(std::function<void(size_t)> handler) override;
+  UdsServer& on_connect(ConnectionHandler handler) override;
+  UdsServer& on_disconnect(ConnectionHandler handler) override;
+  UdsServer& on_data(MessageHandler handler) override;
+  UdsServer& on_data_batch(BatchMessageHandler handler) override;
+  UdsServer& on_error(ErrorHandler handler) override;
+  UdsServer& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ServerInterface& framer(FramerFactory factory) override;
-  ServerInterface& on_message(MessageHandler handler) override;
-  ServerInterface& on_message_batch(BatchMessageHandler handler) override;
+  UdsServer& framer(FramerFactory factory) override;
+  UdsServer& on_message(MessageHandler handler) override;
+  UdsServer& on_message_batch(BatchMessageHandler handler) override;
 
   // Client count and management
   size_t client_count() const override;

@@ -62,26 +62,32 @@ class UNILINK_API UdpServer : public ServerInterface {
   bool send_to_blocking(ClientId client_id, std::string_view data) override;
   bool try_send_to(ClientId client_id, std::string_view data) override;
   bool try_broadcast(std::string_view data) override;
+  bool broadcast_line(std::string_view line) override;
+  bool send_to_line(ClientId client_id, std::string_view line) override;
+  bool try_broadcast_line(std::string_view line) override;
+  bool try_send_to_line(ClientId client_id, std::string_view line) override;
 
   // Event handlers
-  ServerInterface& on_connect(ConnectionHandler handler) override;
-  ServerInterface& on_disconnect(ConnectionHandler handler) override;
-  ServerInterface& on_data(MessageHandler handler) override;
-  ServerInterface& on_data_batch(BatchMessageHandler handler) override;
-  ServerInterface& on_error(ErrorHandler handler) override;
+  UdpServer& on_connect(ConnectionHandler handler) override;
+  UdpServer& on_disconnect(ConnectionHandler handler) override;
+  UdpServer& on_data(MessageHandler handler) override;
+  UdpServer& on_data_batch(BatchMessageHandler handler) override;
+  UdpServer& on_error(ErrorHandler handler) override;
+  UdpServer& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ServerInterface& framer(FramerFactory factory) override;
-  ServerInterface& on_message(MessageHandler handler) override;
-  ServerInterface& on_message_batch(BatchMessageHandler handler) override;
+  UdpServer& framer(FramerFactory factory) override;
+  UdpServer& on_message(MessageHandler handler) override;
+  UdpServer& on_message_batch(BatchMessageHandler handler) override;
 
   // Client count and management
   size_t client_count() const override;
   std::vector<ClientId> connected_clients() const override;
 
-  // UDP specific
+  // Configuration (Fluent API)
   UdpServer& auto_start(bool manage = true) override;
-  UdpServer& session_timeout(std::chrono::milliseconds timeout);
-  UdpServer& on_backpressure(std::function<void(size_t)> handler);
+  UdpServer& idle_timeout(std::chrono::milliseconds timeout);
+  UdpServer& max_clients(size_t max);
+  UdpServer& unlimited_clients();
   UdpServer& backpressure_threshold(size_t threshold);
   UdpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdpServer& manage_external_context(bool manage);

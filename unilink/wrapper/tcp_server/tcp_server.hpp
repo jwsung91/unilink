@@ -70,18 +70,22 @@ class UNILINK_API TcpServer : public ServerInterface {
   bool send_to_blocking(ClientId client_id, std::string_view data) override;
   bool try_send_to(ClientId client_id, std::string_view data) override;
   bool try_broadcast(std::string_view data) override;
+  bool broadcast_line(std::string_view line) override;
+  bool send_to_line(ClientId client_id, std::string_view line) override;
+  bool try_broadcast_line(std::string_view line) override;
+  bool try_send_to_line(ClientId client_id, std::string_view line) override;
 
   // Event handlers
-  ServerInterface& on_connect(ConnectionHandler handler) override;
-  ServerInterface& on_disconnect(ConnectionHandler handler) override;
-  ServerInterface& on_data(MessageHandler handler) override;
-  ServerInterface& on_data_batch(BatchMessageHandler handler) override;
-  ServerInterface& on_error(ErrorHandler handler) override;
-  ServerInterface& on_backpressure(std::function<void(size_t)> handler) override;
+  TcpServer& on_connect(ConnectionHandler handler) override;
+  TcpServer& on_disconnect(ConnectionHandler handler) override;
+  TcpServer& on_data(MessageHandler handler) override;
+  TcpServer& on_data_batch(BatchMessageHandler handler) override;
+  TcpServer& on_error(ErrorHandler handler) override;
+  TcpServer& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ServerInterface& framer(FramerFactory factory) override;
-  ServerInterface& on_message(MessageHandler handler) override;
-  ServerInterface& on_message_batch(BatchMessageHandler handler) override;
+  TcpServer& framer(FramerFactory factory) override;
+  TcpServer& on_message(MessageHandler handler) override;
+  TcpServer& on_message_batch(BatchMessageHandler handler) override;
 
   // Client count and management
   size_t client_count() const override;

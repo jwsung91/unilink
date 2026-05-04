@@ -70,18 +70,18 @@ class UNILINK_API UdpClient : public ChannelInterface {
   bool try_send_line(std::string_view line) override;
   bool connected() const override;
 
-  ChannelInterface& on_data(MessageHandler handler) override;
-  ChannelInterface& on_data_batch(BatchMessageHandler handler) override;
-  ChannelInterface& on_connect(ConnectionHandler handler) override;
-  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
-  ChannelInterface& on_error(ErrorHandler handler) override;
-  ChannelInterface& on_backpressure(std::function<void(size_t)> handler) override;
+  UdpClient& on_data(MessageHandler handler) override;
+  UdpClient& on_data_batch(BatchMessageHandler handler) override;
+  UdpClient& on_connect(ConnectionHandler handler) override;
+  UdpClient& on_disconnect(ConnectionHandler handler) override;
+  UdpClient& on_error(ErrorHandler handler) override;
+  UdpClient& on_backpressure(std::function<void(size_t)> handler) override;
 
-  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
-  ChannelInterface& on_message(MessageHandler handler) override;
-  ChannelInterface& on_message_batch(BatchMessageHandler handler) override;
+  UdpClient& framer(std::unique_ptr<framer::IFramer> framer) override;
+  UdpClient& on_message(MessageHandler handler) override;
+  UdpClient& on_message_batch(BatchMessageHandler handler) override;
 
-  ChannelInterface& auto_start(bool manage = true) override;
+  UdpClient& auto_start(bool manage = true) override;
 
   UdpClient& backpressure_threshold(size_t threshold);
   UdpClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);

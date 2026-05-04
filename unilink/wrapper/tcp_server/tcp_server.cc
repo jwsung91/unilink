@@ -484,51 +484,60 @@ bool TcpServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);
 }
 
-ServerInterface& TcpServer::on_connect(ConnectionHandler h) {
+bool TcpServer::broadcast_line(std::string_view line) { return broadcast(std::string(line) + "\n"); }
+bool TcpServer::send_to_line(ClientId client_id, std::string_view line) {
+  return send_to(client_id, std::string(line) + "\n");
+}
+bool TcpServer::try_broadcast_line(std::string_view line) { return try_broadcast(std::string(line) + "\n"); }
+bool TcpServer::try_send_to_line(ClientId client_id, std::string_view line) {
+  return try_send_to(client_id, std::string(line) + "\n");
+}
+
+TcpServer& TcpServer::on_connect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_connect_ = std::move(h);
   return *this;
 }
-ServerInterface& TcpServer::on_disconnect(ConnectionHandler h) {
+TcpServer& TcpServer::on_disconnect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_disconnect_ = std::move(h);
   return *this;
 }
-ServerInterface& TcpServer::on_data(MessageHandler h) {
+TcpServer& TcpServer::on_data(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_data_ = std::move(h);
   return *this;
 }
-ServerInterface& TcpServer::on_data_batch(BatchMessageHandler h) {
+TcpServer& TcpServer::on_data_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_batch_handler_ = std::move(h);
   return *this;
 }
-ServerInterface& TcpServer::on_error(ErrorHandler h) {
+TcpServer& TcpServer::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
   return *this;
 }
 
-ServerInterface& TcpServer::on_backpressure(std::function<void(size_t)> h) {
+TcpServer& TcpServer::on_backpressure(std::function<void(size_t)> h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_backpressure_ = std::move(h);
   return *this;
 }
 
-ServerInterface& TcpServer::framer(FramerFactory factory) {
+TcpServer& TcpServer::framer(FramerFactory factory) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
-ServerInterface& TcpServer::on_message(MessageHandler handler) {
+TcpServer& TcpServer::on_message(MessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& TcpServer::on_message_batch(BatchMessageHandler h) {
+TcpServer& TcpServer::on_message_batch(BatchMessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->message_batch_handler_ = std::move(h);
   return *this;

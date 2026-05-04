@@ -57,7 +57,7 @@ TEST(UdpServerCoverageTest, SessionReaping) {
   cfg.local_port = 0;
 
   wrapper::UdpServer server(cfg);
-  server.session_timeout(100ms);
+  server.idle_timeout(100ms);
 
   std::atomic<int> disconnects{0};
   server.on_disconnect([&](const wrapper::ConnectionContext&) { disconnects++; });

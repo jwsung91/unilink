@@ -424,55 +424,64 @@ bool UdsServer::send_to_blocking(ClientId client_id, std::string_view data) {
   return impl_->send_to_blocking(client_id, data);
 }
 
-ServerInterface& UdsServer::on_connect(ConnectionHandler handler) {
+bool UdsServer::broadcast_line(std::string_view line) { return broadcast(std::string(line) + "\n"); }
+bool UdsServer::send_to_line(ClientId client_id, std::string_view line) {
+  return send_to(client_id, std::string(line) + "\n");
+}
+bool UdsServer::try_broadcast_line(std::string_view line) { return try_broadcast(std::string(line) + "\n"); }
+bool UdsServer::try_send_to_line(ClientId client_id, std::string_view line) {
+  return try_send_to(client_id, std::string(line) + "\n");
+}
+
+UdsServer& UdsServer::on_connect(ConnectionHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_connect_handler_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::on_disconnect(ConnectionHandler handler) {
+UdsServer& UdsServer::on_disconnect(ConnectionHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_disconnect_handler_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::on_data(MessageHandler handler) {
+UdsServer& UdsServer::on_data(MessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::on_data_batch(BatchMessageHandler handler) {
+UdsServer& UdsServer::on_data_batch(BatchMessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_batch_handler_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::on_error(ErrorHandler handler) {
+UdsServer& UdsServer::on_error(ErrorHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::on_backpressure(std::function<void(size_t)> handler) {
+UdsServer& UdsServer::on_backpressure(std::function<void(size_t)> handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_backpressure_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::framer(FramerFactory factory) {
+UdsServer& UdsServer::framer(FramerFactory factory) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
-ServerInterface& UdsServer::on_message(MessageHandler handler) {
+UdsServer& UdsServer::on_message(MessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }
 
-ServerInterface& UdsServer::on_message_batch(BatchMessageHandler handler) {
+UdsServer& UdsServer::on_message_batch(BatchMessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_batch_ = std::move(handler);
   return *this;
