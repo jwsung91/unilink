@@ -661,7 +661,7 @@ PYBIND11_MODULE(unilink_py, m) {
   // UdpConfig
   py::class_<config::UdpConfig>(m, "UdpConfig")
       .def(py::init<>())
-      .def_readwrite("local_address", &config::UdpConfig::local_address)
+      .def_readwrite("bind_address", &config::UdpConfig::bind_address)
       .def_readwrite("local_port", &config::UdpConfig::local_port)
       .def_readwrite("remote_address", &config::UdpConfig::remote_address)
       .def_readwrite("remote_port", &config::UdpConfig::remote_port)

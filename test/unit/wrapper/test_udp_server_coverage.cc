@@ -34,7 +34,7 @@ namespace test {
 TEST(UdpServerCoverageTest, ExternalIoContextManagement) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   config::UdpConfig cfg;
-  cfg.local_address = "127.0.0.1";
+  cfg.bind_address = "127.0.0.1";
   cfg.local_port = 0;
 
   {
@@ -53,7 +53,7 @@ TEST(UdpServerCoverageTest, ExternalIoContextManagement) {
 
 TEST(UdpServerCoverageTest, SessionReaping) {
   config::UdpConfig cfg;
-  cfg.local_address = "127.0.0.1";
+  cfg.bind_address = "127.0.0.1";
   cfg.local_port = 0;
 
   wrapper::UdpServer server(cfg);
@@ -78,7 +78,7 @@ TEST(UdpServerCoverageTest, IPv6EndpointHashCoverage) {
   // This is to cover UdpEndpointHash with IPv6
   boost::asio::ip::udp::endpoint ep(boost::asio::ip::make_address("::1"), 1234);
   config::UdpConfig cfg;
-  cfg.local_address = "::1";
+  cfg.bind_address = "::1";
   cfg.local_port = 0;
 
   // We don't need to run it, just constructing and potentially triggering a hash if we could

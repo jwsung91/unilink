@@ -649,8 +649,12 @@ void TcpServer::set_client_limit(size_t max) {
   auto impl = get_impl();
   std::lock_guard<std::mutex> l(impl->sessions_mutex_);
   impl->max_clients_ = max;
-  impl->client_limit_enabled_ = true;
-  if (impl->paused_accept_ && impl->sessions_.size() < impl->max_clients_) {
+  if (max == 0) {
+    impl->client_limit_enabled_ = false;
+  } else {
+    impl->client_limit_enabled_ = true;
+  }
+  if (impl->paused_accept_ && (!impl->client_limit_enabled_ || impl->sessions_.size() < impl->max_clients_)) {
     impl->paused_accept_ = false;
     net::post(impl->ioc_, [self = shared_from_this()] { self->get_impl()->do_accept(self); });
   }

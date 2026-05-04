@@ -51,7 +51,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
   template <uint32_t OtherState>
   UdpClientBuilder(UdpClientBuilder<OtherState>&& other) noexcept
       : local_port_(other.local_port_),
-        local_address_(std::move(other.local_address_)),
+        bind_address_(std::move(other.bind_address_)),
         remote_host_(std::move(other.remote_host_)),
         remote_port_(other.remote_port_),
         auto_start_(other.auto_start_),
@@ -81,7 +81,11 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
 
   UdpClientBuilder<State>& auto_start(bool auto_start = true) override;
   UdpClientBuilder<State>& local_port(uint16_t port);
-  UdpClientBuilder<State>& local_address(const std::string& address);
+  UdpClientBuilder<State>& bind_address(const std::string& address);
+  [[deprecated("Use bind_address instead")]]
+  UdpClientBuilder<State>& local_address(const std::string& address) {
+    return bind_address(address);
+  }
   UdpClientBuilder<State>& remote_endpoint(const std::string& host, uint16_t port);
   UdpClientBuilder<State>& remote(const std::string& host, uint16_t port) { return remote_endpoint(host, port); }
   UdpClientBuilder<State>& broadcast(bool enable = true);
@@ -93,7 +97,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
   friend class UdpClientBuilder;
 
   uint16_t local_port_;
-  std::string local_address_;
+  std::string bind_address_;
   std::string remote_host_;
   uint16_t remote_port_;
   bool auto_start_;
@@ -120,11 +124,13 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   template <uint32_t OtherState>
   UdpServerBuilder(UdpServerBuilder<OtherState>&& other) noexcept
       : local_port_(other.local_port_),
-        local_address_(std::move(other.local_address_)),
+        bind_address_(std::move(other.bind_address_)),
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         enable_broadcast_(other.enable_broadcast_),
-        reuse_address_(other.reuse_address_) {
+        reuse_address_(other.reuse_address_),
+        max_clients_(other.max_clients_),
+        client_limit_enabled_(other.client_limit_enabled_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -148,7 +154,12 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 
   UdpServerBuilder<State>& auto_start(bool auto_start = true) override;
   UdpServerBuilder<State>& local_port(uint16_t port);
-  UdpServerBuilder<State>& local_address(const std::string& address);
+  UdpServerBuilder<State>& bind_address(const std::string& address);
+  [[deprecated("Use bind_address instead")]]
+  UdpServerBuilder<State>& local_address(const std::string& address) {
+    return bind_address(address);
+  }
+  UdpServerBuilder<State>& max_clients(size_t max);
   UdpServerBuilder<State>& broadcast(bool enable = true);
   UdpServerBuilder<State>& reuse_address(bool enable = true);
   UdpServerBuilder<State>& independent_context(bool use_independent = true);
@@ -158,11 +169,13 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   friend class UdpServerBuilder;
 
   uint16_t local_port_;
-  std::string local_address_;
+  std::string bind_address_;
   bool auto_start_;
   bool independent_context_;
   bool enable_broadcast_;
   bool reuse_address_;
+  size_t max_clients_ = 0;
+  bool client_limit_enabled_ = false;
 };
 
 using UdpServerBuilderDefault = UdpServerBuilder<BuilderState::None>;

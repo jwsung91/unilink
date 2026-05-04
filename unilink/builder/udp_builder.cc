@@ -32,7 +32,7 @@ UdpClientBuilder<State>::UdpClientBuilder() : UdpClientBuilder(0) {}
 template <uint32_t State>
 UdpClientBuilder<State>::UdpClientBuilder(uint16_t local_port)
     : local_port_(local_port),
-      local_address_("0.0.0.0"),
+      bind_address_("0.0.0.0"),
       remote_host_(""),
       remote_port_(0),
       auto_start_(false),
@@ -53,7 +53,7 @@ std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
 
   std::unique_ptr<wrapper::UdpClient> client;
   config::UdpConfig cfg;
-  cfg.local_address = local_address_;
+  cfg.bind_address = bind_address_;
   cfg.local_port = local_port_;
   cfg.remote_address = remote_host_;
   cfg.remote_port = remote_port_;
@@ -107,8 +107,8 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::local_port(uint16_t port) {
 }
 
 template <uint32_t State>
-UdpClientBuilder<State>& UdpClientBuilder<State>::local_address(const std::string& address) {
-  local_address_ = address;
+UdpClientBuilder<State>& UdpClientBuilder<State>::bind_address(const std::string& address) {
+  bind_address_ = address;
   return *this;
 }
 
@@ -145,7 +145,7 @@ UdpServerBuilder<State>::UdpServerBuilder() : UdpServerBuilder(0) {}
 template <uint32_t State>
 UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)
     : local_port_(local_port),
-      local_address_("0.0.0.0"),
+      bind_address_("0.0.0.0"),
       auto_start_(false),
       independent_context_(false),
       enable_broadcast_(false),
@@ -164,7 +164,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
 
   std::unique_ptr<wrapper::UdpServer> server;
   config::UdpConfig cfg;
-  cfg.local_address = local_address_;
+  cfg.bind_address = bind_address_;
   cfg.local_port = local_port_;
   cfg.enable_broadcast = enable_broadcast_;
   cfg.reuse_address = reuse_address_;
@@ -187,7 +187,6 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
 
   if (this->framer_factory_) {
-    // Corrected: ServerInterface::framer expects std::function factory
     server->framer(this->framer_factory_);
   }
   if (this->on_message_) {
@@ -195,6 +194,10 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   }
   if (this->on_message_batch_) {
     server->on_message_batch(std::move(this->on_message_batch_));
+  }
+
+  if (client_limit_enabled_) {
+    server->max_clients(max_clients_);
   }
 
   if (auto_start_) {
@@ -217,8 +220,15 @@ UdpServerBuilder<State>& UdpServerBuilder<State>::local_port(uint16_t port) {
 }
 
 template <uint32_t State>
-UdpServerBuilder<State>& UdpServerBuilder<State>::local_address(const std::string& address) {
-  local_address_ = address;
+UdpServerBuilder<State>& UdpServerBuilder<State>::bind_address(const std::string& address) {
+  bind_address_ = address;
+  return *this;
+}
+
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::max_clients(size_t max) {
+  max_clients_ = max;
+  client_limit_enabled_ = true;
   return *this;
 }
 

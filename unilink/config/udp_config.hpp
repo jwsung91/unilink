@@ -26,7 +26,7 @@ namespace unilink {
 namespace config {
 
 struct UdpConfig {
-  std::string local_address = "0.0.0.0";
+  std::string bind_address = "0.0.0.0";
   uint16_t local_port = 0;
   std::optional<std::string> remote_address;
   std::optional<uint16_t> remote_port;

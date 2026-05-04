@@ -75,13 +75,13 @@ struct UdsServerConfig {
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
   bool enable_memory_pool = true;
-  int max_connections = static_cast<int>(base::constants::DEFAULT_MAX_CONNECTIONS);
+  int max_connections = 0;  // Maximum concurrent connections (0 = unlimited)
   int idle_timeout_ms = 0;  // Idle connection timeout in milliseconds (0 = disabled)
 
   bool is_valid() const {
     return util::InputValidator::is_valid_uds_path(socket_path) &&
            backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
-           backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
+           backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections >= 0 &&
            idle_timeout_ms >= 0;
   }
 
@@ -92,8 +92,8 @@ struct UdsServerConfig {
       backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD;
     }
 
-    if (max_connections <= 0) {
-      max_connections = 1;
+    if (max_connections < 0) {
+      max_connections = 0;
     } else if (max_connections > static_cast<int>(base::constants::MAX_MAX_CONNECTIONS)) {
       max_connections = static_cast<int>(base::constants::MAX_MAX_CONNECTIONS);
     }

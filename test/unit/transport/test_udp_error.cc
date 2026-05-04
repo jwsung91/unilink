@@ -36,7 +36,7 @@ TEST(TransportUdpErrorTest, SendOversizedPacket) {
   net::io_context ioc;
 
   config::UdpConfig cfg;
-  cfg.local_address = "127.0.0.1";
+  cfg.bind_address = "127.0.0.1";
   cfg.local_port = 0;  // Ephemeral
   cfg.remote_address = "127.0.0.1";
   cfg.remote_port = 12345;

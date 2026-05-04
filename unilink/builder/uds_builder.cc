@@ -206,9 +206,6 @@ UdsServerBuilder<State>& UdsServerBuilder<State>::idle_timeout(std::chrono::mill
 
 template <uint32_t State>
 UdsServerBuilder<State>& UdsServerBuilder<State>::max_clients(uint32_t max_clients) {
-  if (max_clients == 0) {
-    throw std::invalid_argument("max_clients must be greater than 0");
-  }
   max_clients_ = max_clients;
   client_limit_enabled_ = true;
   return *this;
