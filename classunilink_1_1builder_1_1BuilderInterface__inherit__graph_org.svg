@@ -208,41 +208,43 @@
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:href="classunilink_1_1builder_1_1UdpClientBuilder.html" target="_top" xlink:title="Modernized Builder for UdpClient.">
-<polygon fill="white" stroke="transparent" points="580,-346.5 443,-346.5 443,-91.5 580,-91.5 580,-346.5"/>
-<text text-anchor="start" x="448.5" y="-334" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::builder::UdpClient</text>
-<text text-anchor="start" x="470.5" y="-323" font-family="Helvetica,sans-Serif" font-size="10.00">Builder&lt; State &gt;</text>
-<text text-anchor="start" x="510" y="-308" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="448.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
-<text text-anchor="start" x="448.5" y="-278" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-278" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
-<text text-anchor="start" x="448.5" y="-263" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-263" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
-<text text-anchor="start" x="448.5" y="-248" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-248" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
-<text text-anchor="start" x="448.5" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
-<text text-anchor="start" x="448.5" y="-218" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-218" font-family="Helvetica,sans-Serif" font-size="10.00">build()</text>
-<text text-anchor="start" x="448.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">auto_start()</text>
-<text text-anchor="start" x="448.5" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">local_port()</text>
-<text text-anchor="start" x="448.5" y="-173" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-173" font-family="Helvetica,sans-Serif" font-size="10.00">local_address()</text>
-<text text-anchor="start" x="448.5" y="-158" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-158" font-family="Helvetica,sans-Serif" font-size="10.00">remote_endpoint()</text>
-<text text-anchor="start" x="448.5" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">remote()</text>
-<text text-anchor="start" x="448.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">broadcast()</text>
-<text text-anchor="start" x="448.5" y="-113" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-113" font-family="Helvetica,sans-Serif" font-size="10.00">reuse_address()</text>
-<text text-anchor="start" x="448.5" y="-98" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="462.5" y="-98" font-family="Helvetica,sans-Serif" font-size="10.00">independent_context()</text>
-<polygon fill="#666666" stroke="#666666" points="443.5,-318 443.5,-318 580.5,-318 580.5,-318 443.5,-318"/>
-<polygon fill="#666666" stroke="#666666" points="443.5,-303 443.5,-303 580.5,-303 580.5,-303 443.5,-303"/>
-<polygon fill="none" stroke="#666666" points="443,-91.5 443,-346.5 580,-346.5 580,-91.5 443,-91.5"/>
+<polygon fill="white" stroke="transparent" points="580,-354 443,-354 443,-84 580,-84 580,-354"/>
+<text text-anchor="start" x="448.5" y="-342" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::builder::UdpClient</text>
+<text text-anchor="start" x="470.5" y="-331" font-family="Helvetica,sans-Serif" font-size="10.00">Builder&lt; State &gt;</text>
+<text text-anchor="start" x="510" y="-316" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="448.5" y="-301" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-301" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
+<text text-anchor="start" x="448.5" y="-286" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-286" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
+<text text-anchor="start" x="448.5" y="-271" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-271" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
+<text text-anchor="start" x="448.5" y="-256" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-256" font-family="Helvetica,sans-Serif" font-size="10.00">UdpClientBuilder()</text>
+<text text-anchor="start" x="448.5" y="-241" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-241" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
+<text text-anchor="start" x="448.5" y="-226" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-226" font-family="Helvetica,sans-Serif" font-size="10.00">build()</text>
+<text text-anchor="start" x="448.5" y="-211" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-211" font-family="Helvetica,sans-Serif" font-size="10.00">auto_start()</text>
+<text text-anchor="start" x="448.5" y="-196" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-196" font-family="Helvetica,sans-Serif" font-size="10.00">local_port()</text>
+<text text-anchor="start" x="448.5" y="-181" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-181" font-family="Helvetica,sans-Serif" font-size="10.00">bind_address()</text>
+<text text-anchor="start" x="448.5" y="-166" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-166" font-family="Helvetica,sans-Serif" font-size="10.00">local_address()</text>
+<text text-anchor="start" x="448.5" y="-151" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-151" font-family="Helvetica,sans-Serif" font-size="10.00">remote_endpoint()</text>
+<text text-anchor="start" x="448.5" y="-136" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-136" font-family="Helvetica,sans-Serif" font-size="10.00">remote()</text>
+<text text-anchor="start" x="448.5" y="-121" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-121" font-family="Helvetica,sans-Serif" font-size="10.00">broadcast()</text>
+<text text-anchor="start" x="448.5" y="-106" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-106" font-family="Helvetica,sans-Serif" font-size="10.00">reuse_address()</text>
+<text text-anchor="start" x="448.5" y="-91" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="462.5" y="-91" font-family="Helvetica,sans-Serif" font-size="10.00">independent_context()</text>
+<polygon fill="#666666" stroke="#666666" points="443.5,-326 443.5,-326 580.5,-326 580.5,-326 443.5,-326"/>
+<polygon fill="#666666" stroke="#666666" points="443.5,-311 443.5,-311 580.5,-311 580.5,-311 443.5,-311"/>
+<polygon fill="none" stroke="#666666" points="443,-84 443,-354 580,-354 580,-84 443,-84"/>
 </a>
 </g>
 </g>
@@ -250,7 +252,7 @@
 <g id="edge4_Node000001_Node000005" class="edge">
 <title>Node1&#45;&gt;Node5</title>
 <g id="a_edge4_Node000001_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M978.92,-689.16C872.57,-648.09 694.45,-564.99 589.5,-438 567.73,-411.66 551.82,-378.78 540.28,-346.61"/>
+<path fill="none" stroke="#63b8ff" d="M978.92,-689.16C872.57,-648.09 694.45,-564.99 589.5,-438 569.46,-413.75 554.39,-383.96 543.11,-354.28"/>
 <polygon fill="none" stroke="#63b8ff" points="977.76,-692.47 988.35,-692.77 980.25,-685.93 977.76,-692.47"/>
 </a>
 </g>
@@ -259,10 +261,12 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="classunilink_1_1builder_1_1UdpServerBuilder.html" target="_top" xlink:title="Modernized Builder for UdpServer.">
-<polygon fill="white" stroke="transparent" points="738.5,-331.5 598.5,-331.5 598.5,-106.5 738.5,-106.5 738.5,-331.5"/>
-<text text-anchor="start" x="603.5" y="-319" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::builder::UdpServer</text>
-<text text-anchor="start" x="627" y="-308" font-family="Helvetica,sans-Serif" font-size="10.00">Builder&lt; State &gt;</text>
-<text text-anchor="start" x="666.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<polygon fill="white" stroke="transparent" points="738.5,-346.5 598.5,-346.5 598.5,-91.5 738.5,-91.5 738.5,-346.5"/>
+<text text-anchor="start" x="603.5" y="-334" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::builder::UdpServer</text>
+<text text-anchor="start" x="627" y="-323" font-family="Helvetica,sans-Serif" font-size="10.00">Builder&lt; State &gt;</text>
+<text text-anchor="start" x="666.5" y="-308" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="604.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="619.5" y="-293" font-family="Helvetica,sans-Serif" font-size="10.00">UdpServerBuilder()</text>
 <text text-anchor="start" x="604.5" y="-278" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="619.5" y="-278" font-family="Helvetica,sans-Serif" font-size="10.00">UdpServerBuilder()</text>
 <text text-anchor="start" x="604.5" y="-263" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
@@ -270,26 +274,28 @@
 <text text-anchor="start" x="604.5" y="-248" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="619.5" y="-248" font-family="Helvetica,sans-Serif" font-size="10.00">UdpServerBuilder()</text>
 <text text-anchor="start" x="604.5" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">UdpServerBuilder()</text>
+<text text-anchor="start" x="619.5" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="604.5" y="-218" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-218" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
+<text text-anchor="start" x="619.5" y="-218" font-family="Helvetica,sans-Serif" font-size="10.00">build()</text>
 <text text-anchor="start" x="604.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">build()</text>
+<text text-anchor="start" x="619.5" y="-203" font-family="Helvetica,sans-Serif" font-size="10.00">auto_start()</text>
 <text text-anchor="start" x="604.5" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">auto_start()</text>
+<text text-anchor="start" x="619.5" y="-188" font-family="Helvetica,sans-Serif" font-size="10.00">local_port()</text>
 <text text-anchor="start" x="604.5" y="-173" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-173" font-family="Helvetica,sans-Serif" font-size="10.00">local_port()</text>
+<text text-anchor="start" x="619.5" y="-173" font-family="Helvetica,sans-Serif" font-size="10.00">bind_address()</text>
 <text text-anchor="start" x="604.5" y="-158" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="619.5" y="-158" font-family="Helvetica,sans-Serif" font-size="10.00">local_address()</text>
 <text text-anchor="start" x="604.5" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">broadcast()</text>
+<text text-anchor="start" x="619.5" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00">max_clients()</text>
 <text text-anchor="start" x="604.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">reuse_address()</text>
+<text text-anchor="start" x="619.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">broadcast()</text>
 <text text-anchor="start" x="604.5" y="-113" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="619.5" y="-113" font-family="Helvetica,sans-Serif" font-size="10.00">independent_context()</text>
+<text text-anchor="start" x="619.5" y="-113" font-family="Helvetica,sans-Serif" font-size="10.00">reuse_address()</text>
+<text text-anchor="start" x="604.5" y="-98" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="619.5" y="-98" font-family="Helvetica,sans-Serif" font-size="10.00">independent_context()</text>
+<polygon fill="#666666" stroke="#666666" points="598.5,-318 598.5,-318 738.5,-318 738.5,-318 598.5,-318"/>
 <polygon fill="#666666" stroke="#666666" points="598.5,-303 598.5,-303 738.5,-303 738.5,-303 598.5,-303"/>
-<polygon fill="#666666" stroke="#666666" points="598.5,-288 598.5,-288 738.5,-288 738.5,-288 598.5,-288"/>
-<polygon fill="none" stroke="#666666" points="598.5,-106.5 598.5,-331.5 738.5,-331.5 738.5,-106.5 598.5,-106.5"/>
+<polygon fill="none" stroke="#666666" points="598.5,-91.5 598.5,-346.5 738.5,-346.5 738.5,-91.5 598.5,-91.5"/>
 </a>
 </g>
 </g>
@@ -297,7 +303,7 @@
 <g id="edge5_Node000001_Node000006" class="edge">
 <title>Node1&#45;&gt;Node6</title>
 <g id="a_edge5_Node000001_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M979.65,-661.69C908.53,-610.39 809.81,-529.53 747.5,-438 725.75,-406.05 709.21,-367.41 697.02,-331.59"/>
+<path fill="none" stroke="#63b8ff" d="M979.65,-661.69C908.53,-610.39 809.81,-529.53 747.5,-438 728.75,-410.46 713.87,-377.95 702.32,-346.56"/>
 <polygon fill="none" stroke="#63b8ff" points="978.02,-664.82 988.18,-667.8 982.09,-659.13 978.02,-664.82"/>
 </a>
 </g>

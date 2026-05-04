@@ -8,7 +8,6 @@ var searchData=
   ['level_5',['level',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071',1,'unilink::diagnostics::ErrorInfo']]],
   ['lifecycle_5fseq_5f_6',['lifecycle_seq_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac510c0cb02c4330db37f6af0192e43ec',1,'unilink::transport::TcpClient::Impl']]],
   ['line_7',['line',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a733e2ad1c87818881716646ebf885c60',1,'unilink::memory::MemoryTracker::AllocationInfo']]],
-  ['local_5faddress_8',['local_address',['../structunilink_1_1config_1_1UdpConfig.html#af3692dcfb43f946cde3a71b75e58b1b9',1,'unilink::config::UdpConfig']]],
-  ['local_5fendpoint_5f_9',['local_endpoint_',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16',1,'unilink::transport::UdpChannel::Impl']]],
-  ['local_5fport_10',['local_port',['../structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71',1,'unilink::config::UdpConfig']]]
+  ['local_5fendpoint_5f_8',['local_endpoint_',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16',1,'unilink::transport::UdpChannel::Impl']]],
+  ['local_5fport_9',['local_port',['../structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71',1,'unilink::config::UdpConfig']]]
 ];

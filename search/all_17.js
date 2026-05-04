@@ -63,7 +63,7 @@ var searchData=
   ['operator_5b_5d_60',['operator[]',['../classunilink_1_1memory_1_1PooledBuffer.html#abcd5e51a9b3a0849f4ed4c35f73c8343',1,'unilink::memory::PooledBuffer::operator[](size_t index) const'],['../classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722',1,'unilink::memory::PooledBuffer::operator[](size_t index)'],['../classunilink_1_1memory_1_1SafeDataBuffer.html#aa441cfa7f246ef1e1c2d76c1dd9eaf37',1,'unilink::memory::SafeDataBuffer::operator[]()']]],
   ['optimization_61',['optimization',['../user_performance.html#autotoc_md621',1,'Memory Optimization'],['../user_performance.html#autotoc_md625',1,'Network Optimization'],['../user_performance.html#autotoc_md616',1,'Runtime Optimization']]],
   ['optimization_20recommendations_62',['3. Optimization Recommendations',['../user_benchmark.html#autotoc_md585',1,'']]],
-  ['optional_63',['Pattern 3: Single vs Multi-Client Server (optional)',['../user_quickstart.html#autotoc_md671',1,'']]],
+  ['optional_63',['Pattern 3: Connection Limits (optional)',['../user_quickstart.html#autotoc_md671',1,'']]],
   ['options_64',['options',['../contrib_build.html#autotoc_md270',1,'Core Options'],['../contrib_build.html#autotoc_md271',1,'Development Options'],['../contrib_build.html#autotoc_md272',1,'Installation Options']]],
   ['options_20reference_65',['Build Options Reference',['../contrib_build.html#autotoc_md269',1,'']]],
   ['options_20source_20builds_66',['Build Options (Source Builds)',['../user_installation.html#autotoc_md611',1,'']]],

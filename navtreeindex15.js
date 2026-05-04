@@ -1,5 +1,11 @@
 var NAVTREEINDEX15 =
 {
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#af52ab03bac4490cea990110f8862e2b3":[7,0,0,4,8,0,21],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#af52ab03bac4490cea990110f8862e2b3":[5,0,1,4,9,0,21],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#afa79329af609379abc961577d5bcb67e":[5,0,1,4,9,0,11],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#afa79329af609379abc961577d5bcb67e":[7,0,0,4,8,0,11],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#afcc2d4a2afab9dbbb02cab7df69e2d49":[5,0,1,4,9,0,13],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#afcc2d4a2afab9dbbb02cab7df69e2d49":[7,0,0,4,8,0,13],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aff99e31cca0f3f3c8923398a6290e350":[7,0,0,4,8,0,1],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aff99e31cca0f3f3c8923398a6290e350":[5,0,1,4,9,0,1],
 "structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html":[7,0,0,8,2,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX15 =
 "structunilink_1_1transport_1_1TcpServer_1_1Impl.html":[7,0,0,9,8,0],
 "structunilink_1_1transport_1_1TcpServer_1_1Impl.html":[5,0,1,9,8,0],
 "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a0d7314f2204ede19a05bc1fcaff3b06d":[5,0,1,9,8,0,13],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a0d7314f2204ede19a05bc1fcaff3b06d":[7,0,0,9,8,0,13],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a15788a8adb6ebaa9aa0923ebe0c66077":[5,0,1,9,8,0,18],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a15788a8adb6ebaa9aa0923ebe0c66077":[7,0,0,9,8,0,18],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a1a23dcee3c5370d815eb3802cd565abb":[7,0,0,9,8,0,15],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a1a23dcee3c5370d815eb3802cd565abb":[5,0,1,9,8,0,15],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a40270b15a1cc13bbe8afc1b30ab3b8ae":[5,0,1,9,8,0,19],
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a40270b15a1cc13bbe8afc1b30ab3b8ae":[7,0,0,9,8,0,19]
+"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a0d7314f2204ede19a05bc1fcaff3b06d":[7,0,0,9,8,0,13]
 };

@@ -309,23 +309,17 @@ Pattern 2: Error Handling</h2>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00094">context.hpp:94</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdoc">Get the error message.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00103">context.hpp:103</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md671"></a>
-Pattern 3: Single vs Multi-Client Server (optional)</h2>
-<div class="fragment"><div class="line"><span class="comment">// Single client only (reject others)</span></div>
+Pattern 3: Connection Limits (optional)</h2>
+<div class="fragment"><div class="line"><span class="comment">// Set an explicit client limit</span></div>
 <div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a>(8080)</div>
-<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#afa58555b554c99636c1348f99ad477a8">single_client</a>()</div>
+<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a328f6fa452c61d63356a541fc5b5f0e8">max_clients</a>(8)  <span class="comment">// allow up to 8 clients</span></div>
 <div class="line">    .build();</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Multiple clients (set an explicit limit)</span></div>
-<div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a>(8080)</div>
-<div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a012e09f172fb4836b7246a2fa0d1d70f">multi_client</a>(8)  <span class="comment">// allow up to 8 clients</span></div>
-<div class="line">    .build();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Default bounded client limit</span></div>
+<div class="line"><span class="comment">// Default unlimited client limit</span></div>
 <div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">build</a>();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a012e09f172fb4836b7246a2fa0d1d70f"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a012e09f172fb4836b7246a2fa0d1d70f">unilink::builder::TcpServerBuilder::multi_client</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; multi_client(size_t max)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00166">tcp_server_builder.cc:166</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a0c0029f7ca4b8ae9bf08f467a1b2348c"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00046">tcp_server_builder.cc:46</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_afa58555b554c99636c1348f99ad477a8"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#afa58555b554c99636c1348f99ad477a8">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; single_client()</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00159">tcp_server_builder.cc:159</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a328f6fa452c61d63356a541fc5b5f0e8"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a328f6fa452c61d63356a541fc5b5f0e8">unilink::builder::TcpServerBuilder::max_clients</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; max_clients(uint32_t max_clients)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00116">tcp_server_builder.cc:116</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md673"></a>
 Next Steps</h1>
@@ -351,7 +345,7 @@ Port already in use?</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Try 5 times</span></div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a40e2d5173a8dd92c7ed8d4fcc79995e7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00145">tcp_server_builder.cc:145</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a40e2d5173a8dd92c7ed8d4fcc79995e7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00142">tcp_server_builder.cc:142</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md678"></a>
 Need independent IO thread?</h2>
 <div class="fragment"><div class="line"><span class="comment">// For testing or isolation</span></div>
@@ -367,6 +361,10 @@ Support</h1>
 <li><b>Documentation</b>: <code>docs/</code> directory</li>
 <li><b>Examples</b>: <code>examples/</code> directory</li>
 </ul>
+<p>Happy coding! 🚀 ttps://github.com/jwsung91/unilink/issues</p><ul>
+<li><b>Documentation</b>: <code>docs/</code> directory</li>
+<li><b>Examples</b>: <code>examples/</code> directory</li>
+</ul>
 <p>Happy coding! 🚀 </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -374,7 +372,7 @@ Support</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 4 2026 11:49:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 12:43:08 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -305,32 +305,34 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; independent_context(<span class="keywordtype">bool</span> <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">use_independent</a> = <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; idle_timeout(std::chrono::milliseconds <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">timeout</a>);</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; max_clients(<a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">uint32_t</a> max_clients);</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; single_client();</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; multi_client(<span class="keywordtype">size_t</span> <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">max</a>);</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="keyword">template</span> &lt;u<span class="keywordtype">int</span>32_t S&gt;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a202b67897b48612ffa82399563c4a663">  151</a></span>  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  std::string socket_path_;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="keywordtype">bool</span> auto_start_;</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keywordtype">bool</span> independent_context_;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">uint32_t</a> max_clients_;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keywordtype">bool</span> client_limit_enabled_;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  std::chrono::milliseconds idle_timeout_;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">bool</span> idle_timeout_set_;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>};</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  [[<a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">deprecated</a>(<span class="stringliteral">&quot;Use max_clients(1) instead&quot;</span>)]]</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; single_client();</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  [[<a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">deprecated</a>(<span class="stringliteral">&quot;Use max_clients(max) instead&quot;</span>)]]</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">UdsServerBuilder&lt;State&gt;</a>&amp; multi_client(<span class="keywordtype">size_t</span> <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">max</a>);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="keyword">template</span> &lt;u<span class="keywordtype">int</span>32_t S&gt;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a202b67897b48612ffa82399563c4a663">  153</a></span>  <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  std::string socket_path_;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <span class="keywordtype">bool</span> auto_start_;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keywordtype">bool</span> independent_context_;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  <a class="code hl_typedef" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3f34668a1bf0fd61b7fa0ae7df71c226">uint32_t</a> max_clients_;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">bool</span> client_limit_enabled_;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  std::chrono::milliseconds idle_timeout_;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keywordtype">bool</span> idle_timeout_set_;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>};</div>
 </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1builder.html#a332768bbf4f7b2a6ee3e78900509569d">  163</a></span><span class="keyword">using </span><a class="code hl_class" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilderDefault</a> = <a class="code hl_class" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder&lt;BuilderState::None&gt;</a>;</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="preprocessor">#pragma warning(pop)</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>}  <span class="comment">// namespace builder</span></div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1builder.html#a332768bbf4f7b2a6ee3e78900509569d">  165</a></span><span class="keyword">using </span><a class="code hl_class" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilderDefault</a> = <a class="code hl_class" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder&lt;BuilderState::None&gt;</a>;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span><span class="preprocessor">#pragma warning(pop)</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>}  <span class="comment">// namespace builder</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a></div><div class="ttdoc">Generic Builder interface for fluent API pattern.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00062">ibuilder.hpp:62</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsClientBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsClientBuilder.html">unilink::builder::UdsClientBuilder</a></div><div class="ttdoc">Modernized Builder for UdsClient.</div><div class="ttdef"><b>Definition</b> <a href="uds__builder_8hpp_source.html#l00042">uds_builder.hpp:42</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsClientBuilder_html_a231fc704870d49b254aa485bed3e619e"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsClientBuilder.html#a231fc704870d49b254aa485bed3e619e">unilink::builder::UdsClientBuilder::UdsClientBuilder</a></div><div class="ttdeci">UdsClientBuilder(const UdsClientBuilder &amp;)=delete</div></div>
@@ -354,7 +356,7 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li><li class="navelem"><a class="el" href="uds__builder_8hpp.html">uds_builder.hpp</a></li>
-    <li class="footer">Generated on Mon May 4 2026 11:49:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 12:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -12,7 +12,6 @@ var namespaceunilink_1_1base =
       [ "DEFAULT_ERROR_CLEANUP_INTERVAL_MS", "namespaceunilink_1_1base_1_1constants.html#a9ad0cadf781cc25f0e4ec4767ee1186e", null ],
       [ "DEFAULT_HEALTH_CHECK_INTERVAL_MS", "namespaceunilink_1_1base_1_1constants.html#a0ca441b754b7a6f40a720d0e868e2976", null ],
       [ "DEFAULT_IDLE_TIMEOUT_MS", "namespaceunilink_1_1base_1_1constants.html#a78b8aef98e6021764c010d308f30fd0c", null ],
-      [ "DEFAULT_MAX_CONNECTIONS", "namespaceunilink_1_1base_1_1constants.html#a7edcabc39f8317241115f9c09470181b", null ],
       [ "DEFAULT_MAX_RECENT_ERRORS", "namespaceunilink_1_1base_1_1constants.html#acb7112cd854506a55f54d2d2e3e9e21d", null ],
       [ "DEFAULT_MAX_RETRIES", "namespaceunilink_1_1base_1_1constants.html#a8865782602fcb1122c6901257b22b57a", null ],
       [ "DEFAULT_MEMORY_POOL_SIZE", "namespaceunilink_1_1base_1_1constants.html#acd56025a27a22b8addc603b0cf6075f0", null ],

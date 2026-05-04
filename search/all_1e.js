@@ -51,7 +51,6 @@ var searchData=
   ['virtual_20serial_20pair_48',['Manual Virtual Serial Pair',['../contrib_orin_nano_validation.html#autotoc_md360',1,'']]],
   ['visibility_2ehpp_49',['visibility.hpp',['../visibility_8hpp.html',1,'']]],
   ['vs_20asynchronously_50',['Starting Synchronously vs. Asynchronously',['../user_api_guide.html#autotoc_md483',1,'']]],
-  ['vs_20multi_20client_20server_20optional_51',['Pattern 3: Single vs Multi-Client Server (optional)',['../user_quickstart.html#autotoc_md671',1,'']]],
-  ['vs_20sync_52',['4. When to Use Async vs Sync',['../user_tutorial_async.html#autotoc_md883',1,'']]],
-  ['vulnerabilities_53',['Prevents Common Vulnerabilities',['../contrib_arch_memory.html#autotoc_md82',1,'']]]
+  ['vs_20sync_51',['4. When to Use Async vs Sync',['../user_tutorial_async.html#autotoc_md883',1,'']]],
+  ['vulnerabilities_52',['Prevents Common Vulnerabilities',['../contrib_arch_memory.html#autotoc_md82',1,'']]]
 ];

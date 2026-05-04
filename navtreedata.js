@@ -67,7 +67,7 @@ var NAVTREE =
           [ "Common Patterns", "user_quickstart.html#autotoc_md668", [
             [ "Pattern 1: Auto-Reconnection", "user_quickstart.html#autotoc_md669", null ],
             [ "Pattern 2: Error Handling", "user_quickstart.html#autotoc_md670", null ],
-            [ "Pattern 3: Single vs Multi-Client Server (optional)", "user_quickstart.html#autotoc_md671", null ]
+            [ "Pattern 3: Connection Limits (optional)", "user_quickstart.html#autotoc_md671", null ]
           ] ],
           [ "Next Steps", "user_quickstart.html#autotoc_md673", null ],
           [ "Troubleshooting", "user_quickstart.html#autotoc_md675", [
@@ -809,27 +809,27 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classunilink_1_1builder_1_1UdpClientBuilder.html#a20e852fc56d2d43b8e124280f34c9ce7",
-"classunilink_1_1concurrency_1_1ThreadSafeState.html#aea3c859af53a5459d17b33e1499f199d",
-"classunilink_1_1diagnostics_1_1MemoryException.html#a69a351eafe3d732f41f5b7c0a4edf845",
-"classunilink_1_1memory_1_1MemoryPool.html#a147b0b31383a235a19c006a56688d8b4",
-"classunilink_1_1transport_1_1BoostTcpSocket.html#af30dcf4e6ac273c37bb59a8b2d01b7e8",
-"classunilink_1_1transport_1_1UdpChannel.html#a48a842372f9e9e56eda1a1cd0925c09c",
-"classunilink_1_1wrapper_1_1ChannelInterface.html#a224eb09b48d5949b4703453c1d962e62",
-"classunilink_1_1wrapper_1_1TcpClient.html#a9be1f6d546142916cbf6114882f01906",
-"classunilink_1_1wrapper_1_1UdpServer.html#aeb4e4ccfc8c7f547696756aa3b444d9f",
-"contrib_arch_channel.html#autotoc_md4",
-"contrib_testing.html#autotoc_md449",
-"index.html#autotoc_md147",
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900",
-"structunilink_1_1config_1_1TcpClientConfig.html#a8adbe0e970da82c1a1b18191cdd7b0e4",
-"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aff99e31cca0f3f3c8923398a6290e350",
-"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a527c13044020b392dfdc5037ab7f89d2",
-"structunilink_1_1transport_1_1UdsClient_1_1Impl.html#af9fd07d7054dd8de981437e24aad688d",
-"structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a9444ab6c0a1ee71369f75886ccfa0999",
-"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a020659b881451438291128e1ccfa4dc2",
-"structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a520c40a1c437857421817eeabe2671d5",
-"user_api_guide.html#autotoc_md512",
-"wrapper_2serial_2serial_8hpp.html"
+"classunilink_1_1concurrency_1_1ThreadSafeState.html#aacc09e9632ebc96702ac595d5776d42b",
+"classunilink_1_1diagnostics_1_1MemoryException.html",
+"classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410da9b9c17e13f0e3dc9860a26e08b59b2a7",
+"classunilink_1_1transport_1_1BoostTcpSocket.html#a67842a6b4483378ef17ef485851f08ac",
+"classunilink_1_1transport_1_1UdpChannel.html#a098ba188fefb85a1c70b1d101557c02d",
+"classunilink_1_1wrapper_1_1ChannelInterface.html#a203b730e7939654f6f5a13c3211dbd32",
+"classunilink_1_1wrapper_1_1TcpClient.html#a70ac872cb1b230b0100be0e7afb05b6c",
+"classunilink_1_1wrapper_1_1UdpServer.html#ae58e4b46b698ddb86b6f81863af9f426",
+"context_8hpp_source.html",
+"contrib_testing.html#autotoc_md437",
+"index.html#autotoc_md138",
+"namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada",
+"structunilink_1_1config_1_1TcpClientConfig.html#a5af91d34fd8b384fe5471ebe8c6ae49a",
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#af52ab03bac4490cea990110f8862e2b3",
+"structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a15788a8adb6ebaa9aa0923ebe0c66077",
+"structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aeb543101d73fce185b0d19188af9c151",
+"structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a8ab8cedd92a78d5e9aa4f9aadbe736d3",
+"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#afecd10f2882aac006d9468f96d141749",
+"structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a4b1d6e6fa56686bbd55b5cfebf5621d1",
+"user_api_guide.html#autotoc_md505",
+"visibility_8hpp.html#a768a108034a8fe14866b0f0a4673cfd6"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

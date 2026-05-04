@@ -6,6 +6,7 @@ var classunilink_1_1builder_1_1UdpClientBuilder =
     [ "UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html#a906dfa79856a52d7f0f7ef9c7aa70255", null ],
     [ "UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html#a311d0cf25b87948d22e4aaaf8b1f1ff6", null ],
     [ "auto_start", "classunilink_1_1builder_1_1UdpClientBuilder.html#aedb2359516c75d92e1bf63060d98a5ea", null ],
+    [ "bind_address", "classunilink_1_1builder_1_1UdpClientBuilder.html#a3463ad763e3af63b47860ed932711d5d", null ],
     [ "broadcast", "classunilink_1_1builder_1_1UdpClientBuilder.html#aaa2ca9a60534bbf052b32363111a919a", null ],
     [ "build", "classunilink_1_1builder_1_1UdpClientBuilder.html#a995fddcda154abf3bec6664c6b3bbf7f", null ],
     [ "independent_context", "classunilink_1_1builder_1_1UdpClientBuilder.html#addaa5a8a2c07f521519b03cd165c9a81", null ],

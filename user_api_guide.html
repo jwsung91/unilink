@@ -476,9 +476,9 @@ Builder Methods</h3>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Parameters   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>single_client()</code>   </td><td class="markdownTableBodyNone">None   </td><td class="markdownTableBodyNone">Accept only one client (required to choose a limit before <code>build()</code>)    </td></tr>
+<td class="markdownTableBodyNone"><code>max_clients(n)</code>   </td><td class="markdownTableBodyNone"><code>size_t</code>   </td><td class="markdownTableBodyNone">Set maximum concurrent clients (0 = unlimited, default)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>multi_client(max)</code>   </td><td class="markdownTableBodyNone"><code>size_t (&gt;=2)</code>   </td><td class="markdownTableBodyNone">Accept up to <code>max</code> clients    </td></tr>
+<td class="markdownTableBodyNone"><code>bind_address(address)</code>   </td><td class="markdownTableBodyNone"><code>string</code>   </td><td class="markdownTableBodyNone">Bind to a specific network interface (e.g., "127.0.0.1")    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>port_retry()</code>   </td><td class="markdownTableBodyNone"><code>bool, retries, interval_ms</code>   </td><td class="markdownTableBodyNone">Retry if port is in use    </td></tr>
 <tr class="markdownTableRowEven">
@@ -486,6 +486,9 @@ Builder Methods</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start immediately and stop on destruction   </td></tr>
 </table>
+<blockquote class="doxtable">
+<p>&zwj;<b>Note</b>: <code>single_client()</code> and <code>multi_client(max)</code> are deprecated in favor of <code>max_clients(n)</code>. </p>
+</blockquote>
 <p>Multi-client callbacks use the standard <code>ConnectionContext</code> and <code>MessageContext</code> which contain <code>client_id()</code> and <code>client_info()</code> accessors.</p>
 <h3><a class="anchor" id="autotoc_md501"></a>
 Instance Methods</h3>
@@ -525,7 +528,7 @@ Single Client Mode</h3>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected: &quot;</span> &lt;&lt; ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1ConnectionContext.html#acfe7e93440fd212929ae8009f64a4024">client_info</a>() &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_afa58555b554c99636c1348f99ad477a8"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#afa58555b554c99636c1348f99ad477a8">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; single_client()</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00159">tcp_server_builder.cc:159</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_afa58555b554c99636c1348f99ad477a8"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#afa58555b554c99636c1348f99ad477a8">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; single_client()</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00156">tcp_server_builder.cc:156</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md504"></a>
 Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a>(8080)</div>
@@ -708,7 +711,7 @@ UDP Sender (Client)</h3>
 <div class="line"><span class="keywordflow">if</span> (sender_started) {</div>
 <div class="line">    sender-&gt;send(<span class="stringliteral">&quot;Hello UDP!&quot;</span>);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_a20e852fc56d2d43b8e124280f34c9ce7"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#a20e852fc56d2d43b8e124280f34c9ce7">unilink::builder::UdpClientBuilder::remote</a></div><div class="ttdeci">UdpClientBuilder&lt; State &gt; &amp; remote(const std::string &amp;host, uint16_t port)</div><div class="ttdef"><b>Definition</b> <a href="udp__builder_8hpp_source.html#l00086">udp_builder.hpp:86</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_a20e852fc56d2d43b8e124280f34c9ce7"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#a20e852fc56d2d43b8e124280f34c9ce7">unilink::builder::UdpClientBuilder::remote</a></div><div class="ttdeci">UdpClientBuilder&lt; State &gt; &amp; remote(const std::string &amp;host, uint16_t port)</div><div class="ttdef"><b>Definition</b> <a href="udp__builder_8hpp_source.html#l00090">udp_builder.hpp:90</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md522"></a>
 API Reference</h2>
 <h3><a class="anchor" id="autotoc_md523"></a>
@@ -744,6 +747,10 @@ Builder Methods (UdpServer)</h3>
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Parameters   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>local_port(port)</code>   </td><td class="markdownTableBodyNone"><code>uint16_t</code>   </td><td class="markdownTableBodyNone">Bind to a specific local port    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>bind_address(address)</code>   </td><td class="markdownTableBodyNone"><code>string</code>   </td><td class="markdownTableBodyNone">Bind to a specific network interface (e.g., "127.0.0.1")    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>max_clients(n)</code>   </td><td class="markdownTableBodyNone"><code>size_t</code>   </td><td class="markdownTableBodyNone">Set maximum concurrent clients (0 = unlimited, default)    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>broadcast(enable)</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Enable broadcast receives    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -837,12 +844,15 @@ Builder Methods (UDS Server)</h3>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Parameters   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>max_clients(max)</code>   </td><td class="markdownTableBodyNone"><code>size_t</code>   </td><td class="markdownTableBodyNone">Allow up to <code>max</code> concurrent clients    </td></tr>
+<td class="markdownTableBodyNone"><code>max_clients(n)</code>   </td><td class="markdownTableBodyNone"><code>size_t</code>   </td><td class="markdownTableBodyNone">Set maximum concurrent clients (0 = unlimited, default)    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>independent_context()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Run on dedicated IO thread    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_start()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start/stop lifecycle   </td></tr>
 </table>
+<blockquote class="doxtable">
+<p>&zwj;<b>Note</b>: <code>single_client()</code> and <code>multi_client(max)</code> are deprecated in favor of <code>max_clients(n)</code>. </p>
+</blockquote>
 <h3><a class="anchor" id="autotoc_md538"></a>
 Builder Methods (UDS Client)</h3>
 <table class="markdownTable">
@@ -1253,14 +1263,14 @@ Connection Limits</h2>
 <div class="line"><span class="keyword">auto</span> server = <a class="code hl_function" href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a012e09f172fb4836b7246a2fa0d1d70f">multi_client</a>(100)  <span class="comment">// max 100 clients</span></div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a012e09f172fb4836b7246a2fa0d1d70f"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a012e09f172fb4836b7246a2fa0d1d70f">unilink::builder::TcpServerBuilder::multi_client</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; multi_client(size_t max)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00166">tcp_server_builder.cc:166</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a012e09f172fb4836b7246a2fa0d1d70f"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a012e09f172fb4836b7246a2fa0d1d70f">unilink::builder::TcpServerBuilder::multi_client</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; multi_client(size_t max)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00163">tcp_server_builder.cc:163</a></div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 4 2026 11:49:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 12:43:08 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

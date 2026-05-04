@@ -11,6 +11,7 @@ var classunilink_1_1wrapper_1_1UdpServer =
     [ "auto_start", "classunilink_1_1wrapper_1_1UdpServer.html#af8d6543350ab12bdd86a220f952d6630", null ],
     [ "backpressure_strategy", "classunilink_1_1wrapper_1_1UdpServer.html#a1db51695b256dd136e478ec6eacc4fba", null ],
     [ "backpressure_threshold", "classunilink_1_1wrapper_1_1UdpServer.html#ab691b756ece9d5896e5625085ba9df1e", null ],
+    [ "bind_address", "classunilink_1_1wrapper_1_1UdpServer.html#ae9fc2bb469c31fc20ee8b26dcc126745", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1UdpServer.html#aeb4e4ccfc8c7f547696756aa3b444d9f", null ],
     [ "broadcast_line", "classunilink_1_1wrapper_1_1UdpServer.html#a9497a7bbeb4a53c57bec6da015ce1e2f", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1UdpServer.html#a75b170fbd0dbfcacfb161933c96db6b8", null ],
