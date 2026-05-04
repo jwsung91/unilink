@@ -98,7 +98,7 @@ jobs:
         fi
 
         # Install other tools. Boost and spdlog are supplied by vcpkg.
-        sudo apt-get install -y ninja-build
+        sudo apt-get install -y ninja-build ccache
 
     - name: Install tools (macOS)
       if: runner.os == 'macOS'
