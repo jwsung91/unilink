@@ -42,7 +42,7 @@ var structunilink_1_1wrapper_1_1Serial_1_1Impl =
     [ "external_ioc", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a438f3ac1f81c2f8d1292c066746714c8", null ],
     [ "external_thread", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a41db5150dfe7a9ee36bbb6175915fecd", null ],
     [ "flow_control", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a02ef8d444b0cbd39e532ee6905845686", null ],
-    [ "framer", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a3b93b9faff8a0386d79d935b0320615e", null ],
+    [ "framer", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5505f2fd78751a7a19fdffa03aadd443", null ],
     [ "manage_external_context", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a208dfb7931409bf2aa576350bad58c58", null ],
     [ "max_batch_latency_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a529147bd18ce7b826fb81c33abf121dc", null ],
     [ "max_batch_size_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#af93b38560d51425059bb3ac877e8a232", null ],

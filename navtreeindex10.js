@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"contrib_arch_channel.html#autotoc_md4":[2,4,7,2,4],
+"contrib_arch_channel.html#autotoc_md5":[2,4,7,2,5],
+"contrib_arch_memory.html":[2,4,7,1],
+"contrib_arch_memory.html#autotoc_md10":[2,4,7,1,1,0],
+"contrib_arch_memory.html#autotoc_md12":[2,4,7,1,1,1],
+"contrib_arch_memory.html#autotoc_md14":[2,4,7,1,2],
 "contrib_arch_memory.html#autotoc_md15":[2,4,7,1,2,0],
 "contrib_arch_memory.html#autotoc_md17":[2,4,7,1,2,1],
 "contrib_arch_memory.html#autotoc_md18":[2,4,7,1,2,1,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX10 =
 "contrib_testing.html#autotoc_md442":[2,4,4,8,1],
 "contrib_testing.html#autotoc_md444":[2,4,4,9],
 "contrib_testing.html#autotoc_md445":[2,4,4,9,0],
-"contrib_testing.html#autotoc_md447":[2,4,4,9,1],
-"contrib_testing.html#autotoc_md449":[2,4,4,9,2],
-"contrib_testing.html#autotoc_md451":[2,4,4,10],
-"contrib_testing.html#autotoc_md452":[2,4,4,10,0],
-"contrib_testing.html#autotoc_md453":[2,4,4,10,1],
-"contrib_testing.html#autotoc_md454":[2,4,4,10,2],
-"contrib_testing.html#autotoc_md456":[2,4,4,11]
+"contrib_testing.html#autotoc_md447":[2,4,4,9,1]
 };

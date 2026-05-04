@@ -182,8 +182,7 @@ Step 1: Create A UDS Server</h1>
 <div class="line"> </div>
 <div class="line">    std::unique_ptr&lt;unilink::UdsServer&gt; server;</div>
 <div class="line">    server = <a class="code hl_function" href="namespaceunilink.html#a8b48958811ee60e074923f0c615bc6ef">unilink::uds_server</a>(socket_path)</div>
-<div class="line">        .<a class="code hl_function" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a2e64577a81c719dfe4fc5f67d597d872">unlimited_clients</a>()</div>
-<div class="line">        .on_connect([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
+<div class="line">        .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">on_connect</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
 <div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected: &quot;</span> &lt;&lt; ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1ConnectionContext.html#a9c487d4ec5f33ff9cd966427453588c7">client_id</a>()</div>
 <div class="line">                      &lt;&lt; <span class="stringliteral">&quot; info=&quot;</span> &lt;&lt; ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1ConnectionContext.html#acfe7e93440fd212929ae8009f64a4024">client_info</a>() &lt;&lt; std::endl;</div>
 <div class="line">        })</div>
@@ -209,7 +208,7 @@ Step 1: Create A UDS Server</h1>
 <div class="line">    server-&gt;stop();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdsServerBuilder_html_a2e64577a81c719dfe4fc5f67d597d872"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsServerBuilder.html#a2e64577a81c719dfe4fc5f67d597d872">unilink::builder::UdsServerBuilder::unlimited_clients</a></div><div class="ttdeci">UdsServerBuilder&lt; State &gt; &amp; unlimited_clients()</div><div class="ttdef"><b>Definition</b> <a href="uds__builder_8cc_source.html#l00225">uds_builder.cc:225</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ad8d6c30285a36b3a466a37d06f7460dd"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(F &amp;&amp;handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00111">ibuilder.hpp:111</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00075">context.hpp:75</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a9c487d4ec5f33ff9cd966427453588c7"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a9c487d4ec5f33ff9cd966427453588c7">unilink::wrapper::ConnectionContext::client_id</a></div><div class="ttdeci">ClientId client_id() const</div><div class="ttdoc">Get the client identifier.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00081">context.hpp:81</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_acfe7e93440fd212929ae8009f64a4024"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#acfe7e93440fd212929ae8009f64a4024">unilink::wrapper::ConnectionContext::client_info</a></div><div class="ttdeci">const std::string &amp; client_info() const</div><div class="ttdoc">Get the client information (e.g., endpoint address)</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00084">context.hpp:84</a></div></div>
@@ -256,7 +255,6 @@ Step 2: Create A UDS Client</h1>
 <div class="line">    client-&gt;stop();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ad8d6c30285a36b3a466a37d06f7460dd"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(F &amp;&amp;handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00099">ibuilder.hpp:99</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_acb04aca2f71cf23a3a3f25ec6bd6928c"><div class="ttname"><a href="namespaceunilink.html#acb04aca2f71cf23a3a3f25ec6bd6928c">unilink::uds_client</a></div><div class="ttdeci">builder::UdsClientBuilderDefault uds_client(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00111">unilink.hpp:111</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md832"></a>
@@ -293,7 +291,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 11:49:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

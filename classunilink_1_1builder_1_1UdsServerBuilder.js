@@ -12,6 +12,5 @@ var classunilink_1_1builder_1_1UdsServerBuilder =
     [ "multi_client", "classunilink_1_1builder_1_1UdsServerBuilder.html#a1cba07a6d31011751aad66b1bcc06f06", null ],
     [ "operator=", "classunilink_1_1builder_1_1UdsServerBuilder.html#afb6a8a43f5874e57ede4ee022401ef54", null ],
     [ "single_client", "classunilink_1_1builder_1_1UdsServerBuilder.html#a0a350b573a3db39908b9e820cc99fcf3", null ],
-    [ "unlimited_clients", "classunilink_1_1builder_1_1UdsServerBuilder.html#a2e64577a81c719dfe4fc5f67d597d872", null ],
     [ "UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html#a202b67897b48612ffa82399563c4a663", null ]
 ];

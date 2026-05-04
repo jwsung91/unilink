@@ -2,6 +2,7 @@ var ibuilder_8hpp =
 [
     [ "unilink::builder::BuilderInterface< T, Derived, State >", "classunilink_1_1builder_1_1BuilderInterface.html", "classunilink_1_1builder_1_1BuilderInterface" ],
     [ "unilink::builder::DataHandler", "conceptunilink_1_1builder_1_1DataHandler.html", null ],
+    [ "unilink::builder::BatchDataHandler", "conceptunilink_1_1builder_1_1BatchDataHandler.html", null ],
     [ "unilink::builder::ErrorHandler", "conceptunilink_1_1builder_1_1ErrorHandler.html", null ],
     [ "unilink::builder::ConnectionHandler", "conceptunilink_1_1builder_1_1ConnectionHandler.html", null ],
     [ "BuilderState", "ibuilder_8hpp.html#aaaa1844bc1ccddbe03c66b32e48b9c3e", [

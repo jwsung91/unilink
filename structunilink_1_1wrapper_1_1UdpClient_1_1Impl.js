@@ -36,7 +36,7 @@ var structunilink_1_1wrapper_1_1UdpClient_1_1Impl =
     [ "error_handler", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ac28ed62caa8f6e4c46cb1cbebb83721b", null ],
     [ "external_ioc", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#af55e10ca2cc1bb6f0fd46506d0a030e6", null ],
     [ "external_thread", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a2e114e314340adb14afb4d3f8bc1314e", null ],
-    [ "framer", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a51b24d5a13f52ca58719dd1680334ac6", null ],
+    [ "framer", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ab6f1ae0c776b57c2807a39117488cd33", null ],
     [ "manage_external_context", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a96e50b1f11ec35ac416159e52a8bd855", null ],
     [ "max_batch_latency_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ace89cf7938615c98a7e5534c1e6a7fdb", null ],
     [ "max_batch_size_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ae8568bc4ca9d731a4312593d5d511ad0", null ],

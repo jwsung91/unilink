@@ -184,7 +184,7 @@ Runtime Optimization</h1>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aae1db48c240ea8a0c454a970ab60e2f7">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Creates dedicated thread</span></div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3209a5f18973c46d60299428afcc4e62"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00044">tcp_client_builder.cc:44</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aae1db48c240ea8a0c454a970ab60e2f7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aae1db48c240ea8a0c454a970ab60e2f7">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder&lt; State &gt; &amp; independent_context(bool use_independent=true)</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00111">tcp_client_builder.cc:111</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aae1db48c240ea8a0c454a970ab60e2f7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aae1db48c240ea8a0c454a970ab60e2f7">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder&lt; State &gt; &amp; independent_context(bool use_independent=true)</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00116">tcp_client_builder.cc:116</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a3a4bdb4df1849be592d03452cb48278c"><div class="ttname"><a href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilderDefault tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md618"></a>
 2. Async Logging</h2>
@@ -284,7 +284,7 @@ Backpressure Management</h1>
 <div class="line"><span class="comment">// In Python</span></div>
 <div class="line">client.backpressure_strategy = <a class="code hl_namespace" href="namespaceunilink.html">unilink</a>.BackpressureStrategy.BestEffort</div>
 <div class="line">client.backpressure_threshold = 1024 * 512</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a488d998ee718a02a3b4c4f8a144131bb"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a488d998ee718a02a3b4c4f8a144131bb">unilink::builder::BuilderInterface::backpressure_strategy</a></div><div class="ttdeci">Derived &amp; backpressure_strategy(base::constants::BackpressureStrategy strategy)</div><div class="ttdoc">Set the backpressure strategy.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00199">ibuilder.hpp:199</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a488d998ee718a02a3b4c4f8a144131bb"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a488d998ee718a02a3b4c4f8a144131bb">unilink::builder::BuilderInterface::backpressure_strategy</a></div><div class="ttdeci">Derived &amp; backpressure_strategy(base::constants::BackpressureStrategy strategy)</div><div class="ttdoc">Set the backpressure strategy.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00228">ibuilder.hpp:228</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_1_1constants_html_af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230"><div class="ttname"><a href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230">unilink::base::constants::BackpressureStrategy::BestEffort</a></div><div class="ttdeci">@ BestEffort</div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 </div><!-- fragment --><p><b>Benchmarking Insights:</b></p><ul>
@@ -309,7 +309,7 @@ Backpressure Management</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 11:49:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

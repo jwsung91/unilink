@@ -10,6 +10,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "auto_start", "classunilink_1_1wrapper_1_1TcpServer.html#a2d8c7983984c7816c6bba7bf91fee7bc", null ],
     [ "backpressure_strategy", "classunilink_1_1wrapper_1_1TcpServer.html#a2e167784621f76de54d67834b1477721", null ],
     [ "backpressure_threshold", "classunilink_1_1wrapper_1_1TcpServer.html#a59fea2993947bb6e974d650b646e3a9d", null ],
+    [ "bind_address", "classunilink_1_1wrapper_1_1TcpServer.html#ad8dcc11759c860452353dd3a16a16c08", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181", null ],
     [ "broadcast_line", "classunilink_1_1wrapper_1_1TcpServer.html#ae1575d3f34f582f2c0a40c260ead4c04", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1TcpServer.html#a54382f1c15ebb6509e04b413b03c37d7", null ],
@@ -38,6 +39,5 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "try_broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a8603d52e3c76f92af3aa0f1b934193f1", null ],
     [ "try_broadcast_line", "classunilink_1_1wrapper_1_1TcpServer.html#a5a9b543eb1c1e2d18ffd742f81842982", null ],
     [ "try_send_to", "classunilink_1_1wrapper_1_1TcpServer.html#ac82530130ed20cee6514642feb30390c", null ],
-    [ "try_send_to_line", "classunilink_1_1wrapper_1_1TcpServer.html#a3b10322332bf2b8517a13340a25ea083", null ],
-    [ "unlimited_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a4f20f7b28dc851c8344d4ce37d5817e1", null ]
+    [ "try_send_to_line", "classunilink_1_1wrapper_1_1TcpServer.html#a3b10322332bf2b8517a13340a25ea083", null ]
 ];

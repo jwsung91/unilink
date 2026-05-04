@@ -38,6 +38,5 @@ var classunilink_1_1wrapper_1_1UdpServer =
     [ "try_broadcast", "classunilink_1_1wrapper_1_1UdpServer.html#ae6ec979a5b3932669c31e068758a539b", null ],
     [ "try_broadcast_line", "classunilink_1_1wrapper_1_1UdpServer.html#a8a16648f802cf9e118ddf9e124dfd081", null ],
     [ "try_send_to", "classunilink_1_1wrapper_1_1UdpServer.html#a1d124d5e337f8df1acccc373af0dde4a", null ],
-    [ "try_send_to_line", "classunilink_1_1wrapper_1_1UdpServer.html#a9d0719e90903c0ab12128b79064ccc9d", null ],
-    [ "unlimited_clients", "classunilink_1_1wrapper_1_1UdpServer.html#a934885ac6132a5628a85d7cc89d6182f", null ]
+    [ "try_send_to_line", "classunilink_1_1wrapper_1_1UdpServer.html#a9d0719e90903c0ab12128b79064ccc9d", null ]
 ];

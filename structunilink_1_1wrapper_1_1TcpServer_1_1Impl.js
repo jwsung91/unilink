@@ -20,6 +20,7 @@ var structunilink_1_1wrapper_1_1TcpServer_1_1Impl =
     [ "backpressure_strategy_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a4b411c4a2ad8829029994019402e5944", null ],
     [ "backpressure_threshold_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a680e3b326aff018c7fc72496956c4aae", null ],
     [ "batch_timer_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#adcee1ae2bc2cb3e2925e333016a5dd2f", null ],
+    [ "bind_address_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8d57cb0dfa8d46da189384e95f4ed53d", null ],
     [ "bp_cv_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#af40fa5383583cae7470e7736e2ad79ff", null ],
     [ "bp_mutex_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a70c0c3018bc6a859fe6d00cad27559ee", null ],
     [ "channel_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a61697a7b76a66ec72e66b3645c380784", null ],

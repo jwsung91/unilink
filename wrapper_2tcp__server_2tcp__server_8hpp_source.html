@@ -252,10 +252,10 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="comment">// Configuration (Fluent API)</span></div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; auto_start(<span class="keywordtype">bool</span> manage = true) override;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; port_retry(<span class="keywordtype">bool</span> enable = true, <span class="keywordtype">int</span> max_retries = 3, <span class="keywordtype">int</span> retry_interval_ms = 1000);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; idle_timeout(std::chrono::milliseconds timeout);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; unlimited_clients();</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; bind_address(const std::<span class="keywordtype">string</span>&amp; address);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; port_retry(<span class="keywordtype">bool</span> enable = true, <span class="keywordtype">int</span> max_retries = 3, <span class="keywordtype">int</span> retry_interval_ms = 1000);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; idle_timeout(std::chrono::milliseconds timeout);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; backpressure_threshold(<span class="keywordtype">size_t</span> threshold);</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; backpressure_strategy(base::constants::BackpressureStrategy strategy);</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <a class="code hl_class" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; manage_external_context(<span class="keywordtype">bool</span> manage);</div>
@@ -293,7 +293,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_fdd6e5571e153f1d8025548436a989da.html">tcp_server</a></li><li class="navelem"><a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp.html">tcp_server.hpp</a></li>
-    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 11:49:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

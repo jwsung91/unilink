@@ -11,6 +11,7 @@ var namespaceunilink_1_1builder =
     [ "UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", "classunilink_1_1builder_1_1UdsServerBuilder" ],
     [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ],
     [ "DataHandler", "conceptunilink_1_1builder_1_1DataHandler.html", null ],
+    [ "BatchDataHandler", "conceptunilink_1_1builder_1_1BatchDataHandler.html", null ],
     [ "ErrorHandler", "conceptunilink_1_1builder_1_1ErrorHandler.html", null ],
     [ "ConnectionHandler", "conceptunilink_1_1builder_1_1ConnectionHandler.html", null ],
     [ "SerialBuilderDefault", "namespaceunilink_1_1builder.html#af4f5614db6c9981e195b02bf73ec8f87", null ],

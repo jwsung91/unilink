@@ -32,7 +32,6 @@ var classunilink_1_1transport_1_1TcpServer =
     [ "send_to_client", "classunilink_1_1transport_1_1TcpServer.html#a0e8a84d5dfd0855018b62725dc7df33a", null ],
     [ "send_to_client", "classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656", null ],
     [ "set_client_limit", "classunilink_1_1transport_1_1TcpServer.html#afa002ff3287e69e7815e73d39cc4aac8", null ],
-    [ "set_unlimited_clients", "classunilink_1_1transport_1_1TcpServer.html#a0305142a02b64cf7b68c2e3256a45180", null ],
     [ "start", "classunilink_1_1transport_1_1TcpServer.html#a7dc115cc9cc67ae7c5990c0d01a5a0a6", null ],
     [ "state", "classunilink_1_1transport_1_1TcpServer.html#aa0f9e066743d5432ad15655eda1c6031", null ],
     [ "stop", "classunilink_1_1transport_1_1TcpServer.html#a3535932f4b2d08af75ac212aa6d11a12", null ]

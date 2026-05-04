@@ -17,6 +17,5 @@ var classunilink_1_1builder_1_1TcpServerBuilder =
     [ "port_retry", "classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7", null ],
     [ "port_retry_interval", "classunilink_1_1builder_1_1TcpServerBuilder.html#a2b7fc243a3f6c10fbf44c8837c8b2665", null ],
     [ "single_client", "classunilink_1_1builder_1_1TcpServerBuilder.html#afa58555b554c99636c1348f99ad477a8", null ],
-    [ "unlimited_clients", "classunilink_1_1builder_1_1TcpServerBuilder.html#a9fdd67215a413495b5bfe7c98a9dcd36", null ],
     [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html#a7e26bbd98d99e99fcde9e4cdfd0d6a45", null ]
 ];
