@@ -87,6 +87,20 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     add_compile_definitions(UNILINK_PLATFORM_MACOS=1)
     message(STATUS "Detected macOS compatibility mode")
+    # std::jthread / stop_token / stop_callback are gated on
+    # __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 150000 in Apple's libc++.
+    # The vcpkg arm64-osx triplet can lower CMAKE_OSX_DEPLOYMENT_TARGET to 11.0
+    # via its toolchain; force 15.0 here before any project targets are defined.
+    if(NOT CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "15.0")
+      set(CMAKE_OSX_DEPLOYMENT_TARGET
+          "15.0"
+          CACHE STRING "Minimum macOS deployment target" FORCE
+      )
+      message(
+        STATUS
+          "Bumped macOS deployment target to 15.0 (std::jthread requires Apple libc++ macOS 15+)"
+      )
+    endif()
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_compile_definitions(UNILINK_PLATFORM_LINUX=1)
     message(STATUS "Detected Linux compatibility mode")
