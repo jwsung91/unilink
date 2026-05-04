@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-04 01:13:21</td>
+            <td class="headerValue">2026-05-04 11:55:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -171,10 +171,10 @@
 <span id="L93"><span class="lineNum">      93</span>                 :             : </span>
 <span id="L94"><span class="lineNum">      94</span>                 :             :   // Configuration (Fluent API)</span>
 <span id="L95"><span class="lineNum">      95</span>                 :             :   TcpServer&amp; auto_start(bool manage = true) override;</span>
-<span id="L96"><span class="lineNum">      96</span>                 :             :   TcpServer&amp; port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);</span>
-<span id="L97"><span class="lineNum">      97</span>                 :             :   TcpServer&amp; idle_timeout(std::chrono::milliseconds timeout);</span>
-<span id="L98"><span class="lineNum">      98</span>                 :             :   TcpServer&amp; max_clients(size_t max);</span>
-<span id="L99"><span class="lineNum">      99</span>                 :             :   TcpServer&amp; unlimited_clients();</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :   TcpServer&amp; bind_address(const std::string&amp; address);</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :   TcpServer&amp; port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :   TcpServer&amp; idle_timeout(std::chrono::milliseconds timeout);</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :   TcpServer&amp; max_clients(size_t max);</span>
 <span id="L100"><span class="lineNum">     100</span>                 :             :   TcpServer&amp; backpressure_threshold(size_t threshold);</span>
 <span id="L101"><span class="lineNum">     101</span>                 :             :   TcpServer&amp; backpressure_strategy(base::constants::BackpressureStrategy strategy);</span>
 <span id="L102"><span class="lineNum">     102</span>                 :             :   TcpServer&amp; manage_external_context(bool manage);</span>

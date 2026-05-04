@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-04 01:13:21</td>
+            <td class="headerValue">2026-05-04 11:55:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -109,7 +109,7 @@
 <span id="L31"><span class="lineNum">      31</span>                 :             :   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;</span>
 <span id="L32"><span class="lineNum">      32</span>                 :             :   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;</span>
 <span id="L33"><span class="lineNum">      33</span>                 :             :   bool enable_memory_pool = true;</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :   int max_connections = 100;  // Maximum concurrent connections</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :   int max_connections = static_cast&lt;int&gt;(base::constants::DEFAULT_MAX_CONNECTIONS);</span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : </span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :   // Port binding retry configuration</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             :   bool enable_port_retry = false;     // Enable port binding retry</span>
@@ -137,16 +137,18 @@
 <span id="L58"><span class="lineNum">      58</span>                 :             : </span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :     if (max_connections &lt;= 0) {</span>
 <span id="L60"><span class="lineNum">      60</span>                 :             :       max_connections = 1;</span>
-<span id="L61"><span class="lineNum">      61</span>                 :             :     }</span>
-<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
-<span id="L63"><span class="lineNum">      63</span>                 :             :     if (idle_timeout_ms &lt; 0) {</span>
-<span id="L64"><span class="lineNum">      64</span>                 :             :       idle_timeout_ms = 0;</span>
-<span id="L65"><span class="lineNum">      65</span>                 :             :     }</span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :   }</span>
-<span id="L67"><span class="lineNum">      67</span>                 :             : };</span>
-<span id="L68"><span class="lineNum">      68</span>                 :             : </span>
-<span id="L69"><span class="lineNum">      69</span>                 :             : }  // namespace config</span>
-<span id="L70"><span class="lineNum">      70</span>                 :             : }  // namespace unilink</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :     } else if (max_connections &gt; static_cast&lt;int&gt;(base::constants::MAX_MAX_CONNECTIONS)) {</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :       max_connections = static_cast&lt;int&gt;(base::constants::MAX_MAX_CONNECTIONS);</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     }</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : </span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     if (idle_timeout_ms &lt; 0) {</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :       idle_timeout_ms = 0;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     }</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :   }</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : };</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : </span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : }  // namespace config</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
