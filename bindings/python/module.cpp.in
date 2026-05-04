@@ -809,7 +809,7 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("connected_clients", &UdpServer::connected_clients)
       .def("listening", &UdpServer::listening)
       .def("auto_start", &UdpServer::auto_start, py::arg("start") = true)
-      .def("session_timeout", &UdpServer::session_timeout)
+      .def("idle_timeout", &UdpServer::idle_timeout)
       .def(
           "use_line_framer",
           [](UdpServer& self, const std::string& d, bool i, size_t m) {
