@@ -29,7 +29,6 @@ class EchoServer {
   bool start() {
     server_ =
         unilink::tcp_server(port_)
-            .unlimited_clients()
             .on_connect([](const unilink::ConnectionContext& ctx) {
               std::cout << "[connect] client " << ctx.client_id() << " from " << ctx.client_info() << "\n";
             })

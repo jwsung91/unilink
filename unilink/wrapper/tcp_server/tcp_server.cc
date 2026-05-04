@@ -41,6 +41,7 @@ struct TcpServer::Impl {
   std::mutex bp_mutex_;
   std::condition_variable bp_cv_;
   uint16_t port_;
+  std::string bind_address_{"0.0.0.0"};
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
   std::atomic<bool> use_external_context_{false};
@@ -131,6 +132,7 @@ struct TcpServer::Impl {
         max_clients_(0),
         backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
         backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {
+    transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     setup_internal_handlers();
   }
 
@@ -204,6 +206,7 @@ struct TcpServer::Impl {
 
     if (!channel_) {
       config::TcpServerConfig config;
+      config.bind_address = bind_address_;
       config.port = port_;
       config.enable_port_retry = port_retry_enabled_.load();
       config.max_port_retries = max_port_retries_.load();
@@ -219,10 +222,7 @@ struct TcpServer::Impl {
       if (client_limit_enabled_.load()) {
         auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
         if (transport_server) {
-          if (max_clients_.load() == 0)
-            transport_server->set_unlimited_clients();
-          else
-            transport_server->set_client_limit(max_clients_.load());
+          transport_server->set_client_limit(max_clients_.load());
         }
       }
     }
@@ -431,8 +431,12 @@ struct TcpServer::Impl {
         bp_cv_.notify_all();
         auto alive = weak_alive.lock();
         if (!alive) return;
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (on_backpressure_) on_backpressure_(queued);
+        std::function<void(size_t)> handler;
+        {
+          std::shared_lock<std::shared_mutex> lock(mutex_);
+          handler = on_backpressure_;
+        }
+        if (handler) handler(queued);
       });
     }
     channel_->on_state([this, weak_alive](base::LinkState state) {
@@ -561,6 +565,12 @@ TcpServer& TcpServer::auto_start(bool m) {
   return *this;
 }
 
+TcpServer& TcpServer::bind_address(const std::string& address) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bind_address_ = address;
+  return *this;
+}
+
 TcpServer& TcpServer::port_retry(bool e, int m, int i) {
   impl_->port_retry_enabled_.store(e);
   impl_->max_port_retries_.store(m);
@@ -578,13 +588,6 @@ TcpServer& TcpServer::max_clients(size_t max) {
   impl_->max_clients_.store(max);
   impl_->client_limit_enabled_.store(true);
   if (impl_->transport_cache_) impl_->transport_cache_->set_client_limit(max);
-  return *this;
-}
-
-TcpServer& TcpServer::unlimited_clients() {
-  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->client_limit_enabled_.store(false);
-  if (impl_->transport_cache_) impl_->transport_cache_->set_unlimited_clients();
   return *this;
 }
 

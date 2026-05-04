@@ -656,17 +656,6 @@ void TcpServer::set_client_limit(size_t max) {
   }
 }
 
-void TcpServer::set_unlimited_clients() {
-  auto impl = get_impl();
-  std::lock_guard<std::mutex> l(impl->sessions_mutex_);
-  impl->client_limit_enabled_ = false;
-  impl->max_clients_ = 0;
-  if (impl->paused_accept_) {
-    impl->paused_accept_ = false;
-    net::post(impl->ioc_, [self = shared_from_this()] { self->get_impl()->do_accept(self); });
-  }
-}
-
 base::LinkState TcpServer::state() const { return get_impl()->state_.state(); }
 
 }  // namespace transport

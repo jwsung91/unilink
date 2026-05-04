@@ -46,7 +46,6 @@ class TcpServerChaosTest : public ::testing::Test {
 TEST_F(TcpServerChaosTest, GhostClient) {
   std::atomic<int> connect_count{0};
   auto server = tcp_server(test_port_)
-                    .unlimited_clients()
                     .on_connect([&](const wrapper::ConnectionContext&) { connect_count++; })
                     .on_data([](auto&&) {})
                     .on_error([](auto&&) {})

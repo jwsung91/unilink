@@ -53,7 +53,7 @@ class AdvancedTcpServerCoverageTest : public ::testing::Test {
 };
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   for (int i = 0; i < 3; ++i) {
     auto f = server_->start();
     EXPECT_TRUE(f.get());

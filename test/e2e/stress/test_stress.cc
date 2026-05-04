@@ -60,7 +60,6 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
   std::atomic<size_t> server_received_bytes{0};
 
   auto server = tcp_server(port)
-                    .unlimited_clients()
                     .on_data([&](const wrapper::MessageContext& ctx) { server_received_bytes += ctx.data().size(); })
                     .on_error([](auto&&) {})
                     .build();
@@ -100,7 +99,7 @@ TEST_F(StressTest, RapidStartStop) {
   const int iterations = 20;
 
   for (int i = 0; i < iterations; ++i) {
-    auto server = tcp_server(port).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+    auto server = tcp_server(port).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
     ASSERT_NE(server, nullptr);
 
     auto start_future = server->start();
@@ -122,7 +121,6 @@ TEST_F(StressTest, ConcurrentClientConnections) {
   std::atomic<int> send_success_count{0};
 
   auto server = tcp_server(port)
-                    .unlimited_clients()
                     .use_line_framer()
                     .on_connect([&](const wrapper::ConnectionContext&) { connected_count++; })
                     .on_message([&](const wrapper::MessageContext& ctx) {

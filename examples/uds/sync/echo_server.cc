@@ -27,7 +27,6 @@ class UdsEchoServer {
   bool start() {
     server_ =
         unilink::uds_server(path_)
-            .unlimited_clients()
             .on_connect([](const unilink::ConnectionContext& ctx) {
               std::cout << "[connect] client " << ctx.client_id() << "\n";
             })

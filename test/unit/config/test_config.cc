@@ -188,7 +188,7 @@ TEST_F(ConfigTest, ConfigValidationBoundaryValues) {
 
   // Test TCP server configuration validation
   auto server = UnifiedBuilder::tcp_server(test_port_)
-                    .unlimited_clients()  // No client limit
+                    // No client limit
 
                     .on_data([](auto&&) {})
                     .on_error([](auto&&) {})

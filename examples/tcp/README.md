@@ -30,7 +30,6 @@ Type messages in any client terminal. `/quit` disconnects.
 
 ## API Patterns
 
-- `unlimited_clients()` — allow any number of concurrent connections
 - `send_to(client_id, data)` — reply to a specific client (echo server)
 - `broadcast(data)` — send to all connected clients (broadcast server)
 - `start_sync()` — block until the server is listening or failed

@@ -76,7 +76,7 @@ g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
 #include "unilink/unilink.hpp"
 
 int main() {
-    // Create a TCP server (defaults to unlimited clients)
+    // Create a TCP server (uses the default bounded client limit)
     auto server = unilink::tcp_server(8080)
         .on_connect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Client " << ctx.client_id() << " connected from " << ctx.client_info() << std::endl;
@@ -177,9 +177,8 @@ auto server = unilink::tcp_server(8080)
     .multi_client(8)  // allow up to 8 clients
     .build();
 
-// Unlimited clients (default)
+// Default bounded client limit
 auto server = unilink::tcp_server(8080)
-    .unlimited_clients()
     .build();
 ```
 
@@ -207,7 +206,6 @@ unilink::diagnostics::Logger::instance().set_console_output(true);
 
 ```cpp
 auto server = unilink::tcp_server(8080)
-    .unlimited_clients()
     .port_retry(true, 5, 1000)  // Try 5 times
     .build();
 ```

@@ -235,6 +235,11 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("connected_clients", &TcpServer::connected_clients)
       .def("listening", &TcpServer::listening)
       .def("auto_start", &TcpServer::auto_start, py::arg("start") = true)
+      .def("bind_address", &TcpServer::bind_address)
+      .def("port_retry", &TcpServer::port_retry, py::arg("enable") = true, py::arg("max_retries") = 3,
+           py::arg("retry_interval_ms") = 1000)
+      .def("idle_timeout", &TcpServer::idle_timeout)
+      .def("max_clients", &TcpServer::max_clients)
       .def(
           "use_line_framer",
           [](TcpServer& self, const std::string& d, bool i, size_t m) {
@@ -570,6 +575,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("connected_clients", &UdsServer::connected_clients)
       .def("listening", &UdsServer::listening)
       .def("auto_start", &UdsServer::auto_start, py::arg("start") = true)
+      .def("idle_timeout", &UdsServer::idle_timeout)
+      .def("max_clients", &UdsServer::max_clients)
       .def(
           "use_line_framer",
           [](UdsServer& self, const std::string& d, bool i, size_t m) {
@@ -810,6 +817,7 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("listening", &UdpServer::listening)
       .def("auto_start", &UdpServer::auto_start, py::arg("start") = true)
       .def("idle_timeout", &UdpServer::idle_timeout)
+      .def("max_clients", &UdpServer::max_clients)
       .def(
           "use_line_framer",
           [](UdpServer& self, const std::string& d, bool i, size_t m) {

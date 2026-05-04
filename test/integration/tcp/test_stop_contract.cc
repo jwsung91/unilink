@@ -65,7 +65,6 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
 
   config::TcpServerConfig cfg;
   cfg.port = port;
-  cfg.max_connections = 0;
   // Lower threshold to ensure backpressure triggers easily when client doesn't read
   cfg.backpressure_threshold = 4096;
 
@@ -132,7 +131,6 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
   std::atomic<int> data_calls{0};
 
   auto server = tcp_server(port)
-                    .unlimited_clients()
                     .on_data([&](const wrapper::MessageContext& ctx) {
                       if (stop_called.load()) {
                         ADD_FAILURE() << "Data callback received AFTER stop! Size: " << ctx.data().size();

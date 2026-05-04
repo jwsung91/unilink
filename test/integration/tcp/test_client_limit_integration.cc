@@ -117,9 +117,9 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   for (auto& f : client_futures) f.wait();
 }
 
-TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
+TEST_F(ClientLimitIntegrationTest, DefaultClientLimitAllowsTypicalLoad) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).unlimited_clients().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  server_ = unilink::tcp_server(test_port).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_NE(server_, nullptr);
   ASSERT_TRUE(server_->start().get());
 

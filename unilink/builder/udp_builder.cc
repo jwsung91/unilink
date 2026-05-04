@@ -68,9 +68,11 @@ std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
   }
 
   if (this->on_data_) client->on_data(this->on_data_);
+  if (this->on_data_batch_) client->on_data_batch(this->on_data_batch_);
   if (this->on_connect_) client->on_connect(this->on_connect_);
   if (this->on_disconnect_) client->on_disconnect(this->on_disconnect_);
   if (this->on_error_) client->on_error(this->on_error_);
+  if (this->on_backpressure_) client->on_backpressure(this->on_backpressure_);
 
   if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
   client->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -80,6 +82,9 @@ std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
   }
   if (this->on_message_) {
     client->on_message(std::move(this->on_message_));
+  }
+  if (this->on_message_batch_) {
+    client->on_message_batch(std::move(this->on_message_batch_));
   }
 
   if (auto_start_) {
@@ -172,9 +177,11 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   }
 
   if (this->on_data_) server->on_data(this->on_data_);
+  if (this->on_data_batch_) server->on_data_batch(this->on_data_batch_);
   if (this->on_connect_) server->on_connect(this->on_connect_);
   if (this->on_disconnect_) server->on_disconnect(this->on_disconnect_);
   if (this->on_error_) server->on_error(this->on_error_);
+  if (this->on_backpressure_) server->on_backpressure(this->on_backpressure_);
 
   if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -185,6 +192,9 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   }
   if (this->on_message_) {
     server->on_message(std::move(this->on_message_));
+  }
+  if (this->on_message_batch_) {
+    server->on_message_batch(std::move(this->on_message_batch_));
   }
 
   if (auto_start_) {

@@ -31,7 +31,6 @@ int main() {
 
     std::unique_ptr<unilink::UdsServer> server;
     server = unilink::uds_server(socket_path)
-        .unlimited_clients()
         .on_connect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Client connected: " << ctx.client_id()
                       << " info=" << ctx.client_info() << std::endl;

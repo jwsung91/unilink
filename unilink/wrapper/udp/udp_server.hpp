@@ -87,7 +87,6 @@ class UNILINK_API UdpServer : public ServerInterface {
   UdpServer& auto_start(bool manage = true) override;
   UdpServer& idle_timeout(std::chrono::milliseconds timeout);
   UdpServer& max_clients(size_t max);
-  UdpServer& unlimited_clients();
   UdpServer& backpressure_threshold(size_t threshold);
   UdpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdpServer& manage_external_context(bool manage);

@@ -59,13 +59,20 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
   }
 
   if (this->on_data_) server->on_data(this->on_data_);
+  if (this->on_data_batch_) server->on_data_batch(this->on_data_batch_);
   if (this->on_connect_) server->on_connect(this->on_connect_);
   if (this->on_disconnect_) server->on_disconnect(this->on_disconnect_);
   if (this->on_error_) server->on_error(this->on_error_);
+  if (this->on_backpressure_) server->on_backpressure(this->on_backpressure_);
 
   if (client_limit_enabled_) {
     server->max_clients(max_clients_);
   }
+
+  server->bind_address(bind_address_);
+  server->port_retry(port_retry_enabled_, static_cast<int>(max_port_retries_),
+                     static_cast<int>(port_retry_interval_ms_));
+  server->idle_timeout(idle_timeout_);
 
   if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -75,6 +82,9 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
   }
   if (this->on_message_) {
     server->on_message(std::move(this->on_message_));
+  }
+  if (this->on_message_batch_) {
+    server->on_message_batch(std::move(this->on_message_batch_));
   }
 
   if (auto_start_) {
@@ -105,7 +115,7 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::independent_context(bool use_i
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::max_clients(uint32_t max_clients) {
   if (max_clients == 0) {
-    throw std::invalid_argument("max_clients must be greater than 0; use unlimited_clients() for no limit");
+    throw std::invalid_argument("max_clients must be greater than 0");
   }
   max_clients_ = max_clients;
   client_limit_enabled_ = true;
@@ -155,16 +165,10 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::single_client() {
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::multi_client(size_t max) {
   if (max == 0) {
-    throw std::invalid_argument("multi_client max must be greater than 0; use unlimited_clients() for no limit");
+    throw std::invalid_argument("multi_client max must be greater than 0");
   }
   max_clients_ = static_cast<uint32_t>(max);
   client_limit_enabled_ = true;
-  return *this;
-}
-
-template <uint32_t State>
-TcpServerBuilder<State>& TcpServerBuilder<State>::unlimited_clients() {
-  client_limit_enabled_ = false;
   return *this;
 }
 

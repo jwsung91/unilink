@@ -519,7 +519,6 @@ TEST(CustomTest, ClientServerCommunication) {
     
     // Create server
     auto server = unilink::tcp_server(8080)
-        .unlimited_clients()
         .on_connect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Client connected: " << ctx.client_id() << std::endl;
         })

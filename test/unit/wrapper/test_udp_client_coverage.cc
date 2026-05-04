@@ -16,10 +16,12 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <boost/asio.hpp>
 
 #include "unilink/framer/line_framer.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 using namespace unilink;
 
@@ -62,6 +64,24 @@ TEST(UdpClientCoverageTest, FramerIntegration) {
   wrapper::UdpClient client(cfg);
   client.framer(std::make_unique<framer::LineFramer>());
   client.on_message([](const wrapper::MessageContext&) {});
+}
+
+TEST(UdpClientCoverageTest, MessageBatchHandlerAttachesAfterFramer) {
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
+  wrapper::UdpClient client(fake_channel);
+  std::atomic<int> batches{0};
+
+  client.framer(std::make_unique<framer::LineFramer>());
+  client.on_message_batch(
+      [&](const std::vector<wrapper::MessageContext>& messages) { batches += static_cast<int>(messages.size()); });
+
+  std::string payload;
+  for (int i = 0; i < 100; ++i) {
+    payload += "payload\n";
+  }
+  fake_channel->emit_bytes(payload);
+
+  EXPECT_EQ(batches.load(), 100);
 }
 
 TEST(UdpClientCoverageTest, StopWithoutStart) {

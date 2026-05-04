@@ -64,7 +64,7 @@ struct TcpClient::Impl {
   MessageHandler message_handler_{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
-  std::unique_ptr<framer::IFramer> framer_{nullptr};
+  std::shared_ptr<framer::IFramer> framer_{nullptr};
 
   // Batching logic
   std::vector<MessageContext> data_batch_queue_;
@@ -304,6 +304,7 @@ struct TcpClient::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      std::shared_ptr<framer::IFramer> framer_to_push;
       std::unique_lock<std::shared_mutex> lock(mutex_);
       if (data_batch_handler_) {
         data_batch_queue_.emplace_back(0, memory::SafeDataBuffer(data));
@@ -327,8 +328,10 @@ struct TcpClient::Impl {
       }
 
       if (framer_) {
-        framer_->push_bytes(data);
+        framer_to_push = framer_;
       }
+      lock.unlock();
+      if (framer_to_push) framer_to_push->push_bytes(data);
     });
 
     channel_->on_state([this, weak_alive](base::LinkState state) {
@@ -425,7 +428,7 @@ struct TcpClient::Impl {
 
   void set_framer(std::unique_ptr<framer::IFramer> framer) {
     std::unique_lock<std::shared_mutex> lock(mutex_);
-    framer_ = std::move(framer);
+    framer_ = std::shared_ptr<framer::IFramer>(std::move(framer));
     if (framer_ && (message_handler_ || message_batch_handler_)) attach_framer_callback();
   }
 
