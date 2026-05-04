@@ -225,6 +225,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8e1c4ef868a94d39992e114c0b7725c8" id="r_a8e1c4ef868a94d39992e114c0b7725c8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8e1c4ef868a94d39992e114c0b7725c8">try_broadcast</a> (std::string_view data)=0</td></tr>
 <tr class="memdesc:a8e1c4ef868a94d39992e114c0b7725c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking broadcast that always drops on full queues, ignoring strategy.  <br /></td></tr>
 <tr class="separator:a8e1c4ef868a94d39992e114c0b7725c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a914beef46c8740d068ea44c2918c7685" id="r_a914beef46c8740d068ea44c2918c7685"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a914beef46c8740d068ea44c2918c7685">broadcast_line</a> (std::string_view line)=0</td></tr>
+<tr class="memdesc:a914beef46c8740d068ea44c2918c7685"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a line (data + "\n") to all clients, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a914beef46c8740d068ea44c2918c7685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63d23e82bd31bc7d25a7f37efa1468b1" id="r_a63d23e82bd31bc7d25a7f37efa1468b1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a63d23e82bd31bc7d25a7f37efa1468b1">send_to_line</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view line)=0</td></tr>
+<tr class="memdesc:a63d23e82bd31bc7d25a7f37efa1468b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a line (data + "\n") to a specific client, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a63d23e82bd31bc7d25a7f37efa1468b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c0acd3dbe74c6cfab073cadb784f44e" id="r_a0c0acd3dbe74c6cfab073cadb784f44e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a0c0acd3dbe74c6cfab073cadb784f44e">try_broadcast_line</a> (std::string_view line)=0</td></tr>
+<tr class="memdesc:a0c0acd3dbe74c6cfab073cadb784f44e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking broadcast_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:a0c0acd3dbe74c6cfab073cadb784f44e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61ca1a0e155bca5561663954a24fa5f8" id="r_a61ca1a0e155bca5561663954a24fa5f8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a61ca1a0e155bca5561663954a24fa5f8">try_send_to_line</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view line)=0</td></tr>
+<tr class="memdesc:a61ca1a0e155bca5561663954a24fa5f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_to_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:a61ca1a0e155bca5561663954a24fa5f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6f5d7163923cf82721385246b448a69" id="r_af6f5d7163923cf82721385246b448a69"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#af6f5d7163923cf82721385246b448a69">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler)=0</td></tr>
 <tr class="separator:af6f5d7163923cf82721385246b448a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b2ab220d0e4875935b2caa54589871c" id="r_a2b2ab220d0e4875935b2caa54589871c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2b2ab220d0e4875935b2caa54589871c">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler)=0</td></tr>
@@ -426,6 +438,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a914beef46c8740d068ea44c2918c7685" name="a914beef46c8740d068ea44c2918c7685"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a914beef46c8740d068ea44c2918c7685">&#9670;&#160;</a></span>broadcast_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ServerInterface::broadcast_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Send a line (data + "\n") to all clients, honouring the backpressure strategy. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ae1575d3f34f582f2c0a40c260ead4c04">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a9497a7bbeb4a53c57bec6da015ce1e2f">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a1f33f49e6511858698e6b5c0b67faa16">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
 <a id="ad18e4d24ce196ade73fac5c7b83a2270" name="ad18e4d24ce196ade73fac5c7b83a2270"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad18e4d24ce196ade73fac5c7b83a2270">&#9670;&#160;</a></span>client_count()</h2>
 
@@ -512,7 +554,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#aa4301de269dbc59838c68f7416708233">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ab2c693580ad3587072009509395cc22f">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ac6991cbbbda6f3b4f4e6b7f0cf25aa30">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a761a63b4cf3c87549db93fd41e80e721">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#aaee08308c226fc68bf0cb84edafcdc75">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a2c65d3b6d297859fecfce924b9ef6adc">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -570,14 +612,15 @@ Public Member Functions</h2></td></tr>
 <p>Register a callback to be notified when send queue congestion changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes.</td></tr>
   </table>
   </dd>
 </dl>
+<p>Default implementation is a no-op. Concrete implementations that support backpressure reporting must override this method; otherwise the handler is silently discarded. </p>
 
-<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#abe43d6a577229d8ec9290e46b88f1343">unilink::wrapper::UdpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a84e135d351d98857b71bdd949e6aeb88">unilink::wrapper::TcpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af4ede548501f8b368d18ad4e22a71194">unilink::wrapper::UdsServer</a>.</p>
+<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a379257413af142eb2a92667c75520b3c">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a5807a610a96a7dd226b5b97985c92e33">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a316be62b50f4e1b71c28b51363a1a588">unilink::wrapper::UdsServer</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00132">132</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00156">156</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -605,7 +648,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#acd03a8d5e1a03b575eb9386114f9aa73">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a1384b47214b3903de44a4d06bdb02711">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a946b8ac8139ccb590df48c743c89465f">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#aab095abbaeac2d473f4b1903fea7da15">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ab80537f403dd28441c779219739a6770">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#acce1a5da13671a4167e96fd1c0f3741a">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -633,7 +676,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a30745a9e9f88247048edef18045f2e11">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a7b239bff057cef3146029c1ac83a1f9f">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a79ce10d7ee5799078bda65121a08900f">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a37e3373dd74dd95ff31b2fa5baf1fde7">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a41c913b79eca4f0411968741749c295b">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af2acbd5188b0f996f33a5bd9116814cf">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -663,7 +706,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Register a callback for batched data reception. </p>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#aae5d127ad60f2f456bb60f9609fe1f76">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a1805748c2fcca4d3f59f57dce7b80017">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ad4f8ddf8b8ae7f4a988ad75baed45c83">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#afce6439a7f5d634f9defa294574cefad">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a8bd747a916fc394aff94e631f4eb9952">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#acb99d4592f160cd901b34649559ed242">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -691,7 +734,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a42e5745b5aee461bfbe1028f45373d36">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a6e138e7ea5321b40f71fea8ff615379b">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af5174d6d8849d63545328b0dd8e18f96">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a777103faad83ad015da1fe0ceade66d8">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#aa40c423b4485b16eb61e10f00f9d70aa">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a44183b32b4ad305e2e2eab43e4b403a8">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -719,7 +762,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#af9f81ab409fae99f9b02da5187e49957">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a185da1be985fcdf233909259b24d5435">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a8b080d4eed250fbf1af42f7fab375494">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ac996e82da910d2a4c12b01701bc303dc">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a48e99fec83c6ed3d7c6fd3d9e71f5e50">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ae7c27af1221d43d98e20ee671a972e88">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -755,7 +798,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a54f83211f21182a0e49b4fcaeb568cb6">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ae3aefb1b405103db7fa7907777794094">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a96c112224f1af1d3b5a185eca165ac86">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a11aa86bec4dc0b864b6a116b61e8f8bd">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a3e9667f8d8ee05b02fbb71890b269fdc">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a588ef181fd93aacb96467acaa05c2fd0">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -785,7 +828,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Register a callback for batched framed message reception. </p>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a795bd4ece9df1d0a5f14175a698404ec">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a6ad90161b752b1f64daf4f3313797bec">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#abb8500a46c20981ed73244c62891e6c2">unilink::wrapper::UdsServer</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a89c53ee4dc292f38d014cc796f08ba2d">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ae090ae557f390d6a0e31784e50573515">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a4841ff5b6784694f07acdc9e681479e0">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -873,6 +916,46 @@ false Dropped or client not found. </dd></dl>
 false Server stopped while waiting. </dd></dl>
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a9b87210894d1fec902db8011484b415d">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a7ea1520219607dd99422e81cd6249939">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#aa3a999cf7c6d326a504527e2cc1374df">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
+<a id="a63d23e82bd31bc7d25a7f37efa1468b1" name="a63d23e82bd31bc7d25a7f37efa1468b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63d23e82bd31bc7d25a7f37efa1468b1">&#9670;&#160;</a></span>send_to_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ServerInterface::send_to_line </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Send a line (data + "\n") to a specific client, honouring the backpressure strategy. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a697538f177178a5e96ae074a4b90df08">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a45590081e50cd4c3fb71fa512500b0b4">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a846ea585651b1b99ed978356d164a899">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -993,6 +1076,36 @@ false Server stopped while waiting. </dd></dl>
 
 </div>
 </div>
+<a id="a0c0acd3dbe74c6cfab073cadb784f44e" name="a0c0acd3dbe74c6cfab073cadb784f44e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c0acd3dbe74c6cfab073cadb784f44e">&#9670;&#160;</a></span>try_broadcast_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ServerInterface::try_broadcast_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking broadcast_line that always drops on a full queue, ignoring strategy. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a5a9b543eb1c1e2d18ffd742f81842982">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a8a16648f802cf9e118ddf9e124dfd081">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a96900125268ba9cfc1440f723c26ce6c">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
 <a id="a1f5795e294b646631c4233465aef16f3" name="a1f5795e294b646631c4233465aef16f3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1f5795e294b646631c4233465aef16f3">&#9670;&#160;</a></span>try_send_to()</h2>
 
@@ -1037,6 +1150,46 @@ false Dropped or client not found. </dd></dl>
 
 </div>
 </div>
+<a id="a61ca1a0e155bca5561663954a24fa5f8" name="a61ca1a0e155bca5561663954a24fa5f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61ca1a0e155bca5561663954a24fa5f8">&#9670;&#160;</a></span>try_send_to_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ServerInterface::try_send_to_line </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking send_to_line that always drops on a full queue, ignoring strategy. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a3b10322332bf2b8517a13340a25ea083">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a9d0719e90903c0ab12128b79064ccc9d">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ab5eed47c753464ebbd8369480bb78c33">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>unilink/wrapper/<a class="el" href="iserver_8hpp_source.html">iserver.hpp</a></li>
 </ul>
@@ -1046,7 +1199,7 @@ false Dropped or client not found. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a></li>
-    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

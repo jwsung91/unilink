@@ -231,31 +231,31 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aba41859051f3f0094b899382f1debf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29d78f724c70878a7ae76d9648ab9edb" id="r_a29d78f724c70878a7ae76d9648ab9edb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a29d78f724c70878a7ae76d9648ab9edb">connected</a> () const override</td></tr>
 <tr class="separator:a29d78f724c70878a7ae76d9648ab9edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92a13ab0f67fcf6dc54452074eb8c028" id="r_a92a13ab0f67fcf6dc54452074eb8c028"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a92a13ab0f67fcf6dc54452074eb8c028">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
-<tr class="separator:a92a13ab0f67fcf6dc54452074eb8c028"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8861d7192b5df91d1c62880e8a617b47" id="r_a8861d7192b5df91d1c62880e8a617b47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a8861d7192b5df91d1c62880e8a617b47">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:a8861d7192b5df91d1c62880e8a617b47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
-<tr class="separator:a8861d7192b5df91d1c62880e8a617b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e24a2859f8d1fa2faf34a2a3d116b67" id="r_a2e24a2859f8d1fa2faf34a2a3d116b67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2e24a2859f8d1fa2faf34a2a3d116b67">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
-<tr class="separator:a2e24a2859f8d1fa2faf34a2a3d116b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4401c5e02864adee270e6d74ba7ea93f" id="r_a4401c5e02864adee270e6d74ba7ea93f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a4401c5e02864adee270e6d74ba7ea93f">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
-<tr class="separator:a4401c5e02864adee270e6d74ba7ea93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a9e954a14b22cef576b6b04162c31dc" id="r_a0a9e954a14b22cef576b6b04162c31dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override</td></tr>
-<tr class="separator:a0a9e954a14b22cef576b6b04162c31dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68dff33182be92b857170fcaf737afec" id="r_a68dff33182be92b857170fcaf737afec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a68dff33182be92b857170fcaf737afec">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
-<tr class="memdesc:a68dff33182be92b857170fcaf737afec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
-<tr class="separator:a68dff33182be92b857170fcaf737afec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd4b8fd33c56b74e8e4233a14f076212" id="r_afd4b8fd33c56b74e8e4233a14f076212"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd4b8fd33c56b74e8e4233a14f076212">framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; framer) override</td></tr>
-<tr class="memdesc:afd4b8fd33c56b74e8e4233a14f076212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a message framer for this channel.  <br /></td></tr>
-<tr class="separator:afd4b8fd33c56b74e8e4233a14f076212"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa98e66f891ab2aa92cee67d40e094158" id="r_aa98e66f891ab2aa92cee67d40e094158"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa98e66f891ab2aa92cee67d40e094158">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:aa98e66f891ab2aa92cee67d40e094158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
-<tr class="separator:aa98e66f891ab2aa92cee67d40e094158"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0734c6cd48e6f7c42948466548632c4a" id="r_a0734c6cd48e6f7c42948466548632c4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a0734c6cd48e6f7c42948466548632c4a">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:a0734c6cd48e6f7c42948466548632c4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
-<tr class="separator:a0734c6cd48e6f7c42948466548632c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a72721374f3fcf4013c297b3a824142" id="r_a8a72721374f3fcf4013c297b3a824142"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a8a72721374f3fcf4013c297b3a824142">auto_start</a> (bool manage=true) override</td></tr>
-<tr class="separator:a8a72721374f3fcf4013c297b3a824142"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07887c4ff178195a577a54271d332425" id="r_a07887c4ff178195a577a54271d332425"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a07887c4ff178195a577a54271d332425">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
+<tr class="separator:a07887c4ff178195a577a54271d332425"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2790bb2682b0809217477f968188d4d9" id="r_a2790bb2682b0809217477f968188d4d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2790bb2682b0809217477f968188d4d9">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:a2790bb2682b0809217477f968188d4d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
+<tr class="separator:a2790bb2682b0809217477f968188d4d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b6c905abe209f2e5d16ce0b05b3fd42" id="r_a2b6c905abe209f2e5d16ce0b05b3fd42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2b6c905abe209f2e5d16ce0b05b3fd42">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:a2b6c905abe209f2e5d16ce0b05b3fd42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa000fa9b0b85e3ee24c3e2e90ddbb02f" id="r_aa000fa9b0b85e3ee24c3e2e90ddbb02f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa000fa9b0b85e3ee24c3e2e90ddbb02f">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:aa000fa9b0b85e3ee24c3e2e90ddbb02f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98c0324655db5d4c7553cce63535f395" id="r_a98c0324655db5d4c7553cce63535f395"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a98c0324655db5d4c7553cce63535f395">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override</td></tr>
+<tr class="separator:a98c0324655db5d4c7553cce63535f395"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd0d53e98349d037b977c876a936535e" id="r_afd0d53e98349d037b977c876a936535e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd0d53e98349d037b977c876a936535e">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
+<tr class="memdesc:afd0d53e98349d037b977c876a936535e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
+<tr class="separator:afd0d53e98349d037b977c876a936535e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b40a82a8442782b4704ee89701e1d2" id="r_ad2b40a82a8442782b4704ee89701e1d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ad2b40a82a8442782b4704ee89701e1d2">framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; framer) override</td></tr>
+<tr class="memdesc:ad2b40a82a8442782b4704ee89701e1d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a message framer for this channel.  <br /></td></tr>
+<tr class="separator:ad2b40a82a8442782b4704ee89701e1d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70ac872cb1b230b0100be0e7afb05b6c" id="r_a70ac872cb1b230b0100be0e7afb05b6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a70ac872cb1b230b0100be0e7afb05b6c">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:a70ac872cb1b230b0100be0e7afb05b6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
+<tr class="separator:a70ac872cb1b230b0100be0e7afb05b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7bf897223cb584294a17c34120a67c7" id="r_ac7bf897223cb584294a17c34120a67c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ac7bf897223cb584294a17c34120a67c7">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:ac7bf897223cb584294a17c34120a67c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
+<tr class="separator:ac7bf897223cb584294a17c34120a67c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be1f6d546142916cbf6114882f01906" id="r_a9be1f6d546142916cbf6114882f01906"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a9be1f6d546142916cbf6114882f01906">auto_start</a> (bool manage=true) override</td></tr>
+<tr class="separator:a9be1f6d546142916cbf6114882f01906"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbd1933f2b9c8439bbe79a0a7e94f154" id="r_acbd1933f2b9c8439bbe79a0a7e94f154"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#acbd1933f2b9c8439bbe79a0a7e94f154">batch_size</a> (size_t size)</td></tr>
 <tr class="separator:acbd1933f2b9c8439bbe79a0a7e94f154"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8145daeaee5e82bf9a2527e9b109c8f" id="r_aa8145daeaee5e82bf9a2527e9b109c8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa8145daeaee5e82bf9a2527e9b109c8f">batch_latency</a> (std::chrono::milliseconds latency)</td></tr>
@@ -468,8 +468,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8a72721374f3fcf4013c297b3a824142" name="a8a72721374f3fcf4013c297b3a824142"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a72721374f3fcf4013c297b3a824142">&#9670;&#160;</a></span>auto_start()</h2>
+<a id="a9be1f6d546142916cbf6114882f01906" name="a9be1f6d546142916cbf6114882f01906"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9be1f6d546142916cbf6114882f01906">&#9670;&#160;</a></span>auto_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -478,7 +478,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::auto_start </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::auto_start </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>manage</em> = <code>true</code></td><td>)</td>
@@ -500,7 +500,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-2-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1TcpClient_a8a72721374f3fcf4013c297b3a824142_cgraph.svg" width="448" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1TcpClient_a9be1f6d546142916cbf6114882f01906_cgraph.svg" width="448" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -648,8 +648,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="afd4b8fd33c56b74e8e4233a14f076212" name="afd4b8fd33c56b74e8e4233a14f076212"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd4b8fd33c56b74e8e4233a14f076212">&#9670;&#160;</a></span>framer()</h2>
+<a id="ad2b40a82a8442782b4704ee89701e1d2" name="ad2b40a82a8442782b4704ee89701e1d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2b40a82a8442782b4704ee89701e1d2">&#9670;&#160;</a></span>framer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -658,7 +658,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::framer </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::framer </td>
           <td>(</td>
           <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;&#160;</td>
           <td class="paramname"><em>framer</em></td><td>)</td>
@@ -726,8 +726,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a68dff33182be92b857170fcaf737afec" name="a68dff33182be92b857170fcaf737afec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68dff33182be92b857170fcaf737afec">&#9670;&#160;</a></span>on_backpressure()</h2>
+<a id="afd0d53e98349d037b977c876a936535e" name="afd0d53e98349d037b977c876a936535e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd0d53e98349d037b977c876a936535e">&#9670;&#160;</a></span>on_backpressure()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -736,7 +736,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_backpressure </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_backpressure </td>
           <td>(</td>
           <td class="paramtype">std::function&lt; void(size_t)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -753,10 +753,11 @@ Additional Inherited Members</h2></td></tr>
 <p>Register a callback to be notified when send queue congestion changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes.</td></tr>
   </table>
   </dd>
 </dl>
+<p>Default implementation is a no-op. Concrete implementations that support backpressure reporting must override this method; otherwise the handler is silently discarded. </p>
 
 <p>Reimplemented from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aab51ca2988d45a77f9f611518c27374b">unilink::wrapper::ChannelInterface</a>.</p>
 
@@ -764,8 +765,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a2e24a2859f8d1fa2faf34a2a3d116b67" name="a2e24a2859f8d1fa2faf34a2a3d116b67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e24a2859f8d1fa2faf34a2a3d116b67">&#9670;&#160;</a></span>on_connect()</h2>
+<a id="a2b6c905abe209f2e5d16ce0b05b3fd42" name="a2b6c905abe209f2e5d16ce0b05b3fd42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b6c905abe209f2e5d16ce0b05b3fd42">&#9670;&#160;</a></span>on_connect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -774,7 +775,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_connect </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_connect </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -794,8 +795,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a92a13ab0f67fcf6dc54452074eb8c028" name="a92a13ab0f67fcf6dc54452074eb8c028"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92a13ab0f67fcf6dc54452074eb8c028">&#9670;&#160;</a></span>on_data()</h2>
+<a id="a07887c4ff178195a577a54271d332425" name="a07887c4ff178195a577a54271d332425"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07887c4ff178195a577a54271d332425">&#9670;&#160;</a></span>on_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -804,7 +805,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_data </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_data </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -824,8 +825,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a8861d7192b5df91d1c62880e8a617b47" name="a8861d7192b5df91d1c62880e8a617b47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8861d7192b5df91d1c62880e8a617b47">&#9670;&#160;</a></span>on_data_batch()</h2>
+<a id="a2790bb2682b0809217477f968188d4d9" name="a2790bb2682b0809217477f968188d4d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2790bb2682b0809217477f968188d4d9">&#9670;&#160;</a></span>on_data_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -834,7 +835,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_data_batch </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_data_batch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -856,8 +857,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a4401c5e02864adee270e6d74ba7ea93f" name="a4401c5e02864adee270e6d74ba7ea93f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4401c5e02864adee270e6d74ba7ea93f">&#9670;&#160;</a></span>on_disconnect()</h2>
+<a id="aa000fa9b0b85e3ee24c3e2e90ddbb02f" name="aa000fa9b0b85e3ee24c3e2e90ddbb02f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa000fa9b0b85e3ee24c3e2e90ddbb02f">&#9670;&#160;</a></span>on_disconnect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -866,7 +867,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_disconnect </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_disconnect </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -886,8 +887,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0a9e954a14b22cef576b6b04162c31dc" name="a0a9e954a14b22cef576b6b04162c31dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a9e954a14b22cef576b6b04162c31dc">&#9670;&#160;</a></span>on_error()</h2>
+<a id="a98c0324655db5d4c7553cce63535f395" name="a98c0324655db5d4c7553cce63535f395"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98c0324655db5d4c7553cce63535f395">&#9670;&#160;</a></span>on_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -896,7 +897,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_error </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_error </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -916,8 +917,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aa98e66f891ab2aa92cee67d40e094158" name="aa98e66f891ab2aa92cee67d40e094158"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa98e66f891ab2aa92cee67d40e094158">&#9670;&#160;</a></span>on_message()</h2>
+<a id="a70ac872cb1b230b0100be0e7afb05b6c" name="a70ac872cb1b230b0100be0e7afb05b6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70ac872cb1b230b0100be0e7afb05b6c">&#9670;&#160;</a></span>on_message()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -926,7 +927,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_message </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_message </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -954,8 +955,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0734c6cd48e6f7c42948466548632c4a" name="a0734c6cd48e6f7c42948466548632c4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0734c6cd48e6f7c42948466548632c4a">&#9670;&#160;</a></span>on_message_batch()</h2>
+<a id="ac7bf897223cb584294a17c34120a67c7" name="ac7bf897223cb584294a17c34120a67c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7bf897223cb584294a17c34120a67c7">&#9670;&#160;</a></span>on_message_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -964,7 +965,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_message_batch </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a> &amp; unilink::wrapper::TcpClient::on_message_batch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -1356,7 +1357,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a></li>
-    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

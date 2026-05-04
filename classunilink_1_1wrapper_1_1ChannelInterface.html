@@ -372,7 +372,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a5e696487086d4ecf1a8e75a76d0031fc">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a8a72721374f3fcf4013c297b3a824142">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#af45eacbe84b1157daf9fdc816bab22b1">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a257c3887737fb03ac8970d9f7563d49c">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a6a5dc7c9fb83aeb36f19160386f57e83">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a9be1f6d546142916cbf6114882f01906">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#abd3cc6559a4c848278b870f9243ffe61">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#adf20a83b26047a02e61e3cf8484276d4">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -435,7 +435,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a252064c40c12a44f4d1ea69bec25fa80">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd4b8fd33c56b74e8e4233a14f076212">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a8a73c978af0051201211fa47e8d51f13">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a34f35ff1dabe2aba310c3e489b27193d">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a3b59dd30d29b6c079c13a71e4ca96826">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ad2b40a82a8442782b4704ee89701e1d2">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a064b7e3eb22a3b2ac1e347ad343fbcc2">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ab203983b9631f5aa4a77281727be629b">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -466,14 +466,15 @@ Public Member Functions</h2></td></tr>
 <p>Register a callback to be notified when send queue congestion changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes.</td></tr>
   </table>
   </dd>
 </dl>
+<p>Default implementation is a no-op. Concrete implementations that support backpressure reporting must override this method; otherwise the handler is silently discarded. </p>
 
-<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a4693fa73b908e37913006b1510e75d57">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a68dff33182be92b857170fcaf737afec">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a273f5f125ec3c6a5a9f41ba75ef22f8b">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a404832b269719188046010e3c84f7c8a">unilink::wrapper::UdsClient</a>.</p>
+<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a691435de162ec7a5cc4da3621f3d9260">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd0d53e98349d037b977c876a936535e">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a71f925263ff0e584ecaa90b5291a213c">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ac2723395fb6d0652997da82bc76d4e6e">unilink::wrapper::UdsClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00144">144</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00148">148</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -501,7 +502,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a328cb1216bcced4cb7fa75c9c659a7af">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2e24a2859f8d1fa2faf34a2a3d116b67">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a6a6fedeee6eb8d312d08fc6302a8bf83">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ae4af8fc6ae761cce0c09fcdf434a970b">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad40a316ce044f4e7d60bba03a751154b">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2b6c905abe209f2e5d16ce0b05b3fd42">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#ad849eabe4224fbe4989e95bfe8d37ee0">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a0cd60404d30ba4b487138079be14a532">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -529,7 +530,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad1714ffd59053ecc5d6764748fc896dd">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a92a13ab0f67fcf6dc54452074eb8c028">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a96169b4d5c8dc5730e1855e60729f0c1">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a7ae5ca61188fd7b9d570900c27ad016f">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a34eee053800cebc27411d6d6d561a938">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a07887c4ff178195a577a54271d332425">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aeeaef6adf75e2969e40a52cf11571dfe">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#afb9056ef06397411851836514f4709c8">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -559,7 +560,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Register a callback for batched data reception. </p>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a3f4ac49d0651a769c0fa1f915b5489ed">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a8861d7192b5df91d1c62880e8a617b47">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#af25dc8d6b3ed0558ab1eb88787973218">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a809f31d6949ae7f56e97dcb0a0fdef82">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#af81a3421d6b99fba440340a51ef580b9">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2790bb2682b0809217477f968188d4d9">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a77cca644c4e422c3f5173085bd35ae2c">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a506d2b1137236f397948a79556977d7c">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -587,7 +588,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a25e05819e04bdc27957ed698b95b39fa">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a4401c5e02864adee270e6d74ba7ea93f">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a3ac5cc7051be02b215b4ccef74a52721">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#aa9f4f008e4f276d21483871e8b3193d4">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ae157f1a861632b96582c3b523b50b80e">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa000fa9b0b85e3ee24c3e2e90ddbb02f">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a60ad48eb0f659209819be2f65bd28a52">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ab2a16e8f88f197102f04cbf9e08fc482">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -615,7 +616,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a9c7f8154cf8fa1f00053308eb116ba1a">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a1d5c3263890dfdcb917bac58bfecabca">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ac20b76f66b86180a9bb8c045f1604766">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#aafbea220f96a94ad1f817ef65148c1bd">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a98c0324655db5d4c7553cce63535f395">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aa28088012c271713baca96c9129c182d">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a225e86d383fe802af663365cde7b1e4c">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -651,7 +652,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a80b9913b7e9a554341aaa43d6947e7ae">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa98e66f891ab2aa92cee67d40e094158">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a8b83eaffeb7e280b88ff3e107b0e2806">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a567c36ac2ad93de354bdb74b31437248">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a806ba4c2c223add0616f284b256b691b">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a70ac872cb1b230b0100be0e7afb05b6c">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a2d80042eb90f0f7141ca3214dc521fcd">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a662d2ed1619581ab04540da40eaa4904">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -681,7 +682,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Register a callback for batched framed message reception. </p>
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a642dd8ba25b02064165e86557308e0d0">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a0734c6cd48e6f7c42948466548632c4a">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a0df43b240c8cb91073e6aa2950b1e928">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#afe330703b3d2b376d01307bf8c43133e">unilink::wrapper::UdsClient</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#aa81d7be9551ac4a63911d8b7fa95dc8c">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ac7bf897223cb584294a17c34120a67c7">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a24c87a370e521b22d18031d1bddc012c">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a8ef772760c8eb7c9f93b4a22e7a9b76d">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -981,7 +982,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

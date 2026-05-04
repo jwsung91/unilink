@@ -232,31 +232,31 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af0f88a7d2ad73cb9d761b33052644200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b9f553c0f4fe67d316a9c30e391c3d8" id="r_a5b9f553c0f4fe67d316a9c30e391c3d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a5b9f553c0f4fe67d316a9c30e391c3d8">connected</a> () const override</td></tr>
 <tr class="separator:a5b9f553c0f4fe67d316a9c30e391c3d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1714ffd59053ecc5d6764748fc896dd" id="r_ad1714ffd59053ecc5d6764748fc896dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad1714ffd59053ecc5d6764748fc896dd">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
-<tr class="separator:ad1714ffd59053ecc5d6764748fc896dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f4ac49d0651a769c0fa1f915b5489ed" id="r_a3f4ac49d0651a769c0fa1f915b5489ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a3f4ac49d0651a769c0fa1f915b5489ed">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:a3f4ac49d0651a769c0fa1f915b5489ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
-<tr class="separator:a3f4ac49d0651a769c0fa1f915b5489ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a328cb1216bcced4cb7fa75c9c659a7af" id="r_a328cb1216bcced4cb7fa75c9c659a7af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a328cb1216bcced4cb7fa75c9c659a7af">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
-<tr class="separator:a328cb1216bcced4cb7fa75c9c659a7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25e05819e04bdc27957ed698b95b39fa" id="r_a25e05819e04bdc27957ed698b95b39fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a25e05819e04bdc27957ed698b95b39fa">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
-<tr class="separator:a25e05819e04bdc27957ed698b95b39fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c7f8154cf8fa1f00053308eb116ba1a" id="r_a9c7f8154cf8fa1f00053308eb116ba1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a9c7f8154cf8fa1f00053308eb116ba1a">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override</td></tr>
-<tr class="separator:a9c7f8154cf8fa1f00053308eb116ba1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4693fa73b908e37913006b1510e75d57" id="r_a4693fa73b908e37913006b1510e75d57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a4693fa73b908e37913006b1510e75d57">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
-<tr class="memdesc:a4693fa73b908e37913006b1510e75d57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
-<tr class="separator:a4693fa73b908e37913006b1510e75d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a252064c40c12a44f4d1ea69bec25fa80" id="r_a252064c40c12a44f4d1ea69bec25fa80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a252064c40c12a44f4d1ea69bec25fa80">framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; framer) override</td></tr>
-<tr class="memdesc:a252064c40c12a44f4d1ea69bec25fa80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a message framer for this channel.  <br /></td></tr>
-<tr class="separator:a252064c40c12a44f4d1ea69bec25fa80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80b9913b7e9a554341aaa43d6947e7ae" id="r_a80b9913b7e9a554341aaa43d6947e7ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a80b9913b7e9a554341aaa43d6947e7ae">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:a80b9913b7e9a554341aaa43d6947e7ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
-<tr class="separator:a80b9913b7e9a554341aaa43d6947e7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a642dd8ba25b02064165e86557308e0d0" id="r_a642dd8ba25b02064165e86557308e0d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a642dd8ba25b02064165e86557308e0d0">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:a642dd8ba25b02064165e86557308e0d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
-<tr class="separator:a642dd8ba25b02064165e86557308e0d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e696487086d4ecf1a8e75a76d0031fc" id="r_a5e696487086d4ecf1a8e75a76d0031fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a5e696487086d4ecf1a8e75a76d0031fc">auto_start</a> (bool manage=true) override</td></tr>
-<tr class="separator:a5e696487086d4ecf1a8e75a76d0031fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34eee053800cebc27411d6d6d561a938" id="r_a34eee053800cebc27411d6d6d561a938"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a34eee053800cebc27411d6d6d561a938">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
+<tr class="separator:a34eee053800cebc27411d6d6d561a938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af81a3421d6b99fba440340a51ef580b9" id="r_af81a3421d6b99fba440340a51ef580b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#af81a3421d6b99fba440340a51ef580b9">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:af81a3421d6b99fba440340a51ef580b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
+<tr class="separator:af81a3421d6b99fba440340a51ef580b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad40a316ce044f4e7d60bba03a751154b" id="r_ad40a316ce044f4e7d60bba03a751154b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad40a316ce044f4e7d60bba03a751154b">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:ad40a316ce044f4e7d60bba03a751154b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae157f1a861632b96582c3b523b50b80e" id="r_ae157f1a861632b96582c3b523b50b80e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ae157f1a861632b96582c3b523b50b80e">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:ae157f1a861632b96582c3b523b50b80e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafbea220f96a94ad1f817ef65148c1bd" id="r_aafbea220f96a94ad1f817ef65148c1bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#aafbea220f96a94ad1f817ef65148c1bd">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override</td></tr>
+<tr class="separator:aafbea220f96a94ad1f817ef65148c1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a691435de162ec7a5cc4da3621f3d9260" id="r_a691435de162ec7a5cc4da3621f3d9260"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a691435de162ec7a5cc4da3621f3d9260">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
+<tr class="memdesc:a691435de162ec7a5cc4da3621f3d9260"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
+<tr class="separator:a691435de162ec7a5cc4da3621f3d9260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b59dd30d29b6c079c13a71e4ca96826" id="r_a3b59dd30d29b6c079c13a71e4ca96826"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a3b59dd30d29b6c079c13a71e4ca96826">framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; framer) override</td></tr>
+<tr class="memdesc:a3b59dd30d29b6c079c13a71e4ca96826"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a message framer for this channel.  <br /></td></tr>
+<tr class="separator:a3b59dd30d29b6c079c13a71e4ca96826"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a806ba4c2c223add0616f284b256b691b" id="r_a806ba4c2c223add0616f284b256b691b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a806ba4c2c223add0616f284b256b691b">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:a806ba4c2c223add0616f284b256b691b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
+<tr class="separator:a806ba4c2c223add0616f284b256b691b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa81d7be9551ac4a63911d8b7fa95dc8c" id="r_aa81d7be9551ac4a63911d8b7fa95dc8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#aa81d7be9551ac4a63911d8b7fa95dc8c">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:aa81d7be9551ac4a63911d8b7fa95dc8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
+<tr class="separator:aa81d7be9551ac4a63911d8b7fa95dc8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a5dc7c9fb83aeb36f19160386f57e83" id="r_a6a5dc7c9fb83aeb36f19160386f57e83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a6a5dc7c9fb83aeb36f19160386f57e83">auto_start</a> (bool manage=true) override</td></tr>
+<tr class="separator:a6a5dc7c9fb83aeb36f19160386f57e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a062c7d4e703bf3f79f52f11941c95a85" id="r_a062c7d4e703bf3f79f52f11941c95a85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a062c7d4e703bf3f79f52f11941c95a85">baud_rate</a> (uint32_t baud_rate)</td></tr>
 <tr class="separator:a062c7d4e703bf3f79f52f11941c95a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a261ea6cce059bc6913f1689b4ff2f9ba" id="r_a261ea6cce059bc6913f1689b4ff2f9ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a261ea6cce059bc6913f1689b4ff2f9ba">data_bits</a> (int data_bits)</td></tr>
@@ -476,8 +476,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5e696487086d4ecf1a8e75a76d0031fc" name="a5e696487086d4ecf1a8e75a76d0031fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e696487086d4ecf1a8e75a76d0031fc">&#9670;&#160;</a></span>auto_start()</h2>
+<a id="a6a5dc7c9fb83aeb36f19160386f57e83" name="a6a5dc7c9fb83aeb36f19160386f57e83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a5dc7c9fb83aeb36f19160386f57e83">&#9670;&#160;</a></span>auto_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -486,7 +486,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::auto_start </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::auto_start </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>manage</em> = <code>true</code></td><td>)</td>
@@ -508,7 +508,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-2-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1Serial_a5e696487086d4ecf1a8e75a76d0031fc_cgraph.svg" width="403" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1Serial_a6a5dc7c9fb83aeb36f19160386f57e83_cgraph.svg" width="403" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -669,8 +669,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a252064c40c12a44f4d1ea69bec25fa80" name="a252064c40c12a44f4d1ea69bec25fa80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a252064c40c12a44f4d1ea69bec25fa80">&#9670;&#160;</a></span>framer()</h2>
+<a id="a3b59dd30d29b6c079c13a71e4ca96826" name="a3b59dd30d29b6c079c13a71e4ca96826"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b59dd30d29b6c079c13a71e4ca96826">&#9670;&#160;</a></span>framer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -679,7 +679,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::framer </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::framer </td>
           <td>(</td>
           <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;&#160;</td>
           <td class="paramname"><em>framer</em></td><td>)</td>
@@ -727,8 +727,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a4693fa73b908e37913006b1510e75d57" name="a4693fa73b908e37913006b1510e75d57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4693fa73b908e37913006b1510e75d57">&#9670;&#160;</a></span>on_backpressure()</h2>
+<a id="a691435de162ec7a5cc4da3621f3d9260" name="a691435de162ec7a5cc4da3621f3d9260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a691435de162ec7a5cc4da3621f3d9260">&#9670;&#160;</a></span>on_backpressure()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -737,7 +737,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_backpressure </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_backpressure </td>
           <td>(</td>
           <td class="paramtype">std::function&lt; void(size_t)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -754,10 +754,11 @@ Additional Inherited Members</h2></td></tr>
 <p>Register a callback to be notified when send queue congestion changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes.</td></tr>
   </table>
   </dd>
 </dl>
+<p>Default implementation is a no-op. Concrete implementations that support backpressure reporting must override this method; otherwise the handler is silently discarded. </p>
 
 <p>Reimplemented from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aab51ca2988d45a77f9f611518c27374b">unilink::wrapper::ChannelInterface</a>.</p>
 
@@ -765,8 +766,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a328cb1216bcced4cb7fa75c9c659a7af" name="a328cb1216bcced4cb7fa75c9c659a7af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a328cb1216bcced4cb7fa75c9c659a7af">&#9670;&#160;</a></span>on_connect()</h2>
+<a id="ad40a316ce044f4e7d60bba03a751154b" name="ad40a316ce044f4e7d60bba03a751154b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad40a316ce044f4e7d60bba03a751154b">&#9670;&#160;</a></span>on_connect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -775,7 +776,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_connect </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_connect </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -795,8 +796,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ad1714ffd59053ecc5d6764748fc896dd" name="ad1714ffd59053ecc5d6764748fc896dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1714ffd59053ecc5d6764748fc896dd">&#9670;&#160;</a></span>on_data()</h2>
+<a id="a34eee053800cebc27411d6d6d561a938" name="a34eee053800cebc27411d6d6d561a938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34eee053800cebc27411d6d6d561a938">&#9670;&#160;</a></span>on_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -805,7 +806,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_data </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_data </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -825,8 +826,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3f4ac49d0651a769c0fa1f915b5489ed" name="a3f4ac49d0651a769c0fa1f915b5489ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f4ac49d0651a769c0fa1f915b5489ed">&#9670;&#160;</a></span>on_data_batch()</h2>
+<a id="af81a3421d6b99fba440340a51ef580b9" name="af81a3421d6b99fba440340a51ef580b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af81a3421d6b99fba440340a51ef580b9">&#9670;&#160;</a></span>on_data_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -835,7 +836,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_data_batch </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_data_batch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -857,8 +858,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a25e05819e04bdc27957ed698b95b39fa" name="a25e05819e04bdc27957ed698b95b39fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25e05819e04bdc27957ed698b95b39fa">&#9670;&#160;</a></span>on_disconnect()</h2>
+<a id="ae157f1a861632b96582c3b523b50b80e" name="ae157f1a861632b96582c3b523b50b80e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae157f1a861632b96582c3b523b50b80e">&#9670;&#160;</a></span>on_disconnect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -867,7 +868,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_disconnect </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_disconnect </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -887,8 +888,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c7f8154cf8fa1f00053308eb116ba1a" name="a9c7f8154cf8fa1f00053308eb116ba1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c7f8154cf8fa1f00053308eb116ba1a">&#9670;&#160;</a></span>on_error()</h2>
+<a id="aafbea220f96a94ad1f817ef65148c1bd" name="aafbea220f96a94ad1f817ef65148c1bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafbea220f96a94ad1f817ef65148c1bd">&#9670;&#160;</a></span>on_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -897,7 +898,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_error </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_error </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -917,8 +918,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a80b9913b7e9a554341aaa43d6947e7ae" name="a80b9913b7e9a554341aaa43d6947e7ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80b9913b7e9a554341aaa43d6947e7ae">&#9670;&#160;</a></span>on_message()</h2>
+<a id="a806ba4c2c223add0616f284b256b691b" name="a806ba4c2c223add0616f284b256b691b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806ba4c2c223add0616f284b256b691b">&#9670;&#160;</a></span>on_message()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -927,7 +928,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_message </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_message </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -955,8 +956,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a642dd8ba25b02064165e86557308e0d0" name="a642dd8ba25b02064165e86557308e0d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a642dd8ba25b02064165e86557308e0d0">&#9670;&#160;</a></span>on_message_batch()</h2>
+<a id="aa81d7be9551ac4a63911d8b7fa95dc8c" name="aa81d7be9551ac4a63911d8b7fa95dc8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa81d7be9551ac4a63911d8b7fa95dc8c">&#9670;&#160;</a></span>on_message_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -965,7 +966,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_message_batch </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> &amp; unilink::wrapper::Serial::on_message_batch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -1397,7 +1398,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a></li>
-    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

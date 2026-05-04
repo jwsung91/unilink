@@ -252,155 +252,138 @@ $(document).ready(function(){initNavTree('logger_8hpp_source.html',''); initResi
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122">  102</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122">LogCallback</a> = std::function&lt;void(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0">LogLevel</a> level, <span class="keyword">const</span> std::string&amp; formatted_message)&gt;;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keyword">static</span> <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; instance();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keyword">static</span> <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; default_logger();</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78">  111</a></span>  <a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78">~Logger</a>();</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="comment">// Move semantics</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a87902d159a5737dc5e39a513d7409a94">  114</a></span>  <a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a87902d159a5737dc5e39a513d7409a94">Logger</a>(<a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;&amp;) noexcept;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a082c57005f8140e3f02c30135b48dce4">  115</a></span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; operator=(<a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;&amp;) noexcept;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="comment">// Non-copyable</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a2502cd4188ed77e915272ddbccf94d64">  118</a></span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>(const <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;) = delete;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a47e082df1da943227134e55d6d2de6db">  119</a></span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; operator=(const <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;) = delete;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keywordtype">void</span> set_level(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0">LogLevel</a> level);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0">LogLevel</a> level() const;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keywordtype">void</span> set_console_output(<span class="keywordtype">bool</span> enable);</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keywordtype">void</span> set_file_output(const std::<span class="keywordtype">string</span>&amp; filename);</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <span class="keywordtype">void</span> set_file_output_with_rotation(const std::<span class="keywordtype">string</span>&amp; filename,</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                                     const <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1LogRotationConfig.html">LogRotationConfig</a>&amp; config = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1LogRotationConfig.html">LogRotationConfig</a>{});</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keywordtype">void</span> set_async_logging(<span class="keywordtype">bool</span> enable, <span class="keyword">const</span> <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>&amp; config = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>{});</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keywordtype">bool</span> async_logging_enabled() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keywordtype">void</span> set_callback(LogCallback callback);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <span class="keywordtype">void</span> set_outputs(<span class="keywordtype">int</span> outputs);</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keywordtype">void</span> set_enabled(<span class="keywordtype">bool</span> enabled);</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  <span class="keywordtype">bool</span> enabled() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  <span class="keywordtype">void</span> set_format(<span class="keyword">const</span> std::string&amp; format);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <span class="keywordtype">void</span> flush();</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  <span class="comment">// Main logging functions</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  <span class="keywordtype">void</span> log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message,</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>           <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="keywordtype">void</span> debug(std::string_view component, std::string_view operation, std::string_view message,</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>             <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keywordtype">void</span> info(std::string_view component, std::string_view operation, std::string_view message,</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  <span class="keywordtype">void</span> warning(std::string_view component, std::string_view operation, std::string_view message,</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>               <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  <span class="keywordtype">void</span> error(std::string_view component, std::string_view operation, std::string_view message,</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>             <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  <span class="keywordtype">void</span> critical(std::string_view component, std::string_view operation, std::string_view message,</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  <span class="keyword">struct </span>Impl;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="keyword">const</span> Impl* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  std::unique_ptr&lt;Impl&gt; impl_;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>};</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  [[deprecated(<span class="stringliteral">&quot;Use Logger::instance() instead&quot;</span>)]]</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keyword">static</span> <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; default_logger();</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78">  112</a></span>  <a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78">~Logger</a>();</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="comment">// Move semantics</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a87902d159a5737dc5e39a513d7409a94">  115</a></span>  <a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a87902d159a5737dc5e39a513d7409a94">Logger</a>(<a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;&amp;) noexcept;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a082c57005f8140e3f02c30135b48dce4">  116</a></span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; operator=(<a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;&amp;) noexcept;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="comment">// Non-copyable</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a2502cd4188ed77e915272ddbccf94d64">  119</a></span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>(const <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;) = delete;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a47e082df1da943227134e55d6d2de6db">  120</a></span>  <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp; operator=(const <a class="code hl_class" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a>&amp;) = delete;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="keywordtype">void</span> set_level(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0">LogLevel</a> level);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0">LogLevel</a> level() const;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  <span class="keywordtype">void</span> set_console_output(<span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keywordtype">void</span> set_file_output(const std::<span class="keywordtype">string</span>&amp; filename);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="keywordtype">void</span> set_file_output_with_rotation(const std::<span class="keywordtype">string</span>&amp; filename,</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                     const <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1LogRotationConfig.html">LogRotationConfig</a>&amp; config = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1LogRotationConfig.html">LogRotationConfig</a>{});</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keywordtype">void</span> set_async_logging(<span class="keywordtype">bool</span> enable, <span class="keyword">const</span> <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>&amp; config = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>{});</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="keywordtype">bool</span> async_logging_enabled() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keywordtype">void</span> set_callback(LogCallback callback);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  <span class="keywordtype">void</span> set_outputs(<span class="keywordtype">int</span> outputs);</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  <span class="keywordtype">void</span> set_enabled(<span class="keywordtype">bool</span> enabled);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  <span class="keywordtype">bool</span> enabled() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  <span class="keywordtype">void</span> set_format(<span class="keyword">const</span> std::string&amp; format);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keywordtype">void</span> flush();</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  <span class="comment">// Main logging functions</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  <span class="keywordtype">void</span> log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message,</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>           <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  <span class="keywordtype">void</span> debug(std::string_view component, std::string_view operation, std::string_view message,</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>             <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keywordtype">void</span> info(std::string_view component, std::string_view operation, std::string_view message,</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>  <span class="keywordtype">void</span> warning(std::string_view component, std::string_view operation, std::string_view message,</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>               <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <span class="keywordtype">void</span> error(std::string_view component, std::string_view operation, std::string_view message,</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>             <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keywordtype">void</span> critical(std::string_view component, std::string_view operation, std::string_view message,</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                <span class="keyword">const</span> std::source_location&amp; loc = std::source_location::current());</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  <span class="keyword">struct </span>Impl;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keyword">const</span> Impl* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  std::unique_ptr&lt;Impl&gt; impl_;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>};</div>
 </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="foldopen" id="foldopen00223" data-start="" data-end="">
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e">  223</a></span><span class="preprocessor">#define UNILINK_LOG_DEBUG(component, operation, message)                                             \</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="preprocessor">  do {                                                                                               \</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</span></div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().debug(component, operation, message);                 \</span></div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="preprocessor">    }                                                                                                \</span></div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="foldopen" id="foldopen00224" data-start="" data-end="">
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e">  224</a></span><span class="preprocessor">#define UNILINK_LOG_DEBUG(component, operation, message)                                             \</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="preprocessor">  do {                                                                                               \</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().debug(component, operation, message);                 \</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span><span class="preprocessor">    }                                                                                                \</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span><span class="preprocessor">  } while (0)</span></div>
 </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
-<div class="foldopen" id="foldopen00230" data-start="" data-end="">
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">  230</a></span><span class="preprocessor">#define UNILINK_LOG_INFO(component, operation, message)                                             \</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="preprocessor">  do {                                                                                              \</span></div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</span></div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().info(component, operation, message);                 \</span></div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="preprocessor">    }                                                                                               \</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="foldopen" id="foldopen00231" data-start="" data-end="">
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">  231</a></span><span class="preprocessor">#define UNILINK_LOG_INFO(component, operation, message)                                             \</span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="preprocessor">  do {                                                                                              \</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().info(component, operation, message);                 \</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="preprocessor">    }                                                                                               \</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span><span class="preprocessor">  } while (0)</span></div>
 </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="foldopen" id="foldopen00237" data-start="" data-end="">
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aa917f1cb16e9feb541d8ad6d14a4aa6a">  237</a></span><span class="preprocessor">#define UNILINK_LOG_WARNING(component, operation, message)                                             \</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="preprocessor">  do {                                                                                                 \</span></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::WARNING) { \</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().warning(component, operation, message);                 \</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="preprocessor">    }                                                                                                  \</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="foldopen" id="foldopen00238" data-start="" data-end="">
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aa917f1cb16e9feb541d8ad6d14a4aa6a">  238</a></span><span class="preprocessor">#define UNILINK_LOG_WARNING(component, operation, message)                                             \</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="preprocessor">  do {                                                                                                 \</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::WARNING) { \</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().warning(component, operation, message);                 \</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="preprocessor">    }                                                                                                  \</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="preprocessor">  } while (0)</span></div>
 </div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="foldopen" id="foldopen00244" data-start="" data-end="">
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno"><a class="line" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">  244</a></span><span class="preprocessor">#define UNILINK_LOG_ERROR(component, operation, message)                                             \</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="preprocessor">  do {                                                                                               \</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::ERROR) { \</span></div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().error(component, operation, message);                 \</span></div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">    }                                                                                                \</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="foldopen" id="foldopen00245" data-start="" data-end="">
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno"><a class="line" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">  245</a></span><span class="preprocessor">#define UNILINK_LOG_ERROR(component, operation, message)                                             \</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="preprocessor">  do {                                                                                               \</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::ERROR) { \</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().error(component, operation, message);                 \</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">    }                                                                                                \</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">  } while (0)</span></div>
 </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="foldopen" id="foldopen00251" data-start="" data-end="">
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="logger_8hpp.html#adbcc470aa88aac2aac6ae713a2715531">  251</a></span><span class="preprocessor">#define UNILINK_LOG_CRITICAL(component, operation, message)                                             \</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="preprocessor">  do {                                                                                                  \</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::CRITICAL) { \</span></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().critical(component, operation, message);                 \</span></div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="preprocessor">    }                                                                                                   \</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="foldopen" id="foldopen00252" data-start="" data-end="">
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno"><a class="line" href="logger_8hpp.html#adbcc470aa88aac2aac6ae713a2715531">  252</a></span><span class="preprocessor">#define UNILINK_LOG_CRITICAL(component, operation, message)                                             \</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="preprocessor">  do {                                                                                                  \</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::CRITICAL) { \</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="preprocessor">      unilink::diagnostics::Logger::instance().critical(component, operation, message);                 \</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="preprocessor">    }                                                                                                   \</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">  } while (0)</span></div>
 </div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="foldopen" id="foldopen00261" data-start="" data-end="">
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="logger_8hpp.html#a6f1ab03f6f6417674829acf0c882f46b">  261</a></span><span class="preprocessor">#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                          \</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">  do {                                                                                               \</span></div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</span></div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="preprocessor">      UNILINK_LOG_DEBUG(component, operation, message);                                              \</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="preprocessor">    }                                                                                                \</span></div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="foldopen" id="foldopen00266" data-start="" data-end="">
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="logger_8hpp.html#a3637a26f418d4d14dfd68fd2ee374fd6">  266</a></span><span class="preprocessor">#define UNILINK_LOG_PERF_START(component, operation)                                              \</span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="preprocessor">  auto _perf_start_##operation =                                                                  \</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span><span class="preprocessor">      (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) \</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span><span class="preprocessor">          ? std::chrono::high_resolution_clock::now()                                             \</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="preprocessor">          : std::chrono::high_resolution_clock::time_point()</span></div>
 </div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="foldopen" id="foldopen00268" data-start="" data-end="">
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="logger_8hpp.html#a983b455c1e9a6c2abb13458ffa2049cf">  268</a></span><span class="preprocessor">#define UNILINK_LOG_INFO_IF(component, operation, message)                                          \</span></div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span><span class="preprocessor">  do {                                                                                              \</span></div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</span></div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span><span class="preprocessor">      UNILINK_LOG_INFO(component, operation, message);                                              \</span></div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="preprocessor">    }                                                                                               \</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
+<div class="foldopen" id="foldopen00272" data-start="" data-end="">
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aa8aed21d2fc4d95311ed6f292df6dd56">  272</a></span><span class="preprocessor">#define UNILINK_LOG_PERF_END(component, operation)                                                         \</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="preprocessor">  do {                                                                                                     \</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {       \</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="preprocessor">      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                              \</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="preprocessor">      using _us_t = std::chrono::microseconds;                                                             \</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="preprocessor">      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                            \</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="preprocessor">      auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();      \</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="preprocessor">      UNILINK_LOG_DEBUG(component, operation, std::format(&quot;Duration: {} μs&quot;, _perf_duration_##operation)); \</span></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="preprocessor">    }                                                                                                      \</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="preprocessor">  } while (0)</span></div>
 </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
-<div class="foldopen" id="foldopen00278" data-start="" data-end="">
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno"><a class="line" href="logger_8hpp.html#a3637a26f418d4d14dfd68fd2ee374fd6">  278</a></span><span class="preprocessor">#define UNILINK_LOG_PERF_START(component, operation)                                              \</span></div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="preprocessor">  auto _perf_start_##operation =                                                                  \</span></div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="preprocessor">      (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) \</span></div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="preprocessor">          ? std::chrono::high_resolution_clock::now()                                             \</span></div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span><span class="preprocessor">          : std::chrono::high_resolution_clock::time_point()</span></div>
-</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="foldopen" id="foldopen00284" data-start="" data-end="">
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="logger_8hpp.html#aa8aed21d2fc4d95311ed6f292df6dd56">  284</a></span><span class="preprocessor">#define UNILINK_LOG_PERF_END(component, operation)                                                         \</span></div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="preprocessor">  do {                                                                                                     \</span></div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span><span class="preprocessor">    if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {       \</span></div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span><span class="preprocessor">      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                              \</span></div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span><span class="preprocessor">      using _us_t = std::chrono::microseconds;                                                             \</span></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="preprocessor">      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                            \</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="preprocessor">      auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();      \</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">      UNILINK_LOG_DEBUG(component, operation, std::format(&quot;Duration: {} μs&quot;, _perf_duration_##operation)); \</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">    }                                                                                                      \</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">  } while (0)</span></div>
-</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>}  <span class="comment">// namespace diagnostics</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>}  <span class="comment">// namespace diagnostics</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html">unilink::diagnostics::Logger</a></div><div class="ttdoc">Centralized logging system with async support.</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00100">logger.hpp:100</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a87902d159a5737dc5e39a513d7409a94"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a87902d159a5737dc5e39a513d7409a94">unilink::diagnostics::Logger::Logger</a></div><div class="ttdeci">Logger(Logger &amp;&amp;) noexcept</div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_aab6b65a72d045195df582a6c5c00f122"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122">unilink::diagnostics::Logger::LogCallback</a></div><div class="ttdeci">std::function&lt; void(LogLevel level, const std::string &amp;formatted_message)&gt; LogCallback</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00102">logger.hpp:102</a></div></div>
@@ -440,7 +423,7 @@ $(document).ready(function(){initNavTree('logger_8hpp_source.html',''); initResi
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8hpp.html">logger.hpp</a></li>
-    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

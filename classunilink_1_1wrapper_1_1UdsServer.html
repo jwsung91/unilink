@@ -228,29 +228,41 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac56c6ce2b2d399ca2cc20c8ebf2dc15b" id="r_ac56c6ce2b2d399ca2cc20c8ebf2dc15b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ac56c6ce2b2d399ca2cc20c8ebf2dc15b">try_broadcast</a> (std::string_view data) override</td></tr>
 <tr class="memdesc:ac56c6ce2b2d399ca2cc20c8ebf2dc15b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking broadcast that always drops on full queues, ignoring strategy.  <br /></td></tr>
 <tr class="separator:ac56c6ce2b2d399ca2cc20c8ebf2dc15b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a946b8ac8139ccb590df48c743c89465f" id="r_a946b8ac8139ccb590df48c743c89465f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a946b8ac8139ccb590df48c743c89465f">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler) override</td></tr>
-<tr class="separator:a946b8ac8139ccb590df48c743c89465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5174d6d8849d63545328b0dd8e18f96" id="r_af5174d6d8849d63545328b0dd8e18f96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af5174d6d8849d63545328b0dd8e18f96">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler) override</td></tr>
-<tr class="separator:af5174d6d8849d63545328b0dd8e18f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79ce10d7ee5799078bda65121a08900f" id="r_a79ce10d7ee5799078bda65121a08900f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a79ce10d7ee5799078bda65121a08900f">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override</td></tr>
-<tr class="separator:a79ce10d7ee5799078bda65121a08900f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4f8ddf8b8ae7f4a988ad75baed45c83" id="r_ad4f8ddf8b8ae7f4a988ad75baed45c83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ad4f8ddf8b8ae7f4a988ad75baed45c83">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:ad4f8ddf8b8ae7f4a988ad75baed45c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
-<tr class="separator:ad4f8ddf8b8ae7f4a988ad75baed45c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b080d4eed250fbf1af42f7fab375494" id="r_a8b080d4eed250fbf1af42f7fab375494"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a8b080d4eed250fbf1af42f7fab375494">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override</td></tr>
-<tr class="separator:a8b080d4eed250fbf1af42f7fab375494"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4ede548501f8b368d18ad4e22a71194" id="r_af4ede548501f8b368d18ad4e22a71194"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af4ede548501f8b368d18ad4e22a71194">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
-<tr class="memdesc:af4ede548501f8b368d18ad4e22a71194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
-<tr class="separator:af4ede548501f8b368d18ad4e22a71194"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6991cbbbda6f3b4f4e6b7f0cf25aa30" id="r_ac6991cbbbda6f3b4f4e6b7f0cf25aa30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ac6991cbbbda6f3b4f4e6b7f0cf25aa30">framer</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override</td></tr>
-<tr class="memdesc:ac6991cbbbda6f3b4f4e6b7f0cf25aa30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a factory function to create a new framer for each client connection.  <br /></td></tr>
-<tr class="separator:ac6991cbbbda6f3b4f4e6b7f0cf25aa30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96c112224f1af1d3b5a185eca165ac86" id="r_a96c112224f1af1d3b5a185eca165ac86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a96c112224f1af1d3b5a185eca165ac86">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:a96c112224f1af1d3b5a185eca165ac86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
-<tr class="separator:a96c112224f1af1d3b5a185eca165ac86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb8500a46c20981ed73244c62891e6c2" id="r_abb8500a46c20981ed73244c62891e6c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#abb8500a46c20981ed73244c62891e6c2">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> handler) override</td></tr>
-<tr class="memdesc:abb8500a46c20981ed73244c62891e6c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
-<tr class="separator:abb8500a46c20981ed73244c62891e6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f33f49e6511858698e6b5c0b67faa16" id="r_a1f33f49e6511858698e6b5c0b67faa16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a1f33f49e6511858698e6b5c0b67faa16">broadcast_line</a> (std::string_view line) override</td></tr>
+<tr class="memdesc:a1f33f49e6511858698e6b5c0b67faa16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a line (data + "\n") to all clients, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a1f33f49e6511858698e6b5c0b67faa16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a846ea585651b1b99ed978356d164a899" id="r_a846ea585651b1b99ed978356d164a899"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a846ea585651b1b99ed978356d164a899">send_to_line</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view line) override</td></tr>
+<tr class="memdesc:a846ea585651b1b99ed978356d164a899"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a line (data + "\n") to a specific client, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a846ea585651b1b99ed978356d164a899"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96900125268ba9cfc1440f723c26ce6c" id="r_a96900125268ba9cfc1440f723c26ce6c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a96900125268ba9cfc1440f723c26ce6c">try_broadcast_line</a> (std::string_view line) override</td></tr>
+<tr class="memdesc:a96900125268ba9cfc1440f723c26ce6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking broadcast_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:a96900125268ba9cfc1440f723c26ce6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5eed47c753464ebbd8369480bb78c33" id="r_ab5eed47c753464ebbd8369480bb78c33"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ab5eed47c753464ebbd8369480bb78c33">try_send_to_line</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view line) override</td></tr>
+<tr class="memdesc:ab5eed47c753464ebbd8369480bb78c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_to_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
+<tr class="separator:ab5eed47c753464ebbd8369480bb78c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acce1a5da13671a4167e96fd1c0f3741a" id="r_acce1a5da13671a4167e96fd1c0f3741a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#acce1a5da13671a4167e96fd1c0f3741a">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:acce1a5da13671a4167e96fd1c0f3741a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44183b32b4ad305e2e2eab43e4b403a8" id="r_a44183b32b4ad305e2e2eab43e4b403a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a44183b32b4ad305e2e2eab43e4b403a8">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:a44183b32b4ad305e2e2eab43e4b403a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2acbd5188b0f996f33a5bd9116814cf" id="r_af2acbd5188b0f996f33a5bd9116814cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af2acbd5188b0f996f33a5bd9116814cf">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override</td></tr>
+<tr class="separator:af2acbd5188b0f996f33a5bd9116814cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb99d4592f160cd901b34649559ed242" id="r_acb99d4592f160cd901b34649559ed242"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#acb99d4592f160cd901b34649559ed242">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:acb99d4592f160cd901b34649559ed242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
+<tr class="separator:acb99d4592f160cd901b34649559ed242"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c27af1221d43d98e20ee671a972e88" id="r_ae7c27af1221d43d98e20ee671a972e88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ae7c27af1221d43d98e20ee671a972e88">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override</td></tr>
+<tr class="separator:ae7c27af1221d43d98e20ee671a972e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a316be62b50f4e1b71c28b51363a1a588" id="r_a316be62b50f4e1b71c28b51363a1a588"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a316be62b50f4e1b71c28b51363a1a588">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler) override</td></tr>
+<tr class="memdesc:a316be62b50f4e1b71c28b51363a1a588"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
+<tr class="separator:a316be62b50f4e1b71c28b51363a1a588"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c65d3b6d297859fecfce924b9ef6adc" id="r_a2c65d3b6d297859fecfce924b9ef6adc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a2c65d3b6d297859fecfce924b9ef6adc">framer</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override</td></tr>
+<tr class="memdesc:a2c65d3b6d297859fecfce924b9ef6adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a factory function to create a new framer for each client connection.  <br /></td></tr>
+<tr class="separator:a2c65d3b6d297859fecfce924b9ef6adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a588ef181fd93aacb96467acaa05c2fd0" id="r_a588ef181fd93aacb96467acaa05c2fd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a588ef181fd93aacb96467acaa05c2fd0">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:a588ef181fd93aacb96467acaa05c2fd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
+<tr class="separator:a588ef181fd93aacb96467acaa05c2fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4841ff5b6784694f07acdc9e681479e0" id="r_a4841ff5b6784694f07acdc9e681479e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a4841ff5b6784694f07acdc9e681479e0">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:a4841ff5b6784694f07acdc9e681479e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
+<tr class="separator:a4841ff5b6784694f07acdc9e681479e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef6a244b6ff21ab3e46912208ef08110" id="r_aef6a244b6ff21ab3e46912208ef08110"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#aef6a244b6ff21ab3e46912208ef08110">client_count</a> () const override</td></tr>
 <tr class="separator:aef6a244b6ff21ab3e46912208ef08110"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22d78e227c2705fba874d64c71952346" id="r_a22d78e227c2705fba874d64c71952346"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a22d78e227c2705fba874d64c71952346">connected_clients</a> () const override</td></tr>
@@ -485,7 +497,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a29376f8067ad8f10e890b1b74dd32693">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00493">493</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00502">502</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -512,7 +524,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00521">521</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00530">530</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -532,7 +544,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00516">516</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00525">525</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -566,6 +578,52 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00418">418</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a43983c237bfa6949654c1248c75e8dfe_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a1f33f49e6511858698e6b5c0b67faa16" name="a1f33f49e6511858698e6b5c0b67faa16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f33f49e6511858698e6b5c0b67faa16">&#9670;&#160;</a></span>broadcast_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdsServer::broadcast_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Send a line (data + "\n") to all clients, honouring the backpressure strategy. </p>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a914beef46c8740d068ea44c2918c7685">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00427">427</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a1f33f49e6511858698e6b5c0b67faa16_cgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -594,7 +652,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad18e4d24ce196ade73fac5c7b83a2270">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00481">481</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00490">490</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -623,12 +681,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2d52f8bfad723402c2b99472e8715fba">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00487">487</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00496">496</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="ac6991cbbbda6f3b4f4e6b7f0cf25aa30" name="ac6991cbbbda6f3b4f4e6b7f0cf25aa30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6991cbbbda6f3b4f4e6b7f0cf25aa30">&#9670;&#160;</a></span>framer()</h2>
+<a id="a2c65d3b6d297859fecfce924b9ef6adc" name="a2c65d3b6d297859fecfce924b9ef6adc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c65d3b6d297859fecfce924b9ef6adc">&#9670;&#160;</a></span>framer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -637,7 +695,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::framer </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::framer </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a>&#160;</td>
           <td class="paramname"><em>factory</em></td><td>)</td>
@@ -661,7 +719,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac2151283a784a61cd2b2b0aaf8b110ae">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00463">463</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00472">472</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -681,7 +739,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00501">501</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00510">510</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -730,7 +788,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00526">526</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00535">535</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -750,12 +808,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00506">506</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00515">515</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="af4ede548501f8b368d18ad4e22a71194" name="af4ede548501f8b368d18ad4e22a71194"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4ede548501f8b368d18ad4e22a71194">&#9670;&#160;</a></span>on_backpressure()</h2>
+<a id="a316be62b50f4e1b71c28b51363a1a588" name="a316be62b50f4e1b71c28b51363a1a588"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a316be62b50f4e1b71c28b51363a1a588">&#9670;&#160;</a></span>on_backpressure()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -764,7 +822,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_backpressure </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_backpressure </td>
           <td>(</td>
           <td class="paramtype">std::function&lt; void(size_t)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -781,19 +839,20 @@ Additional Inherited Members</h2></td></tr>
 <p>Register a callback to be notified when send queue congestion changes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes.</td></tr>
   </table>
   </dd>
 </dl>
+<p>Default implementation is a no-op. Concrete implementations that support backpressure reporting must override this method; otherwise the handler is silently discarded. </p>
 
 <p>Reimplemented from <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8f7a03bdf134b43899712b1d57cb7de4">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00457">457</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00466">466</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="a946b8ac8139ccb590df48c743c89465f" name="a946b8ac8139ccb590df48c743c89465f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a946b8ac8139ccb590df48c743c89465f">&#9670;&#160;</a></span>on_connect()</h2>
+<a id="acce1a5da13671a4167e96fd1c0f3741a" name="acce1a5da13671a4167e96fd1c0f3741a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acce1a5da13671a4167e96fd1c0f3741a">&#9670;&#160;</a></span>on_connect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -802,7 +861,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_connect </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_connect </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -818,12 +877,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#af6f5d7163923cf82721385246b448a69">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00427">427</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00436">436</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="a79ce10d7ee5799078bda65121a08900f" name="a79ce10d7ee5799078bda65121a08900f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79ce10d7ee5799078bda65121a08900f">&#9670;&#160;</a></span>on_data()</h2>
+<a id="af2acbd5188b0f996f33a5bd9116814cf" name="af2acbd5188b0f996f33a5bd9116814cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2acbd5188b0f996f33a5bd9116814cf">&#9670;&#160;</a></span>on_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -832,7 +891,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_data </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_data </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -848,12 +907,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a39eb8c72d637c8eee7dd7c0e94b6b7c6">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00439">439</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00448">448</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="ad4f8ddf8b8ae7f4a988ad75baed45c83" name="ad4f8ddf8b8ae7f4a988ad75baed45c83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4f8ddf8b8ae7f4a988ad75baed45c83">&#9670;&#160;</a></span>on_data_batch()</h2>
+<a id="acb99d4592f160cd901b34649559ed242" name="acb99d4592f160cd901b34649559ed242"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb99d4592f160cd901b34649559ed242">&#9670;&#160;</a></span>on_data_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -862,7 +921,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_data_batch </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_data_batch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -880,12 +939,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a637fa1fc50c1777ef53e69204da6f72d">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00445">445</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00454">454</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="af5174d6d8849d63545328b0dd8e18f96" name="af5174d6d8849d63545328b0dd8e18f96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5174d6d8849d63545328b0dd8e18f96">&#9670;&#160;</a></span>on_disconnect()</h2>
+<a id="a44183b32b4ad305e2e2eab43e4b403a8" name="a44183b32b4ad305e2e2eab43e4b403a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44183b32b4ad305e2e2eab43e4b403a8">&#9670;&#160;</a></span>on_disconnect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -894,7 +953,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_disconnect </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_disconnect </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -910,12 +969,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2b2ab220d0e4875935b2caa54589871c">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00433">433</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00442">442</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="a8b080d4eed250fbf1af42f7fab375494" name="a8b080d4eed250fbf1af42f7fab375494"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b080d4eed250fbf1af42f7fab375494">&#9670;&#160;</a></span>on_error()</h2>
+<a id="ae7c27af1221d43d98e20ee671a972e88" name="ae7c27af1221d43d98e20ee671a972e88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7c27af1221d43d98e20ee671a972e88">&#9670;&#160;</a></span>on_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -924,7 +983,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_error </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_error </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -940,12 +999,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a44bc173a5fcad1186b744f1040d4942f">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00451">451</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00460">460</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="a96c112224f1af1d3b5a185eca165ac86" name="a96c112224f1af1d3b5a185eca165ac86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96c112224f1af1d3b5a185eca165ac86">&#9670;&#160;</a></span>on_message()</h2>
+<a id="a588ef181fd93aacb96467acaa05c2fd0" name="a588ef181fd93aacb96467acaa05c2fd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a588ef181fd93aacb96467acaa05c2fd0">&#9670;&#160;</a></span>on_message()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -954,7 +1013,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_message </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_message </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -978,12 +1037,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad24bc099659445bb75e62d1809c063b9">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00469">469</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00478">478</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="abb8500a46c20981ed73244c62891e6c2" name="abb8500a46c20981ed73244c62891e6c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb8500a46c20981ed73244c62891e6c2">&#9670;&#160;</a></span>on_message_batch()</h2>
+<a id="a4841ff5b6784694f07acdc9e681479e0" name="a4841ff5b6784694f07acdc9e681479e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4841ff5b6784694f07acdc9e681479e0">&#9670;&#160;</a></span>on_message_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -992,7 +1051,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdsServer::on_message_batch </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a> &amp; unilink::wrapper::UdsServer::on_message_batch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -1010,7 +1069,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a275d1e986bc367c0082bb9db3971c43b">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00475">475</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00484">484</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1109,6 +1168,13 @@ false Dropped or client not found. </dd></dl>
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a20b16e1e57ab82297d6d443a24adf0e1">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00420">420</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_ab85d87986b379c902088c7e1e2211c58_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1157,6 +1223,55 @@ false Server stopped while waiting. </dd></dl>
 
 </div>
 </div>
+<a id="a846ea585651b1b99ed978356d164a899" name="a846ea585651b1b99ed978356d164a899"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a846ea585651b1b99ed978356d164a899">&#9670;&#160;</a></span>send_to_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdsServer::send_to_line </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Send a line (data + "\n") to a specific client, honouring the backpressure strategy. </p>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a63d23e82bd31bc7d25a7f37efa1468b1">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00428">428</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a846ea585651b1b99ed978356d164a899_cgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a26de1dce570cdd96462c4b2f8b5286f0" name="a26de1dce570cdd96462c4b2f8b5286f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a26de1dce570cdd96462c4b2f8b5286f0">&#9670;&#160;</a></span>start()</h2>
 
@@ -1183,18 +1298,18 @@ false Server stopped while waiting. </dd></dl>
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a823ccba7490a070689c366a09ed10b1a">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00412">412</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a26de1dce570cdd96462c4b2f8b5286f0_cgraph.svg" width="214" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a26de1dce570cdd96462c4b2f8b5286f0_icgraph.svg" width="464" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1262,6 +1377,52 @@ false Server stopped while waiting. </dd></dl>
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8e1c4ef868a94d39992e114c0b7725c8">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00419">419</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_ac56c6ce2b2d399ca2cc20c8ebf2dc15b_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a96900125268ba9cfc1440f723c26ce6c" name="a96900125268ba9cfc1440f723c26ce6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96900125268ba9cfc1440f723c26ce6c">&#9670;&#160;</a></span>try_broadcast_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdsServer::try_broadcast_line </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking broadcast_line that always drops on a full queue, ignoring strategy. </p>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a0c0acd3dbe74c6cfab073cadb784f44e">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00431">431</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a96900125268ba9cfc1440f723c26ce6c_cgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1308,6 +1469,62 @@ false Dropped or client not found. </dd></dl>
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a1f5795e294b646631c4233465aef16f3">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00421">421</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_a4f98b1490a20cf84dfcdee76e5efad57_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ab5eed47c753464ebbd8369480bb78c33" name="ab5eed47c753464ebbd8369480bb78c33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5eed47c753464ebbd8369480bb78c33">&#9670;&#160;</a></span>try_send_to_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdsServer::try_send_to_line </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
+          <td class="paramname"><em>client_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking send_to_line that always drops on a full queue, ignoring strategy. </p>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a61ca1a0e155bca5561663954a24fa5f8">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00432">432</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1wrapper_1_1UdsServer_ab5eed47c753464ebbd8369480bb78c33_cgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1326,7 +1543,7 @@ false Dropped or client not found. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00511">511</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00520">520</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1340,7 +1557,7 @@ false Dropped or client not found. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a></li>
-    <li class="footer">Generated on Sun May 3 2026 13:16:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 4 2026 01:06:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
