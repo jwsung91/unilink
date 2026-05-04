@@ -48,6 +48,15 @@ jobs:
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
+          - name: C++ (Linux, GCC 12, Ubuntu 22.04)
+            os: ubuntu-22.04
+            triplet: x64-linux
+            cc: gcc-12
+            cxx: g++-12
+            generator: Ninja
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
           - name: C++ (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows-static-md
@@ -82,6 +91,15 @@ jobs:
             triplet: arm64-linux
             cc: gcc-13
             cxx: g++-13
+            generator: Ninja
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
+          - name: Python3 (Linux, GCC 12, Ubuntu 22.04)
+            os: ubuntu-22.04
+            triplet: x64-linux
+            cc: gcc-12
+            cxx: g++-12
             generator: Ninja
             build_type: Release
             build_python: ON
@@ -130,15 +148,9 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ca-certificates
             
-            # Install build tools and modern GCC for C++20 support
+            # Install build tools and the matrix-specified compiler
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
-              gcc-13 g++-13
-            
-            # Set as default if not already
-            if [ "${{ matrix.cc }}" = "gcc" ]; then
-              sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
-              sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
-            fi
+              ${{ matrix.cc }} ${{ matrix.cxx }}
           else
             brew install ninja autoconf autoconf-archive automake libtool pkg-config
           fi
