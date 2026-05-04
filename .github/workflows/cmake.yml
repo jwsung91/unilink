@@ -245,9 +245,11 @@ jobs:
 
       - name: Configure (macOS)
         if: runner.os == 'macOS'
-        env:
-          MACOSX_DEPLOYMENT_TARGET: "15.0"
         run: |
+          SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
+          echo "macOS SDK version: $SDK_VER"
+          export MACOSX_DEPLOYMENT_TARGET="$SDK_VER"
+
           PYTHON_CMAKE_ARGS=()
           if [ "${{ matrix.build_python }}" = "ON" ]; then
             PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
@@ -258,7 +260,7 @@ jobs:
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \

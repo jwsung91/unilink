@@ -106,9 +106,12 @@ jobs:
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON
           elif [ "${{ runner.os }}" = "macOS" ]; then
+            SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
+            echo "macOS SDK version: $SDK_VER"
+            export MACOSX_DEPLOYMENT_TARGET="$SDK_VER"
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
