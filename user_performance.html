@@ -90,7 +90,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">unilink<span id="projectnumber">&#160;0.6.1</span>
+   <div id="projectname">unilink<span id="projectnumber">&#160;0.7.0</span>
    </div>
    <div id="projectbrief">A simple C++ library for unified async communication</div>
   </td>
@@ -268,7 +268,7 @@ Backpressure Management</h1>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">Strategy   </th><th class="markdownTableHeadLeft">Behavior   </th><th class="markdownTableHeadLeft">Best For    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><code>Reliable</code> (Default)   </td><td class="markdownTableBodyLeft">Retains all data until a hard limit (64MB) is reached.   </td><td class="markdownTableBodyLeft">Reliable data (files, logs, commands).    </td></tr>
+<td class="markdownTableBodyLeft"><code>Reliable</code> (Default)   </td><td class="markdownTableBodyLeft">Retains all data and applies backpressure based on the configured threshold (default: 4 MiB), bounded by system buffer limits (up to 64MB).   </td><td class="markdownTableBodyLeft">Reliable data (files, logs, commands).    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><code>BestEffort</code>   </td><td class="markdownTableBodyLeft">Drops oldest data when a threshold is reached.   </td><td class="markdownTableBodyLeft">Real-time sensors (LiDAR, Video, Telemetry).   </td></tr>
 </table>
@@ -309,7 +309,7 @@ Backpressure Management</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue May 5 2026 02:54:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue May 5 2026 05:34:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
