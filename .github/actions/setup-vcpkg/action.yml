@@ -75,4 +75,5 @@ runs:
           echo "VCPKG_ROOT=${VCPKG_ROOT}"
           echo "VCPKG_TARGET_TRIPLET=${{ inputs.triplet }}"
           echo "CMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+          echo "VCPKG_BINARY_SOURCES=clear;x-gha,readwrite"
         } >> "$GITHUB_ENV"

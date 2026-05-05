@@ -39,6 +39,14 @@ jobs:
             release_files: |
               build/package/unilink-*.tar.gz
 
+          - os: ubuntu-22.04-arm
+            label: Linux ARM64 (Ubuntu 22.04)
+            triplet: arm64-linux
+            cmake_generator: "Ninja"
+            cpack_generator: "TGZ"
+            release_files: |
+              build/package/unilink-*.tar.gz
+
           - os: macos-15
             label: macOS 15
             triplet: arm64-osx
@@ -66,7 +74,18 @@ jobs:
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
-          sudo apt-get install -y build-essential cmake ninja-build
+          sudo apt-get install -y build-essential cmake ninja-build software-properties-common
+          
+          if [[ "${{ matrix.os }}" == "ubuntu-22.04"* ]]; then
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+            sudo apt-get update
+            sudo apt-get install -y gcc-13 g++-13
+            echo "CC=gcc-13" >> $GITHUB_ENV
+            echo "CXX=g++-13" >> $GITHUB_ENV
+          else
+            echo "CC=gcc" >> $GITHUB_ENV
+            echo "CXX=g++" >> $GITHUB_ENV
+          fi
 
       - name: Set up C++ toolchain (macOS)
         if: runner.os == 'macOS'
@@ -119,6 +138,8 @@ jobs:
           else
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_C_COMPILER=$CC \
+              -DCMAKE_CXX_COMPILER=$CXX \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
