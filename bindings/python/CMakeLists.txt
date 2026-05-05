@@ -1,7 +1,20 @@
 include(GNUInstallDirs)
 
 if(DEFINED Python3_EXECUTABLE AND NOT DEFINED Python3_ROOT_DIR)
-  get_filename_component(Python3_ROOT_DIR "${Python3_EXECUTABLE}" DIRECTORY)
+  get_filename_component(
+    _unilink_python_executable_dir "${Python3_EXECUTABLE}" DIRECTORY
+  )
+  get_filename_component(
+    _unilink_python_executable_dir_name "${_unilink_python_executable_dir}"
+    NAME
+  )
+  if(_unilink_python_executable_dir_name MATCHES "^(bin|Scripts)$")
+    get_filename_component(
+      Python3_ROOT_DIR "${_unilink_python_executable_dir}" DIRECTORY
+    )
+  else()
+    set(Python3_ROOT_DIR "${_unilink_python_executable_dir}")
+  endif()
 endif()
 
 # On Windows CI, vcpkg also provides a Python distribution for pybind11's
@@ -15,7 +28,7 @@ if(WIN32)
   set(Python3_FIND_ABI OFF ANY ANY)
 endif()
 
-if(WIN32 AND Python3_EXECUTABLE)
+if((WIN32 OR APPLE) AND Python3_EXECUTABLE)
   execute_process(
     COMMAND
       "${Python3_EXECUTABLE}" -c
@@ -32,12 +45,8 @@ if(WIN32 AND Python3_EXECUTABLE)
     )
     list(LENGTH _unilink_python_probe_lines _unilink_python_probe_count)
 
-    if(_unilink_python_probe_count GREATER_EQUAL 2)
+    if(_unilink_python_probe_count GREATER_EQUAL 1)
       list(GET _unilink_python_probe_lines 0 _unilink_python_include_dir)
-      list(GET _unilink_python_probe_lines 1 _unilink_python_library)
-      get_filename_component(
-        _unilink_python_library_dir "${_unilink_python_library}" DIRECTORY
-      )
 
       if(EXISTS "${_unilink_python_include_dir}/Python.h")
         set(Python3_INCLUDE_DIR
@@ -48,7 +57,14 @@ if(WIN32 AND Python3_EXECUTABLE)
         )
       endif()
 
-      if(EXISTS "${_unilink_python_library}")
+      if(_unilink_python_probe_count GREATER_EQUAL 2)
+        list(GET _unilink_python_probe_lines 1 _unilink_python_library)
+        get_filename_component(
+          _unilink_python_library_dir "${_unilink_python_library}" DIRECTORY
+        )
+      endif()
+
+      if(WIN32 AND EXISTS "${_unilink_python_library}")
         set(Python3_LIBRARY
             "${_unilink_python_library}"
             CACHE FILEPATH
