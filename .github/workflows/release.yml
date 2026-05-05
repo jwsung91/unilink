@@ -50,6 +50,7 @@ jobs:
 
           - os: windows-2022
             label: Windows (VS 2022)
+            triplet: x64-windows
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "x64"
             cpack_generator: "ZIP"
@@ -72,8 +73,13 @@ jobs:
         run: |
           brew install cmake ninja
 
-      - name: Install dependencies with vcpkg (Unix)
-        if: runner.os != 'Windows'
+      - name: Set up C++ toolchain (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install ninja --no-progress -y
+
+      - name: Install dependencies with vcpkg
         uses: ./.github/actions/setup-vcpkg
         with:
           triplet: ${{ matrix.triplet }}
@@ -86,13 +92,6 @@ jobs:
           security unlock-keychain -p "" build.keychain
           security set-keychain-settings -t 3600 -u build.keychain
 
-      - name: Set up C++ toolchain (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          choco install ninja --no-progress -y
-          & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows spdlog:x64-windows
-
       - name: Configure
         shell: bash
         env:
@@ -100,8 +99,8 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" -A "${{ matrix.cmake_arch }}" \
-              -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
-              -DVCPKG_TARGET_TRIPLET=x64-windows \
+              -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON
@@ -150,7 +149,21 @@ jobs:
         shell: bash
         run: |
           cd build
-          cpack -C Release -B package -G "${{ matrix.cpack_generator }}"
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          SUCCESS=0
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if cpack -C Release -B package -G "${{ matrix.cpack_generator }}"; then
+              SUCCESS=1
+              break
+            fi
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "CPack failed. Retry $RETRY_COUNT of $MAX_RETRIES..."
+            sleep 10
+          done
+          if [ $SUCCESS -ne 1 ]; then
+            exit 1
+          fi
           ls -la package/
 
       - name: Upload Release Asset
