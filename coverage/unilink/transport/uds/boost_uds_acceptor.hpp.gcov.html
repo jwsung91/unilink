@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-04 12:49:09</td>
+            <td class="headerValue">2026-05-05 02:58:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -113,7 +113,7 @@
 <span id="L35"><span class="lineNum">      35</span>                 :             : class UNILINK_API BoostUdsAcceptor : public interface::UdsAcceptorInterface {</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :  public:</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             :   explicit BoostUdsAcceptor(boost::asio::io_context&amp; ioc);</span>
-<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC tlaBgGNC">          38 :   ~BoostUdsAcceptor() override = default;</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC tlaBgGNC">          36 :   ~BoostUdsAcceptor() override = default;</span></span>
 <span id="L39"><span class="lineNum">      39</span>                 :             : </span>
 <span id="L40"><span class="lineNum">      40</span>                 :             :   void open(const uds&amp; protocol, boost::system::error_code&amp; ec) override;</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :   void bind(const uds::endpoint&amp; endpoint, boost::system::error_code&amp; ec) override;</span>
