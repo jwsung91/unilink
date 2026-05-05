@@ -276,7 +276,7 @@ cmake -S . -B build \
 #### System Boost setup
 
 ```bash
-cmake -S . -B build -DBOOST_ROOT=/path/to/boost-1.84-or-newer
+cmake -S . -B build -DBOOST_ROOT=/path/to/boost-1.83-or-newer
 ```
 
 #### Windows (vcpkg)

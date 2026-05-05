@@ -25,9 +25,9 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 
 ## Requirements
 
-* **C++20 compiler and standard library with `std::format`**: GCC 13+, recent Clang/libc++, or MSVC 2022 (required)
+* **C++20 compiler and standard library**: GCC 10+, recent Clang/libc++, or MSVC 2022 (required)
 * CMake 3.12 or later
-* Boost 1.84.0 or later. vcpkg is the recommended dependency supplier; OS package manager Boost versions are supported only when they meet this minimum.
+* Boost 1.83.0 or later. vcpkg is the recommended dependency supplier; OS package manager Boost versions are supported only when they meet this minimum.
 
 ## 📦 Installation
 
@@ -47,7 +47,7 @@ cmake --preset dev-linux-x64
 cmake --build --preset dev-linux-x64
 ```
 
-The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.84.0.
+The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0.
 
 ## 🐍 Python Bindings
 
@@ -59,7 +59,7 @@ For a complete guide, see the **[Python Bindings Guide](docs/user/python_binding
 
 * Python 3.8+ (dev headers)
 * pybind11 (`sudo apt-get install pybind11-dev python3-pybind11` on Ubuntu)
-* Boost 1.84.0+ (`boost-system`, `boost-asio`)
+* Boost 1.83.0+ (`boost-system`, `boost-asio`)
 
 ### Build
 

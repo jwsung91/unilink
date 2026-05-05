@@ -59,7 +59,7 @@ sudo apt install -y \
   socat
 ```
 
-Install C++ dependencies through vcpkg so Boost 1.84.0+ is used consistently:
+Install C++ dependencies through vcpkg so Boost 1.83.0+ is used consistently:
 
 ```bash
 vcpkg install boost-asio boost-system spdlog pybind11 --triplet arm64-linux

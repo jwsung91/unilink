@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     wget \
     zip \
-    gcc-13 \
-    g++-13 \
+    gcc-10 \
+    g++-10 \
     python3 \
     doxygen \
     graphviz \
@@ -37,8 +37,8 @@ RUN rm -rf build && mkdir build && cd build && \
     cmake .. \
         -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER=gcc-13 \
-        -DCMAKE_CXX_COMPILER=g++-13 \
+        -DCMAKE_C_COMPILER=gcc-10 \
+        -DCMAKE_CXX_COMPILER=g++-10 \
         -DCMAKE_CXX_STANDARD=20 \
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic \
