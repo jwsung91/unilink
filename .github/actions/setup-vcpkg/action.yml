@@ -18,62 +18,30 @@ runs:
     - shell: bash
       run: |
         set -euo pipefail
-        
-        # Determine VCPKG_ROOT and VCPKG_EXE based on OS
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
-          # Use pre-installed vcpkg on Windows runner if available, otherwise use workspace
-          if [ -d "C:/vcpkg" ]; then
-            VCPKG_ROOT="C:/vcpkg"
-          else
-            VCPKG_ROOT="${GITHUB_WORKSPACE}/vcpkg-repo"
-          fi
-          VCPKG_EXE="${VCPKG_ROOT}/vcpkg.exe"
-          
-          if [ ! -f "${VCPKG_EXE}" ]; then
-            echo "vcpkg not found at ${VCPKG_ROOT}, cloning..."
-            git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
-            "${VCPKG_ROOT}/bootstrap-vcpkg.bat" -disableMetrics
-          fi
-        else
-          VCPKG_ROOT="${{ inputs.vcpkg-root }}"
-          if [ -z "${VCPKG_ROOT}" ]; then
-            VCPKG_ROOT="${GITHUB_WORKSPACE}/vcpkg-repo"
-          fi
-          if [ ! -d "${VCPKG_ROOT}/.git" ]; then
-            git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
-          fi
-          if [ ! -f "${VCPKG_ROOT}/vcpkg" ]; then
-            "${VCPKG_ROOT}/bootstrap-vcpkg.sh" -disableMetrics
-          fi
-          VCPKG_EXE="${VCPKG_ROOT}/vcpkg"
+        VCPKG_ROOT="${{ inputs.vcpkg-root }}"
+        if [ -z "${VCPKG_ROOT}" ]; then
+          VCPKG_ROOT="${GITHUB_WORKSPACE}/vcpkg"
         fi
-
-        echo "Using vcpkg at: ${VCPKG_ROOT}"
-
+        if [ ! -d "${VCPKG_ROOT}/.git" ]; then
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
+        fi
+        "${VCPKG_ROOT}/bootstrap-vcpkg.sh" -disableMetrics
         retry_vcpkg_install() {
           local attempt
-          local max_attempts=3
-          for attempt in $(seq 1 $max_attempts); do
-            echo "vcpkg install attempt ${attempt} of ${max_attempts}..."
-            if "${VCPKG_EXE}" install ${{ inputs.packages }} \
-                --triplet "${{ inputs.triplet }}" \
-                --overlay-triplets "${GITHUB_WORKSPACE}/vcpkg/triplets" \
-                --clean-after-build; then
+          for attempt in 1 2 3; do
+            if "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --overlay-triplets "${GITHUB_WORKSPACE}/vcpkg/triplets" --clean-after-build; then
               return 0
             fi
-            if [ "${attempt}" -eq "${max_attempts}" ]; then
+            if [ "${attempt}" -eq 3 ]; then
               return 1
             fi
-            echo "vcpkg install failed; retrying in $((attempt * 10)) seconds..."
+            echo "vcpkg install failed; retrying attempt $((attempt + 1)) of 3..."
             sleep $((attempt * 10))
           done
         }
-        
         retry_vcpkg_install
-        
         {
           echo "VCPKG_ROOT=${VCPKG_ROOT}"
           echo "VCPKG_TARGET_TRIPLET=${{ inputs.triplet }}"
           echo "CMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-          echo "VCPKG_BINARY_SOURCES=clear;x-gha,readwrite"
         } >> "$GITHUB_ENV"
