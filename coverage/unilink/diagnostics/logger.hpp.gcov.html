@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-05 06:42:29</td>
+            <td class="headerValue">2026-05-05 08:22:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -280,12 +280,12 @@
 <span id="L202"><span class="lineNum">     202</span>                 :             :   void debug(std::string_view component, std::string_view operation, std::string_view message,</span>
 <span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">        2234 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span id="L204"><span class="lineNum">     204</span>                 :             :   void info(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L205"><span class="lineNum">     205</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         750 :             const std::source_location&amp; loc = std::source_location::current());</span></span>
+<span id="L205"><span class="lineNum">     205</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         754 :             const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span id="L206"><span class="lineNum">     206</span>                 :             :   void warning(std::string_view component, std::string_view operation, std::string_view message,</span>
 <span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          14 :                const std::source_location&amp; loc = std::source_location::current());</span></span>
 <span id="L208"><span class="lineNum">     208</span>                 :             :   void error(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L209"><span class="lineNum">     209</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         102 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
+<span id="L209"><span class="lineNum">     209</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          92 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaUNC" title="Branch 12 was not taken"> - </span> 
 <span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 13 was not taken"> - </span>]
 <span id="L210"><span class="lineNum">     210</span>                 :             :   void critical(std::string_view component, std::string_view operation, std::string_view message,</span>
@@ -293,8 +293,8 @@
 <span id="L212"><span class="lineNum">     212</span>                 :             : </span>
 <span id="L213"><span class="lineNum">     213</span>                 :             :  private:</span>
 <span id="L214"><span class="lineNum">     214</span>                 :             :   struct Impl;</span>
-<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">        1588 :   const Impl* get_impl() const { return impl_.get(); }</span></span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">        3105 :   Impl* get_impl() { return impl_.get(); }</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">        1585 :   const Impl* get_impl() const { return impl_.get(); }</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">        3099 :   Impl* get_impl() { return impl_.get(); }</span></span>
 <span id="L217"><span class="lineNum">     217</span>                 :             :   std::unique_ptr&lt;Impl&gt; impl_;</span>
 <span id="L218"><span class="lineNum">     218</span>                 :             : };</span>
 <span id="L219"><span class="lineNum">     219</span>                 :             : </span>
