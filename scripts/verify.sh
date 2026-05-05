@@ -17,6 +17,7 @@ job_count() {
 }
 
 JOBS="$(job_count)"
+export JOBS
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -78,8 +79,14 @@ fi
 # ---------------------------------------------------------------------------
 if [[ "${SKIP_FORMAT}" -eq 0 ]]; then
   section "Step 1: Formatting code"
-  ./scripts/apply_clang_format.sh
-  ./scripts/apply_cmake_format.sh
+  ./scripts/apply_clang_format.sh &
+  CLANG_PID=$!
+  ./scripts/apply_cmake_format.sh &
+  CMAKE_PID=$!
+
+  # Wait for both and check for failures
+  wait "$CLANG_PID" || { echo "clang-format failed"; exit 1; }
+  wait "$CMAKE_PID" || { echo "cmake-format failed"; exit 1; }
 else
   section "Step 1: Formatting code [SKIPPED]"
 fi

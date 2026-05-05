@@ -71,7 +71,8 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
   // Fix for macOS/BSD SIGPIPE on write to closed socket
   int yes = 1;
-  int result = setsockopt(static_cast<int>(client.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes, static_cast<socklen_t>(sizeof(yes)));
+  int result = setsockopt(static_cast<int>(client.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes,
+                          static_cast<socklen_t>(sizeof(yes)));
   if (result < 0) {
     std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
   }
@@ -120,7 +121,8 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
   // Fix for macOS/BSD SIGPIPE on write to closed socket
   int yes = 1;
-  int result = setsockopt(static_cast<int>(client.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes, static_cast<socklen_t>(sizeof(yes)));
+  int result = setsockopt(static_cast<int>(client.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes,
+                          static_cast<socklen_t>(sizeof(yes)));
   if (result < 0) {
     std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
   }

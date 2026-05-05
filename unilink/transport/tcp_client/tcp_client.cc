@@ -525,7 +525,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
           int yes = 1;
-          (void)::setsockopt(static_cast<int>(self->impl_->socket_.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes, static_cast<socklen_t>(sizeof(yes)));
+          (void)::setsockopt(static_cast<int>(self->impl_->socket_.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes,
+                             static_cast<socklen_t>(sizeof(yes)));
 #endif
 
           self->impl_->transition_to(LinkState::Connected);
