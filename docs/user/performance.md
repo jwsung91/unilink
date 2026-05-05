@@ -129,7 +129,7 @@ Unilink provides two strategies for handling full queues:
 
 | Strategy | Behavior | Best For |
 |:---|:---|:---|
-| `Reliable` (Default) | Retains all data until a hard limit (64MB) is reached. | Reliable data (files, logs, commands). |
+| `Reliable` (Default) | Retains all data and applies backpressure based on the configured threshold (default: 4 MiB), bounded by system buffer limits (up to 64MB). | Reliable data (files, logs, commands). |
 | `BestEffort` | Drops oldest data when a threshold is reached. | Real-time sensors (LiDAR, Video, Telemetry). |
 
 ### 2. High-Throughput Sensors (LiDAR/Camera)
