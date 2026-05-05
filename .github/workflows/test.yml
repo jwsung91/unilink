@@ -59,11 +59,11 @@ jobs:
             cc: gcc-12
             cxx: g++-12
             triplet: x64-linux
-          # macOS: Clang (AppleClang, arm64)
+          # macOS: Homebrew LLVM Clang/libc++ (arm64)
           - os: macos-15
             compiler: clang
-            cc: clang
-            cxx: clang++
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
             triplet: arm64-osx
 
     steps:
@@ -108,12 +108,21 @@ jobs:
 
     - name: Install tools (macOS)
       if: runner.os == 'macOS'
-      run: brew install ccache ninja
+      run: brew install ccache ninja llvm
 
     - name: Set up compiler env
       run: |
-        echo "CC=$(which ${{ matrix.cc }})" >> $GITHUB_ENV
-        echo "CXX=$(which ${{ matrix.cxx }})" >> $GITHUB_ENV
+        resolve_tool() {
+          if [ -x "$1" ]; then
+            printf '%s\n' "$1"
+          else
+            command -v "$1"
+          fi
+        }
+        CC_PATH=$(resolve_tool "${{ matrix.cc }}")
+        CXX_PATH=$(resolve_tool "${{ matrix.cxx }}")
+        echo "CC=${CC_PATH}" >> $GITHUB_ENV
+        echo "CXX=${CXX_PATH}" >> $GITHUB_ENV
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg

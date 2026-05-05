@@ -69,8 +69,8 @@ jobs:
           - name: C++ (macOS, Clang)
             os: macos-15
             triplet: arm64-osx
-            cc: clang
-            cxx: clang++
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
             generator: Ninja
             build_type: Release
             build_python: OFF
@@ -116,8 +116,8 @@ jobs:
           - name: Python3 (macOS, Clang)
             os: macos-15
             triplet: arm64-osx
-            cc: clang
-            cxx: clang++
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
             generator: Ninja
             build_type: Release
             build_python: ON
@@ -152,12 +152,22 @@ jobs:
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
               ${{ matrix.cc }} ${{ matrix.cxx }}
           else
-            brew install ninja autoconf autoconf-archive automake libtool pkg-config
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config llvm
           fi
 
-      - name: Install dependencies with vcpkg (Unix)
-        if: runner.os != 'Windows'
+      - name: Install dependencies with vcpkg (Linux)
+        if: runner.os == 'Linux'
         uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: ${{ matrix.triplet }}
+          packages: boost-asio boost-system spdlog pybind11
+
+      - name: Install dependencies with vcpkg (macOS)
+        if: runner.os == 'macOS'
+        uses: ./.github/actions/setup-vcpkg
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
         with:
           triplet: ${{ matrix.triplet }}
           packages: boost-asio boost-system spdlog pybind11
