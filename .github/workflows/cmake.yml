@@ -48,6 +48,15 @@ jobs:
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
+          - name: C++ (Linux, GCC 12, Ubuntu 22.04)
+            os: ubuntu-22.04
+            triplet: x64-linux
+            cc: gcc-12
+            cxx: g++-12
+            generator: Ninja
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
           - name: C++ (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows-static-md
@@ -58,10 +67,10 @@ jobs:
             build_python: OFF
             vcpkg_features: ""
           - name: C++ (macOS, Clang)
-            os: macos-26
+            os: macos-15
             triplet: arm64-osx
-            cc: clang
-            cxx: clang++
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
             generator: Ninja
             build_type: Release
             build_python: OFF
@@ -86,6 +95,15 @@ jobs:
             build_type: Release
             build_python: ON
             vcpkg_features: "python"
+          - name: Python3 (Linux, GCC 12, Ubuntu 22.04)
+            os: ubuntu-22.04
+            triplet: x64-linux
+            cc: gcc-12
+            cxx: g++-12
+            generator: Ninja
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
           - name: Python3 (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows-static-md
@@ -96,10 +114,10 @@ jobs:
             build_python: ON
             vcpkg_features: "python"
           - name: Python3 (macOS, Clang)
-            os: macos-26
+            os: macos-15
             triplet: arm64-osx
-            cc: clang
-            cxx: clang++
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
             generator: Ninja
             build_type: Release
             build_python: ON
@@ -130,22 +148,26 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ca-certificates
             
-            # Install build tools and modern GCC for C++20 support
+            # Install build tools and the matrix-specified compiler
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
-              gcc-13 g++-13
-            
-            # Set as default if not already
-            if [ "${{ matrix.cc }}" = "gcc" ]; then
-              sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
-              sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
-            fi
+              ${{ matrix.cc }} ${{ matrix.cxx }}
           else
-            brew install ninja autoconf autoconf-archive automake libtool pkg-config
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config llvm
           fi
 
-      - name: Install dependencies with vcpkg (Unix)
-        if: runner.os != 'Windows'
+      - name: Install dependencies with vcpkg (Linux)
+        if: runner.os == 'Linux'
         uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: ${{ matrix.triplet }}
+          packages: boost-asio boost-system spdlog pybind11
+
+      - name: Install dependencies with vcpkg (macOS)
+        if: runner.os == 'macOS'
+        uses: ./.github/actions/setup-vcpkg
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
         with:
           triplet: ${{ matrix.triplet }}
           packages: boost-asio boost-system spdlog pybind11
@@ -234,6 +256,10 @@ jobs:
       - name: Configure (macOS)
         if: runner.os == 'macOS'
         run: |
+          SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
+          echo "macOS SDK version: $SDK_VER"
+          export MACOSX_DEPLOYMENT_TARGET="$SDK_VER"
+
           PYTHON_CMAKE_ARGS=()
           if [ "${{ matrix.build_python }}" = "ON" ]; then
             PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
@@ -244,7 +270,7 @@ jobs:
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=26.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \

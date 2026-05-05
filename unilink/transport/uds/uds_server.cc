@@ -16,11 +16,12 @@
 
 #include "unilink/transport/uds/uds_server.hpp"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <algorithm>
 #include <atomic>
 #include <boost/asio.hpp>
 #include <cstdio>
-#include <format>
 #include <mutex>
 #include <stop_token>
 #include <string_view>
@@ -134,7 +135,7 @@ void UdsServer::start() {
   boost::system::error_code ec;
   impl_->acceptor_->open(uds(), ec);
   if (ec) {
-    UNILINK_LOG_ERROR("uds_server", "start", std::format("Failed to open acceptor: {}", ec.message()));
+    UNILINK_LOG_ERROR("uds_server", "start", fmt::format("Failed to open acceptor: {}", ec.message()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -144,7 +145,7 @@ void UdsServer::start() {
   try {
     endpoint = uds::endpoint(impl_->cfg_.socket_path);
   } catch (const std::exception& e) {
-    UNILINK_LOG_ERROR("uds_server", "start", std::format("Invalid UDS endpoint: {}", e.what()));
+    UNILINK_LOG_ERROR("uds_server", "start", fmt::format("Invalid UDS endpoint: {}", e.what()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -153,7 +154,7 @@ void UdsServer::start() {
   impl_->acceptor_->bind(endpoint, ec);
   if (ec) {
     UNILINK_LOG_ERROR("uds_server", "start",
-                      std::format("Failed to bind to {}: {}", impl_->cfg_.socket_path, ec.message()));
+                      fmt::format("Failed to bind to {}: {}", impl_->cfg_.socket_path, ec.message()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -161,7 +162,7 @@ void UdsServer::start() {
 
   impl_->acceptor_->listen(net::socket_base::max_listen_connections, ec);
   if (ec) {
-    UNILINK_LOG_ERROR("uds_server", "start", std::format("Failed to listen: {}", ec.message()));
+    UNILINK_LOG_ERROR("uds_server", "start", fmt::format("Failed to listen: {}", ec.message()));
     impl_->state_.set_state(base::LinkState::Error);
     impl_->notify_state();
     return;
@@ -430,7 +431,7 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
     } else {
       // Log only real errors, not operation_aborted
       if (ec != boost::asio::error::operation_aborted) {
-        UNILINK_LOG_ERROR("uds_server", "accept", std::format("Accept failed: {}", ec.message()));
+        UNILINK_LOG_ERROR("uds_server", "accept", fmt::format("Accept failed: {}", ec.message()));
       }
     }
   });

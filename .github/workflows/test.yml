@@ -54,11 +54,16 @@ jobs:
             cc: gcc-13
             cxx: g++-13
             triplet: arm64-linux
-          # macOS: Clang with libc++ std::format support
-          - os: macos-26
+          - os: ubuntu-22.04
+            compiler: gcc
+            cc: gcc-12
+            cxx: g++-12
+            triplet: x64-linux
+          # macOS: Homebrew LLVM Clang/libc++ (arm64)
+          - os: macos-15
             compiler: clang
-            cc: clang
-            cxx: clang++
+            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: /opt/homebrew/opt/llvm/bin/clang++
             triplet: arm64-osx
 
     steps:
@@ -92,8 +97,9 @@ jobs:
         sudo apt-get install -y ca-certificates
 
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          sudo apt-get install -y gcc-13 g++-13
+          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
         else
+          # Clang needs GCC's C++ stdlib headers; all clang entries run on ubuntu-24.04
           sudo apt-get install -y ${{ matrix.cc }} g++-13
         fi
 
@@ -102,25 +108,56 @@ jobs:
 
     - name: Install tools (macOS)
       if: runner.os == 'macOS'
-      run: brew install ccache ninja
+      run: brew install ccache ninja llvm
 
     - name: Set up compiler env
       run: |
-        echo "CC=$(which ${{ matrix.cc }})" >> $GITHUB_ENV
-        echo "CXX=$(which ${{ matrix.cxx }})" >> $GITHUB_ENV
+        resolve_tool() {
+          if [ -x "$1" ]; then
+            printf '%s\n' "$1"
+          else
+            command -v "$1"
+          fi
+        }
+        CC_PATH=$(resolve_tool "${{ matrix.cc }}")
+        CXX_PATH=$(resolve_tool "${{ matrix.cxx }}")
+        echo "CC=${CC_PATH}" >> $GITHUB_ENV
+        echo "CXX=${CXX_PATH}" >> $GITHUB_ENV
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg
       with:
         triplet: ${{ matrix.triplet }}
 
-    - name: Configure CMake
+    - name: Configure CMake (Linux)
+      if: runner.os == 'Linux'
       run: |
         cmake -S . -B build-test \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
           -DCMAKE_C_COMPILER=$CC \
           -DCMAKE_CXX_COMPILER=$CXX \
           -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+          -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+    - name: Configure CMake (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
+        echo "macOS SDK version: $SDK_VER"
+        export MACOSX_DEPLOYMENT_TARGET="$SDK_VER"
+        cmake -S . -B build-test \
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DCMAKE_C_COMPILER=$CC \
+          -DCMAKE_CXX_COMPILER=$CXX \
+          -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \

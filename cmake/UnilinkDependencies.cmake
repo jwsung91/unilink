@@ -7,7 +7,7 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31" AND POLICY CMP0167)
 endif()
 
 set(UNILINK_MIN_BOOST_VERSION
-    1.84.0
+    1.83.0
     CACHE STRING "Minimum supported Boost version"
 )
 
@@ -86,7 +86,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT _unilink_using_vcpkg)
       CACHE PATH "Homebrew Boost include dir" FORCE
   )
   set(Boost_ADDITIONAL_VERSIONS
-      "1.89" "1.89.0" "1.84" "1.84.0"
+      "1.89" "1.89.0" "1.83" "1.83.0"
       CACHE STRING "" FORCE
   )
   list(APPEND CMAKE_PREFIX_PATH /opt/homebrew/opt/boost /opt/homebrew

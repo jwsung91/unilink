@@ -117,7 +117,7 @@ class TestUtils {
 
     // Set SO_REUSEADDR to allow binding to recently used ports
     int reuse = 1;
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, static_cast<socklen_t>(sizeof(reuse)));
 
     sockaddr_in addr{};
     addr.sin_family = AF_INET;

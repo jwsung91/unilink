@@ -16,10 +16,11 @@
 
 #include "unilink/wrapper/udp/udp_server.hpp"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
-#include <format>
 #include <iostream>
 #include <mutex>
 #include <shared_mutex>
@@ -202,7 +203,7 @@ struct UdpServer::Impl {
       for (auto it = sessions.begin(); it != sessions.end();) {
         if (now - it->second.last_seen > session_timeout) {
           std::string info =
-              std::format("{}:{}", it->second.endpoint.address().to_string(), it->second.endpoint.port());
+              fmt::format("{}:{}", it->second.endpoint.address().to_string(), it->second.endpoint.port());
           endpoint_to_id.erase(it->second.endpoint);
           to_remove_with_info.push_back({it->first, info});
           it = sessions.erase(it);
@@ -283,7 +284,7 @@ struct UdpServer::Impl {
       }
 
       if (is_new && connect_handler_copy) {
-        connect_handler_copy(ConnectionContext(client_id, std::format("{}:{}", ep.address().to_string(), ep.port())));
+        connect_handler_copy(ConnectionContext(client_id, fmt::format("{}:{}", ep.address().to_string(), ep.port())));
       }
 
       {

@@ -16,11 +16,12 @@
 
 #include "unilink/transport/serial/serial.hpp"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <atomic>
 #include <boost/asio.hpp>
 #include <cstddef>
 #include <deque>
-#include <format>
 #include <memory>
 #include <optional>
 #include <stop_token>
@@ -142,21 +143,21 @@ struct Serial::Impl {
     boost::system::error_code ec;
     port_->open(cfg_.device, ec);
     if (ec) {
-      UNILINK_LOG_ERROR("serial", "open", std::format("Failed to open device: {} - {}", cfg_.device, ec.message()));
+      UNILINK_LOG_ERROR("serial", "open", fmt::format("Failed to open device: {} - {}", cfg_.device, ec.message()));
       handle_error(self, "open", ec);
       return;
     }
 
     port_->set_option(net::serial_port_base::baud_rate(cfg_.baud_rate), ec);
     if (ec) {
-      UNILINK_LOG_ERROR("serial", "configure", std::format("Failed baud rate: {}", ec.message()));
+      UNILINK_LOG_ERROR("serial", "configure", fmt::format("Failed baud rate: {}", ec.message()));
       handle_error(self, "baud_rate", ec);
       return;
     }
 
     port_->set_option(net::serial_port_base::character_size(cfg_.char_size), ec);
     if (ec) {
-      UNILINK_LOG_ERROR("serial", "configure", std::format("Failed char size: {}", ec.message()));
+      UNILINK_LOG_ERROR("serial", "configure", fmt::format("Failed char size: {}", ec.message()));
       handle_error(self, "char_size", ec);
       return;
     }
@@ -164,7 +165,7 @@ struct Serial::Impl {
     using sb = net::serial_port_base::stop_bits;
     port_->set_option(sb(cfg_.stop_bits == 2 ? sb::two : sb::one), ec);
     if (ec) {
-      UNILINK_LOG_ERROR("serial", "configure", std::format("Failed stop bits: {}", ec.message()));
+      UNILINK_LOG_ERROR("serial", "configure", fmt::format("Failed stop bits: {}", ec.message()));
       handle_error(self, "stop_bits", ec);
       return;
     }
@@ -177,7 +178,7 @@ struct Serial::Impl {
       p = pa::odd;
     port_->set_option(pa(p), ec);
     if (ec) {
-      UNILINK_LOG_ERROR("serial", "configure", std::format("Failed parity: {}", ec.message()));
+      UNILINK_LOG_ERROR("serial", "configure", fmt::format("Failed parity: {}", ec.message()));
       handle_error(self, "parity", ec);
       return;
     }
@@ -190,12 +191,12 @@ struct Serial::Impl {
       f = fc::hardware;
     port_->set_option(fc(f), ec);
     if (ec) {
-      UNILINK_LOG_ERROR("serial", "configure", std::format("Failed flow control: {}", ec.message()));
+      UNILINK_LOG_ERROR("serial", "configure", fmt::format("Failed flow control: {}", ec.message()));
       handle_error(self, "flow_control", ec);
       return;
     }
 
-    UNILINK_LOG_INFO("serial", "connect", std::format("Device opened: {}", cfg_.device));
+    UNILINK_LOG_INFO("serial", "connect", fmt::format("Device opened: {}", cfg_.device));
     start_read(self);
 
     opened_.store(true);
@@ -216,7 +217,7 @@ struct Serial::Impl {
             try {
               impl->on_bytes_(memory::ConstByteSpan(impl->rx_.data(), n));
             } catch (const std::exception& e) {
-              UNILINK_LOG_ERROR("serial", "on_bytes", std::format("Exception in callback: {}", e.what()));
+              UNILINK_LOG_ERROR("serial", "on_bytes", fmt::format("Exception in callback: {}", e.what()));
               if (impl->cfg_.stop_on_callback_exception) {
                 impl->opened_.store(false);
                 impl->close_port();
@@ -332,7 +333,7 @@ struct Serial::Impl {
     bool retryable = cfg_.reopen_on_error;
     diagnostics::error_reporting::report_connection_error("serial", where, ec, retryable);
 
-    UNILINK_LOG_ERROR("serial", where, std::format("Error: {}", ec.message()));
+    UNILINK_LOG_ERROR("serial", where, fmt::format("Error: {}", ec.message()));
 
     if (cfg_.reopen_on_error) {
       opened_.store(false);
@@ -350,7 +351,7 @@ struct Serial::Impl {
 
   void schedule_retry(std::shared_ptr<Serial> self, const char* where, const boost::system::error_code& ec) {
     (void)ec;
-    UNILINK_LOG_INFO("serial", "retry", std::format("Scheduling retry at {}", where));
+    UNILINK_LOG_INFO("serial", "retry", fmt::format("Scheduling retry at {}", where));
     if (stopping_.load()) return;
     retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
     retry_timer_.async_wait([self](auto e) {
@@ -429,7 +430,7 @@ void Serial::start() {
   auto impl = get_impl();
   if (impl->started_) return;
   impl->stopping_.store(false);
-  UNILINK_LOG_INFO("serial", "start", std::format("Starting device: {}", impl->cfg_.device));
+  UNILINK_LOG_INFO("serial", "start", fmt::format("Starting device: {}", impl->cfg_.device));
   if (!impl->owns_ioc_) {
     auto& manager = concurrency::IoContextManager::instance();
     if (!manager.is_running()) manager.start();

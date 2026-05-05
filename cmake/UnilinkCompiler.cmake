@@ -75,18 +75,68 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   endif()
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
-                                              VERSION_LESS "13.0"
+                                              VERSION_LESS "10.0"
   )
-    message(FATAL_ERROR "GCC 13.0+ is required for unilink's std::format usage")
+    message(FATAL_ERROR "GCC 10.0+ is required for unilink's C++20 features")
   elseif(UNILINK_COMPILER_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS
                                     "14.0"
   )
-    message(FATAL_ERROR "Clang 14.0+ is required for unilink's C++20 API")
+    message(FATAL_ERROR "Clang 14.0+ is required for unilink's C++20 features")
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     add_compile_definitions(UNILINK_PLATFORM_MACOS=1)
     message(STATUS "Detected macOS compatibility mode")
+    # std::jthread / stop_token / stop_callback are gated on
+    # __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 150000 in Apple's libc++.
+    # The vcpkg arm64-osx triplet can lower CMAKE_OSX_DEPLOYMENT_TARGET to 11.0
+    # via its toolchain; force 15.0 here before any project targets are defined.
+    if(NOT CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "15.0")
+      set(CMAKE_OSX_DEPLOYMENT_TARGET
+          "15.0"
+          CACHE STRING "Minimum macOS deployment target" FORCE
+      )
+      message(
+        STATUS
+          "Bumped macOS deployment target to 15.0 (std::jthread requires Apple libc++ macOS 15+)"
+      )
+    endif()
+    # Belt-and-suspenders: directly add the flag so it overrides any earlier
+    # -mmacosx-version-min that CMake or vcpkg already wrote into the build
+    # rules.
+    add_compile_options(-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET})
+
+    if(UNILINK_COMPILER_CLANG)
+      include(CheckCXXSourceCompiles)
+      set(_UNILINK_REQUIRED_FLAGS_SAVE "${CMAKE_REQUIRED_FLAGS}")
+      set(CMAKE_REQUIRED_FLAGS
+          "${CMAKE_REQUIRED_FLAGS} -std=c++20 -fexperimental-library"
+      )
+      check_cxx_source_compiles(
+        "#include <thread>
+#include <stop_token>
+int main() {
+  std::jthread worker([](std::stop_token) {});
+  worker.request_stop();
+  return 0;
+}"
+        UNILINK_HAS_FEXPERIMENTAL_LIBRARY
+      )
+      set(CMAKE_REQUIRED_FLAGS "${_UNILINK_REQUIRED_FLAGS_SAVE}")
+      unset(_UNILINK_REQUIRED_FLAGS_SAVE)
+      if(UNILINK_HAS_FEXPERIMENTAL_LIBRARY)
+        # libc++ still gates P0660 (std::jthread, std::stop_token and
+        # std::stop_callback) behind this flag on Apple's Clang toolchain.
+        add_compile_options(-fexperimental-library)
+        add_link_options(-fexperimental-library)
+        message(STATUS "Enabled libc++ experimental C++20 library support")
+      else()
+        message(
+          FATAL_ERROR
+            "Configured macOS Clang/libc++ does not provide std::jthread/stop_token support with -fexperimental-library"
+        )
+      endif()
+    endif()
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_compile_definitions(UNILINK_PLATFORM_LINUX=1)
     message(STATUS "Detected Linux compatibility mode")

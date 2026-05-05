@@ -1,7 +1,20 @@
 include(GNUInstallDirs)
 
 if(DEFINED Python3_EXECUTABLE AND NOT DEFINED Python3_ROOT_DIR)
-  get_filename_component(Python3_ROOT_DIR "${Python3_EXECUTABLE}" DIRECTORY)
+  get_filename_component(
+    _unilink_python_executable_dir "${Python3_EXECUTABLE}" DIRECTORY
+  )
+  get_filename_component(
+    _unilink_python_executable_dir_name "${_unilink_python_executable_dir}"
+    NAME
+  )
+  if(_unilink_python_executable_dir_name MATCHES "^(bin|Scripts)$")
+    get_filename_component(
+      Python3_ROOT_DIR "${_unilink_python_executable_dir}" DIRECTORY
+    )
+  else()
+    set(Python3_ROOT_DIR "${_unilink_python_executable_dir}")
+  endif()
 endif()
 
 # On Windows CI, vcpkg also provides a Python distribution for pybind11's
@@ -15,7 +28,7 @@ if(WIN32)
   set(Python3_FIND_ABI OFF ANY ANY)
 endif()
 
-if(WIN32 AND Python3_EXECUTABLE)
+if((WIN32 OR APPLE) AND Python3_EXECUTABLE)
   execute_process(
     COMMAND
       "${Python3_EXECUTABLE}" -c
@@ -32,12 +45,8 @@ if(WIN32 AND Python3_EXECUTABLE)
     )
     list(LENGTH _unilink_python_probe_lines _unilink_python_probe_count)
 
-    if(_unilink_python_probe_count GREATER_EQUAL 2)
+    if(_unilink_python_probe_count GREATER_EQUAL 1)
       list(GET _unilink_python_probe_lines 0 _unilink_python_include_dir)
-      list(GET _unilink_python_probe_lines 1 _unilink_python_library)
-      get_filename_component(
-        _unilink_python_library_dir "${_unilink_python_library}" DIRECTORY
-      )
 
       if(EXISTS "${_unilink_python_include_dir}/Python.h")
         set(Python3_INCLUDE_DIR
@@ -48,7 +57,14 @@ if(WIN32 AND Python3_EXECUTABLE)
         )
       endif()
 
-      if(EXISTS "${_unilink_python_library}")
+      if(_unilink_python_probe_count GREATER_EQUAL 2)
+        list(GET _unilink_python_probe_lines 1 _unilink_python_library)
+        get_filename_component(
+          _unilink_python_library_dir "${_unilink_python_library}" DIRECTORY
+        )
+      endif()
+
+      if(WIN32 AND EXISTS "${_unilink_python_library}")
         set(Python3_LIBRARY
             "${_unilink_python_library}"
             CACHE FILEPATH
@@ -176,14 +192,12 @@ if(CMAKE_CONFIGURATION_TYPES)
   endforeach()
 endif()
 
-# Link against the main library. On Windows, avoid the imported Python3::Module
-# target when vcpkg has installed its own Python package; it can retain vcpkg's
-# python312.lib even when the interpreter comes from actions/setup-python.
+# Link against the main library. On Windows/macOS, avoid the imported
+# Python3::Module target when vcpkg has installed its own Python package; it can
+# retain vcpkg's python312.lib or SDK include directories even when the
+# interpreter comes from actions/setup-python.
 set(_unilink_python_module_link_target Python3::Module)
-if(WIN32
-   AND _unilink_python_library
-   AND EXISTS "${_unilink_python_library}"
-)
+if((WIN32 OR APPLE) AND EXISTS "${_unilink_python_include_dir}/Python.h")
   get_target_property(_unilink_py_link_libraries unilink_py LINK_LIBRARIES)
   if(_unilink_py_link_libraries)
     list(REMOVE_ITEM _unilink_py_link_libraries Python3::Module)
@@ -196,12 +210,16 @@ if(WIN32
   endif()
 
   add_library(unilink_python_module INTERFACE)
-  target_link_libraries(
-    unilink_python_module INTERFACE "${_unilink_python_library}"
+  target_include_directories(
+    unilink_python_module INTERFACE "${_unilink_python_include_dir}"
   )
-  if(EXISTS "${_unilink_python_include_dir}/Python.h")
-    target_include_directories(
-      unilink_python_module INTERFACE "${_unilink_python_include_dir}"
+  if(WIN32 AND EXISTS "${_unilink_python_library}")
+    target_link_libraries(
+      unilink_python_module INTERFACE "${_unilink_python_library}"
+    )
+  elseif(APPLE)
+    target_link_options(
+      unilink_python_module INTERFACE -undefined dynamic_lookup
     )
   endif()
   set(_unilink_python_module_link_target unilink_python_module)
@@ -211,6 +229,26 @@ target_link_libraries(
   unilink_py PRIVATE pybind11::headers unilink::unilink
                      ${_unilink_python_module_link_target}
 )
+
+if(APPLE)
+  foreach(_unilink_py_include_property
+          INCLUDE_DIRECTORIES INTERFACE_INCLUDE_DIRECTORIES
+          SYSTEM_INCLUDE_DIRECTORIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
+  )
+    get_target_property(
+      _unilink_py_includes unilink_py ${_unilink_py_include_property}
+    )
+    if(_unilink_py_includes)
+      list(FILTER _unilink_py_includes EXCLUDE REGEX
+           "MacOSX[^;]*\\.sdk/usr/include$"
+      )
+      set_target_properties(
+        unilink_py PROPERTIES ${_unilink_py_include_property}
+                              "${_unilink_py_includes}"
+      )
+    endif()
+  endforeach()
+endif()
 
 # Ensure extension builds use the same standard as the C++ library.
 target_compile_features(unilink_py PUBLIC cxx_std_20)

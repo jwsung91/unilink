@@ -411,7 +411,7 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
   }
 
   // Incorporate source location information into the payload
-  std::string payload = std::format("[{}] [{}] [{}:{}:{}] {}", component, operation, loc.file_name(), loc.line(),
+  std::string payload = fmt::format("[{}] [{}] [{}:{}:{}] {}", component, operation, loc.file_name(), loc.line(),
                                     loc.function_name(), message);
 
   impl_->spd_logger_->log(Impl::to_spdlog_level(level), payload);

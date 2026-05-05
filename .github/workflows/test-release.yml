@@ -83,6 +83,6 @@ jobs:
           echo "✅ Build: Success" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
           echo "✅ Package: Created" >> $GITHUB_STEP_SUMMARY
-          echo "🔧 Dependencies: vcpkg (${{ matrix.triplet }}), Boost 1.84+" >> $GITHUB_STEP_SUMMARY
+          echo "🔧 Dependencies: vcpkg (${{ matrix.triplet }}), Boost 1.83+" >> $GITHUB_STEP_SUMMARY
           echo "📦 Package files:" >> $GITHUB_STEP_SUMMARY
           ls -la build/package/ >> $GITHUB_STEP_SUMMARY
