@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-05 05:40:21</td>
+            <td class="headerValue">2026-05-05 06:42:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -167,17 +167,17 @@
 <span id="L89"><span class="lineNum">      89</span>                 :             :   /**</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :    * @brief Constructor with Boost error code</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :    */</span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">         133 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">         131 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :             const boost::system::error_code&amp; ec, bool retry = false)</span>
-<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">         133 :       : level(l),</span></span>
-<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">         133 :         category(c),</span></span>
-<span id="L96"><span class="lineNum">      96</span>         [<span class="tlaGBC" title="Branch 0 was taken 133 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         266 :         component(comp),</span></span>
-<span id="L97"><span class="lineNum">      97</span>         [<span class="tlaGBC" title="Branch 0 was taken 133 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         266 :         operation(op),</span></span>
-<span id="L98"><span class="lineNum">      98</span>         [<span class="tlaGBC" title="Branch 0 was taken 133 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         266 :         message(msg),</span></span>
-<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">         133 :         boost_error(ec),</span></span>
-<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">         133 :         timestamp(std::chrono::system_clock::now()),</span></span>
-<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">         133 :         retryable(retry),</span></span>
-<span id="L102"><span class="lineNum">     102</span>                 :<span class="tlaGNC">         133 :         retry_count(0) {}</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">         131 :       : level(l),</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">         131 :         category(c),</span></span>
+<span id="L96"><span class="lineNum">      96</span>         [<span class="tlaGBC" title="Branch 0 was taken 131 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         262 :         component(comp),</span></span>
+<span id="L97"><span class="lineNum">      97</span>         [<span class="tlaGBC" title="Branch 0 was taken 131 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         262 :         operation(op),</span></span>
+<span id="L98"><span class="lineNum">      98</span>         [<span class="tlaGBC" title="Branch 0 was taken 131 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         262 :         message(msg),</span></span>
+<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">         131 :         boost_error(ec),</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">         131 :         timestamp(std::chrono::system_clock::now()),</span></span>
+<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">         131 :         retryable(retry),</span></span>
+<span id="L102"><span class="lineNum">     102</span>                 :<span class="tlaGNC">         131 :         retry_count(0) {}</span></span>
 <span id="L103"><span class="lineNum">     103</span>                 :             : </span>
 <span id="L104"><span class="lineNum">     104</span>                 :             :   /**</span>
 <span id="L105"><span class="lineNum">     105</span>                 :             :    * @brief Get formatted timestamp string</span>
