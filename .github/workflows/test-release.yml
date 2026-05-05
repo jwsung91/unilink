@@ -19,10 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04]
         include:
           - os: ubuntu-24.04
             triplet: x64-linux
+          - os: ubuntu-22.04-arm
+            triplet: arm64-linux
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -32,7 +33,12 @@ jobs:
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
-          sudo apt-get install -y build-essential cmake ninja-build
+          sudo apt-get install -y build-essential cmake ninja-build software-properties-common
+          
+          if [[ "${{ matrix.os }}" == "ubuntu-22.04"* ]]; then
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+            sudo apt-get update
+          fi
           sudo apt-get install -y gcc-13 g++-13
 
       - name: Install dependencies with vcpkg
@@ -62,7 +68,21 @@ jobs:
       - name: Package
         run: |
           cd build
-          cpack -B package -G TGZ
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          SUCCESS=0
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if cpack -B package -G TGZ; then
+              SUCCESS=1
+              break
+            fi
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "CPack failed. Retry $RETRY_COUNT of $MAX_RETRIES..."
+            sleep 10
+          done
+          if [ $SUCCESS -ne 1 ]; then
+            exit 1
+          fi
           ls -la package/
 
       - name: Show package contents
