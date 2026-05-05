@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-05 02:58:35</td>
+            <td class="headerValue">2026-05-05 05:40:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">74.5&nbsp;%</td>
@@ -496,8 +496,8 @@
 <span id="L401"><span class="lineNum">     401</span>                 :<span class="tlaGNC">           9 : void UdsClient::Impl::start_read(std::shared_ptr&lt;UdsClient&gt; self, uint64_t seq) {</span></span>
 <span id="L402"><span class="lineNum">     402</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          18 :   socket_-&gt;async_read_some(net::buffer(rx_),</span></span>
 <span id="L403"><span class="lineNum">     403</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          18 :                            net::bind_executor(strand_, [self, seq](const boost::system::error_code&amp; ec, size_t bytes) {</span></span>
-<span id="L404"><span class="lineNum">     404</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           5 :                              if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L404"><span class="lineNum">     404</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           6 :                              if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L405"><span class="lineNum">     405</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :                              if (ec) {</span></span>
 <span id="L406"><span class="lineNum">     406</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :                                self-&gt;impl_-&gt;handle_close(self, seq, ec);</span></span>
 <span id="L407"><span class="lineNum">     407</span>                 :<span class="tlaUNC">           0 :                                return;</span></span>
