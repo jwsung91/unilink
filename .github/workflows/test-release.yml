@@ -57,7 +57,7 @@ jobs:
         run: cmake --build build --config Release -- -v
 
       - name: Test
-        run: cmake --build build --target test
+        run: ctest --test-dir build --output-on-failure -C Release -LE docs_snippets
 
       - name: Package
         run: |

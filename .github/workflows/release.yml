@@ -66,6 +66,8 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
           sudo apt-get install -y build-essential cmake ninja-build
+          echo "CC=gcc" >> "$GITHUB_ENV"
+          echo "CXX=g++" >> "$GITHUB_ENV"
 
       - name: Set up C++ toolchain (macOS)
         if: runner.os == 'macOS'
@@ -120,6 +122,8 @@ jobs:
           else
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_C_COMPILER="${CC}" \
+              -DCMAKE_CXX_COMPILER="${CXX}" \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
@@ -150,15 +154,26 @@ jobs:
         shell: bash
         run: |
           cd build
-          cpack -C Release -B package -G "${{ matrix.cpack_generator }}"
+          for attempt in 1 2 3; do
+            if cpack -C Release -B package -G "${{ matrix.cpack_generator }}"; then
+              break
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "CPack failed after 3 attempts"
+              exit 1
+            fi
+            echo "CPack attempt $attempt failed, retrying in $((attempt * 10))s..."
+            sleep $((attempt * 10))
+            rm -rf package
+          done
           ls -la package/
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v3
         with:
           files: ${{ matrix.release_files }}
-          name: Release ${{ github.ref_name || inputs.tag_name }} (${{ matrix.label }})
-          tag_name: ${{ github.ref_name || inputs.tag_name }}
+          name: Release ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }} (${{ matrix.label }})
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }}
           draft: true
           prerelease: true
         env:
