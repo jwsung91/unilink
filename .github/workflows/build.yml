@@ -47,11 +47,6 @@ jobs:
             cc: clang-18
             cxx: clang++-18
             triplet: x64-linux
-          - os: ubuntu-22.04-arm
-            compiler: gcc
-            cc: gcc-13
-            cxx: g++-13
-            triplet: arm64-linux
 
     steps:
     - name: Checkout code
@@ -67,16 +62,11 @@ jobs:
           build-essential \
           cmake \
           doxygen \
-          graphviz \
-          software-properties-common
+          graphviz
 
         echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [[ "${{ matrix.os }}" == "ubuntu-22.04"* ]] && [[ "${{ matrix.cc }}" == "gcc-13" ]]; then
-            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-            sudo apt-get update
-          fi
-          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
+          sudo apt-get install -y gcc-13 g++-13
         else
           sudo apt-get install -y ${{ matrix.cc }} g++-13
         fi
@@ -156,21 +146,64 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v6
 
-    - name: Set up C++ toolchain (Windows)
+    - name: Set CMake path without spaces
       shell: pwsh
       run: |
-        choco install ninja --no-progress -y
         echo "CMAKE_EXE=C:/PROGRA~1/CMake/bin/cmake.exe" >> $env:GITHUB_ENV
         echo "CTEST_EXE=C:/PROGRA~1/CMake/bin/ctest.exe" >> $env:GITHUB_ENV
 
-    - name: Install dependencies with vcpkg
-      uses: ./.github/actions/setup-vcpkg
-      with:
-        triplet: x64-windows
-        packages: boost-system boost-asio spdlog
+    - name: Clone vcpkg
+      run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
+
+    - name: Bootstrap vcpkg
+      shell: pwsh
+      working-directory: ${{ github.workspace }}/vcpkg
+      run: .\bootstrap-vcpkg.bat
+
+    - name: Create Custom Triplet
+      shell: pwsh
+      run: |
+        $tripletPath = Join-Path "${{ github.workspace }}\vcpkg" "triplets/x64-windows-static-md.cmake"
+        Set-Content -Path $tripletPath -Value @"
+        set(VCPKG_TARGET_ARCHITECTURE x64)
+        set(VCPKG_CRT_LINKAGE dynamic)
+        set(VCPKG_LIBRARY_LINKAGE static)
+        "@
+
+    - name: Install Dependencies (vcpkg)
+      shell: pwsh
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+        VCPKG_USE_SYSTEM_BINARIES: "1"
+      run: |
+        $retries = 3
+        $count = 0
+        $success = $false
+        do {
+          try {
+            & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio spdlog --triplet x64-windows-static-md
+            if ($LASTEXITCODE -eq 0) {
+              $success = $true
+            } else {
+              throw "vcpkg install failed with exit code $LASTEXITCODE"
+            }
+          } catch {
+            $count++
+            if ($count -lt $retries) {
+              Write-Host "Command failed. Retrying ($count/$retries) in 10s..."
+              Start-Sleep -Seconds 10
+            } else {
+              Write-Error "Command failed after $retries attempts."
+              exit 1
+            }
+          }
+        } until ($success)
 
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+        VCPKG_USE_SYSTEM_BINARIES: "1"
       run: |
         & "$env:CMAKE_EXE" -S . -B build-windows `
           -G "Visual Studio 17 2022" -A x64 `
@@ -179,8 +212,8 @@ jobs:
           -DUNILINK_ENABLE_CONFIG=ON `
           -DUNILINK_BUILD_EXAMPLES=OFF `
           -DUNILINK_BUILD_TESTS=ON `
-          -DCMAKE_TOOLCHAIN_FILE="$env:CMAKE_TOOLCHAIN_FILE" `
-          -DVCPKG_TARGET_TRIPLET="$env:VCPKG_TARGET_TRIPLET"
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET=x64-windows-static-md
 
     - name: Build (Release)
       shell: pwsh

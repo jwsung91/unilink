@@ -48,15 +48,6 @@ jobs:
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
-          - name: C++ (Linux ARM64, GCC, Ubuntu 22.04)
-            os: ubuntu-22.04-arm
-            triplet: arm64-linux
-            cc: gcc-13
-            cxx: g++-13
-            generator: Ninja
-            build_type: Release
-            build_python: OFF
-            vcpkg_features: ""
           - name: C++ (Linux, GCC 12, Ubuntu 22.04)
             os: ubuntu-22.04
             triplet: x64-linux
@@ -97,15 +88,6 @@ jobs:
             vcpkg_features: "python"
           - name: Python3 (Linux ARM64, GCC, Ubuntu 24.04)
             os: ubuntu-24.04-arm
-            triplet: arm64-linux
-            cc: gcc-13
-            cxx: g++-13
-            generator: Ninja
-            build_type: Release
-            build_python: ON
-            vcpkg_features: "python"
-          - name: Python3 (Linux ARM64, GCC, Ubuntu 22.04)
-            os: ubuntu-22.04-arm
             triplet: arm64-linux
             cc: gcc-13
             cxx: g++-13
@@ -164,13 +146,8 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            sudo apt-get install -y ca-certificates software-properties-common
+            sudo apt-get install -y ca-certificates
             
-            if [[ "${{ matrix.os }}" == "ubuntu-22.04"* ]] && [[ "${{ matrix.cc }}" == "gcc-13" ]]; then
-              sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-              sudo apt-get update
-            fi
-
             # Install build tools and the matrix-specified compiler
             sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
               ${{ matrix.cc }} ${{ matrix.cxx }}
