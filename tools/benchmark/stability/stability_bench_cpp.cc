@@ -227,7 +227,7 @@ void run_raw(int level, const Config& cfg) {
   auto start_server = [&] {
     int fd = ::socket(AF_INET, SOCK_STREAM, 0);
     int opt = 1;
-    ::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    ::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, static_cast<socklen_t>(sizeof(opt)));
     sockaddr_in addr{};
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
@@ -255,7 +255,7 @@ void run_raw(int level, const Config& cfg) {
       struct timeval tv {
         0, 100000
       };
-      setsockopt(lfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+      setsockopt(lfd, SOL_SOCKET, SO_RCVTIMEO, &tv, static_cast<socklen_t>(sizeof(tv)));
       sockaddr_in cli{};
       socklen_t len = sizeof(cli);
       int cfd = ::accept(lfd, reinterpret_cast<sockaddr*>(&cli), &len);
@@ -314,8 +314,8 @@ void run_raw(int level, const Config& cfg) {
         struct timeval tv {
           1, 0
         };
-        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-        setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, static_cast<socklen_t>(sizeof(tv)));
+        setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &tv, static_cast<socklen_t>(sizeof(tv)));
         sockaddr_in addr{};
         addr.sin_family = AF_INET;
         ::inet_pton(AF_INET, "127.0.0.1", &addr.sin_addr);

@@ -525,7 +525,7 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
           int yes = 1;
-          (void)::setsockopt(self->impl_->socket_.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+          (void)::setsockopt(static_cast<int>(self->impl_->socket_.native_handle()), SOL_SOCKET, SO_NOSIGPIPE, &yes, static_cast<socklen_t>(sizeof(yes)));
 #endif
 
           self->impl_->transition_to(LinkState::Connected);
@@ -535,8 +535,6 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
             UNILINK_LOG_INFO("tcp_client", "connect",
                              fmt::format("Connected to {}:{}", rep.address().to_string(), rep.port()));
           }
-          self->impl_->connected_.store(true);
-          self->impl_->transition_to(LinkState::Connected);
           self->impl_->start_read(self, seq);
           net::post(self->impl_->strand_, [self, seq]() {
             self->impl_->writing_ = false;
