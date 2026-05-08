@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-05 08:22:35</td>
+            <td class="headerValue">2026-05-08 14:08:26</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -249,10 +249,10 @@
 <span id="L171"><span class="lineNum">     171</span>         [<span class="tlaGBC" title="Branch 0 was taken 255 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">         255 : ThreadSafeState&lt;StateType&gt;::ThreadSafeState(const State&amp; initial_state) : state_(initial_state) {}</span></span>
 <span id="L172"><span class="lineNum">     172</span>                 :             : </span>
 <span id="L173"><span class="lineNum">     173</span>                 :             : template &lt;typename StateType&gt;</span>
-<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">        1155 : StateType ThreadSafeState&lt;StateType&gt;::state() const {</span></span>
-<span id="L175"><span class="lineNum">     175</span>         [<span class="tlaGBC" title="Branch 0 was taken 1155 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1155 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">        1155 :   return state_;</span></span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">        1155 : }</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">        1156 : StateType ThreadSafeState&lt;StateType&gt;::state() const {</span></span>
+<span id="L175"><span class="lineNum">     175</span>         [<span class="tlaGBC" title="Branch 0 was taken 1156 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1156 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">        1156 :   return state_;</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">        1156 : }</span></span>
 <span id="L178"><span class="lineNum">     178</span>                 :             : </span>
 <span id="L179"><span class="lineNum">     179</span>                 :             : template &lt;typename StateType&gt;</span>
 <span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">         439 : void ThreadSafeState&lt;StateType&gt;::set_state(const State&amp; new_state) {</span></span>
