@@ -26,7 +26,7 @@ jobs:
             triplet: arm64-osx
             cpack_generator: "TGZ"
           - os: windows-2022
-            triplet: x64-windows-static-md
+            triplet: x64-windows
             cpack_generator: ZIP
 
     steps:
@@ -55,18 +55,9 @@ jobs:
       - name: Set up C++ toolchain (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: choco install ninja --no-progress -y
-
-      - name: Clone vcpkg (Windows)
-        if: runner.os == 'Windows'
-        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
-
-      - name: Bootstrap vcpkg (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
         run: |
-          & "${{ github.workspace }}\vcpkg\bootstrap-vcpkg.bat"
-          "${{ github.workspace }}\vcpkg\vcpkg.exe" install boost-system boost-asio spdlog --triplet ${{ matrix.triplet }}
+          choco install ninja --no-progress -y
+          & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows spdlog:x64-windows
 
       - name: Configure (Linux)
         if: runner.os == 'Linux'
@@ -103,7 +94,7 @@ jobs:
             -DUNILINK_ENABLE_INSTALL=ON `
             -DUNILINK_ENABLE_PKGCONFIG=ON `
             -DUNILINK_ENABLE_EXPORT_HEADER=ON `
-            -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" `
             -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
 
       - name: Build
