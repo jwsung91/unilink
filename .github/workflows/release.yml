@@ -25,6 +25,7 @@ jobs:
         include:
           - os: ubuntu-24.04
             label: Linux (Ubuntu 24.04)
+            os_label: ubuntu-24.04
             triplet: x64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
@@ -33,6 +34,7 @@ jobs:
 
           - os: ubuntu-24.04-arm
             label: Linux ARM64 (Ubuntu 24.04)
+            os_label: ubuntu-24.04
             triplet: arm64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
@@ -41,6 +43,7 @@ jobs:
 
           - os: macos-15
             label: macOS 15
+            os_label: macos-15
             triplet: arm64-osx
             cmake_generator: "Ninja"
             cpack_generator: "TGZ;DragNDrop"
@@ -50,6 +53,7 @@ jobs:
 
           - os: windows-2022
             label: Windows (VS 2022)
+            os_label: windows-2022
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "x64"
             cpack_generator: "ZIP"
@@ -106,7 +110,8 @@ jobs:
               -DVCPKG_TARGET_TRIPLET=x64-windows \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
-              -DUNILINK_ENABLE_EXPORT_HEADER=ON
+              -DUNILINK_ENABLE_EXPORT_HEADER=ON \
+              -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
           elif [ "${{ runner.os }}" = "macOS" ]; then
             SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
             echo "macOS SDK version: $SDK_VER"
@@ -118,7 +123,8 @@ jobs:
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
               -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
+              -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
           else
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
@@ -128,7 +134,8 @@ jobs:
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
               -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
+              -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
           fi
 
       - name: Build

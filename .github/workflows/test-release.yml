@@ -17,21 +17,27 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
+            os_label: ubuntu-22.04
             triplet: x64-linux
             cpack_generator: TGZ
           - os: ubuntu-22.04-arm
+            os_label: ubuntu-22.04
             triplet: arm64-linux
             cpack_generator: TGZ
           - os: ubuntu-24.04
+            os_label: ubuntu-24.04
             triplet: x64-linux
             cpack_generator: TGZ
           - os: ubuntu-24.04-arm
+            os_label: ubuntu-24.04
             triplet: arm64-linux
             cpack_generator: TGZ
           - os: macos-15
+            os_label: macos-15
             triplet: arm64-osx
             cpack_generator: "TGZ"
           - os: windows-2022
+            os_label: windows-2022
             triplet: x64-windows
             cpack_generator: ZIP
 
@@ -76,7 +82,8 @@ jobs:
             -DUNILINK_ENABLE_PKGCONFIG=ON \
             -DUNILINK_ENABLE_EXPORT_HEADER=ON \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
-            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
+            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
+            -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
 
       - name: Configure (macOS)
         if: runner.os == 'macOS'
@@ -89,7 +96,8 @@ jobs:
             -DUNILINK_ENABLE_PKGCONFIG=ON \
             -DUNILINK_ENABLE_EXPORT_HEADER=ON \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
+            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
+            -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
@@ -101,7 +109,8 @@ jobs:
             -DUNILINK_ENABLE_PKGCONFIG=ON `
             -DUNILINK_ENABLE_EXPORT_HEADER=ON `
             -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" `
-            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} `
+            -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
 
       - name: Build
         run: cmake --build build --config Release --parallel
