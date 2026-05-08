@@ -164,11 +164,11 @@ $(document).ready(function(){initNavTree('user_installation.html',''); initResiz
 Prerequisites</h1>
 <ul>
 <li><b>CMake</b>: 3.12 or higher</li>
-<li><b>C++ Compiler</b>: C++20 compatible with <code>std::format</code> support (GCC 13+, recent Clang/libc++, MSVC 2022+)</li>
-<li><b>Boost</b>: 1.84.0 or higher</li>
+<li><b>C++ Compiler</b>: C++20 compatible (GCC 10+, recent Clang/libc++, MSVC 2022+)</li>
+<li><b>Boost</b>: 1.83.0 or higher</li>
 <li><b>Platform</b>: Linux, Windows, macOS</li>
 </ul>
-<p><b>Dependency policy:</b> vcpkg is the recommended dependency supplier. CMake owns the version policy and rejects Boost versions older than 1.84.0. OS package manager Boost packages are supported only when they meet that minimum.</p>
+<p><b>Dependency policy:</b> vcpkg is the recommended dependency supplier. CMake owns the version policy and rejects Boost versions older than 1.83.0. OS package manager Boost packages are supported only when they meet that minimum.</p>
 <h1><a class="anchor" id="autotoc_md596"></a>
 Installation Methods</h1>
 <h2><a class="anchor" id="autotoc_md597"></a>
@@ -198,7 +198,7 @@ Step 2: Use in your project</h3>
 <h2><a class="anchor" id="autotoc_md600"></a>
 Method 2: Install from Source (CMake Package)</h2>
 <p>Use this method if you prefer not to rely on a package manager or need a custom build.</p>
-<p>Source builds still require Boost 1.84.0+. On Ubuntu 22.04/24.04, the default apt Boost package is older than this baseline, so use vcpkg or provide a custom Boost installation through <code>BOOST_ROOT</code>/<code>CMAKE_PREFIX_PATH</code>.</p>
+<p>Source builds still require Boost 1.83.0+. On Ubuntu 22.04/24.04, the default apt Boost package is older than this baseline, so use vcpkg or provide a custom Boost installation through <code>BOOST_ROOT</code>/<code>CMAKE_PREFIX_PATH</code>.</p>
 <h3><a class="anchor" id="autotoc_md601"></a>
 Step 1: Build and install</h3>
 <div class="fragment"><div class="line">git clone https://github.com/jwsung91/unilink.git</div>
@@ -309,7 +309,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue May 5 2026 05:34:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 8 2026 14:01:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

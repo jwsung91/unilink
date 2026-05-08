@@ -178,7 +178,7 @@ Quick Build</h1>
 <h2><a class="anchor" id="autotoc_md260"></a>
 Basic Build (Recommended)</h2>
 <div class="fragment"><div class="line"># 1. Install build tools</div>
-<div class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential cmake ninja-build gcc-13 g++-13</div>
+<div class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential cmake ninja-build gcc-10 g++-10</div>
 <div class="line"> </div>
 <div class="line"># 2. Install vcpkg-managed dependencies and configure with the project preset</div>
 <div class="line">./scripts/setup_dev_env.sh</div>
@@ -397,8 +397,8 @@ Example 5: Build with Specific Compiler</h2>
 <div class="line">cmake --build build -j</div>
 <div class="line"> </div>
 <div class="line"># Using specific GCC version</div>
-<div class="line">export CC=gcc-13</div>
-<div class="line">export CXX=g++-13</div>
+<div class="line">export CC=gcc-10</div>
+<div class="line">export CXX=g++-10</div>
 <div class="line"> </div>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build build -j</div>
@@ -420,7 +420,7 @@ Ubuntu 22.04 (Recommended)</h2>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md295"></a>
 Ubuntu 20.04 Build</h2>
-<p>Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.84.0+ through vcpkg or a custom dependency prefix.</p>
+<p>Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.83.0+ through vcpkg or a custom dependency prefix.</p>
 <h3><a class="anchor" id="autotoc_md296"></a>
 Prerequisites</h3>
 <div class="fragment"><div class="line"># Install dependencies</div>
@@ -429,13 +429,13 @@ Prerequisites</h3>
 <div class="line">  cmake</div>
 <div class="line"> </div>
 <div class="line"># Install newer compiler</div>
-<div class="line">sudo apt install -y gcc-13 g++-13</div>
+<div class="line">sudo apt install -y gcc-10 g++-10</div>
 <div class="line">vcpkg install boost-asio boost-system spdlog</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md297"></a>
 Build Steps</h3>
 <div class="fragment"><div class="line"># 1. Set compiler environment</div>
-<div class="line">export CC=gcc-13</div>
-<div class="line">export CXX=g++-13</div>
+<div class="line">export CC=gcc-10</div>
+<div class="line">export CXX=g++-10</div>
 <div class="line"> </div>
 <div class="line"># 2. Configure CMake</div>
 <div class="line">cmake -S . -B build \</div>
@@ -571,7 +571,7 @@ Troubleshooting</h1>
 <h2><a class="anchor" id="autotoc_md322"></a>
 Problem: CMake Can't Find Boost</h2>
 <div class="fragment"><div class="line"># Specify Boost location</div>
-<div class="line">cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.84</div>
+<div class="line">cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.83</div>
 <div class="line"> </div>
 <div class="line"># Or use vcpkg</div>
 <div class="line">vcpkg install boost-asio boost-system spdlog</div>
@@ -579,8 +579,8 @@ Problem: CMake Can't Find Boost</h2>
 Problem: Compiler Not Found</h2>
 <div class="fragment"><div class="line"># Specify compiler explicitly</div>
 <div class="line">cmake -S . -B build \</div>
-<div class="line">  -DCMAKE_C_COMPILER=gcc-13 \</div>
-<div class="line">  -DCMAKE_CXX_COMPILER=g++-13</div>
+<div class="line">  -DCMAKE_C_COMPILER=gcc-10 \</div>
+<div class="line">  -DCMAKE_CXX_COMPILER=g++-10</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md324"></a>
 Problem: Out of Memory During Build</h2>
 <div class="fragment"><div class="line"># Reduce parallel jobs</div>
@@ -655,7 +655,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue May 5 2026 05:34:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 8 2026 14:01:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
