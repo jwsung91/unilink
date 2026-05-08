@@ -33,8 +33,8 @@ jobs:
           - name: C++ (Linux, GCC)
             os: ubuntu-24.04
             triplet: x64-linux
-            cc: gcc-13
-            cxx: g++-13
+            cc: gcc
+            cxx: g++
             generator: Ninja
             build_type: Release
             build_python: OFF
@@ -42,17 +42,17 @@ jobs:
           - name: C++ (Linux ARM64, GCC, Ubuntu 24.04)
             os: ubuntu-24.04-arm
             triplet: arm64-linux
-            cc: gcc-13
-            cxx: g++-13
+            cc: gcc
+            cxx: g++
             generator: Ninja
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
-          - name: C++ (Linux, GCC 12, Ubuntu 22.04)
+          - name: C++ (Linux, GCC, Ubuntu 22.04)
             os: ubuntu-22.04
             triplet: x64-linux
-            cc: gcc-12
-            cxx: g++-12
+            cc: gcc
+            cxx: g++
             generator: Ninja
             build_type: Release
             build_python: OFF
@@ -80,8 +80,8 @@ jobs:
           - name: Python3 (Linux, GCC)
             os: ubuntu-24.04
             triplet: x64-linux
-            cc: gcc-13
-            cxx: g++-13
+            cc: gcc
+            cxx: g++
             generator: Ninja
             build_type: Release
             build_python: ON
@@ -89,17 +89,17 @@ jobs:
           - name: Python3 (Linux ARM64, GCC, Ubuntu 24.04)
             os: ubuntu-24.04-arm
             triplet: arm64-linux
-            cc: gcc-13
-            cxx: g++-13
+            cc: gcc
+            cxx: g++
             generator: Ninja
             build_type: Release
             build_python: ON
             vcpkg_features: "python"
-          - name: Python3 (Linux, GCC 12, Ubuntu 22.04)
+          - name: Python3 (Linux, GCC, Ubuntu 22.04)
             os: ubuntu-22.04
             triplet: x64-linux
-            cc: gcc-12
-            cxx: g++-12
+            cc: gcc
+            cxx: g++
             generator: Ninja
             build_type: Release
             build_python: ON
@@ -148,9 +148,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y ca-certificates
             
-            # Install build tools and the matrix-specified compiler
-            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config \
-              ${{ matrix.cc }} ${{ matrix.cxx }}
+            # Install build tools (default GCC is pre-installed; install explicit compilers only when needed)
+            EXTRA_PKGS=""
+            if [[ "${{ matrix.cc }}" == "clang"* ]]; then
+              EXTRA_PKGS="${{ matrix.cc }} ${{ matrix.cxx }}"
+            fi
+            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config $EXTRA_PKGS
           else
             brew install ninja autoconf autoconf-archive automake libtool pkg-config llvm
           fi

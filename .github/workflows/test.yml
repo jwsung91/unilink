@@ -38,11 +38,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 24.04: GCC 13 and Clang 18
+          # Ubuntu 24.04: default GCC and Clang 18
           - os: ubuntu-24.04
             compiler: gcc
-            cc: gcc-13
-            cxx: g++-13
+            cc: gcc
+            cxx: g++
             triplet: x64-linux
           - os: ubuntu-24.04
             compiler: clang
@@ -51,13 +51,13 @@ jobs:
             triplet: x64-linux
           - os: ubuntu-24.04-arm
             compiler: gcc
-            cc: gcc-13
-            cxx: g++-13
+            cc: gcc
+            cxx: g++
             triplet: arm64-linux
           - os: ubuntu-22.04
             compiler: gcc
-            cc: gcc-12
-            cxx: g++-12
+            cc: gcc
+            cxx: g++
             triplet: x64-linux
           # macOS: Homebrew LLVM Clang/libc++ (arm64)
           - os: macos-15
@@ -96,11 +96,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y ca-certificates
 
-        if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }}
-        else
-          # Clang needs GCC's C++ stdlib headers; all clang entries run on ubuntu-24.04
-          sudo apt-get install -y ${{ matrix.cc }} g++-13
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          # Clang needs explicit install; default GCC stdlib headers are pre-installed
+          sudo apt-get install -y ${{ matrix.cc }}
         fi
 
         # Install other tools. Boost and spdlog are supplied by vcpkg.
@@ -207,7 +205,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13 python3"
+        packages: "build-essential cmake ccache python3"
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg
@@ -218,8 +216,6 @@ jobs:
       run: |
         cmake -S . -B build-docs-snippets \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-          -DCMAKE_C_COMPILER=gcc-13 \
-          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -269,7 +265,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13"
+        packages: "build-essential cmake ccache"
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg
@@ -280,8 +276,6 @@ jobs:
       run: |
         cmake -S . -B build-integration \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-          -DCMAKE_C_COMPILER=gcc-13 \
-          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -336,7 +330,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13 socat"
+        packages: "build-essential cmake ccache socat"
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg
@@ -347,8 +341,6 @@ jobs:
       run: |
         cmake -S . -B build-integration-arm64 \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-          -DCMAKE_C_COMPILER=gcc-13 \
-          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -405,7 +397,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake ccache gcc-13 g++-13"
+        packages: "build-essential cmake ccache"
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg
@@ -416,8 +408,6 @@ jobs:
       run: |
         cmake -S . -B build-perf \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_C_COMPILER=gcc-13 \
-          -DCMAKE_CXX_COMPILER=g++-13 \
           -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_BUILD_EXAMPLES=OFF \
@@ -462,7 +452,7 @@ jobs:
     - name: Install dependencies
       uses: ./.github/actions/apt-install
       with:
-        packages: "build-essential cmake gcc-13 g++-13"
+        packages: "build-essential cmake"
 
     - name: Install dependencies with vcpkg
       uses: ./.github/actions/setup-vcpkg
@@ -473,8 +463,6 @@ jobs:
       run: |
         cmake -S . -B build-sanitizer \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_COMPILER=g++-13 \
-          -DCMAKE_C_COMPILER=gcc-13 \
           -DUNILINK_ENABLE_SANITIZERS=ON \
           -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
           -DUNILINK_BUILD_TESTS=ON \
@@ -514,7 +502,7 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/apt-install
         with:
-          packages: "build-essential cmake gcc-13 g++-13"
+          packages: "build-essential cmake"
       - name: Install dependencies with vcpkg
         uses: ./.github/actions/setup-vcpkg
         with:
@@ -523,8 +511,6 @@ jobs:
         run: |
           cmake -S . -B build-e2e \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_C_COMPILER=gcc-13 \
-            -DCMAKE_CXX_COMPILER=g++-13 \
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_TESTS=ON \

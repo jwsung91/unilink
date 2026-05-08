@@ -411,13 +411,13 @@ Tests run across multiple configurations:
 
 | Platform | Compiler | Build Type | Sanitizers | Test Status |
 |----------|----------|------------|------------|-------------|
-| Ubuntu 22.04 | GCC 13 + vcpkg Boost 1.84+ | Debug | ✅ | ✅ Full Testing |
-| Ubuntu 22.04 | GCC 13 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
-| Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.84+ | Debug | ✅ | ✅ Full Testing |
-| Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
-| Ubuntu 24.04 ARM64 | GCC 13 + vcpkg Boost 1.84+ | Release | ❌ | ✅ Full Testing |
-| Ubuntu 24.04 | GCC 13 | Debug | ✅ | ✅ Full Testing |
-| Ubuntu 24.04 | GCC 13 | Release | ❌ | ✅ Full Testing |
+| Ubuntu 22.04 | GCC 10 + vcpkg Boost 1.83+ | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 22.04 | GCC 10 + vcpkg Boost 1.83+ | Release | ❌ | ✅ Full Testing |
+| Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.83+ | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 22.04 | Clang 15 + vcpkg Boost 1.83+ | Release | ❌ | ✅ Full Testing |
+| Ubuntu 24.04 ARM64 | GCC 10 + vcpkg Boost 1.83+ | Release | ❌ | ✅ Full Testing |
+| Ubuntu 24.04 | GCC 10 | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 24.04 | GCC 10 | Release | ❌ | ✅ Full Testing |
 | Ubuntu 24.04 | Clang 15 | Debug | ✅ | ✅ Full Testing |
 | Ubuntu 24.04 | Clang 15 | Release | ❌ | ✅ Full Testing |
 

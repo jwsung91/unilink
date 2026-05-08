@@ -23,7 +23,7 @@ Complete guide for building `unilink` with different configurations and platform
 
 ```bash
 # 1. Install build tools
-sudo apt update && sudo apt install -y build-essential cmake ninja-build gcc-13 g++-13
+sudo apt update && sudo apt install -y build-essential cmake ninja-build gcc-10 g++-10
 
 # 2. Install vcpkg-managed dependencies and configure with the project preset
 ./scripts/setup_dev_env.sh
@@ -274,8 +274,8 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 
 # Using specific GCC version
-export CC=gcc-13
-export CXX=g++-13
+export CC=gcc-10
+export CXX=g++-10
 
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
@@ -304,7 +304,7 @@ cmake --build build -j
 
 ### Ubuntu 20.04 Build
 
-Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.84.0+ through vcpkg or a custom dependency prefix.
+Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.83.0+ through vcpkg or a custom dependency prefix.
 
 #### Prerequisites
 
@@ -315,7 +315,7 @@ sudo apt update && sudo apt install -y \
   cmake
 
 # Install newer compiler
-sudo apt install -y gcc-13 g++-13
+sudo apt install -y gcc-10 g++-10
 vcpkg install boost-asio boost-system spdlog
 ```
 
@@ -323,8 +323,8 @@ vcpkg install boost-asio boost-system spdlog
 
 ```bash
 # 1. Set compiler environment
-export CC=gcc-13
-export CXX=g++-13
+export CC=gcc-10
+export CXX=g++-10
 
 # 2. Configure CMake
 cmake -S . -B build \
@@ -506,7 +506,7 @@ nm -D build/libunilink.so | grep unilink
 
 ```bash
 # Specify Boost location
-cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.84
+cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.83
 
 # Or use vcpkg
 vcpkg install boost-asio boost-system spdlog
@@ -517,8 +517,8 @@ vcpkg install boost-asio boost-system spdlog
 ```bash
 # Specify compiler explicitly
 cmake -S . -B build \
-  -DCMAKE_C_COMPILER=gcc-13 \
-  -DCMAKE_CXX_COMPILER=g++-13
+  -DCMAKE_C_COMPILER=gcc-10 \
+  -DCMAKE_CXX_COMPILER=g++-10
 ```
 
 ### Problem: Out of Memory During Build

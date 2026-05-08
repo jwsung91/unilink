@@ -5,11 +5,11 @@ This guide covers the supported ways to install and use the **unilink** library 
 ## Prerequisites
 
 - **CMake**: 3.12 or higher
-- **C++ Compiler**: C++20 compatible with `std::format` support (GCC 13+, recent Clang/libc++, MSVC 2022+)
-- **Boost**: 1.84.0 or higher
+- **C++ Compiler**: C++20 compatible (GCC 10+, recent Clang/libc++, MSVC 2022+)
+- **Boost**: 1.83.0 or higher
 - **Platform**: Linux, Windows, macOS
 
-**Dependency policy:** vcpkg is the recommended dependency supplier. CMake owns the version policy and rejects Boost versions older than 1.84.0. OS package manager Boost packages are supported only when they meet that minimum.
+**Dependency policy:** vcpkg is the recommended dependency supplier. CMake owns the version policy and rejects Boost versions older than 1.83.0. OS package manager Boost packages are supported only when they meet that minimum.
 
 ## Installation Methods
 
@@ -49,7 +49,7 @@ int main() {
 
 Use this method if you prefer not to rely on a package manager or need a custom build.
 
-Source builds still require Boost 1.84.0+. On Ubuntu 22.04/24.04, the default apt Boost package is older than this baseline, so use vcpkg or provide a custom Boost installation through `BOOST_ROOT`/`CMAKE_PREFIX_PATH`.
+Source builds still require Boost 1.83.0+. On Ubuntu 22.04/24.04, the default apt Boost package is older than this baseline, so use vcpkg or provide a custom Boost installation through `BOOST_ROOT`/`CMAKE_PREFIX_PATH`.
 
 #### Step 1: Build and install
 
