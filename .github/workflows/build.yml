@@ -36,11 +36,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 24.04: GCC 10 and Clang 18
+          # Ubuntu 24.04: default GCC and Clang 18
           - os: ubuntu-24.04
             compiler: gcc
-            cc: gcc-10
-            cxx: g++-10
+            cc: gcc
+            cxx: g++
             triplet: x64-linux
           - os: ubuntu-24.04
             compiler: clang
@@ -65,10 +65,8 @@ jobs:
           graphviz
 
         echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
-        if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          sudo apt-get install -y gcc-10 g++-10
-        else
-          sudo apt-get install -y ${{ matrix.cc }} g++-10
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          sudo apt-get install -y ${{ matrix.cc }}
         fi
         
         echo "Verifying compiler installation..."
