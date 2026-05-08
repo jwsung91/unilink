@@ -76,7 +76,7 @@ jobs:
 
           - os: windows-2022
             label: Windows (VS 2022)
-            os_label: windows-2022
+            os_label: windows
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "x64"
             triplet: x64-windows
@@ -86,7 +86,7 @@ jobs:
 
           - os: windows-11-arm
             label: Windows ARM64
-            os_label: windows-11-arm
+            os_label: windows
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "ARM64"
             triplet: arm64-windows
