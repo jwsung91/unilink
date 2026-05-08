@@ -56,6 +56,17 @@ jobs:
             os_label: windows-2022
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "x64"
+            triplet: x64-windows
+            cpack_generator: "ZIP"
+            release_files: |
+              build/package/unilink-*.zip
+
+          - os: windows-11-arm
+            label: Windows ARM64
+            os_label: windows-11-arm
+            cmake_generator: "Visual Studio 17 2022"
+            cmake_arch: "ARM64"
+            triplet: arm64-windows
             cpack_generator: "ZIP"
             release_files: |
               build/package/unilink-*.zip
@@ -92,12 +103,23 @@ jobs:
           security unlock-keychain -p "" build.keychain
           security set-keychain-settings -t 3600 -u build.keychain
 
-      - name: Set up C++ toolchain (Windows)
-        if: runner.os == 'Windows'
+      - name: Set up C++ toolchain (Windows x64)
+        if: runner.os == 'Windows' && matrix.cmake_arch == 'x64'
         shell: pwsh
         run: |
           choco install ninja --no-progress -y
           & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows spdlog:x64-windows
+          echo "VCPKG_ROOT=C:/vcpkg" >> $env:GITHUB_ENV
+
+      - name: Set up C++ toolchain (Windows ARM64)
+        if: runner.os == 'Windows' && matrix.cmake_arch == 'ARM64'
+        shell: pwsh
+        run: |
+          choco install ninja --no-progress -y
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git C:/vcpkg-arm
+          & "C:/vcpkg-arm/bootstrap-vcpkg.bat"
+          & "C:/vcpkg-arm/vcpkg.exe" install boost-asio:arm64-windows boost-system:arm64-windows spdlog:arm64-windows
+          echo "VCPKG_ROOT=C:/vcpkg-arm" >> $env:GITHUB_ENV
 
       - name: Configure
         shell: bash
@@ -106,8 +128,8 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" -A "${{ matrix.cmake_arch }}" \
-              -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
-              -DVCPKG_TARGET_TRIPLET=x64-windows \
+              -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+              -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
