@@ -242,3 +242,82 @@ jobs:
           build-windows/
         retention-days: 7
         overwrite: true
+
+  # Windows ARM64 Build (windows-11-arm)
+  build-windows-arm:
+    name: Build (windows-11-arm, msvc)
+    runs-on: windows-11-arm
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Clone vcpkg
+      shell: pwsh
+      run: git clone --depth 1 https://github.com/microsoft/vcpkg.git C:/vcpkg-arm
+
+    - name: Bootstrap vcpkg
+      shell: pwsh
+      working-directory: C:/vcpkg-arm
+      run: .\bootstrap-vcpkg.bat
+
+    - name: Install Dependencies (vcpkg)
+      shell: pwsh
+      env:
+        VCPKG_ROOT: C:\vcpkg-arm
+      run: |
+        $retries = 3
+        $count = 0
+        $success = $false
+        do {
+          try {
+            & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio spdlog --triplet arm64-windows
+            if ($LASTEXITCODE -eq 0) { $success = $true }
+            else { throw "vcpkg install failed with exit code $LASTEXITCODE" }
+          } catch {
+            $count++
+            if ($count -lt $retries) {
+              Write-Host "Command failed. Retrying ($count/$retries) in 10s..."
+              Start-Sleep -Seconds 10
+            } else {
+              Write-Error "Command failed after $retries attempts."
+              exit 1
+            }
+          }
+        } until ($success)
+
+    - name: Configure CMake (MSVC ARM64 + vcpkg)
+      shell: pwsh
+      env:
+        VCPKG_ROOT: C:\vcpkg-arm
+      run: |
+        cmake -S . -B build-windows `
+          -G "Visual Studio 17 2022" -A ARM64 `
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} `
+          -DUNILINK_ENABLE_CONFIG=ON `
+          -DUNILINK_BUILD_EXAMPLES=OFF `
+          -DUNILINK_BUILD_TESTS=ON `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET=arm64-windows
+
+    - name: Build (Release)
+      shell: pwsh
+      run: cmake --build build-windows --config ${{ env.BUILD_TYPE }}
+
+    - name: Smoke tests (exclude slow/perf)
+      shell: pwsh
+      run: |
+        ctest --test-dir build-windows `
+          -C ${{ env.BUILD_TYPE }} `
+          --output-on-failure `
+          --label-exclude "performance|benchmark|stress|slow|serial"
+
+    - name: Upload Windows ARM64 artifacts
+      uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: build-artifacts-windows-arm64-msvc
+        path: build-windows/
+        retention-days: 7
+        overwrite: true
