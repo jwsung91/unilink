@@ -214,7 +214,7 @@ jobs:
       - name: Show package contents (Unix)
         if: runner.os != 'Windows'
         shell: bash
-        run: tar -tzf build/package/unilink-*.tar.gz | head -20 || true
+        run: tar -tzf build/package/unilink-*.tar.gz | sed -n '1,20p'
 
       - name: Summary
         shell: bash
