@@ -112,8 +112,7 @@ TEST_F(UdsErrorTest, ServerStopWithActiveSessions) {
   client->start();
 
   // Wait until both sides observe the active session before stopping the server.
-  ASSERT_TRUE(
-      TestUtils::waitForCondition([&] { return client->is_connected() && server->client_count() == 1; }, 2000));
+  ASSERT_TRUE(TestUtils::waitForCondition([&] { return client->is_connected() && server->client_count() == 1; }, 2000));
 
   // Stop server while client is connected - this must not crash
   server->stop();
