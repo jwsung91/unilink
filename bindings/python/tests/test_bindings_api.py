@@ -31,6 +31,23 @@ def reserve_tcp_port():
         pytest.skip(f"socket creation is blocked in this environment: {exc}")
 
 
+def call_from_thread(callback, *args):
+    errors = []
+
+    def run():
+        try:
+            callback(*args)
+        except Exception as exc:  # pragma: no cover - re-raised in the test thread
+            errors.append(exc)
+
+    thread = threading.Thread(target=run)
+    thread.start()
+    thread.join(timeout=1.0)
+    assert not thread.is_alive()
+    if errors:
+        raise errors[0]
+
+
 def test_standard_python_surface_uses_canonical_names():
     assert hasattr(unilink.TcpClient, "connected")
     assert not hasattr(unilink.TcpClient, "is_connected")
@@ -121,6 +138,49 @@ class FakeClient:
         self.packet_framer_args = args
 
 
+class FakeServer:
+    def __init__(self):
+        self._on_connect = None
+        self._on_disconnect = None
+        self._on_data = None
+        self._on_message = None
+        self.sent = []
+
+    def on_connect(self, handler):
+        self._on_connect = handler
+
+    def on_disconnect(self, handler):
+        self._on_disconnect = handler
+
+    def on_data(self, handler):
+        self._on_data = handler
+
+    def on_message(self, handler):
+        self._on_message = handler
+
+    def start(self):
+        return True
+
+    def stop(self):
+        return None
+
+    def listening(self):
+        return True
+
+    def broadcast(self, _data):
+        return True
+
+    def send_to(self, client_id, data):
+        self.sent.append((client_id, data))
+        return True
+
+    def use_line_framer(self, *args):
+        self.line_framer_args = args
+
+    def use_packet_framer(self, *args):
+        self.packet_framer_args = args
+
+
 def test_asyncio_wrapper_uses_start_not_connect():
     async def run():
         wrapper = unilink_asyncio.AsyncChannelBase(FakeClient())
@@ -130,12 +190,52 @@ def test_asyncio_wrapper_uses_start_not_connect():
         assert wrapper.send(b"payload") is True
 
         wrapper.use_line_framer("\n", False, 1024)
-        wrapper._raw_client._on_data(SimpleNamespace(client_id=0, client_info="", data=b"raw"))
+        call_from_thread(wrapper._raw_client._on_data, SimpleNamespace(client_id=0, client_info="", data=b"raw"))
         raw_ctx = await asyncio.wait_for(wrapper.read(), timeout=1.0)
         assert raw_ctx.data == b"raw"
 
-        wrapper._raw_client._on_message(SimpleNamespace(client_id=0, client_info="", data=b"framed"))
+        call_from_thread(wrapper._raw_client._on_message, SimpleNamespace(client_id=0, client_info="", data=b"framed"))
         msg_ctx = await asyncio.wait_for(wrapper.read_message(), timeout=1.0)
         assert msg_ctx.data == b"framed"
+
+    asyncio.run(run())
+
+
+def test_asyncio_server_callbacks_are_loop_thread_safe():
+    async def run():
+        wrapper = unilink_asyncio.AsyncServerBase(FakeServer())
+        wrapper._ensure_loop()
+
+        call_from_thread(
+            wrapper._raw_server._on_connect,
+            SimpleNamespace(client_id=7, client_info="client-7"),
+        )
+        session = await asyncio.wait_for(wrapper.__anext__(), timeout=1.0)
+        assert session.id == 7
+        assert session.info == "client-7"
+
+        call_from_thread(
+            wrapper._raw_server._on_data,
+            SimpleNamespace(client_id=7, client_info="client-7", data=b"raw"),
+        )
+        raw_ctx = await asyncio.wait_for(session.read(), timeout=1.0)
+        assert raw_ctx.data == b"raw"
+
+        call_from_thread(
+            wrapper._raw_server._on_message,
+            SimpleNamespace(client_id=7, client_info="client-7", data=b"framed"),
+        )
+        msg_ctx = await asyncio.wait_for(session.read_message(), timeout=1.0)
+        assert msg_ctx.data == b"framed"
+
+        assert await session.send(b"reply") is True
+        assert wrapper._raw_server.sent == [(7, b"reply")]
+
+        call_from_thread(
+            wrapper._raw_server._on_disconnect,
+            SimpleNamespace(client_id=7, client_info="client-7"),
+        )
+        await asyncio.wait_for(session._closed.wait(), timeout=1.0)
+        assert 7 not in wrapper._sessions
 
     asyncio.run(run())

@@ -29,11 +29,18 @@ class AsyncChannelBase:
             self._loop = _get_loop()
         return self._loop
 
+    def _schedule_on_loop(self, callback, *args):
+        loop = self._loop
+        if loop is None or loop.is_closed():
+            return False
+        loop.call_soon_threadsafe(callback, *args)
+        return True
+
     def _on_data_bridge(self, ctx):
-        self._ensure_loop().call_soon_threadsafe(self._data_queue.put_nowait, ctx)
+        self._schedule_on_loop(self._data_queue.put_nowait, ctx)
 
     def _on_message_bridge(self, ctx):
-        self._ensure_loop().call_soon_threadsafe(self._message_queue.put_nowait, ctx)
+        self._schedule_on_loop(self._message_queue.put_nowait, ctx)
 
     async def start(self) -> bool:
         """Starts the channel and waits for the connection attempt to complete."""
@@ -143,26 +150,44 @@ class AsyncServerBase:
             self._loop = _get_loop()
         return self._loop
 
+    def _schedule_on_loop(self, callback, *args):
+        loop = self._loop
+        if loop is None or loop.is_closed():
+            return False
+        loop.call_soon_threadsafe(callback, *args)
+        return True
+
     def _on_connect_bridge(self, ctx):
-        loop = self._ensure_loop()
-        session = AsyncServerSession(self._raw_server, ctx.client_id, ctx.client_info, loop)
-        self._sessions[ctx.client_id] = session
-        loop.call_soon_threadsafe(self._session_queue.put_nowait, session)
+        def attach_session():
+            session = AsyncServerSession(self._raw_server, ctx.client_id, ctx.client_info, self._loop)
+            self._sessions[ctx.client_id] = session
+            self._session_queue.put_nowait(session)
+
+        self._schedule_on_loop(attach_session)
 
     def _on_disconnect_bridge(self, ctx):
-        session = self._sessions.pop(ctx.client_id, None)
-        if session:
-            session._notify_disconnect()
+        def detach_session():
+            session = self._sessions.pop(ctx.client_id, None)
+            if session:
+                session._closed.set()
+
+        self._schedule_on_loop(detach_session)
 
     def _on_data_bridge(self, ctx):
-        session = self._sessions.get(ctx.client_id)
-        if session:
-            session._push_data(ctx)
+        def push_data():
+            session = self._sessions.get(ctx.client_id)
+            if session:
+                session._data_queue.put_nowait(ctx)
+
+        self._schedule_on_loop(push_data)
 
     def _on_message_bridge(self, ctx):
-        session = self._sessions.get(ctx.client_id)
-        if session:
-            session._push_message(ctx)
+        def push_message():
+            session = self._sessions.get(ctx.client_id)
+            if session:
+                session._message_queue.put_nowait(ctx)
+
+        self._schedule_on_loop(push_message)
 
     async def start(self) -> bool:
         loop = self._ensure_loop()
