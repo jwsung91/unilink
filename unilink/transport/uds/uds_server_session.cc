@@ -69,11 +69,11 @@ bool UdsServerSession::alive() const { return alive_.load(); }
 
 bool UdsServerSession::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> vec(data.begin(), data.end());
-  async_write_move(std::move(vec));
-  return true;
+  return async_write_move(std::move(vec));
 }
 
 bool UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
+  if (!alive_ || closing_) return false;
   if (queue_bytes_ + data.size() > bp_limit_) return false;
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     if (!alive_) return;
@@ -94,6 +94,7 @@ bool UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 bool UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!alive_ || closing_ || !data) return false;
   if (queue_bytes_ + data->size() > bp_limit_) return false;
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     if (!alive_) return;

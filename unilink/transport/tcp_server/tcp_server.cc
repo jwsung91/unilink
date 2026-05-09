@@ -513,7 +513,7 @@ bool TcpServer::async_write_copy(memory::ConstByteSpan data) {
   if (session && session->alive()) {
     return session->async_write_copy(data);
   }
-  return true;
+  return false;
 }
 
 bool TcpServer::async_write_move(std::vector<uint8_t>&& data) {
@@ -528,7 +528,7 @@ bool TcpServer::async_write_move(std::vector<uint8_t>&& data) {
   if (session && session->alive()) {
     return session->async_write_move(std::move(data));
   }
-  return true;
+  return false;
 }
 
 bool TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
@@ -543,7 +543,7 @@ bool TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   if (session && session->alive()) {
     return session->async_write_shared(std::move(data));
   }
-  return true;
+  return false;
 }
 
 void TcpServer::on_bytes(OnBytes cb) {
@@ -578,7 +578,6 @@ bool TcpServer::broadcast(std::string_view message) {
     auto& session = entry.second;
     if (session && session->alive()) {
       if (session->async_write_shared(shared_data)) sent = true;
-      sent = true;
     }
   }
   return sent;
@@ -593,7 +592,6 @@ bool TcpServer::broadcast(memory::ConstByteSpan data) {
     auto& session = entry.second;
     if (session && session->alive()) {
       if (session->async_write_shared(shared_data)) sent = true;
-      sent = true;
     }
   }
   return sent;

@@ -61,6 +61,22 @@ TEST_F(TransportTcpServerTest, LifecycleStartStop) {
   EXPECT_NO_THROW(server_->stop());
 }
 
+TEST_F(TransportTcpServerTest, WriteWithoutActiveSessionReturnsFalse) {
+  config::TcpServerConfig cfg;
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  server_ = TcpServer::create(cfg);
+
+  std::vector<uint8_t> payload = {1, 2, 3};
+  auto shared_payload = std::make_shared<const std::vector<uint8_t>>(payload);
+
+  EXPECT_FALSE(server_->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+  EXPECT_FALSE(server_->async_write_move(std::vector<uint8_t>{1, 2, 3}));
+  EXPECT_FALSE(server_->async_write_shared(shared_payload));
+  EXPECT_FALSE(server_->broadcast("payload"));
+  EXPECT_FALSE(server_->broadcast(memory::ConstByteSpan(payload.data(), payload.size())));
+}
+
 TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   // First server occupies the port
 

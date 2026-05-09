@@ -261,22 +261,24 @@ boost::asio::any_io_executor UdsServer::get_executor() { return impl_->ioc_->get
 
 bool UdsServer::async_write_copy(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
-  async_write_shared(shared_data);
-  return true;
+  return async_write_shared(shared_data);
 }
 
 bool UdsServer::async_write_move(std::vector<uint8_t>&& data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(std::move(data));
-  async_write_shared(shared_data);
-  return true;
+  return async_write_shared(shared_data);
 }
 
 bool UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (impl_->stopping_.load() || !data || data->empty()) return false;
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  bool sent = false;
   for (auto& pair : impl_->sessions_) {
-    pair.second->async_write_shared(data);
+    if (pair.second && pair.second->alive() && pair.second->async_write_shared(data)) {
+      sent = true;
+    }
   }
-  return true;
+  return sent;
 }
 
 void UdsServer::on_bytes(OnBytes cb) {

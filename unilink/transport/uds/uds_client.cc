@@ -251,11 +251,11 @@ boost::asio::any_io_executor UdsClient::get_executor() { return impl_->strand_; 
 
 bool UdsClient::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> vec(data.begin(), data.end());
-  async_write_move(std::move(vec));
-  return true;
+  return async_write_move(std::move(vec));
 }
 
 bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
+  if (!impl_->connected_.load() || impl_->stop_requested_.load()) return false;
   if (impl_->queue_bytes_ + data.size() > impl_->bp_limit_) return false;
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data.size();
@@ -277,6 +277,7 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!impl_->connected_.load() || impl_->stop_requested_.load() || !data) return false;
   if (impl_->queue_bytes_ + data->size() > impl_->bp_limit_) return false;
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     size_t added = data->size();

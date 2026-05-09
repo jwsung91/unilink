@@ -20,6 +20,7 @@
 #include <boost/asio.hpp>
 #include <memory>
 #include <thread>
+#include <vector>
 
 #include "test/mocks/mock_uds_acceptor.hpp"
 #include "test_constants.hpp"
@@ -86,6 +87,17 @@ TEST_F(TransportUdsServerTest, SuccessfulStart) {
 
   EXPECT_TRUE(server->is_connected());
   EXPECT_TRUE(listening);
+}
+
+TEST_F(TransportUdsServerTest, WriteWithoutActiveSessionReturnsFalse) {
+  std::vector<uint8_t> payload = {1, 2, 3};
+  auto shared_payload = std::make_shared<const std::vector<uint8_t>>(payload);
+
+  EXPECT_FALSE(server->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+  EXPECT_FALSE(server->async_write_move(std::vector<uint8_t>{1, 2, 3}));
+  EXPECT_FALSE(server->async_write_shared(shared_payload));
+  EXPECT_FALSE(server->broadcast("payload"));
+  EXPECT_FALSE(server->broadcast(memory::ConstByteSpan(payload.data(), payload.size())));
 }
 
 TEST_F(TransportUdsServerTest, BindFailure) {
