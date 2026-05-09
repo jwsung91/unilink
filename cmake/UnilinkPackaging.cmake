@@ -22,8 +22,8 @@ set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 # Install dirs
 include(GNUInstallDirs)
 
-# Package file naming
-# Normalize architecture: x86_64/AMD64 -> amd64, aarch64/arm64 -> arm64
+# Package file naming Normalize architecture: x86_64/AMD64 -> amd64,
+# aarch64/arm64 -> arm64
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
   set(_unilink_arch "amd64")
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
@@ -32,8 +32,8 @@ else()
   set(_unilink_arch "${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-# UNILINK_OS_LABEL can be passed via -DUNILINK_OS_LABEL=ubuntu-22.04 etc.
-# Falls back to cmake system name if not provided.
+# UNILINK_OS_LABEL can be passed via -DUNILINK_OS_LABEL=ubuntu-22.04 etc. Falls
+# back to cmake system name if not provided.
 if(UNILINK_OS_LABEL)
   set(_unilink_os "${UNILINK_OS_LABEL}")
 elseif(APPLE)
