@@ -226,7 +226,7 @@ jobs:
           ls -la build/package/ >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Release Asset
-        if: github.event_name == 'push' || inputs.upload == 'true'
+        if: github.event_name == 'push' || inputs.upload == true || inputs.upload == 'true'
         uses: softprops/action-gh-release@v3
         with:
           files: ${{ matrix.release_files }}
