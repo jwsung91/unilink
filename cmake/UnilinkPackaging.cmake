@@ -26,7 +26,7 @@ include(GNUInstallDirs)
 # Normalize architecture: x86_64/AMD64 -> amd64, aarch64/arm64 -> arm64
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
   set(_unilink_arch "amd64")
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
   set(_unilink_arch "arm64")
 else()
   set(_unilink_arch "${CMAKE_SYSTEM_PROCESSOR}")
