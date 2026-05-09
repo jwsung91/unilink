@@ -26,7 +26,7 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 ## Requirements
 
 * **C++20 compiler and standard library**: GCC 10+, recent Clang/libc++, or MSVC 2022 (required)
-* CMake 3.12 or later
+* CMake 3.12 or later for plain builds; CMake 3.21 or later for the repository presets
 * Boost 1.83.0 or later. vcpkg is the recommended dependency supplier; OS package manager Boost versions are supported only when they meet this minimum.
 
 ## 📦 Installation
@@ -48,6 +48,7 @@ cmake --build --preset dev-linux-x64
 ```
 
 The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0.
+The preset-based contributor workflow uses `CMakePresets.json` schema version 3, so those `cmake --preset ...` commands require CMake 3.21+.
 
 ## 🐍 Python Bindings
 

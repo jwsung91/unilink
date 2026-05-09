@@ -22,7 +22,6 @@
 #include <boost/asio/steady_timer.hpp>
 #include <chrono>
 #include <mutex>
-#include <optional>
 #include <shared_mutex>
 #include <stdexcept>
 #include <thread>
@@ -79,7 +78,6 @@ struct TcpClient::Impl {
   std::chrono::milliseconds connection_timeout_{5000};
   size_t backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::Reliable};
-  std::optional<std::string> pending_best_effort_msg_;
 
   Impl(const std::string& host, uint16_t port) : host_(host), port_(port), started_(false) {}
 
@@ -257,11 +255,6 @@ struct TcpClient::Impl {
       auto binary_view = base::safe_convert::string_to_bytes(data);
       return channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
-    // Store as pending if in BestEffort mode to send upon reconnection
-    if (backpressure_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-      pending_best_effort_msg_ = std::string(data);
-      return true;  // Accepted for later delivery
-    }
     return false;
   }
 
@@ -347,16 +340,6 @@ struct TcpClient::Impl {
           std::unique_lock<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(true);
           connect_handler = connect_handler_;
-
-          // Recovery: Send the latest pending frame if exists
-          if (pending_best_effort_msg_) {
-            auto data = std::move(*pending_best_effort_msg_);
-            pending_best_effort_msg_.reset();
-            auto binary_view = base::safe_convert::string_to_bytes(data);
-            if (channel_) {
-              channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-            }
-          }
         }
         if (connect_handler) connect_handler(ConnectionContext(0));
       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {

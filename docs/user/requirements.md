@@ -10,7 +10,7 @@ This guide describes the system requirements and dependencies needed to build an
 
 - **Ubuntu 22.04 LTS or later**
 - **C++20 compatible compiler and standard library** (GCC 10+, recent Clang/libc++, or MSVC 2022+)
-- **CMake 3.12 or later**
+- **CMake 3.12 or later** for plain builds; **CMake 3.21 or later** for the repository presets
 - **Boost 1.83.0 or later**, preferably supplied by vcpkg
 
 ### Supported Platforms
@@ -50,7 +50,7 @@ If you use system packages instead of vcpkg, the selected Boost installation mus
 | ----------- | -------------- | ------------ | ------------------------------------------------------------------------- |
 | **GCC/G++** | 10+            | GPL          | C++20 compiler                                                            |
 | **Clang**   | 14+ (optional) | Apache 2.0   | Alternative C++20 compiler                                                |
-| **CMake**   | 3.12+          | BSD-3-Clause | Build system                                                              |
+| **CMake**   | 3.12+ / 3.21+  | BSD-3-Clause | Build system; 3.21+ is needed only for repository presets                 |
 | **Boost**   | 1.83.0+        | BSL 1.0      | Asio for async I/O                                                        |
 
 ---
@@ -136,14 +136,14 @@ clang++ --version
 
 ```bash
 cmake --version
-# Should show version 3.12 or higher
+# Should show 3.12 or higher for plain builds, or 3.21 or higher for repository presets
 ```
 
 ### Check Boost Version
 
 ```bash
 grep BOOST_LIB_VERSION /path/to/boost/include/boost/version.hpp
-# Should show 1_84 or higher
+# Should show 1_83 or higher
 ```
 
 ### Quick Environment Test
@@ -197,6 +197,3 @@ sudo apt install cmake
 - [Quick Start Guide](quickstart.md) - Get started with unilink
 - [Installation Guide](installation.md) - Installation options
 - [Troubleshooting](troubleshooting.md) - Common issues and solutions
-olutions
-[Troubleshooting](troubleshooting.md) - Common issues and solutions
-

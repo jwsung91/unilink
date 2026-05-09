@@ -4,7 +4,7 @@ This guide covers the supported ways to install and use the **unilink** library 
 
 ## Prerequisites
 
-- **CMake**: 3.12 or higher
+- **CMake**: 3.12 or higher for plain builds; 3.21 or higher for the repository presets
 - **C++ Compiler**: C++20 compatible (GCC 10+, recent Clang/libc++, MSVC 2022+)
 - **Boost**: 1.83.0 or higher
 - **Platform**: Linux, Windows, macOS

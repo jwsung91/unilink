@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <boost/asio.hpp>
+#include <vector>
 
 #include "../../mocks/mock_uds_socket.hpp"
 #include "test_utils.hpp"
@@ -52,9 +53,8 @@ TEST_F(UdsServerSessionCoverageTest, BackpressureLimitEnforced) {
   auto mock_socket = std::make_unique<unilink::test::mocks::MockUdsSocket>();
   auto session = std::make_shared<UdsServerSession>(ioc, std::move(mock_socket), 100, 0);
 
-  // threshold is 100, limit is threshold * 4 = 400
-  std::vector<uint8_t> large_data(500, 'A');
-  session->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
+  std::vector<uint8_t> large_data(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD + 1, 'A');
+  EXPECT_FALSE(session->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size())));
 
   // We can't easily check internal state but we can verify it doesn't crash
   // and exercises the bp_limit check.

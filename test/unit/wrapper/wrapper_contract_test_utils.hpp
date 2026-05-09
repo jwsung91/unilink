@@ -40,9 +40,18 @@ class FakeChannel : public interface::Channel {
     return ioc.get_executor();
   }
 
-  bool async_write_copy(memory::ConstByteSpan) override { return true; }
-  bool async_write_move(std::vector<uint8_t>&&) override { return true; }
-  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override { return true; }
+  bool async_write_copy(memory::ConstByteSpan) override {
+    ++write_count_;
+    return true;
+  }
+  bool async_write_move(std::vector<uint8_t>&&) override {
+    ++write_count_;
+    return true;
+  }
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {
+    ++write_count_;
+    return true;
+  }
 
   bool is_backpressure_active() const override { return false; }
 
@@ -67,8 +76,11 @@ class FakeChannel : public interface::Channel {
     }
   }
 
+  int write_count() const { return write_count_; }
+
  private:
   bool connected_{false};
+  int write_count_{0};
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_backpressure_;

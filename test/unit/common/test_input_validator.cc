@@ -16,8 +16,11 @@
 
 #include <gtest/gtest.h>
 
+#include <cctype>
 #include <limits>
+#include <ostream>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <vector>
 
@@ -25,6 +28,34 @@
 
 using namespace unilink;
 using namespace unilink::util;
+
+namespace {
+
+std::string make_param_name(std::string_view description) {
+  std::string name;
+  for (const unsigned char ch : description) {
+    if (std::isalnum(ch)) {
+      name.push_back(static_cast<char>(ch));
+    } else if (!name.empty() && name.back() != '_') {
+      name.push_back('_');
+    }
+  }
+
+  while (!name.empty() && name.back() == '_') {
+    name.pop_back();
+  }
+  if (name.empty() || std::isdigit(static_cast<unsigned char>(name.front()))) {
+    name.insert(0, "Case_");
+  }
+  return name;
+}
+
+template <typename T>
+std::string param_name_from_description(const ::testing::TestParamInfo<T>& info) {
+  return make_param_name(info.param.description) + "_" + std::to_string(info.index);
+}
+
+}  // namespace
 
 // Existing tests
 TEST(InputValidatorTest, ValidatePort) {
@@ -285,6 +316,8 @@ struct IPv4TestCase {
   std::string description;
 };
 
+void PrintTo(const IPv4TestCase& param, std::ostream* os) { *os << param.description; }
+
 class IPv4ParamTest : public ::testing::TestWithParam<IPv4TestCase> {};
 
 TEST_P(IPv4ParamTest, ValidateAddress) {
@@ -308,13 +341,16 @@ INSTANTIATE_TEST_SUITE_P(IPv4Scenarios, IPv4ParamTest,
                                            IPv4TestCase{"tcp://1.1.1.1", true, "Protocol prefix"},
                                            IPv4TestCase{"1.1.1.1", false, "Valid simple address"},
                                            IPv4TestCase{"255.255.255.255", false, "Valid max address"},
-                                           IPv4TestCase{"0.0.0.0", false, "Valid min address"}));
+                                           IPv4TestCase{"0.0.0.0", false, "Valid min address"}),
+                         param_name_from_description<IPv4TestCase>);
 
 struct HostTestCase {
   std::string host;
   bool should_throw;
   std::string description;
 };
+
+void PrintTo(const HostTestCase& param, std::ostream* os) { *os << param.description; }
 
 class HostParamTest : public ::testing::TestWithParam<HostTestCase> {};
 
@@ -336,13 +372,16 @@ INSTANTIATE_TEST_SUITE_P(HostScenarios, HostParamTest,
                                            HostTestCase{"[::1]:80", true, "IPv6 with port"},
                                            HostTestCase{"::1", false, "IPv6 address"},
                                            HostTestCase{"localhost", false, "Simple hostname"},
-                                           HostTestCase{"1.1.1.1", false, "IPv4 address"}));
+                                           HostTestCase{"1.1.1.1", false, "IPv4 address"}),
+                         param_name_from_description<HostTestCase>);
 
 struct DevicePathTestCase {
   std::string path;
   bool should_throw;
   std::string description;
 };
+
+void PrintTo(const DevicePathTestCase& param, std::ostream* os) { *os << param.description; }
 
 class DevicePathParamTest : public ::testing::TestWithParam<DevicePathTestCase> {};
 
@@ -367,13 +406,16 @@ INSTANTIATE_TEST_SUITE_P(
         DevicePathTestCase{"/etc/passwd", true, "Non-device path (rejected)"},
         DevicePathTestCase{"/dev/ttyUSB0", false, "Linux device path"},
         // Invalid
-        DevicePathTestCase{"", true, "Empty path"}, DevicePathTestCase{"/dev/bad?", true, "Invalid char ?"}));
+        DevicePathTestCase{"", true, "Empty path"}, DevicePathTestCase{"/dev/bad?", true, "Invalid char ?"}),
+    param_name_from_description<DevicePathTestCase>);
 
 struct PortTestCase {
   uint16_t port;
   bool should_throw;
   std::string description;
 };
+
+void PrintTo(const PortTestCase& param, std::ostream* os) { *os << param.description; }
 
 class PortParamTest : public ::testing::TestWithParam<PortTestCase> {};
 
@@ -391,7 +433,8 @@ INSTANTIATE_TEST_SUITE_P(PortScenarios, PortParamTest,
                          ::testing::Values(PortTestCase{0, true, "Port 0 (invalid)"},
                                            PortTestCase{1, false, "Port 1 (min valid)"},
                                            PortTestCase{65535, false, "Port 65535 (max valid)"},
-                                           PortTestCase{8080, false, "Standard port"}));
+                                           PortTestCase{8080, false, "Standard port"}),
+                         param_name_from_description<PortTestCase>);
 
 TEST(InputValidatorTest, ValidateSecurityExtendedAscii) {
   // Extended ASCII chars (negative when char is signed)

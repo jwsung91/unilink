@@ -53,6 +53,9 @@ Development dependencies are ready.
 VCPKG_ROOT=${VCPKG_ROOT}
 VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
 
+The preset commands below require CMake 3.21+.
+Plain non-preset builds remain supported with CMake 3.12+.
+
 Configure with one of:
   cmake --preset dev-linux-x64
   cmake --preset dev-linux-arm64

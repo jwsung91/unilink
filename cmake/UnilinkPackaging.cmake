@@ -5,10 +5,10 @@
 set(CPACK_PACKAGE_NAME "unilink")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
-    "Cross-platform async C++ communication library for Serial, TCP, and UDP"
+    "Cross-platform async C++ communication library for Serial, TCP, UDP, and UDS"
 )
 set(CPACK_PACKAGE_DESCRIPTION
-    "A cross-platform asynchronous C++ communication library providing a unified API for Serial, TCP, and UDP transports"
+    "A cross-platform asynchronous C++ communication library providing a unified API for Serial, TCP, UDP, and UDS transports"
 )
 set(CPACK_PACKAGE_VENDOR "Jinwoo Sung")
 set(CPACK_PACKAGE_CONTACT "jwsung91@gmail.com")

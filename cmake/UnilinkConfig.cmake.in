@@ -10,6 +10,7 @@ include(CMakeFindDependencyMacro)
 # Find required dependencies.
 find_dependency(Boost @UNILINK_MIN_BOOST_VERSION@ REQUIRED COMPONENTS system)
 find_dependency(Threads REQUIRED)
+find_dependency(spdlog 1.9 CONFIG REQUIRED)
 
 # Define proxy targets for compatibility with FetchContent builds.
 if(NOT TARGET unilink_boost_system_proxy)
@@ -25,6 +26,15 @@ if(NOT TARGET unilink_boost_asio_proxy)
     target_link_libraries(unilink_boost_asio_proxy INTERFACE Boost::asio)
   elseif(TARGET Boost::system)
     target_link_libraries(unilink_boost_asio_proxy INTERFACE Boost::system)
+  endif()
+endif()
+
+if(NOT TARGET unilink_spdlog_proxy)
+  add_library(unilink_spdlog_proxy INTERFACE IMPORTED)
+  if(TARGET spdlog::spdlog)
+    target_link_libraries(unilink_spdlog_proxy INTERFACE spdlog::spdlog)
+  elseif(TARGET spdlog)
+    target_link_libraries(unilink_spdlog_proxy INTERFACE spdlog)
   endif()
 endif()
 

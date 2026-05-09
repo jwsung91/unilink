@@ -232,8 +232,22 @@ endif()
 # Create interface library for dependencies
 add_library(unilink_dependencies INTERFACE)
 
+set(_UNILINK_SPDLOG_BUILD_TARGET "")
+if(TARGET spdlog::spdlog)
+  set(_UNILINK_SPDLOG_BUILD_TARGET spdlog::spdlog)
+elseif(TARGET spdlog)
+  set(_UNILINK_SPDLOG_BUILD_TARGET spdlog)
+endif()
+
 # Link common dependencies
 target_link_libraries(unilink_dependencies INTERFACE Threads::Threads)
+if(_UNILINK_SPDLOG_BUILD_TARGET)
+  target_link_libraries(
+    unilink_dependencies
+    INTERFACE $<BUILD_INTERFACE:${_UNILINK_SPDLOG_BUILD_TARGET}>
+              $<INSTALL_INTERFACE:unilink_spdlog_proxy>
+  )
+endif()
 if(UNILINK_LINK_BOOST_SYSTEM)
   if(UNILINK_BOOST_FETCHED)
     # For local targets (FetchContent), use BUILD_INTERFACE to avoid export
@@ -317,6 +331,9 @@ endif()
 
 # Export dependencies for downstream projects
 set(_UNILINK_DEPENDENCY_TARGETS Threads::Threads)
+if(_UNILINK_SPDLOG_BUILD_TARGET)
+  list(APPEND _UNILINK_DEPENDENCY_TARGETS ${_UNILINK_SPDLOG_BUILD_TARGET})
+endif()
 if(UNILINK_LINK_BOOST_SYSTEM)
   list(APPEND _UNILINK_DEPENDENCY_TARGETS Boost::system)
 endif()
