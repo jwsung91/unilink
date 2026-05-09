@@ -22,6 +22,7 @@
 #include <thread>
 #include <vector>
 
+#include "test_utils.hpp"
 #include "unilink/base/constants.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/udp_builder.hpp"
@@ -145,18 +146,19 @@ TEST(BackpressureStrategyTest, SetBackpressureStrategyChangesMode) {
 
 TEST(BackpressureStrategyTest, UdsClient_ReportBackpressureHysteresis) {
   constexpr size_t kThreshold = 1024;
-  auto tmp_path = std::string("/tmp/unilink_bp_hysteresis_") + std::to_string(getpid()) + ".sock";
+  auto tmp_path = test::TestUtils::makeUniqueUdsSocketPath("bp_hys");
+  test::TestUtils::removeFileIfExists(tmp_path);
 
   // Start a UDS server to accept the connection (manages its own ioc)
   config::UdsServerConfig srv_cfg;
-  srv_cfg.socket_path = tmp_path;
+  srv_cfg.socket_path = tmp_path.string();
   auto server = transport::UdsServer::create(srv_cfg);
   server->start();
   std::this_thread::sleep_for(50ms);
 
   // Client with small threshold (manages its own ioc)
   config::UdsClientConfig cli_cfg;
-  cli_cfg.socket_path = tmp_path;
+  cli_cfg.socket_path = tmp_path.string();
   cli_cfg.backpressure_threshold = kThreshold;
   cli_cfg.backpressure_strategy = BackpressureStrategy::BestEffort;
 
@@ -181,6 +183,7 @@ TEST(BackpressureStrategyTest, UdsClient_ReportBackpressureHysteresis) {
 
   client->stop();
   server->stop();
+  test::TestUtils::removeFileIfExists(tmp_path);
 
   // Hysteresis: with BestEffort and flooding, must fire at least once
   std::lock_guard<std::mutex> lock(bp_mtx);
@@ -200,8 +203,8 @@ TEST(BackpressureStrategyTest, BuilderFluentBackpressureStrategy) {
 }
 
 TEST(BackpressureStrategyTest, UdsBuilderFluentBackpressureStrategy) {
-  auto tmp_path = std::string("/tmp/unilink_bp_builder_") + std::to_string(getpid()) + ".sock";
-  auto client = builder::UdsClientBuilder(tmp_path)
+  auto tmp_path = test::TestUtils::makeUniqueUdsSocketPath("bp_builder");
+  auto client = builder::UdsClientBuilder(tmp_path.string())
                     .backpressure_strategy(BackpressureStrategy::BestEffort)
                     .backpressure_threshold(256 * 1024)
                     .on_data([](auto&&) {})

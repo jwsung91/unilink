@@ -19,6 +19,11 @@ class AsyncChannelBase:
         self._loop = None
         self._data_queue = asyncio.Queue()
         self._message_queue = asyncio.Queue()
+
+        try:
+            self._loop = _get_loop()
+        except RuntimeError:
+            self._loop = None
         
         # Setup internal handlers
         self._raw_client.on_data(self._on_data_bridge)
@@ -138,6 +143,11 @@ class AsyncServerBase:
         self._loop = None
         self._sessions = {}
         self._session_queue = asyncio.Queue()
+
+        try:
+            self._loop = _get_loop()
+        except RuntimeError:
+            self._loop = None
         
         # Setup bridges
         self._raw_server.on_connect(self._on_connect_bridge)
