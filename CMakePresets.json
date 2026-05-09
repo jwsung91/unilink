@@ -24,8 +24,8 @@
       "inherits": "vcpkg-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_C_COMPILER": "gcc-10",
-        "CMAKE_CXX_COMPILER": "g++-10",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
         "UNILINK_BUILD_TESTS": "ON",
         "VCPKG_TARGET_TRIPLET": "x64-linux"
       }
@@ -36,8 +36,8 @@
       "inherits": "vcpkg-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_C_COMPILER": "gcc-10",
-        "CMAKE_CXX_COMPILER": "g++-10",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
         "UNILINK_BUILD_TESTS": "ON",
         "VCPKG_TARGET_TRIPLET": "arm64-linux"
       }
@@ -78,8 +78,8 @@
       "inherits": "vcpkg-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_C_COMPILER": "gcc-10",
-        "CMAKE_CXX_COMPILER": "g++-10",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
         "UNILINK_BUILD_TESTS": "OFF",
         "VCPKG_TARGET_TRIPLET": "x64-linux"
       }
