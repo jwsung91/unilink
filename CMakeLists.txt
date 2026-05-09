@@ -252,11 +252,7 @@ endfunction()
 
 # Link dependencies and set include directories
 if(TARGET unilink_shared)
-  target_link_libraries(
-    unilink_shared
-    PUBLIC unilink_dependencies
-    PRIVATE spdlog::spdlog
-  )
+  target_link_libraries(unilink_shared PUBLIC unilink_dependencies)
   target_compile_features(unilink_shared PUBLIC cxx_std_20)
   target_include_directories(
     unilink_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -264,11 +260,7 @@ if(TARGET unilink_shared)
   )
 endif()
 if(TARGET unilink_static)
-  target_link_libraries(
-    unilink_static
-    PUBLIC unilink_dependencies
-    PRIVATE spdlog::spdlog
-  )
+  target_link_libraries(unilink_static PUBLIC unilink_dependencies)
   target_compile_features(unilink_static PUBLIC cxx_std_20)
   target_include_directories(
     unilink_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -279,11 +271,7 @@ if(TARGET unilink
    AND NOT TARGET unilink_shared
    AND NOT TARGET unilink_static
 )
-  target_link_libraries(
-    unilink
-    PUBLIC unilink_dependencies
-    PRIVATE spdlog::spdlog
-  )
+  target_link_libraries(unilink PUBLIC unilink_dependencies)
   target_compile_features(unilink PUBLIC cxx_std_20)
   target_include_directories(
     unilink PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
