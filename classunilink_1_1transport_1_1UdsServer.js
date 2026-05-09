@@ -17,7 +17,6 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a394374fb0d473ec9f081e312d8350b57", null ],
     [ "get_executor", "classunilink_1_1transport_1_1UdsServer.html#aabb97fa84c5d0a58246e6144d42371af", null ],
-    [ "get_state", "classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597", null ],
     [ "is_backpressure_active", "classunilink_1_1transport_1_1UdsServer.html#a82a0ff1bb23734fbfb01d07f940f1a7d", null ],
     [ "is_backpressure_active", "classunilink_1_1transport_1_1UdsServer.html#a4e8cd96a865179ac8b6f104e060b55b0", null ],
     [ "is_connected", "classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab", null ],
@@ -33,5 +32,6 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a27cfb9cbb6546f15781cd9516ae63d0e", null ],
     [ "set_client_limit", "classunilink_1_1transport_1_1UdsServer.html#a6dc3c1b699682a130366960e63d49cfd", null ],
     [ "start", "classunilink_1_1transport_1_1UdsServer.html#ad1d32d30e782b7fc5e29d4c7161575e6", null ],
+    [ "state", "classunilink_1_1transport_1_1UdsServer.html#adfca0174ce9c8a45f8d852ae8fb12d39", null ],
     [ "stop", "classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430", null ]
 ];
