@@ -190,4 +190,17 @@ TEST(TcpClientWrapperContractTest, StopSuppressesLateCallbacks) {
   EXPECT_EQ(callbacks.load(), 0);
 }
 
+TEST(TcpClientWrapperContractTest, BestEffortDisconnectedSendReturnsFalse) {
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
+  wrapper::TcpClient client(fake_channel);
+  client.backpressure_strategy(base::constants::BackpressureStrategy::BestEffort);
+
+  EXPECT_FALSE(client.try_send("payload"));
+  EXPECT_FALSE(client.send("payload"));
+  EXPECT_EQ(fake_channel->write_count(), 0);
+
+  fake_channel->emit_state(base::LinkState::Connected);
+  EXPECT_EQ(fake_channel->write_count(), 0);
+}
+
 }  // namespace
