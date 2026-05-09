@@ -57,7 +57,7 @@ FROM ubuntu:24.04 AS production
 RUN apt-get update && apt-get install -y libstdc++6 && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN useradd -m -u 1000 appuser
+RUN userdel -r ubuntu 2>/dev/null || true && useradd -m -u 1000 appuser
 
 # Set working directory
 WORKDIR /app
