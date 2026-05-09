@@ -357,7 +357,7 @@ void UdsServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
   impl_->on_multi_disconnect_ = std::move(handler);
 }
 
-base::LinkState UdsServer::get_state() const { return impl_->state_.state(); }
+base::LinkState UdsServer::state() const { return impl_->state_.state(); }
 
 void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
   acceptor_->async_accept([self](const boost::system::error_code& ec, uds::socket socket) {

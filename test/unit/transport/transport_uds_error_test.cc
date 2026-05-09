@@ -35,10 +35,10 @@ TEST_F(UdsErrorTest, InvalidSocketPath) {
   server->start();
 
   // Give some time for async operation if needed
-  TestUtils::waitForCondition([&] { return server->get_state() == base::LinkState::Error; }, 500);
+  TestUtils::waitForCondition([&] { return server->state() == base::LinkState::Error; }, 500);
 
   // In some implementations, it might stay in Idle if path validation fails immediately
-  EXPECT_TRUE(server->get_state() == base::LinkState::Error || server->get_state() == base::LinkState::Idle);
+  EXPECT_TRUE(server->state() == base::LinkState::Error || server->state() == base::LinkState::Idle);
 }
 
 TEST_F(UdsErrorTest, PathPermissionDenied) {
@@ -61,7 +61,7 @@ TEST_F(UdsErrorTest, PathPermissionDenied) {
   // Wait for potential async error transition (longer timeout)
   bool error_state = TestUtils::waitForCondition(
       [&] {
-        auto s = server->get_state();
+        auto s = server->state();
         return s == base::LinkState::Error || s == base::LinkState::Idle;
       },
       1000);
@@ -104,7 +104,7 @@ TEST_F(UdsErrorTest, DISABLED_ServerStopWithActiveSessions) {
   server->start();
 
   // Wait for server to be ready
-  ASSERT_TRUE(TestUtils::waitForCondition([&] { return server->get_state() == base::LinkState::Listening; }, 2000));
+  ASSERT_TRUE(TestUtils::waitForCondition([&] { return server->state() == base::LinkState::Listening; }, 2000));
 
   config::UdsClientConfig ccfg;
   ccfg.socket_path = temp_sock_;
@@ -120,7 +120,7 @@ TEST_F(UdsErrorTest, DISABLED_ServerStopWithActiveSessions) {
   // Just verify server reached Idle or Error state
   EXPECT_TRUE(TestUtils::waitForCondition(
       [&] {
-        auto s = server->get_state();
+        auto s = server->state();
         return s == base::LinkState::Idle || s == base::LinkState::Error;
       },
       3000));
