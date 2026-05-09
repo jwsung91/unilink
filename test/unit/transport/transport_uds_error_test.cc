@@ -14,7 +14,7 @@ using namespace unilink::test;
 class UdsErrorTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    temp_sock_ = "/tmp/unilink_error_" + std::to_string(TestUtils::getAvailableTestPort()) + ".sock";
+    temp_sock_ = TestUtils::makeUniqueUdsSocketPath("ul_err").string();
     TestUtils::removeFileIfExists(temp_sock_);
   }
 
@@ -39,6 +39,7 @@ TEST_F(UdsErrorTest, InvalidSocketPath) {
 
   // In some implementations, it might stay in Idle if path validation fails immediately
   EXPECT_TRUE(server->state() == base::LinkState::Error || server->state() == base::LinkState::Idle);
+  server->stop();
 }
 
 TEST_F(UdsErrorTest, PathPermissionDenied) {
@@ -48,7 +49,7 @@ TEST_F(UdsErrorTest, PathPermissionDenied) {
   config::UdsServerConfig cfg;
 
   // Create a temporary directory and remove all permissions
-  std::string restricted_dir = "/tmp/unilink_restricted_" + std::to_string(TestUtils::getAvailableTestPort());
+  std::string restricted_dir = TestUtils::makeUniqueTempFilePath("unilink_restricted").string();
   std::filesystem::create_directory(restricted_dir);
   std::filesystem::permissions(restricted_dir, std::filesystem::perms::none);
 
@@ -67,6 +68,7 @@ TEST_F(UdsErrorTest, PathPermissionDenied) {
       1000);
 
   EXPECT_TRUE(error_state);
+  server->stop();
 
   // Cleanup: Restore permissions so directory can be deleted
   std::filesystem::permissions(restricted_dir, std::filesystem::perms::owner_all);
@@ -76,7 +78,7 @@ TEST_F(UdsErrorTest, PathPermissionDenied) {
 
 TEST_F(UdsErrorTest, ClientConnectWithoutServer) {
   config::UdsClientConfig cfg;
-  cfg.socket_path = "/tmp/non_existent_server.sock";
+  cfg.socket_path = TestUtils::makeUniqueUdsSocketPath("ul_missing").string();
   cfg.max_retries = 1;
   cfg.retry_interval_ms = 10;
 
@@ -90,14 +92,12 @@ TEST_F(UdsErrorTest, ClientConnectWithoutServer) {
 
   client->start();
 
-  // Wait for retry attempt
-  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_state_seen.load() || !client->is_connected(); }, 1000));
+  // Wait for the async connect attempt to fail before the next UDS test starts.
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_state_seen.load(); }, 1000));
+  client->stop();
 }
 
-// This test is currently disabled due to intermittent timing issues with UDS session cleanup.
-// It consistently reaches 81%+ coverage even when disabled because the logic is exercised
-// by other tests, but this specific scenario is flaky in high-load environments.
-TEST_F(UdsErrorTest, DISABLED_ServerStopWithActiveSessions) {
+TEST_F(UdsErrorTest, ServerStopWithActiveSessions) {
   config::UdsServerConfig scfg;
   scfg.socket_path = temp_sock_;
   auto server = UdsServer::create(scfg);
@@ -111,8 +111,9 @@ TEST_F(UdsErrorTest, DISABLED_ServerStopWithActiveSessions) {
   auto client = UdsClient::create(ccfg);
   client->start();
 
-  // Wait for connection
-  ASSERT_TRUE(TestUtils::waitForCondition([&] { return client->is_connected(); }, 2000));
+  // Wait until both sides observe the active session before stopping the server.
+  ASSERT_TRUE(
+      TestUtils::waitForCondition([&] { return client->is_connected() && server->client_count() == 1; }, 2000));
 
   // Stop server while client is connected - this must not crash
   server->stop();
@@ -124,6 +125,7 @@ TEST_F(UdsErrorTest, DISABLED_ServerStopWithActiveSessions) {
         return s == base::LinkState::Idle || s == base::LinkState::Error;
       },
       3000));
+  EXPECT_EQ(server->client_count(), 0u);
 
   client->stop();
 }
