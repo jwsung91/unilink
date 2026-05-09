@@ -168,7 +168,7 @@ Recommended Platform</h2>
 <ul>
 <li><b>Ubuntu 22.04 LTS or later</b></li>
 <li><b>C++20 compatible compiler and standard library</b> (GCC 10+, recent Clang/libc++, or MSVC 2022+)</li>
-<li><b>CMake 3.12 or later</b></li>
+<li><b>CMake 3.12 or later</b> for plain builds; <b>CMake 3.21 or later</b> for the repository presets</li>
 <li><b>Boost 1.83.0 or later</b>, preferably supplied by vcpkg</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md684"></a>
@@ -214,7 +214,7 @@ Dependency Details</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b>Clang</b>   </td><td class="markdownTableBodyNone">14+ (optional)   </td><td class="markdownTableBodyNone">Apache 2.0   </td><td class="markdownTableBodyNone">Alternative C++20 compiler    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>CMake</b>   </td><td class="markdownTableBodyNone">3.12+   </td><td class="markdownTableBodyNone">BSD-3-Clause   </td><td class="markdownTableBodyNone">Build system    </td></tr>
+<td class="markdownTableBodyNone"><b>CMake</b>   </td><td class="markdownTableBodyNone">3.12+ / 3.21+   </td><td class="markdownTableBodyNone">BSD-3-Clause   </td><td class="markdownTableBodyNone">Build system; 3.21+ is needed only for repository presets    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b>Boost</b>   </td><td class="markdownTableBodyNone">1.83.0+   </td><td class="markdownTableBodyNone">BSL 1.0   </td><td class="markdownTableBodyNone">Asio for async I/O   </td></tr>
 </table>
@@ -301,11 +301,11 @@ Check Compiler Version</h2>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md706"></a>
 Check CMake Version</h2>
 <div class="fragment"><div class="line">cmake --version</div>
-<div class="line"># Should show version 3.12 or higher</div>
+<div class="line"># Should show 3.12 or higher for plain builds, or 3.21 or higher for repository presets</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md707"></a>
 Check Boost Version</h2>
 <div class="fragment"><div class="line">grep BOOST_LIB_VERSION /path/to/boost/include/boost/version.hpp</div>
-<div class="line"># Should show 1_84 or higher</div>
+<div class="line"># Should show 1_83 or higher</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md708"></a>
 Quick Environment Test</h2>
 <div class="fragment"><div class="line"># Test compilation with C++20</div>
@@ -343,7 +343,7 @@ Next Steps</h1>
 <ul>
 <li><a class="el" href="quickstart_8md.html">Quick Start Guide</a> - Get started with unilink</li>
 <li><a class="el" href="installation_8md.html">Installation Guide</a> - Installation options</li>
-<li><a class="el" href="troubleshooting_8md.html">Troubleshooting</a> - Common issues and solutions olutions <a class="el" href="troubleshooting_8md.html">Troubleshooting</a> - Common issues and solutions </li>
+<li><a class="el" href="troubleshooting_8md.html">Troubleshooting</a> - Common issues and solutions </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -351,7 +351,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 9 2026 03:32:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 9 2026 22:56:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

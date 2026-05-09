@@ -190,7 +190,7 @@ Basic Build (Recommended)</h2>
 <div class="line"> </div>
 <div class="line"># 4. (Optional) Install to custom prefix</div>
 <div class="line">cmake --install build/dev-linux-x64 --prefix /opt/unilink</div>
-</div><!-- fragment --><p>The repository intentionally does not use a root <code>vcpkg.json</code> manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through <code>UNILINK_MIN_BOOST_VERSION</code>.</p>
+</div><!-- fragment --><p>The repository intentionally does not use a root <code>vcpkg.json</code> manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through <code>UNILINK_MIN_BOOST_VERSION</code>. The preset-based contributor workflow requires CMake 3.21+ because <code>CMakePresets.json</code> uses schema version 3. Plain source builds without presets remain supported on CMake 3.12+.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md262"></a>
 Important Build Notes</h1>
@@ -655,7 +655,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 9 2026 03:32:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 9 2026 22:56:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

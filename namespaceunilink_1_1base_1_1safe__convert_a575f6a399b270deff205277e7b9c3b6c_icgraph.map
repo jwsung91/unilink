@@ -1,51 +1,45 @@
 <map id="unilink::base::safe_convert::string_to_bytes" name="unilink::base::safe_convert::string_to_bytes">
-<area shape="rect" id="Node000001" title="Safely obtain a view of std::string as byte array without allocation." alt="" coords="1024,331,1211,371"/>
-<area shape="rect" id="Node000002" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a4b2e9e6e54b4a876ff9b7dd2bcac87e5" title=" " alt="" coords="779,261,951,301"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1030,330,937,304,939,299,1031,324"/>
-<area shape="rect" id="Node000006" href="$structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a71ca6976f08b07bfb8fdc6c17d84aae5" title=" " alt="" coords="753,69,976,109"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1090,321,1038,258,974,187,890,112,893,108,978,183,1042,255,1094,318"/>
-<area shape="rect" id="Node000009" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ac53493b215fe426a68af23ae3844e8ed" title=" " alt="" coords="763,471,966,511"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1081,381,1033,415,977,449,924,473,922,468,975,444,1030,411,1078,377"/>
-<area shape="rect" id="Node000011" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#aed466cfefe41704eaa5640e1fe19dfdd" title=" " alt="" coords="779,197,951,237"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1081,324,1033,287,975,252,946,240,948,235,977,247,1036,282,1085,320"/>
-<area shape="rect" id="Node000013" href="$structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a5eb42ea9060878e32eb41bc7c2f08b69" title=" " alt="" coords="767,395,962,435"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="1025,377,945,397,943,392,1024,372"/>
-<area shape="rect" id="Node000014" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a65fa1f016acd0ea9084a349f04056bbc" title=" " alt="" coords="765,331,964,371"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="1011,353,964,353,964,348,1011,348"/>
-<area shape="rect" id="Node000020" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a335e5b62d1284029ec86007e01dec975" title=" " alt="" coords="763,541,966,581"/>
-<area shape="poly" id="edge23_Node000001_Node000020" title=" " alt="" coords="1100,384,1050,454,1016,492,977,525,942,544,940,539,975,520,1013,488,1046,451,1096,381"/>
-<area shape="rect" id="Node000003" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a2ff1f1ab9415cf563aad518cc05e4cc9" title=" " alt="" coords="518,197,690,237"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="769,261,685,240,687,235,770,255"/>
-<area shape="rect" id="Node000004" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0586e7f25cc0c91807c79106fc496d30" title=" " alt="" coords="509,261,699,301"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="765,284,700,284,700,279,765,279"/>
-<area shape="rect" id="Node000005" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#afcafeb7c7815cc1398f2c1eeeb363ea7" title=" " alt="" coords="267,191,439,231"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="519,260,425,233,426,228,520,255"/>
-<area shape="rect" id="Node000007" href="$structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a32dae0c43294e3469ed3802896fe8116" title=" " alt="" coords="507,69,701,109"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="739,92,702,92,702,87,739,87"/>
-<area shape="rect" id="Node000008" href="$structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a8ab8cedd92a78d5e9aa4f9aadbe736d3" title=" " alt="" coords="507,5,701,45"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="769,69,685,48,687,43,770,63"/>
-<area shape="rect" id="Node000010" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a290b90e2b5d2bccd086d2b8df7a583ee" title=" " alt="" coords="252,517,455,557"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="750,504,455,531,455,525,749,498"/>
-<area shape="poly" id="edge11_Node000011_Node000003" title=" " alt="" coords="765,220,690,220,690,215,765,215"/>
-<area shape="rect" id="Node000012" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ae1a000eb2f4b93645d6c5457398c4eb5" title=" " alt="" coords="518,133,690,173"/>
-<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="769,197,685,176,687,171,770,191"/>
-<area shape="poly" id="edge13_Node000012_Node000005" title=" " alt="" coords="505,179,440,194,439,188,504,173"/>
-<area shape="rect" id="Node000015" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a984a7554166b8e0dab876ecd63b17a3c" title=" " alt="" coords="254,376,453,416"/>
-<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="752,374,706,380,574,391,453,396,453,391,573,386,705,375,751,369"/>
-<area shape="rect" id="Node000016" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a4d5daf16ae0bfec06f9df921f8eab4ee" title=" " alt="" coords="505,325,703,365"/>
-<area shape="poly" id="edge17_Node000014_Node000016" title=" " alt="" coords="752,351,703,350,703,345,752,346"/>
-<area shape="rect" id="Node000019" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a306f373e3f6e919fd2d188b6e742890b" title=" " alt="" coords="254,440,453,480"/>
-<area shape="poly" id="edge21_Node000014_Node000019" title=" " alt="" coords="781,377,754,385,706,400,574,428,453,448,452,443,573,422,705,395,753,380,780,372"/>
-<area shape="poly" id="edge18_Node000016_Node000015" title=" " alt="" coords="492,371,453,379,452,373,491,365"/>
-<area shape="rect" id="Node000017" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#afc23c7b127227a8d6185ea87cf60e85f" title=" " alt="" coords="254,312,453,352"/>
-<area shape="poly" id="edge19_Node000016_Node000017" title=" " alt="" coords="491,342,453,340,453,335,491,337"/>
-<area shape="rect" id="Node000018" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a9764b54b3815c1b1de781c176f97eb98" title=" " alt="" coords="5,376,204,416"/>
-<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="263,358,184,379,182,373,261,353"/>
-<area shape="poly" id="edge22_Node000019_Node000018" title=" " alt="" coords="261,439,182,419,184,413,263,434"/>
-<area shape="rect" id="Node000021" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a933b6ec1aa008bd81988bb03aa47961e" title=" " alt="" coords="252,593,455,633"/>
-<area shape="poly" id="edge24_Node000020_Node000021" title=" " alt="" coords="763,587,706,596,575,608,455,614,455,609,575,603,705,591,762,581"/>
-<area shape="rect" id="Node000022" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a089d32085e7d24b56701bb0657b537f7" title=" " alt="" coords="503,541,705,581"/>
-<area shape="poly" id="edge25_Node000020_Node000022" title=" " alt="" coords="750,564,705,564,705,559,750,559"/>
-<area shape="poly" id="edge26_Node000022_Node000010" title=" " alt="" coords="489,553,455,550,455,544,489,548"/>
-<area shape="poly" id="edge27_Node000022_Node000021" title=" " alt="" coords="494,587,451,596,450,591,493,582"/>
+<area shape="rect" id="Node000001" title="Safely obtain a view of std::string as byte array without allocation." alt="" coords="1004,256,1191,296"/>
+<area shape="rect" id="Node000002" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a4b2e9e6e54b4a876ff9b7dd2bcac87e5" title=" " alt="" coords="769,133,941,173"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1043,252,894,176,897,171,1046,247"/>
+<area shape="rect" id="Node000006" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ac53493b215fe426a68af23ae3844e8ed" title=" " alt="" coords="753,352,956,392"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1044,304,957,342,923,354,922,349,955,338,1042,299"/>
+<area shape="rect" id="Node000008" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#aed466cfefe41704eaa5640e1fe19dfdd" title=" " alt="" coords="769,69,941,109"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1073,246,1023,184,991,151,955,124,932,112,934,107,957,119,994,147,1027,180,1077,243"/>
+<area shape="rect" id="Node000010" href="$structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a5eb42ea9060878e32eb41bc7c2f08b69" title=" " alt="" coords="757,288,952,328"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="991,293,953,298,952,293,990,287"/>
+<area shape="rect" id="Node000011" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a65fa1f016acd0ea9084a349f04056bbc" title=" " alt="" coords="755,224,954,264"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="990,265,954,260,955,254,991,259"/>
+<area shape="rect" id="Node000017" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a335e5b62d1284029ec86007e01dec975" title=" " alt="" coords="753,416,956,456"/>
+<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="1072,308,1022,358,991,384,957,406,932,418,930,413,955,402,987,380,1018,354,1068,305"/>
+<area shape="rect" id="Node000003" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a2ff1f1ab9415cf563aad518cc05e4cc9" title=" " alt="" coords="518,69,690,109"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="762,132,682,112,684,107,763,127"/>
+<area shape="rect" id="Node000004" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0586e7f25cc0c91807c79106fc496d30" title=" " alt="" coords="509,133,699,173"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="755,156,700,156,700,151,755,151"/>
+<area shape="rect" id="Node000005" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#afcafeb7c7815cc1398f2c1eeeb363ea7" title=" " alt="" coords="267,65,439,105"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="516,132,427,108,428,103,517,127"/>
+<area shape="rect" id="Node000007" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a290b90e2b5d2bccd086d2b8df7a583ee" title=" " alt="" coords="252,389,455,429"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="740,383,455,404,455,399,739,378"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="755,92,690,92,690,87,755,87"/>
+<area shape="rect" id="Node000009" href="$structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ae1a000eb2f4b93645d6c5457398c4eb5" title=" " alt="" coords="518,5,690,45"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="762,68,682,48,684,43,763,63"/>
+<area shape="poly" id="edge10_Node000009_Node000005" title=" " alt="" coords="507,51,438,68,437,63,506,46"/>
+<area shape="rect" id="Node000012" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a984a7554166b8e0dab876ecd63b17a3c" title=" " alt="" coords="254,188,453,228"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="741,239,453,218,453,212,741,233"/>
+<area shape="rect" id="Node000013" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a4d5daf16ae0bfec06f9df921f8eab4ee" title=" " alt="" coords="505,248,703,288"/>
+<area shape="poly" id="edge14_Node000011_Node000013" title=" " alt="" coords="742,257,704,261,703,256,742,252"/>
+<area shape="rect" id="Node000016" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a306f373e3f6e919fd2d188b6e742890b" title=" " alt="" coords="254,316,453,356"/>
+<area shape="poly" id="edge18_Node000011_Node000016" title=" " alt="" coords="774,271,754,278,731,291,706,303,641,318,575,328,453,338,453,333,574,323,640,313,704,297,728,286,752,274,772,266"/>
+<area shape="poly" id="edge15_Node000013_Node000012" title=" " alt="" coords="506,247,437,231,438,225,507,242"/>
+<area shape="rect" id="Node000014" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#afc23c7b127227a8d6185ea87cf60e85f" title=" " alt="" coords="254,252,453,292"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="491,272,453,273,453,268,491,267"/>
+<area shape="rect" id="Node000015" href="$structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a9764b54b3815c1b1de781c176f97eb98" title=" " alt="" coords="5,284,204,324"/>
+<area shape="poly" id="edge17_Node000014_Node000015" title=" " alt="" coords="241,289,204,294,204,289,240,284"/>
+<area shape="poly" id="edge19_Node000016_Node000015" title=" " alt="" coords="240,324,204,319,204,314,241,319"/>
+<area shape="rect" id="Node000018" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a933b6ec1aa008bd81988bb03aa47961e" title=" " alt="" coords="252,465,455,505"/>
+<area shape="poly" id="edge21_Node000017_Node000018" title=" " alt="" coords="750,461,706,468,575,480,455,486,455,481,575,475,705,463,749,456"/>
+<area shape="rect" id="Node000019" href="$structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a089d32085e7d24b56701bb0657b537f7" title=" " alt="" coords="503,413,705,453"/>
+<area shape="poly" id="edge22_Node000017_Node000019" title=" " alt="" coords="740,437,705,437,705,432,740,432"/>
+<area shape="poly" id="edge23_Node000019_Node000007" title=" " alt="" coords="489,425,455,422,455,416,489,420"/>
+<area shape="poly" id="edge24_Node000019_Node000018" title=" " alt="" coords="494,459,451,468,450,463,493,454"/>
 </map>

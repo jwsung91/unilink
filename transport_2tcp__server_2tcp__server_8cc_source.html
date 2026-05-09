@@ -705,7 +705,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__server_2tcp__server_8c
 <div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>  <span class="keywordflow">if</span> (session &amp;&amp; session-&gt;alive()) {</div>
 <div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>    <span class="keywordflow">return</span> session-&gt;async_write_copy(data);</div>
 <div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>  }</div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>}</div>
 </div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
@@ -722,7 +722,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__server_2tcp__server_8c
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>  <span class="keywordflow">if</span> (session &amp;&amp; session-&gt;alive()) {</div>
 <div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    <span class="keywordflow">return</span> session-&gt;async_write_move(std::move(data));</div>
 <div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>  }</div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>}</div>
 </div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span> </div>
@@ -739,7 +739,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__server_2tcp__server_8c
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>  <span class="keywordflow">if</span> (session &amp;&amp; session-&gt;alive()) {</div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>    <span class="keywordflow">return</span> session-&gt;async_write_shared(std::move(data));</div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>  }</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>}</div>
 </div>
 <div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span> </div>
@@ -782,112 +782,110 @@ $(document).ready(function(){initNavTree('transport_2tcp__server_2tcp__server_8c
 <div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="keyword">auto</span>&amp; session = entry.second;</div>
 <div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    <span class="keywordflow">if</span> (session &amp;&amp; session-&gt;alive()) {</div>
 <div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>      <span class="keywordflow">if</span> (session-&gt;async_write_shared(shared_data)) sent = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>      sent = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>    }</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>  }</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>  <span class="keywordflow">return</span> sent;</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>}</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>    }</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>  }</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>  <span class="keywordflow">return</span> sent;</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>}</div>
 </div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span> </div>
-<div class="foldopen" id="foldopen00587" data-start="{" data-end="}">
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a56a2fb56d7190dfbd1d9725a16595b9a">  587</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181">TcpServer::broadcast</a>(<a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>  <span class="keyword">auto</span> shared_data = std::make_shared&lt;const std::vector&lt;uint8_t&gt;&gt;(data.begin(), data.end());</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>  <span class="keyword">auto</span> impl = get_impl();</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>  <span class="keywordtype">bool</span> sent = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; entry : impl-&gt;sessions_) {</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>    <span class="keyword">auto</span>&amp; session = entry.second;</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    <span class="keywordflow">if</span> (session &amp;&amp; session-&gt;alive()) {</div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>      <span class="keywordflow">if</span> (session-&gt;async_write_shared(shared_data)) sent = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>      sent = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>    }</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>  }</div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>  <span class="keywordflow">return</span> sent;</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>}</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span> </div>
+<div class="foldopen" id="foldopen00586" data-start="{" data-end="}">
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a56a2fb56d7190dfbd1d9725a16595b9a">  586</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181">TcpServer::broadcast</a>(<a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>  <span class="keyword">auto</span> shared_data = std::make_shared&lt;const std::vector&lt;uint8_t&gt;&gt;(data.begin(), data.end());</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>  <span class="keyword">auto</span> impl = get_impl();</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>  <span class="keywordtype">bool</span> sent = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; entry : impl-&gt;sessions_) {</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>    <span class="keyword">auto</span>&amp; session = entry.second;</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>    <span class="keywordflow">if</span> (session &amp;&amp; session-&gt;alive()) {</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>      <span class="keywordflow">if</span> (session-&gt;async_write_shared(shared_data)) sent = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>    }</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>  }</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>  <span class="keywordflow">return</span> sent;</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>}</div>
 </div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span> </div>
-<div class="foldopen" id="foldopen00602" data-start="{" data-end="}">
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">  602</a></span><span class="keywordtype">bool</span> TcpServer::send_to_client(<a class="code hl_typedef" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view message) {</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">send_to_client</a>(client_id,</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                        <a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>uint8_t*<span class="keyword">&gt;</span>(message.data()), message.size()));</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>}</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span> </div>
+<div class="foldopen" id="foldopen00600" data-start="{" data-end="}">
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">  600</a></span><span class="keywordtype">bool</span> TcpServer::send_to_client(<a class="code hl_typedef" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view message) {</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">send_to_client</a>(client_id,</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>                        <a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span>uint8_t*<span class="keyword">&gt;</span>(message.data()), message.size()));</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>}</div>
 </div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span> </div>
-<div class="foldopen" id="foldopen00607" data-start="{" data-end="}">
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a0e8a84d5dfd0855018b62725dc7df33a">  607</a></span><span class="keywordtype">bool</span> TcpServer::send_to_client(<a class="code hl_typedef" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>  <span class="keyword">auto</span> impl = get_impl();</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>  <span class="keyword">auto</span> it = impl-&gt;sessions_.find(client_id);</div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>  <span class="keywordflow">if</span> (it != impl-&gt;sessions_.end() &amp;&amp; it-&gt;second &amp;&amp; it-&gt;second-&gt;alive()) {</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>    <span class="keywordflow">return</span> it-&gt;second-&gt;async_write_copy(data);</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>  }</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>}</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span> </div>
+<div class="foldopen" id="foldopen00605" data-start="{" data-end="}">
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a0e8a84d5dfd0855018b62725dc7df33a">  605</a></span><span class="keywordtype">bool</span> TcpServer::send_to_client(<a class="code hl_typedef" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>  <span class="keyword">auto</span> impl = get_impl();</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>  <span class="keyword">auto</span> it = impl-&gt;sessions_.find(client_id);</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>  <span class="keywordflow">if</span> (it != impl-&gt;sessions_.end() &amp;&amp; it-&gt;second &amp;&amp; it-&gt;second-&gt;alive()) {</div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>    <span class="keywordflow">return</span> it-&gt;second-&gt;async_write_copy(data);</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>  }</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>}</div>
 </div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span> </div>
-<div class="foldopen" id="foldopen00617" data-start="{" data-end="}">
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a4cd372c89c8beb8f0c0308d73a93fc3d">  617</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classunilink_1_1wrapper_1_1TcpServer.html#a54382f1c15ebb6509e04b413b03c37d7">TcpServer::client_count</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>  <span class="keyword">auto</span> impl = get_impl();</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>  <span class="keywordtype">size_t</span> alive = 0;</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : impl-&gt;sessions_)</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>    <span class="keywordflow">if</span> (entry.second &amp;&amp; entry.second-&gt;alive()) ++alive;</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>  <span class="keywordflow">return</span> alive;</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>}</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span> </div>
+<div class="foldopen" id="foldopen00615" data-start="{" data-end="}">
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a4cd372c89c8beb8f0c0308d73a93fc3d">  615</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classunilink_1_1wrapper_1_1TcpServer.html#a54382f1c15ebb6509e04b413b03c37d7">TcpServer::client_count</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>  <span class="keyword">auto</span> impl = get_impl();</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>  <span class="keywordtype">size_t</span> alive = 0;</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : impl-&gt;sessions_)</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>    <span class="keywordflow">if</span> (entry.second &amp;&amp; entry.second-&gt;alive()) ++alive;</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>  <span class="keywordflow">return</span> alive;</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>}</div>
 </div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span> </div>
-<div class="foldopen" id="foldopen00626" data-start="{" data-end="}">
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">  626</a></span>std::vector&lt;ClientId&gt; <a class="code hl_function" href="classunilink_1_1wrapper_1_1TcpServer.html#a164d2801bb8bf56c39a6a844163de117">TcpServer::connected_clients</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>  <span class="keyword">auto</span> impl = get_impl();</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>  std::vector&lt;ClientId&gt; <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>;</div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>  <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>.reserve(impl-&gt;sessions_.size());</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : impl-&gt;sessions_)</div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>    <span class="keywordflow">if</span> (entry.second &amp;&amp; entry.second-&gt;alive()) <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>.push_back(entry.first);</div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>;</div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>}</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span> </div>
+<div class="foldopen" id="foldopen00624" data-start="{" data-end="}">
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">  624</a></span>std::vector&lt;ClientId&gt; <a class="code hl_function" href="classunilink_1_1wrapper_1_1TcpServer.html#a164d2801bb8bf56c39a6a844163de117">TcpServer::connected_clients</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>  <span class="keyword">auto</span> impl = get_impl();</div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>  std::lock_guard&lt;std::mutex&gt; lock(impl-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>  std::vector&lt;ClientId&gt; <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>;</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>  <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>.reserve(impl-&gt;sessions_.size());</div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : impl-&gt;sessions_)</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>    <span class="keywordflow">if</span> (entry.second &amp;&amp; entry.second-&gt;alive()) <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>.push_back(entry.first);</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a>;</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>}</div>
 </div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span> </div>
-<div class="foldopen" id="foldopen00636" data-start="{" data-end="}">
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a61b139de8bf96ef26e4b7da7227b3d76">  636</a></span><span class="keywordtype">void</span> TcpServer::on_multi_connect(<a class="code hl_typedef" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a> h) {</div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>  std::lock_guard&lt;std::mutex&gt; l(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>  impl_-&gt;on_multi_connect_ = std::move(h);</div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>}</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span> </div>
+<div class="foldopen" id="foldopen00634" data-start="{" data-end="}">
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a61b139de8bf96ef26e4b7da7227b3d76">  634</a></span><span class="keywordtype">void</span> TcpServer::on_multi_connect(<a class="code hl_typedef" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a> h) {</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>  std::lock_guard&lt;std::mutex&gt; l(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>  impl_-&gt;on_multi_connect_ = std::move(h);</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>}</div>
 </div>
-<div class="foldopen" id="foldopen00640" data-start="{" data-end="}">
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a8182dd520e9502a1d564961ef7f4cb03">  640</a></span><span class="keywordtype">void</span> TcpServer::on_multi_data(<a class="code hl_typedef" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a> h) {</div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>  std::lock_guard&lt;std::mutex&gt; l(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>  impl_-&gt;on_multi_data_ = std::move(h);</div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>}</div>
+<div class="foldopen" id="foldopen00638" data-start="{" data-end="}">
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a8182dd520e9502a1d564961ef7f4cb03">  638</a></span><span class="keywordtype">void</span> TcpServer::on_multi_data(<a class="code hl_typedef" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a> h) {</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>  std::lock_guard&lt;std::mutex&gt; l(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>  impl_-&gt;on_multi_data_ = std::move(h);</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>}</div>
 </div>
-<div class="foldopen" id="foldopen00644" data-start="{" data-end="}">
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a576d942411d9db8bbc88abf7dfe21bf4">  644</a></span><span class="keywordtype">void</span> TcpServer::on_multi_disconnect(<a class="code hl_typedef" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a> h) {</div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>  std::lock_guard&lt;std::mutex&gt; l(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>  impl_-&gt;on_multi_disconnect_ = std::move(h);</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>}</div>
+<div class="foldopen" id="foldopen00642" data-start="{" data-end="}">
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#a576d942411d9db8bbc88abf7dfe21bf4">  642</a></span><span class="keywordtype">void</span> TcpServer::on_multi_disconnect(<a class="code hl_typedef" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a> h) {</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>  std::lock_guard&lt;std::mutex&gt; l(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>  impl_-&gt;on_multi_disconnect_ = std::move(h);</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>}</div>
 </div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span> </div>
-<div class="foldopen" id="foldopen00649" data-start="{" data-end="}">
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#afa002ff3287e69e7815e73d39cc4aac8">  649</a></span><span class="keywordtype">void</span> TcpServer::set_client_limit(<span class="keywordtype">size_t</span> max) {</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>  <span class="keyword">auto</span> impl = get_impl();</div>
-<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>  std::lock_guard&lt;std::mutex&gt; l(impl-&gt;sessions_mutex_);</div>
-<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>  impl-&gt;max_clients_ = max;</div>
-<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>  <span class="keywordflow">if</span> (max == 0) {</div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>    impl-&gt;client_limit_enabled_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>    impl-&gt;client_limit_enabled_ = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>  }</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>  <span class="keywordflow">if</span> (impl-&gt;paused_accept_ &amp;&amp; (!impl-&gt;client_limit_enabled_ || impl-&gt;sessions_.size() &lt; impl-&gt;max_clients_)) {</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>    impl-&gt;paused_accept_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>    net::post(impl-&gt;ioc_, [self = shared_from_this()] { self-&gt;get_impl()-&gt;do_accept(self); });</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>  }</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>}</div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span> </div>
+<div class="foldopen" id="foldopen00647" data-start="{" data-end="}">
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#afa002ff3287e69e7815e73d39cc4aac8">  647</a></span><span class="keywordtype">void</span> TcpServer::set_client_limit(<span class="keywordtype">size_t</span> max) {</div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>  <span class="keyword">auto</span> impl = get_impl();</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>  std::lock_guard&lt;std::mutex&gt; l(impl-&gt;sessions_mutex_);</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>  impl-&gt;max_clients_ = max;</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>  <span class="keywordflow">if</span> (max == 0) {</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>    impl-&gt;client_limit_enabled_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>    impl-&gt;client_limit_enabled_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>  }</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>  <span class="keywordflow">if</span> (impl-&gt;paused_accept_ &amp;&amp; (!impl-&gt;client_limit_enabled_ || impl-&gt;sessions_.size() &lt; impl-&gt;max_clients_)) {</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>    impl-&gt;paused_accept_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>    net::post(impl-&gt;ioc_, [self = shared_from_this()] { self-&gt;get_impl()-&gt;do_accept(self); });</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>  }</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>}</div>
 </div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span> </div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#aa0f9e066743d5432ad15655eda1c6031">  662</a></span><a class="code hl_enumeration" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> TcpServer::state()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> get_impl()-&gt;state_.state(); }</div>
 <div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span> </div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpServer.html#aa0f9e066743d5432ad15655eda1c6031">  664</a></span><a class="code hl_enumeration" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> TcpServer::state()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> get_impl()-&gt;state_.state(); }</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span> </div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__tcp__acceptor_8hpp_html"><div class="ttname"><a href="boost__tcp__acceptor_8hpp.html">boost_tcp_acceptor.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html_a196458736bcfd84254d59b8b510aad12"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html#a196458736bcfd84254d59b8b510aad12">unilink::concurrency::IoContextManager::is_running</a></div><div class="ttdeci">bool is_running() const</div><div class="ttdef"><b>Definition</b> <a href="io__context__manager_8cc_source.html#l00165">io_context_manager.cc:165</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html_af8bc9a1e74cd2b081311ae3686bbc8ba"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html#af8bc9a1e74cd2b081311ae3686bbc8ba">unilink::concurrency::IoContextManager::instance</a></div><div class="ttdeci">static IoContextManager &amp; instance()</div><div class="ttdef"><b>Definition</b> <a href="io__context__manager_8cc_source.html#l00098">io_context_manager.cc:98</a></div></div>
@@ -900,9 +898,9 @@ $(document).ready(function(){initNavTree('transport_2tcp__server_2tcp__server_8c
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">C++20 std::span based memory view.</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00033">safe_span.hpp:33</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html">unilink::transport::TcpServer</a></div><div class="ttdoc">Thread-safe TCP Server implementation.</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8hpp_source.html#l00045">tcp_server.hpp:45</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_a4da733ede93eaa9a838ad0c76c6403c2"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">unilink::transport::TcpServer::MultiClientConnectHandler</a></div><div class="ttdeci">std::function&lt; void(ClientId client_id, const std::string &amp;client_info)&gt; MultiClientConnectHandler</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8hpp_source.html#l00085">tcp_server.hpp:85</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_aa921f47f84a91111dad547f4ba6e38f3"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">unilink::transport::TcpServer::connected_clients</a></div><div class="ttdeci">std::vector&lt; ClientId &gt; connected_clients() const</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8cc_source.html#l00626">tcp_server.cc:626</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_aa921f47f84a91111dad547f4ba6e38f3"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">unilink::transport::TcpServer::connected_clients</a></div><div class="ttdeci">std::vector&lt; ClientId &gt; connected_clients() const</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8cc_source.html#l00624">tcp_server.cc:624</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_ace9e10281fdfd2de5fea4d0e9291b2ad"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">unilink::transport::TcpServer::MultiClientDisconnectHandler</a></div><div class="ttdeci">std::function&lt; void(ClientId client_id)&gt; MultiClientDisconnectHandler</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8hpp_source.html#l00087">tcp_server.hpp:87</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_ad274e8df749900ebfc43ad89b1a41656"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">unilink::transport::TcpServer::send_to_client</a></div><div class="ttdeci">bool send_to_client(ClientId client_id, std::string_view message)</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8cc_source.html#l00602">tcp_server.cc:602</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_ad274e8df749900ebfc43ad89b1a41656"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">unilink::transport::TcpServer::send_to_client</a></div><div class="ttdeci">bool send_to_client(ClientId client_id, std::string_view message)</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8cc_source.html#l00600">tcp_server.cc:600</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServer_html_ae97bdb9a320878c62c3ac7c6ff73a854"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">unilink::transport::TcpServer::MultiClientDataHandler</a></div><div class="ttdeci">std::function&lt; void(ClientId client_id, memory::ConstByteSpan data)&gt; MultiClientDataHandler</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__server_2tcp__server_8hpp_source.html#l00086">tcp_server.hpp:86</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a164d2801bb8bf56c39a6a844163de117"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a164d2801bb8bf56c39a6a844163de117">unilink::wrapper::TcpServer::connected_clients</a></div><div class="ttdeci">std::vector&lt; ClientId &gt; connected_clients() const override</div><div class="ttdef"><b>Definition</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00556">tcp_server.cc:556</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a379257413af142eb2a92667c75520b3c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a379257413af142eb2a92667c75520b3c">unilink::wrapper::TcpServer::on_backpressure</a></div><div class="ttdeci">TcpServer &amp; on_backpressure(std::function&lt; void(size_t)&gt; handler) override</div><div class="ttdoc">Register a callback to be notified when send queue congestion changes.</div><div class="ttdef"><b>Definition</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00526">tcp_server.cc:526</a></div></div>
@@ -974,7 +972,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__server_2tcp__server_8c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_bdae376d6a766a2d984a51161a7f5788.html">tcp_server</a></li><li class="navelem"><a class="el" href="transport_2tcp__server_2tcp__server_8cc.html">tcp_server.cc</a></li>
-    <li class="footer">Generated on Sat May 9 2026 03:32:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 9 2026 22:56:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
