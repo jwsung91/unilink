@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 07:17:52</td>
+            <td class="headerValue">2026-05-09 13:50:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">53.3&nbsp;%</td>
@@ -134,13 +134,13 @@
 <span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          12 :   });</span></span>
 <span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          12 : }</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             : </span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">           6 : void UdsServerSession::stop() {</span></span>
-<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span>]:<span class="tlaGNC">           6 :   if (closing_.exchange(true)) return;</span></span>
-<span id="L61"><span class="lineNum">      61</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           5 :   net::post(strand_, [this, self = shared_from_this()]() {</span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">           5 :     on_bytes_ = nullptr;</span></span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           5 :     on_bp_ = nullptr;</span></span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">           5 :     do_close();</span></span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">           5 :   });</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">           7 : void UdsServerSession::stop() {</span></span>
+<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">           7 :   if (closing_.exchange(true)) return;</span></span>
+<span id="L61"><span class="lineNum">      61</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           4 :   net::post(strand_, [this, self = shared_from_this()]() {</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">           3 :     on_bytes_ = nullptr;</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           3 :     on_bp_ = nullptr;</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">           3 :     do_close();</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">           3 :   });</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : }</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             : </span>
 <span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaUNC tlaBgUNC">           0 : bool UdsServerSession::alive() const { return alive_.load(); }</span></span>
@@ -201,11 +201,11 @@
 <span id="L121"><span class="lineNum">     121</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          75 :   socket_-&gt;async_read_some(</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">          50 :       net::buffer(rx_),</span></span>
 <span id="L123"><span class="lineNum">     123</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          50 :       net::bind_executor(strand_, [this, self = shared_from_this()](const boost::system::error_code&amp; ec, size_t bytes) {</span></span>
-<span id="L124"><span class="lineNum">     124</span>   [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 19 times"> + </span> :<span class="tlaGNC">          23 :         if (closing_ || !alive_) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 19 times"> + </span>]
-<span id="L125"><span class="lineNum">     125</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          19 :         if (ec) {</span></span>
-<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           6 :           do_close();</span></span>
-<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">           6 :           return;</span></span>
+<span id="L124"><span class="lineNum">     124</span>   [<span class="tlaGBC" title="Branch 0 was taken 20 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 20 times"> + </span> :<span class="tlaGNC">          22 :         if (closing_ || !alive_) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 20 times"> + </span>]
+<span id="L125"><span class="lineNum">     125</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          20 :         if (ec) {</span></span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           7 :           do_close();</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">           7 :           return;</span></span>
 <span id="L128"><span class="lineNum">     128</span>                 :             :         }</span>
 <span id="L129"><span class="lineNum">     129</span>   [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          26 :         if (on_bytes_) on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));</span></span>
 <span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">          13 :         reset_idle_timer();</span></span>
@@ -253,27 +253,27 @@
 <span id="L168"><span class="lineNum">     168</span>                 :             :                        }));</span>
 <span id="L169"><span class="lineNum">     169</span>                 :             : }</span>
 <span id="L170"><span class="lineNum">     170</span>                 :             : </span>
-<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC tlaBgGNC">          13 : void UdsServerSession::do_close() {</span></span>
-<span id="L172"><span class="lineNum">     172</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span> :<span class="tlaGNC">          13 :   if (!closing_.exchange(true) &amp;&amp; !alive_) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 13 times"> + </span>]
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          13 :   alive_ = false;</span></span>
-<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">          13 :   auto close_cb = std::move(on_close_);</span></span>
-<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          13 :   on_bytes_ = nullptr;</span></span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">          13 :   on_bp_ = nullptr;</span></span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">          13 :   on_close_ = nullptr;</span></span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          13 :   tx_.clear();</span></span>
-<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">          13 :   current_write_buffer_ = std::nullopt;</span></span>
-<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          13 :   queue_bytes_ = 0;</span></span>
-<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          13 :   writing_ = false;</span></span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          13 :   boost::system::error_code ec;</span></span>
-<span id="L183"><span class="lineNum">     183</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :   socket_-&gt;close(ec);</span></span>
-<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          13 :   if (close_cb) {</span></span>
+<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC tlaBgGNC">          12 : void UdsServerSession::do_close() {</span></span>
+<span id="L172"><span class="lineNum">     172</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 9 times"> + </span> :<span class="tlaGNC">          12 :   if (!closing_.exchange(true) &amp;&amp; !alive_) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 12 times"> + </span>]
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          12 :   alive_ = false;</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">          12 :   auto close_cb = std::move(on_close_);</span></span>
+<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          12 :   on_bytes_ = nullptr;</span></span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">          12 :   on_bp_ = nullptr;</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">          12 :   on_close_ = nullptr;</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          12 :   tx_.clear();</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">          12 :   current_write_buffer_ = std::nullopt;</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          12 :   queue_bytes_ = 0;</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          12 :   writing_ = false;</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          12 :   boost::system::error_code ec;</span></span>
+<span id="L183"><span class="lineNum">     183</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :   socket_-&gt;close(ec);</span></span>
+<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          12 :   if (close_cb) {</span></span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :     try {</span>
-<span id="L186"><span class="lineNum">     186</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          11 :       close_cb();</span></span>
+<span id="L186"><span class="lineNum">     186</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :       close_cb();</span></span>
 <span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     } catch (...) {</span></span>
 <span id="L188"><span class="lineNum">     188</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaUNC">           0 :     }</span></span>
 <span id="L189"><span class="lineNum">     189</span>                 :             :   }</span>
-<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC tlaBgGNC">          13 : }</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC tlaBgGNC">          12 : }</span></span>
 <span id="L191"><span class="lineNum">     191</span>                 :             : </span>
 <span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaUNC tlaBgUNC">           0 : void UdsServerSession::maybe_flush_for_keep_latest(size_t added) {</span></span>
 <span id="L193"><span class="lineNum">     193</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;</span></span>
@@ -327,7 +327,7 @@
 <span id="L236"><span class="lineNum">     236</span>                 :             : </span>
 <span id="L237"><span class="lineNum">     237</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :   auto self = shared_from_this();</span></span>
 <span id="L238"><span class="lineNum">     238</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           9 :   idle_timer_.async_wait(net::bind_executor(strand_, [self](const boost::system::error_code&amp; ec) {</span></span>
-<span id="L239"><span class="lineNum">     239</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           8 :     if (ec == boost::asio::error::operation_aborted) return;</span></span>
+<span id="L239"><span class="lineNum">     239</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           7 :     if (ec == boost::asio::error::operation_aborted) return;</span></span>
 <span id="L240"><span class="lineNum">     240</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">           2 :     if (!self-&gt;alive_ || self-&gt;closing_) return;</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 2 times"> + </span>]
 <span id="L241"><span class="lineNum">     241</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           2 :     UNILINK_LOG_WARNING(&quot;uds_server_session&quot;, &quot;timeout&quot;, &quot;Connection idle timeout expired, closing session&quot;);</span></span>
