@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 01:24:04</td>
+            <td class="headerValue">2026-05-09 03:39:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">58.8&nbsp;%</td>
@@ -217,15 +217,15 @@
 <span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaUNC">           0 :     }</span></span>
 <span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC tlaBgGNC">          19 :   }</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             : </span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          15 :   void open_and_configure(std::shared_ptr&lt;Serial&gt; self) {</span></span>
-<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">          15 :     boost::system::error_code ec;</span></span>
-<span id="L144"><span class="lineNum">     144</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :     port_-&gt;open(cfg_.device, ec);</span></span>
-<span id="L145"><span class="lineNum">     145</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          15 :     if (ec) {</span></span>
-<span id="L146"><span class="lineNum">     146</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          14 :       UNILINK_LOG_ERROR(&quot;serial&quot;, &quot;open&quot;, fmt::format(&quot;Failed to open device: {} - {}&quot;, cfg_.device, ec.message()));</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 7 times"> + </span> 
-<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span>]
-<span id="L147"><span class="lineNum">     147</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :       handle_error(self, &quot;open&quot;, ec);</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">           7 :       return;</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          14 :   void open_and_configure(std::shared_ptr&lt;Serial&gt; self) {</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">          14 :     boost::system::error_code ec;</span></span>
+<span id="L144"><span class="lineNum">     144</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :     port_-&gt;open(cfg_.device, ec);</span></span>
+<span id="L145"><span class="lineNum">     145</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          14 :     if (ec) {</span></span>
+<span id="L146"><span class="lineNum">     146</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          12 :       UNILINK_LOG_ERROR(&quot;serial&quot;, &quot;open&quot;, fmt::format(&quot;Failed to open device: {} - {}&quot;, cfg_.device, ec.message()));</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 6 times"> + </span> 
+<span class="lineNum">        </span>       <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span>]
+<span id="L147"><span class="lineNum">     147</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :       handle_error(self, &quot;open&quot;, ec);</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">           6 :       return;</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             :     }</span>
 <span id="L150"><span class="lineNum">     150</span>                 :             : </span>
 <span id="L151"><span class="lineNum">     151</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           8 :     port_-&gt;set_option(net::serial_port_base::baud_rate(cfg_.baud_rate), ec);</span></span>
@@ -395,30 +395,30 @@
 <span id="L298"><span class="lineNum">     298</span>                 :             :         current);</span>
 <span id="L299"><span class="lineNum">     299</span>                 :<span class="tlaGNC">           2 :   }</span></span>
 <span id="L300"><span class="lineNum">     300</span>                 :             : </span>
-<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaGNC">          42 :   void perform_cleanup() {</span></span>
+<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaGNC">          41 :   void perform_cleanup() {</span></span>
 <span id="L302"><span class="lineNum">     302</span>                 :             :     try {</span>
-<span id="L303"><span class="lineNum">     303</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :       retry_timer_.cancel();</span></span>
-<span id="L304"><span class="lineNum">     304</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :       close_port();</span></span>
-<span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">          42 :       tx_.clear();</span></span>
-<span id="L306"><span class="lineNum">     306</span>                 :<span class="tlaGNC">          42 :       queued_bytes_ = 0;</span></span>
-<span id="L307"><span class="lineNum">     307</span>                 :<span class="tlaGNC">          42 :       writing_ = false;</span></span>
-<span id="L308"><span class="lineNum">     308</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :       report_backpressure(queued_bytes_);</span></span>
-<span id="L309"><span class="lineNum">     309</span>                 :<span class="tlaGNC">          42 :       opened_.store(false);</span></span>
-<span id="L310"><span class="lineNum">     310</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :       state_.set_state(LinkState::Closed);</span></span>
-<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :       notify_state();</span></span>
+<span id="L303"><span class="lineNum">     303</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :       retry_timer_.cancel();</span></span>
+<span id="L304"><span class="lineNum">     304</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :       close_port();</span></span>
+<span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">          41 :       tx_.clear();</span></span>
+<span id="L306"><span class="lineNum">     306</span>                 :<span class="tlaGNC">          41 :       queued_bytes_ = 0;</span></span>
+<span id="L307"><span class="lineNum">     307</span>                 :<span class="tlaGNC">          41 :       writing_ = false;</span></span>
+<span id="L308"><span class="lineNum">     308</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :       report_backpressure(queued_bytes_);</span></span>
+<span id="L309"><span class="lineNum">     309</span>                 :<span class="tlaGNC">          41 :       opened_.store(false);</span></span>
+<span id="L310"><span class="lineNum">     310</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :       state_.set_state(LinkState::Closed);</span></span>
+<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :       notify_state();</span></span>
 <span id="L312"><span class="lineNum">     312</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     } catch (...) {</span></span>
 <span id="L313"><span class="lineNum">     313</span>                 :<span class="tlaUNC">           0 :     }</span></span>
-<span id="L314"><span class="lineNum">     314</span>                 :<span class="tlaGNC tlaBgGNC">          42 :   }</span></span>
+<span id="L314"><span class="lineNum">     314</span>                 :<span class="tlaGNC tlaBgGNC">          41 :   }</span></span>
 <span id="L315"><span class="lineNum">     315</span>                 :             : </span>
-<span id="L316"><span class="lineNum">     316</span>                 :<span class="tlaGNC">          15 :   void handle_error(std::shared_ptr&lt;Serial&gt; self, const char* where, const boost::system::error_code&amp; ec) {</span></span>
-<span id="L317"><span class="lineNum">     317</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :     if (ec == boost::asio::error::eof) {</span></span>
+<span id="L316"><span class="lineNum">     316</span>                 :<span class="tlaGNC">          14 :   void handle_error(std::shared_ptr&lt;Serial&gt; self, const char* where, const boost::system::error_code&amp; ec) {</span></span>
+<span id="L317"><span class="lineNum">     317</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          14 :     if (ec == boost::asio::error::eof) {</span></span>
 <span id="L318"><span class="lineNum">     318</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :       if (self) start_read(self);</span></span>
 <span id="L319"><span class="lineNum">     319</span>                 :<span class="tlaUNC">           0 :       return;</span></span>
 <span id="L320"><span class="lineNum">     320</span>                 :             :     }</span>
 <span id="L321"><span class="lineNum">     321</span>                 :             : </span>
-<span id="L322"><span class="lineNum">     322</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          15 :     if (stopping_.load()) {</span></span>
-<span id="L323"><span class="lineNum">     323</span>                 :<span class="tlaGNC">           7 :       perform_cleanup();</span></span>
-<span id="L324"><span class="lineNum">     324</span>                 :<span class="tlaGNC">           7 :       return;</span></span>
+<span id="L322"><span class="lineNum">     322</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          14 :     if (stopping_.load()) {</span></span>
+<span id="L323"><span class="lineNum">     323</span>                 :<span class="tlaGNC">           6 :       perform_cleanup();</span></span>
+<span id="L324"><span class="lineNum">     324</span>                 :<span class="tlaGNC">           6 :       return;</span></span>
 <span id="L325"><span class="lineNum">     325</span>                 :             :     }</span>
 <span id="L326"><span class="lineNum">     326</span>                 :             : </span>
 <span id="L327"><span class="lineNum">     327</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">           8 :     if (ec == boost::asio::error::operation_aborted) {</span></span>
@@ -459,26 +459,26 @@
 <span id="L359"><span class="lineNum">     359</span>                 :<span class="tlaGNC">           7 :     });</span></span>
 <span id="L360"><span class="lineNum">     360</span>                 :             :   }</span>
 <span id="L361"><span class="lineNum">     361</span>                 :             : </span>
-<span id="L362"><span class="lineNum">     362</span>                 :<span class="tlaGNC">          51 :   void close_port() {</span></span>
-<span id="L363"><span class="lineNum">     363</span>                 :<span class="tlaGNC">          51 :     boost::system::error_code ec;</span></span>
-<span id="L364"><span class="lineNum">     364</span>   [<span class="tlaGBC" title="Branch 0 was taken 51 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 51 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          51 :     if (port_ &amp;&amp; port_-&gt;is_open()) {</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 43 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 43 times"> + </span>]
+<span id="L362"><span class="lineNum">     362</span>                 :<span class="tlaGNC">          50 :   void close_port() {</span></span>
+<span id="L363"><span class="lineNum">     363</span>                 :<span class="tlaGNC">          50 :     boost::system::error_code ec;</span></span>
+<span id="L364"><span class="lineNum">     364</span>   [<span class="tlaGBC" title="Branch 0 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          50 :     if (port_ &amp;&amp; port_-&gt;is_open()) {</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 42 times"> + </span>]
 <span id="L365"><span class="lineNum">     365</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :       port_-&gt;close(ec);</span></span>
 <span id="L366"><span class="lineNum">     366</span>                 :             :     }</span>
-<span id="L367"><span class="lineNum">     367</span>                 :<span class="tlaGNC">          51 :   }</span></span>
+<span id="L367"><span class="lineNum">     367</span>                 :<span class="tlaGNC">          50 :   }</span></span>
 <span id="L368"><span class="lineNum">     368</span>                 :             : </span>
-<span id="L369"><span class="lineNum">     369</span>                 :<span class="tlaGNC">          74 :   void notify_state() {</span></span>
-<span id="L370"><span class="lineNum">     370</span>   [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 26 times"> + </span> :<span class="tlaGNC">          74 :     if (stopping_.load() || !on_state_) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 48 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 26 times"> + </span>]
+<span id="L369"><span class="lineNum">     369</span>                 :<span class="tlaGNC">          72 :   void notify_state() {</span></span>
+<span id="L370"><span class="lineNum">     370</span>   [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 41 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 26 times"> + </span> :<span class="tlaGNC">          72 :     if (stopping_.load() || !on_state_) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 46 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 26 times"> + </span>]
 <span id="L371"><span class="lineNum">     371</span>                 :             :     try {</span>
 <span id="L372"><span class="lineNum">     372</span>   [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          26 :       on_state_(state_.state());</span></span>
 <span id="L373"><span class="lineNum">     373</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     } catch (...) {</span></span>
 <span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaUNC">           0 :     }</span></span>
 <span id="L375"><span class="lineNum">     375</span>                 :             :   }</span>
 <span id="L376"><span class="lineNum">     376</span>                 :             : </span>
-<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC tlaBgGNC">          46 :   void report_backpressure(size_t qb) {</span></span>
-<span id="L378"><span class="lineNum">     378</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span> :<span class="tlaGNC">          46 :     if (stopping_.load() || !on_bp_) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 4 times"> + </span>]
+<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC tlaBgGNC">          45 :   void report_backpressure(size_t qb) {</span></span>
+<span id="L378"><span class="lineNum">     378</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span> :<span class="tlaGNC">          45 :     if (stopping_.load() || !on_bp_) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 41 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 4 times"> + </span>]
 <span id="L379"><span class="lineNum">     379</span>                 :             : </span>
 <span id="L380"><span class="lineNum">     380</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :     if (!backpressure_active_ &amp;&amp; qb &gt;= bp_high_) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 2 times"> + </span>]
@@ -564,10 +564,10 @@
 <span id="L450"><span class="lineNum">     450</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          17 :   auto self = shared_from_this();</span></span>
 <span id="L451"><span class="lineNum">     451</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :   net::post(impl-&gt;strand_, [self] {</span></span>
 <span id="L452"><span class="lineNum">     452</span>                 :<span class="tlaGNC">          16 :     auto impl = self-&gt;get_impl();</span></span>
-<span id="L453"><span class="lineNum">     453</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          16 :     if (!impl-&gt;stopping_.load()) {</span></span>
-<span id="L454"><span class="lineNum">     454</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :       impl-&gt;state_.set_state(LinkState::Connecting);</span></span>
-<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">          15 :       impl-&gt;notify_state();</span></span>
-<span id="L456"><span class="lineNum">     456</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :       impl-&gt;open_and_configure(self);</span></span>
+<span id="L453"><span class="lineNum">     453</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          16 :     if (!impl-&gt;stopping_.load()) {</span></span>
+<span id="L454"><span class="lineNum">     454</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :       impl-&gt;state_.set_state(LinkState::Connecting);</span></span>
+<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">          14 :       impl-&gt;notify_state();</span></span>
+<span id="L456"><span class="lineNum">     456</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :       impl-&gt;open_and_configure(self);</span></span>
 <span id="L457"><span class="lineNum">     457</span>                 :             :     }</span>
 <span id="L458"><span class="lineNum">     458</span>                 :<span class="tlaGNC">          16 :   });</span></span>
 <span id="L459"><span class="lineNum">     459</span>                 :<span class="tlaGNC">          17 :   impl-&gt;started_ = true;</span></span>
