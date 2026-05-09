@@ -230,7 +230,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: ${{ matrix.release_files }}
-          name: Release ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }} (${{ matrix.label }})
+          name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }}
           tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }}
           draft: true
           prerelease: true
