@@ -68,8 +68,7 @@ TEST_F(TransportTcpServerTest, WriteWithoutActiveSessionReturnsFalse) {
   server_ = TcpServer::create(cfg);
   ASSERT_NE(server_, nullptr);
   server_->start();
-  ASSERT_TRUE(
-      TestUtils::waitForCondition([&] { return server_->state() == base::LinkState::Listening; }, 1000));
+  ASSERT_TRUE(TestUtils::waitForCondition([&] { return server_->state() == base::LinkState::Listening; }, 1000));
 
   std::vector<uint8_t> payload = {1, 2, 3};
   auto shared_payload = std::make_shared<const std::vector<uint8_t>>(payload);
