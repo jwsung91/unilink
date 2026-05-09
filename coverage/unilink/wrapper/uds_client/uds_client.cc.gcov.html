@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-08 14:08:26</td>
+            <td class="headerValue">2026-05-09 01:24:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">72.9&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">36.3&nbsp;%</td>
-            <td class="headerCovTableEntry">504</td>
-            <td class="headerCovTableEntry">183</td>
+            <td class="headerCovTableEntryLo">36.4&nbsp;%</td>
+            <td class="headerCovTableEntry">508</td>
+            <td class="headerCovTableEntry">185</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -257,9 +257,9 @@
 <span id="L178"><span class="lineNum">     178</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           4 :         channel_ = factory::ChannelFactory::create(cfg, external_ioc_);</span></span>
 <span id="L179"><span class="lineNum">     179</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :         if (manage_external_context_ &amp;&amp; !external_thread_.joinable()) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L180"><span class="lineNum">     180</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span> :<span class="tlaGNC">           4 :           if (external_ioc_ &amp;&amp; external_ioc_-&gt;stopped()) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 3 times"> + </span>]
-<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">           1 :             external_ioc_-&gt;restart();</span></span>
+<span id="L180"><span class="lineNum">     180</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :           if (external_ioc_ &amp;&amp; external_ioc_-&gt;stopped()) {</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 7 was taken 3 times"> + </span>]
+<span id="L181"><span class="lineNum">     181</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :             external_ioc_-&gt;restart();</span></span>
 <span id="L182"><span class="lineNum">     182</span>                 :             :           }</span>
 <span id="L183"><span class="lineNum">     183</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :           work_guard_ = std::make_unique&lt;boost::asio::executor_work_guard&lt;boost::asio::io_context::executor_type&gt;&gt;(</span></span>
 <span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">          12 :               boost::asio::make_work_guard(*external_ioc_));</span></span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-08 14:08:26</td>
+            <td class="headerValue">2026-05-09 01:24:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">58.8&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">34.3&nbsp;%</td>
-            <td class="headerCovTableEntry">696</td>
-            <td class="headerCovTableEntry">239</td>
+            <td class="headerCovTableEntryLo">34.2&nbsp;%</td>
+            <td class="headerCovTableEntry">702</td>
+            <td class="headerCovTableEntry">240</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -547,7 +547,8 @@
 <span id="L435"><span class="lineNum">     435</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :     auto&amp; manager = concurrency::IoContextManager::instance();</span></span>
 <span id="L436"><span class="lineNum">     436</span>   [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 5 times"> + </span> :<span class="tlaGNC">          17 :     if (!manager.is_running()) manager.start();</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L437"><span class="lineNum">     437</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span>]:<span class="tlaGNC">          17 :     if (impl-&gt;ioc_.stopped()) impl-&gt;ioc_.restart();</span></span>
+<span id="L437"><span class="lineNum">     437</span>   [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 17 times"> + </span> :<span class="tlaGNC">          17 :     if (impl-&gt;ioc_.stopped()) impl-&gt;ioc_.restart();</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L438"><span class="lineNum">     438</span>                 :             :   }</span>
 <span id="L439"><span class="lineNum">     439</span>                 :             :   impl-&gt;work_guard_ =</span>
 <span id="L440"><span class="lineNum">     440</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :       std::make_unique&lt;net::executor_work_guard&lt;net::io_context::executor_type&gt;&gt;(impl-&gt;ioc_.get_executor());</span></span>
@@ -591,7 +592,7 @@
 <span id="L478"><span class="lineNum">     478</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          17 :   if (impl-&gt;owns_ioc_ &amp;&amp; impl-&gt;ioc_thread_.joinable()) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 17 times"> + </span>]
 <span id="L479"><span class="lineNum">     479</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     impl-&gt;ioc_thread_.join();</span></span>
-<span id="L480"><span class="lineNum">     480</span>                 :<span class="tlaUNC">           0 :     impl-&gt;ioc_.restart();</span></span>
+<span id="L480"><span class="lineNum">     480</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     impl-&gt;ioc_.restart();</span></span>
 <span id="L481"><span class="lineNum">     481</span>                 :             :   }</span>
 <span id="L482"><span class="lineNum">     482</span>                 :<span class="tlaGNC tlaBgGNC">          17 :   impl-&gt;started_ = false;</span></span>
 <span id="L483"><span class="lineNum">     483</span>                 :<span class="tlaGNC">          17 : }</span></span>

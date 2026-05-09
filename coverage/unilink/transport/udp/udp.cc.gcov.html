@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-08 14:08:26</td>
+            <td class="headerValue">2026-05-09 01:24:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">84.3&nbsp;%</td>
@@ -57,8 +57,8 @@
             <td></td>
             <td class="headerItem">Branches:</td>
             <td class="headerCovTableEntryLo">35.7&nbsp;%</td>
-            <td class="headerCovTableEntry">894</td>
-            <td class="headerCovTableEntry">319</td>
+            <td class="headerCovTableEntry">900</td>
+            <td class="headerCovTableEntry">321</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -711,8 +711,9 @@
 <span id="L572"><span class="lineNum">     572</span>                 :             :   }</span>
 <span id="L573"><span class="lineNum">     573</span>                 :             : </span>
 <span id="L574"><span class="lineNum">     574</span>   [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC tlaBgGNC">          32 :   if (impl-&gt;owns_ioc_ &amp;&amp; impl-&gt;owned_ioc_ &amp;&amp; impl-&gt;owned_ioc_-&gt;stopped()) {</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 32 times"> + </span>]
-<span id="L575"><span class="lineNum">     575</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     impl-&gt;owned_ioc_-&gt;restart();</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
+<span class="lineNum">        </span>             <span class="tlaGBC" title="Branch 9 was taken 32 times"> + </span>]
+<span id="L575"><span class="lineNum">     575</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     impl-&gt;owned_ioc_-&gt;restart();</span></span>
 <span id="L576"><span class="lineNum">     576</span>                 :             :   }</span>
 <span id="L577"><span class="lineNum">     577</span>                 :             : </span>
 <span id="L578"><span class="lineNum">     578</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 32 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          32 :   if (impl-&gt;ioc_thread_.joinable()) {</span></span>
@@ -774,7 +775,7 @@
 <span id="L634"><span class="lineNum">     634</span>                 :             : </span>
 <span id="L635"><span class="lineNum">     635</span>   [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          32 :   if (impl-&gt;owns_ioc_ &amp;&amp; impl-&gt;owned_ioc_) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 13 times"> + </span>]
-<span id="L636"><span class="lineNum">     636</span>                 :<span class="tlaGNC">          19 :     impl-&gt;owned_ioc_-&gt;restart();</span></span>
+<span id="L636"><span class="lineNum">     636</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          19 :     impl-&gt;owned_ioc_-&gt;restart();</span></span>
 <span id="L637"><span class="lineNum">     637</span>                 :             :   }</span>
 <span id="L638"><span class="lineNum">     638</span>                 :             : </span>
 <span id="L639"><span class="lineNum">     639</span>                 :<span class="tlaGNC">          32 :   impl-&gt;started_ = false;</span></span>
