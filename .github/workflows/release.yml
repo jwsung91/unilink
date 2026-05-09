@@ -7,9 +7,14 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag name for release'
-        required: true
+        description: 'Tag name for release (required when upload is true)'
+        required: false
         default: 'v0.1.0-test'
+      upload:
+        description: 'Upload release assets to GitHub'
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   create-release:
@@ -23,8 +28,27 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: ubuntu-22.04
+            label: Linux (Ubuntu 22.04)
+            os_label: ubuntu-22.04
+            triplet: x64-linux
+            cmake_generator: "Ninja"
+            cpack_generator: "TGZ"
+            release_files: |
+              build/package/unilink-*.tar.gz
+
+          - os: ubuntu-22.04-arm
+            label: Linux ARM64 (Ubuntu 22.04)
+            os_label: ubuntu-22.04
+            triplet: arm64-linux
+            cmake_generator: "Ninja"
+            cpack_generator: "TGZ"
+            release_files: |
+              build/package/unilink-*.tar.gz
+
           - os: ubuntu-24.04
             label: Linux (Ubuntu 24.04)
+            os_label: ubuntu-24.04
             triplet: x64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
@@ -33,6 +57,7 @@ jobs:
 
           - os: ubuntu-24.04-arm
             label: Linux ARM64 (Ubuntu 24.04)
+            os_label: ubuntu-24.04
             triplet: arm64-linux
             cmake_generator: "Ninja"
             cpack_generator: "TGZ"
@@ -41,6 +66,7 @@ jobs:
 
           - os: macos-15
             label: macOS 15
+            os_label: macos-15
             triplet: arm64-osx
             cmake_generator: "Ninja"
             cpack_generator: "TGZ;DragNDrop"
@@ -50,19 +76,30 @@ jobs:
 
           - os: windows-2022
             label: Windows (VS 2022)
+            os_label: windows
             cmake_generator: "Visual Studio 17 2022"
             cmake_arch: "x64"
+            triplet: x64-windows
             cpack_generator: "ZIP"
             release_files: |
               build/package/unilink-*.zip
-    
+
+          - os: windows-11-arm
+            label: Windows ARM64
+            os_label: windows
+            cmake_generator: "Visual Studio 17 2022"
+            cmake_arch: "ARM64"
+            triplet: arm64-windows
+            cpack_generator: "ZIP"
+            release_files: |
+              build/package/unilink-*.zip
+
     steps:
       - uses: actions/checkout@v6
 
       - name: Set up C++ toolchain (Linux)
         if: runner.os == 'Linux'
         run: |
-          # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
           sudo apt-get install -y build-essential cmake ninja-build
@@ -71,8 +108,7 @@ jobs:
 
       - name: Set up C++ toolchain (macOS)
         if: runner.os == 'macOS'
-        run: |
-          brew install cmake ninja
+        run: brew install cmake ninja
 
       - name: Install dependencies with vcpkg (Unix)
         if: runner.os != 'Windows'
@@ -88,29 +124,37 @@ jobs:
           security unlock-keychain -p "" build.keychain
           security set-keychain-settings -t 3600 -u build.keychain
 
-      - name: Set up C++ toolchain (Windows)
-        if: runner.os == 'Windows'
+      - name: Set up C++ toolchain (Windows x64)
+        if: runner.os == 'Windows' && matrix.cmake_arch == 'x64'
         shell: pwsh
         run: |
           choco install ninja --no-progress -y
           & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows spdlog:x64-windows
+          echo "VCPKG_ROOT=C:/vcpkg" >> $env:GITHUB_ENV
+
+      - name: Set up C++ toolchain (Windows ARM64)
+        if: runner.os == 'Windows' && matrix.cmake_arch == 'ARM64'
+        shell: pwsh
+        run: |
+          choco install ninja --no-progress -y
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git C:/vcpkg-arm
+          & "C:/vcpkg-arm/bootstrap-vcpkg.bat"
+          & "C:/vcpkg-arm/vcpkg.exe" install boost-asio:arm64-windows boost-system:arm64-windows spdlog:arm64-windows
+          echo "VCPKG_ROOT=C:/vcpkg-arm" >> $env:GITHUB_ENV
 
       - name: Configure
         shell: bash
-        env:
-          MACOSX_DEPLOYMENT_TARGET: "15.0"
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" -A "${{ matrix.cmake_arch }}" \
-              -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
-              -DVCPKG_TARGET_TRIPLET=x64-windows \
+              -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+              -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
               -DUNILINK_ENABLE_INSTALL=ON \
               -DUNILINK_ENABLE_PKGCONFIG=ON \
-              -DUNILINK_ENABLE_EXPORT_HEADER=ON
+              -DUNILINK_ENABLE_EXPORT_HEADER=ON \
+              -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
           elif [ "${{ runner.os }}" = "macOS" ]; then
             SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
-            echo "macOS SDK version: $SDK_VER"
-            export MACOSX_DEPLOYMENT_TARGET="$SDK_VER"
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
               -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
@@ -118,7 +162,8 @@ jobs:
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
               -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
+              -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
           else
             cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
               -DCMAKE_BUILD_TYPE=Release \
@@ -128,7 +173,8 @@ jobs:
               -DUNILINK_ENABLE_PKGCONFIG=ON \
               -DUNILINK_ENABLE_EXPORT_HEADER=ON \
               -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
+              -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
+              -DUNILINK_OS_LABEL="${{ matrix.os_label }}"
           fi
 
       - name: Build
@@ -136,14 +182,11 @@ jobs:
         run: |
           BUILD_ARGS="--config Release --verbose"
           if [ "${{ runner.os }}" = "macOS" ]; then
-            # Explicitly use all available cores as requested for optimization
             CORES=$(sysctl -n hw.ncpu)
             BUILD_ARGS="$BUILD_ARGS --parallel $CORES"
           else
-            # Rely on CMake/Generator default parallelism for other platforms
             BUILD_ARGS="$BUILD_ARGS --parallel"
           fi
-          echo "Building with args: $BUILD_ARGS"
           cmake --build build $BUILD_ARGS
 
       - name: Test
@@ -168,7 +211,22 @@ jobs:
           done
           ls -la package/
 
+      - name: Show package contents (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: tar -tzf build/package/unilink-*.tar.gz | head -20
+
+      - name: Summary
+        shell: bash
+        run: |
+          echo "## Release Summary - ${{ matrix.os }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build: Success" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Package: Created" >> $GITHUB_STEP_SUMMARY
+          ls -la build/package/ >> $GITHUB_STEP_SUMMARY
+
       - name: Upload Release Asset
+        if: github.event_name == 'push' || inputs.upload == 'true'
         uses: softprops/action-gh-release@v3
         with:
           files: ${{ matrix.release_files }}
