@@ -89,7 +89,7 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   void on_multi_data(MultiClientDataHandler handler);
   void on_multi_disconnect(MultiClientDisconnectHandler handler);
 
-  base::LinkState get_state() const;
+  base::LinkState state() const;
 
  private:
   explicit UdsServer(const config::UdsServerConfig& cfg);

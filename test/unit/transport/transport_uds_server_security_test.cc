@@ -60,7 +60,7 @@ TEST_F(TransportUdsServerSecurityTest, NoIdleTimeoutByDefault) {
   server_->start();
 
   ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      [&] { return server_->state() == unilink::base::LinkState::Listening; }, 5000))
       << "Server failed to enter listening state";
 
   net::io_context client_ioc;
@@ -91,7 +91,7 @@ TEST_F(TransportUdsServerSecurityTest, IdleConnectionTimeout) {
   server_->start();
 
   ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      [&] { return server_->state() == unilink::base::LinkState::Listening; }, 5000))
       << "Server failed to enter listening state";
 
   net::io_context client_ioc;
@@ -129,7 +129,7 @@ TEST_F(TransportUdsServerSecurityTest, IdleTimeoutResetOnMessage) {
   server_->start();
 
   ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      [&] { return server_->state() == unilink::base::LinkState::Listening; }, 5000))
       << "Server failed to enter listening state";
 
   net::io_context client_ioc;
