@@ -464,7 +464,7 @@ Backpressure handling ensures:
 - ✅ Queue size is monitored continuously
 - ✅ Queue growth is bounded internally in the transport layer
 - ✅ Applications can add their own send throttling policy
-- ⚠️ Wrapper-level backpressure callbacks are not part of the current public API
+- ✅ Wrapper-level backpressure callbacks are available via the `on_backpressure` builder method
 - ✅ Memory pools reduce allocation overhead for small buffers (<64KB)
 
 ---
@@ -551,4 +551,6 @@ Backpressure handling ensures:
 
 - [Memory Safety](memory_safety.md) - Memory safety features
 - [System Overview](README.md) - High-level architecture
+- [Performance Guide](../../user/performance.md) - Optimization techniques
+md) - High-level architecture
 - [Performance Guide](../../user/performance.md) - Optimization techniques

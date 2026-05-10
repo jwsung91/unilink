@@ -32,7 +32,7 @@ enum class BackpressureStrategy {
 };
 
 // Backpressure threshold constants
-constexpr size_t DEFAULT_THRESHOLD_RELIABLE = 4 * 1024 * 1024;  // 4 MiB (Industry standard)
+constexpr size_t DEFAULT_THRESHOLD_RELIABLE = 1 * 1024 * 1024;  // 1 MiB (Industry standard)
 constexpr size_t DEFAULT_THRESHOLD_BEST_EFFORT = 512 * 1024;    // 512 KiB (Robotics/Real-time)
 constexpr size_t DEFAULT_BACKPRESSURE_THRESHOLD = DEFAULT_THRESHOLD_RELIABLE;
 constexpr size_t MIN_BACKPRESSURE_THRESHOLD = 1024;       // 1 KiB minimum

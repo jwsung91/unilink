@@ -432,20 +432,25 @@ struct UdpChannel::Impl {
 
     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (backpressure_active_ || queue_bytes_ + size > bp_high_)) {
-      while (!tx_.empty() && (queue_bytes_ + size > bp_high_)) {
-        auto& oldest = tx_.front();
-        size_t oldest_size = std::visit(
-            [](auto&& buf) -> size_t {
-              using T = std::decay_t<decltype(buf)>;
-              if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                return buf ? buf->size() : 0;
-              } else {
-                return buf.size();
-              }
-            },
-            oldest.buffer);
-        queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
-        tx_.pop_front();
+      if (size >= bp_high_) {
+        tx_.clear();
+        queue_bytes_ = 0;
+      } else {
+        while (!tx_.empty() && (queue_bytes_ + size > bp_high_)) {
+          auto& oldest = tx_.front();
+          size_t oldest_size = std::visit(
+              [](auto&& buf) -> size_t {
+                using T = std::decay_t<decltype(buf)>;
+                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+                  return buf ? buf->size() : 0;
+                } else {
+                  return buf.size();
+                }
+              },
+              oldest.buffer);
+          queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
+          tx_.pop_front();
+        }
       }
     }
 

@@ -508,19 +508,24 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
         const auto added = buf.size();
         if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
             (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-          while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-            size_t oldest_size = std::visit(
-                [](auto&& buf) -> size_t {
-                  using T = std::decay_t<decltype(buf)>;
-                  if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                    return buf ? buf->size() : 0;
-                  } else {
-                    return buf.size();
-                  }
-                },
-                impl->tx_.front());
-            impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-            impl->tx_.pop_front();
+          if (added >= impl->bp_high_) {
+            impl->tx_.clear();
+            impl->queued_bytes_ = 0;
+          } else {
+            while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
+              size_t oldest_size = std::visit(
+                  [](auto&& buf) -> size_t {
+                    using T = std::decay_t<decltype(buf)>;
+                    if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+                      return buf ? buf->size() : 0;
+                    } else {
+                      return buf.size();
+                    }
+                  },
+                  impl->tx_.front());
+              impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
+              impl->tx_.pop_front();
+            }
           }
         }
 
@@ -550,19 +555,24 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
     const auto added = buf.size();
     if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-      while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-        size_t oldest_size = std::visit(
-            [](auto&& buf) -> size_t {
-              using T = std::decay_t<decltype(buf)>;
-              if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                return buf ? buf->size() : 0;
-              } else {
-                return buf.size();
-              }
-            },
-            impl->tx_.front());
-        impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-        impl->tx_.pop_front();
+      if (added >= impl->bp_high_) {
+        impl->tx_.clear();
+        impl->queued_bytes_ = 0;
+      } else {
+        while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
+          size_t oldest_size = std::visit(
+              [](auto&& buf) -> size_t {
+                using T = std::decay_t<decltype(buf)>;
+                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+                  return buf ? buf->size() : 0;
+                } else {
+                  return buf.size();
+                }
+              },
+              impl->tx_.front());
+          impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
+          impl->tx_.pop_front();
+        }
       }
     }
 
@@ -594,19 +604,24 @@ bool Serial::async_write_move(std::vector<uint8_t>&& data) {
     auto impl = self->get_impl();
     if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-      while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-        size_t oldest_size = std::visit(
-            [](auto&& buf) -> size_t {
-              using T = std::decay_t<decltype(buf)>;
-              if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                return buf ? buf->size() : 0;
-              } else {
-                return buf.size();
-              }
-            },
-            impl->tx_.front());
-        impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-        impl->tx_.pop_front();
+      if (added >= impl->bp_high_) {
+        impl->tx_.clear();
+        impl->queued_bytes_ = 0;
+      } else {
+        while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
+          size_t oldest_size = std::visit(
+              [](auto&& buf) -> size_t {
+                using T = std::decay_t<decltype(buf)>;
+                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+                  return buf ? buf->size() : 0;
+                } else {
+                  return buf.size();
+                }
+              },
+              impl->tx_.front());
+          impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
+          impl->tx_.pop_front();
+        }
       }
     }
 
@@ -639,19 +654,24 @@ bool Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
     auto impl = self->get_impl();
     if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-      while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-        size_t oldest_size = std::visit(
-            [](auto&& buf) -> size_t {
-              using T = std::decay_t<decltype(buf)>;
-              if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                return buf ? buf->size() : 0;
-              } else {
-                return buf.size();
-              }
-            },
-            impl->tx_.front());
-        impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-        impl->tx_.pop_front();
+      if (added >= impl->bp_high_) {
+        impl->tx_.clear();
+        impl->queued_bytes_ = 0;
+      } else {
+        while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
+          size_t oldest_size = std::visit(
+              [](auto&& buf) -> size_t {
+                using T = std::decay_t<decltype(buf)>;
+                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+                  return buf ? buf->size() : 0;
+                } else {
+                  return buf.size();
+                }
+              },
+              impl->tx_.front());
+          impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
+          impl->tx_.pop_front();
+        }
       }
     }
 

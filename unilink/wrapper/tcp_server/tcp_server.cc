@@ -308,18 +308,9 @@ struct TcpServer::Impl {
   }
 
   bool broadcast(std::string_view data) {
-    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) {
-      std::vector<ClientId> clients;
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        if (transport_cache_) clients = transport_cache_->connected_clients();
-      }
-      bool any_sent = false;
-      for (auto id : clients) {
-        if (send_to_blocking(id, data)) any_sent = true;
-      }
-      return any_sent;
-    }
+    // In order to avoid Head-Of-Line blocking where a single slow client
+    // blocks the entire broadcast loop, we delegate to try_broadcast (async fan-out)
+    // even in Reliable mode. Transport-level backpressure will still protect the queues.
     return try_broadcast(data);
   }
 

@@ -494,6 +494,13 @@ void UdsClient::Impl::recalculate_backpressure_bounds() {
 
 void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
   if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
+
+  if (added >= bp_high_) {
+    tx_.clear();
+    queue_bytes_ = 0;
+    return;
+  }
+
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
     while (!tx_.empty() && (queue_bytes_ + added > bp_high_)) {
       size_t oldest_size = std::visit(
