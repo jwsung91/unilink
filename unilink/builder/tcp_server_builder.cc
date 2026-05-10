@@ -35,7 +35,8 @@ TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
       port_retry_enabled_(false),
       max_port_retries_(10),
       port_retry_interval_ms_(1000),
-      idle_timeout_(std::chrono::seconds(30)) {
+      idle_timeout_(0),
+      idle_timeout_set_(false) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
 
   // Ensure background IO service is running
@@ -72,7 +73,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
   server->bind_address(bind_address_);
   server->port_retry(port_retry_enabled_, static_cast<int>(max_port_retries_),
                      static_cast<int>(port_retry_interval_ms_));
-  server->idle_timeout(idle_timeout_);
+  if (idle_timeout_set_) server->idle_timeout(idle_timeout_);
 
   if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -149,6 +150,7 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry(bool enable, int ma
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
   idle_timeout_ = timeout;
+  idle_timeout_set_ = true;
   return *this;
 }
 

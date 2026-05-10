@@ -52,8 +52,8 @@ struct Serial::Impl {
   uint32_t baud_rate;
   std::shared_ptr<interface::Channel> channel;
   std::shared_ptr<boost::asio::io_context> external_ioc;
-  bool use_external_context{false};
-  bool manage_external_context{false};
+  std::atomic<bool> use_external_context{false};
+  std::atomic<bool> manage_external_context{false};
   std::thread external_thread;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
@@ -294,17 +294,17 @@ struct Serial::Impl {
           data_batch_queue_.clear();
           lock.unlock();
           handler(batch);
+          lock.lock();
         } else if (data_batch_queue_.size() == 1) {
           schedule_batch_timer();
         }
-        return;
-      }
-
-      MessageHandler handler = data_handler;
-      if (handler) {
-        lock.unlock();
-        handler(MessageContext(0, memory::SafeDataBuffer(data)));
-        lock.lock();
+      } else {
+        MessageHandler handler = data_handler;
+        if (handler) {
+          lock.unlock();
+          handler(MessageContext(0, memory::SafeDataBuffer(data)));
+          lock.lock();
+        }
       }
 
       if (framer) {
@@ -574,8 +574,7 @@ config::SerialConfig Serial::build_config() const {
 }
 
 Serial& Serial::manage_external_context(bool m) {
-  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->manage_external_context = m;
+  impl_->manage_external_context.store(m);
   return *this;
 }
 

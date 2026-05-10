@@ -55,7 +55,8 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
         port_retry_enabled_(other.port_retry_enabled_),
         max_port_retries_(other.max_port_retries_),
         port_retry_interval_ms_(other.port_retry_interval_ms_),
-        idle_timeout_(other.idle_timeout_) {
+        idle_timeout_(other.idle_timeout_),
+        idle_timeout_set_(other.idle_timeout_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -109,6 +110,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   uint32_t max_port_retries_;
   uint32_t port_retry_interval_ms_;
   std::chrono::milliseconds idle_timeout_;
+  bool idle_timeout_set_;
 };
 
 using TcpServerBuilderDefault = TcpServerBuilder<BuilderState::None>;

@@ -395,6 +395,7 @@ struct TcpServer::Impl {
             data_batch_queue_.clear();
             lock.unlock();
             handler(batch);
+            lock.lock();
           } else if (data_batch_queue_.size() == 1) {
             schedule_batch_timer();
           }

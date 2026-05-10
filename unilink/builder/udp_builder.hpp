@@ -130,7 +130,9 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
         enable_broadcast_(other.enable_broadcast_),
         reuse_address_(other.reuse_address_),
         max_clients_(other.max_clients_),
-        client_limit_enabled_(other.client_limit_enabled_) {
+        client_limit_enabled_(other.client_limit_enabled_),
+        idle_timeout_(other.idle_timeout_),
+        idle_timeout_set_(other.idle_timeout_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -163,6 +165,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   UdpServerBuilder<State>& broadcast(bool enable = true);
   UdpServerBuilder<State>& reuse_address(bool enable = true);
   UdpServerBuilder<State>& independent_context(bool use_independent = true);
+  UdpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
 
  private:
   template <uint32_t S>
@@ -176,6 +179,8 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   bool reuse_address_;
   uint32_t max_clients_ = 0;
   bool client_limit_enabled_ = false;
+  std::chrono::milliseconds idle_timeout_{0};
+  bool idle_timeout_set_ = false;
 };
 
 using UdpServerBuilderDefault = UdpServerBuilder<BuilderState::None>;

@@ -250,7 +250,7 @@ struct TcpClient::Impl {
   }
 
   bool try_send(std::string_view data) {
-    std::unique_lock<std::shared_mutex> lock(mutex_);
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
       return channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
@@ -307,17 +307,17 @@ struct TcpClient::Impl {
           data_batch_queue_.clear();
           lock.unlock();
           handler(batch);
+          lock.lock();
         } else if (data_batch_queue_.size() == 1) {
           schedule_batch_timer();
         }
-        return;
-      }
-
-      MessageHandler handler = data_handler_;
-      if (handler) {
-        lock.unlock();
-        handler(MessageContext(0, memory::SafeDataBuffer(data)));
-        lock.lock();
+      } else {
+        MessageHandler handler = data_handler_;
+        if (handler) {
+          lock.unlock();
+          handler(MessageContext(0, memory::SafeDataBuffer(data)));
+          lock.lock();
+        }
       }
 
       if (framer_) {
@@ -431,9 +431,7 @@ struct TcpClient::Impl {
 TcpClient::TcpClient(const std::string& h, uint16_t p) : impl_(std::make_unique<Impl>(h, p)) {}
 TcpClient::TcpClient(const std::string& h, uint16_t p, std::shared_ptr<boost::asio::io_context> ioc)
     : impl_(std::make_unique<Impl>(h, p, ioc)) {}
-TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
-  impl_->setup_internal_handlers();
-}
+TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {}
 TcpClient::~TcpClient() = default;
 
 TcpClient::TcpClient(TcpClient&&) noexcept = default;

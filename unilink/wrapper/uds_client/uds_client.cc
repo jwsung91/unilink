@@ -45,8 +45,8 @@ struct UdsClient::Impl {
   std::string socket_path_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
+  std::atomic<bool> use_external_context_{false};
+  std::atomic<bool> manage_external_context_{false};
   std::thread external_thread_;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
@@ -353,17 +353,17 @@ struct UdsClient::Impl {
           data_batch_queue_.clear();
           lock.unlock();
           handler(batch);
+          lock.lock();
         } else if (data_batch_queue_.size() == 1) {
           schedule_batch_timer();
         }
-        return;
-      }
-
-      MessageHandler handler = data_handler_;
-      if (handler) {
-        lock.unlock();
-        handler(MessageContext(0, memory::SafeDataBuffer(data)));
-        lock.lock();
+      } else {
+        MessageHandler handler = data_handler_;
+        if (handler) {
+          lock.unlock();
+          handler(MessageContext(0, memory::SafeDataBuffer(data)));
+          lock.lock();
+        }
       }
 
       if (framer_) {
@@ -562,8 +562,7 @@ UdsClient& UdsClient::backpressure_strategy(base::constants::BackpressureStrateg
 }
 
 UdsClient& UdsClient::manage_external_context(bool manage) {
-  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->manage_external_context_ = manage;
+  impl_->manage_external_context_.store(manage);
   return *this;
 }
 
