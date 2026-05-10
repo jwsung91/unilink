@@ -566,5 +566,17 @@ UdsClient& UdsClient::manage_external_context(bool manage) {
   return *this;
 }
 
+UdsClient& UdsClient::batch_size(size_t size) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->max_batch_size_ = size;
+  return *this;
+}
+
+UdsClient& UdsClient::batch_latency(std::chrono::milliseconds latency) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->max_batch_latency_ = latency;
+  return *this;
+}
+
 }  // namespace wrapper
 }  // namespace unilink

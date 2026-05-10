@@ -523,11 +523,19 @@ TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
 TcpClient& TcpClient::max_retries(int m) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->max_retries_ = m;
+  if (impl_->channel_) {
+    auto transport = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
+    if (transport) transport->set_max_retries(m);
+  }
   return *this;
 }
 TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connection_timeout_ = t;
+  if (impl_->channel_) {
+    auto transport = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
+    if (transport) transport->set_connection_timeout(static_cast<unsigned>(t.count()));
+  }
   return *this;
 }
 TcpClient& TcpClient::manage_external_context(bool m) {

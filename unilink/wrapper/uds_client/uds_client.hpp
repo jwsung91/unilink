@@ -90,6 +90,8 @@ class UNILINK_API UdsClient : public ChannelInterface {
   UdsClient& backpressure_threshold(size_t threshold);
   UdsClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdsClient& manage_external_context(bool manage);
+  UdsClient& batch_size(size_t size);
+  UdsClient& batch_latency(std::chrono::milliseconds latency);
 
  private:
   struct Impl;

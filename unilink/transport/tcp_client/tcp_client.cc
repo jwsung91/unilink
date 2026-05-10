@@ -450,6 +450,8 @@ void TcpClient::set_backpressure_strategy(base::constants::BackpressureStrategy 
 }
 
 void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
+void TcpClient::set_max_retries(int max_retries) { impl_->cfg_.max_retries = max_retries; }
+void TcpClient::set_connection_timeout(unsigned timeout_ms) { impl_->cfg_.connection_timeout_ms = timeout_ms; }
 void TcpClient::set_reconnect_policy(ReconnectPolicy policy) {
   if (policy) {
     impl_->reconnect_policy_ = std::move(policy);

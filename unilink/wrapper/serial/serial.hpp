@@ -93,6 +93,8 @@ class UNILINK_API Serial : public ChannelInterface {
   Serial& backpressure_threshold(size_t threshold);
   Serial& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   Serial& manage_external_context(bool manage);
+  Serial& batch_size(size_t size);
+  Serial& batch_latency(std::chrono::milliseconds latency);
 
  protected:
   // Exposed for testing only — not part of the public API.
