@@ -782,7 +782,9 @@ auto& logger = unilink::diagnostics::Logger::instance();
 // Configure logger
 logger.set_level(unilink::diagnostics::LogLevel::DEBUG);
 logger.set_console_output(true);
-logger.set_file_output("app.log");
+if (!logger.try_set_file_output("app.log")) {
+  std::cerr << logger.last_error() << std::endl;
+}
 
 // Log messages
 logger.debug("component", "operation", "Debug message");
@@ -826,6 +828,11 @@ logger.set_format("{timestamp} [{level}] [{component}] [{operation}] {message}")
 
 Supported placeholders are `{timestamp}`, `{level}`, `{component}`, `{operation}`, `{source}`, `{file}`, `{line}`,
 `{function}`, and `{message}`.
+
+### Environment
+
+`UNILINK_LOG_LEVEL` can be set to `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`, or `OFF`. The logger reads it
+during initialization; call `logger.reload_from_environment()` to re-apply it later.
 
 ---
 

@@ -147,12 +147,28 @@ class UNILINK_API Logger {
   void set_file_output(const std::string& filename);
 
   /**
+   * @brief Set file output and report whether it succeeded.
+   * @param filename Log file path (empty string to disable file output)
+   * @return True when the requested output state was applied
+   */
+  bool try_set_file_output(const std::string& filename);
+
+  /**
    * @brief Set file output with rotation
    * @param filename Log file path
    * @param config Rotation configuration
    */
   void set_file_output_with_rotation(const std::string& filename,
                                      const LogRotationConfig& config = LogRotationConfig{});
+
+  /**
+   * @brief Set file output with rotation and report whether it succeeded.
+   * @param filename Log file path
+   * @param config Rotation configuration
+   * @return True when the requested output state was applied
+   */
+  bool try_set_file_output_with_rotation(const std::string& filename,
+                                         const LogRotationConfig& config = LogRotationConfig{});
 
   /**
    * @brief Enable/disable async logging
@@ -165,6 +181,13 @@ class UNILINK_API Logger {
    * @brief Check if async logging is enabled
    */
   bool async_logging_enabled() const;
+
+  /**
+   * @brief Re-apply supported logger settings from environment variables.
+   *
+   * Currently supports UNILINK_LOG_LEVEL values DEBUG, INFO, WARNING, ERROR, CRITICAL, and OFF.
+   */
+  void reload_from_environment();
 
   /**
    * @brief Set log callback
@@ -188,6 +211,16 @@ class UNILINK_API Logger {
    * @brief Check if logging is enabled
    */
   bool enabled() const;
+
+  /**
+   * @brief Return true when at least one output destination is active.
+   */
+  bool has_outputs() const;
+
+  /**
+   * @brief Last logger configuration error, empty when the last operation succeeded.
+   */
+  std::string last_error() const;
 
   /**
    * @brief Set log format

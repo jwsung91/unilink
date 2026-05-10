@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -412,6 +413,50 @@ TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroSkipsFilteredMessageEval
   EXPECT_EQ(evaluations, 0);
 }
 
+TEST_F(AdvancedLoggerCoverageTest, OutputsDisabledSkipsMessageEvaluation) {
+  Logger::instance().set_enabled(true);
+  Logger::instance().set_level(LogLevel::DEBUG);
+  Logger::instance().set_outputs(0);
+
+  int evaluations = 0;
+  auto make_message = [&evaluations]() {
+    ++evaluations;
+    return std::string("no output message");
+  };
+
+  UNILINK_LOG_INFO("test", "outputs_disabled", make_message());
+
+  EXPECT_FALSE(Logger::instance().has_outputs());
+  EXPECT_EQ(evaluations, 0);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, ReloadsLogLevelFromEnvironment) {
+#ifdef _WIN32
+  _putenv_s("UNILINK_LOG_LEVEL", "WARNING");
+#else
+  setenv("UNILINK_LOG_LEVEL", "WARNING", 1);
+#endif
+
+  Logger::instance().reload_from_environment();
+  EXPECT_TRUE(Logger::instance().enabled());
+  EXPECT_EQ(Logger::instance().level(), LogLevel::WARNING);
+
+#ifdef _WIN32
+  _putenv_s("UNILINK_LOG_LEVEL", "OFF");
+#else
+  setenv("UNILINK_LOG_LEVEL", "OFF", 1);
+#endif
+
+  Logger::instance().reload_from_environment();
+  EXPECT_FALSE(Logger::instance().enabled());
+
+#ifdef _WIN32
+  _putenv_s("UNILINK_LOG_LEVEL", "");
+#else
+  unsetenv("UNILINK_LOG_LEVEL");
+#endif
+}
+
 TEST_F(AdvancedLoggerCoverageTest, CallbackReenabledAfterOutputsDisabled) {
   std::vector<std::string> captured_logs;
 
@@ -458,7 +503,16 @@ TEST_F(AdvancedLoggerCoverageTest, FileOpenFailure) {
 #endif
 
   // This should print error to stderr but not throw
-  EXPECT_NO_THROW(Logger::instance().set_file_output(invalid_path));
+  EXPECT_FALSE(Logger::instance().try_set_file_output(invalid_path));
+  EXPECT_FALSE(Logger::instance().last_error().empty());
+}
+
+TEST_F(AdvancedLoggerCoverageTest, UnsupportedRotationOptionsReportFailure) {
+  LogRotationConfig config;
+  config.enable_compression = true;
+
+  EXPECT_FALSE(Logger::instance().try_set_file_output_with_rotation(test_log_file_.string(), config));
+  EXPECT_FALSE(Logger::instance().last_error().empty());
 }
 
 TEST_F(AdvancedLoggerCoverageTest, ConsoleErrorStreamSelection) {

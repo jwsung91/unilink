@@ -17,12 +17,17 @@
 #include "logger.hpp"
 
 #include <spdlog/async.h>
+#include <spdlog/details/thread_pool.h>
 #include <spdlog/sinks/base_sink.h>
 #include <spdlog/sinks/dist_sink.h>
 #include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
 #include <ctime>
 #include <future>
 #include <iomanip>
@@ -84,6 +89,32 @@ class callback_sink : public spdlog::sinks::base_sink<Mutex> {
 
 using callback_sink_mt = callback_sink<std::mutex>;
 
+class level_range_sink final : public spdlog::sinks::sink {
+ public:
+  level_range_sink(std::shared_ptr<spdlog::sinks::sink> sink, spdlog::level::level_enum min_level,
+                   spdlog::level::level_enum max_level)
+      : sink_(std::move(sink)), min_level_(min_level), max_level_(max_level) {}
+
+  void log(const spdlog::details::log_msg& msg) override {
+    if (msg.level >= min_level_ && msg.level <= max_level_) {
+      sink_->log(msg);
+    }
+  }
+
+  void flush() override { sink_->flush(); }
+
+  void set_pattern(const std::string& pattern) override { sink_->set_pattern(pattern); }
+
+  void set_formatter(std::unique_ptr<spdlog::formatter> sink_formatter) override {
+    sink_->set_formatter(std::move(sink_formatter));
+  }
+
+ private:
+  std::shared_ptr<spdlog::sinks::sink> sink_;
+  spdlog::level::level_enum min_level_;
+  spdlog::level::level_enum max_level_;
+};
+
 struct Logger::Impl {
   mutable std::mutex mutex_;
   std::atomic<LogLevel> current_level_{LogLevel::INFO};
@@ -92,18 +123,23 @@ struct Logger::Impl {
 
   std::shared_ptr<spdlog::logger> spd_logger_;
   std::shared_ptr<spdlog::sinks::dist_sink_mt> dist_sink_;
-  std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink_;
+  std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_stdout_sink_;
+  std::shared_ptr<spdlog::sinks::stderr_color_sink_mt> console_stderr_sink_;
+  std::shared_ptr<level_range_sink> console_stdout_filter_;
+  std::shared_ptr<level_range_sink> console_stderr_filter_;
   std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> file_sink_;
   std::shared_ptr<callback_sink_mt> callback_sink_;
 
   std::string current_log_file_;
   LogRotationConfig rotation_config_;
   std::string format_ = "{timestamp} [{level}] [{component}] [{operation}] [{source}] {message}";
+  std::string last_error_;
 
   // Async logging support
   std::atomic<bool> async_enabled_{false};
   AsyncLogConfig async_config_;
   std::future<void> drop_future_;
+  std::shared_ptr<spdlog::details::thread_pool> async_thread_pool_;
 
   Impl() {
     dist_sink_ = std::make_shared<spdlog::sinks::dist_sink_mt>();
@@ -112,11 +148,10 @@ struct Logger::Impl {
     spd_logger_ = std::make_shared<spdlog::logger>("unilink", dist_sink_);
     spd_logger_->set_level(to_spdlog_level(LogLevel::DEBUG));  // Allow all, filter via Logger::log or Logger::set_level
 
-    // Initial setup with console sink
-    console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    dist_sink_->add_sink(console_sink_);
+    add_console_sinks();
 
     apply_spdlog_pattern();
+    apply_environment_settings();
   }
 
   ~Impl() {
@@ -130,6 +165,44 @@ struct Logger::Impl {
     if (dist_sink_) {
       dist_sink_->set_pattern("%v");
     }
+  }
+
+  void set_error(std::string message) { last_error_ = std::move(message); }
+
+  void clear_error() { last_error_.clear(); }
+
+  bool has_outputs_unlocked() const { return outputs_.load() != 0; }
+
+  void add_console_sinks() {
+    if (!console_stdout_sink_) {
+      console_stdout_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+      console_stdout_filter_ =
+          std::make_shared<level_range_sink>(console_stdout_sink_, spdlog::level::trace, spdlog::level::warn);
+    }
+    if (!console_stderr_sink_) {
+      console_stderr_sink_ = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
+      console_stderr_filter_ =
+          std::make_shared<level_range_sink>(console_stderr_sink_, spdlog::level::err, spdlog::level::critical);
+    }
+
+    dist_sink_->remove_sink(console_stdout_filter_);
+    dist_sink_->remove_sink(console_stderr_filter_);
+    dist_sink_->add_sink(console_stdout_filter_);
+    dist_sink_->add_sink(console_stderr_filter_);
+    apply_spdlog_pattern();
+  }
+
+  void remove_console_sinks() {
+    if (console_stdout_filter_) {
+      dist_sink_->remove_sink(console_stdout_filter_);
+    }
+    if (console_stderr_filter_) {
+      dist_sink_->remove_sink(console_stderr_filter_);
+    }
+    console_stdout_filter_.reset();
+    console_stderr_filter_.reset();
+    console_stdout_sink_.reset();
+    console_stderr_sink_.reset();
   }
 
   void set_format(const std::string& format) { format_ = format; }
@@ -161,6 +234,71 @@ struct Logger::Impl {
       default:
         return "info";
     }
+  }
+
+  static std::string normalize_env_value(std::string_view value) {
+    std::string normalized(value);
+    normalized.erase(normalized.begin(), std::find_if(normalized.begin(), normalized.end(),
+                                                      [](unsigned char c) { return !std::isspace(c); }));
+    normalized.erase(
+        std::find_if(normalized.rbegin(), normalized.rend(), [](unsigned char c) { return !std::isspace(c); }).base(),
+        normalized.end());
+    std::transform(normalized.begin(), normalized.end(), normalized.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
+    return normalized;
+  }
+
+  static bool parse_log_level(std::string_view value, LogLevel& level, bool& disable_logging) {
+    const auto normalized = normalize_env_value(value);
+    disable_logging = false;
+    if (normalized == "DEBUG" || normalized == "TRACE") {
+      level = LogLevel::DEBUG;
+      return true;
+    }
+    if (normalized == "INFO") {
+      level = LogLevel::INFO;
+      return true;
+    }
+    if (normalized == "WARNING" || normalized == "WARN") {
+      level = LogLevel::WARNING;
+      return true;
+    }
+    if (normalized == "ERROR" || normalized == "ERR") {
+      level = LogLevel::ERROR;
+      return true;
+    }
+    if (normalized == "CRITICAL" || normalized == "FATAL") {
+      level = LogLevel::CRITICAL;
+      return true;
+    }
+    if (normalized == "OFF" || normalized == "NONE" || normalized == "DISABLED") {
+      disable_logging = true;
+      return true;
+    }
+    return false;
+  }
+
+  void apply_environment_settings() {
+    const char* env_level = std::getenv("UNILINK_LOG_LEVEL");
+    if (!env_level || *env_level == '\0') {
+      return;
+    }
+
+    LogLevel parsed_level = current_level_.load();
+    bool disable_logging = false;
+    if (!parse_log_level(env_level, parsed_level, disable_logging)) {
+      set_error("Invalid UNILINK_LOG_LEVEL: " + std::string(env_level));
+      return;
+    }
+
+    enabled_.store(!disable_logging);
+    if (!disable_logging) {
+      current_level_.store(parsed_level);
+      if (spd_logger_) {
+        spd_logger_->set_level(to_spdlog_level(parsed_level));
+      }
+    }
+    clear_error();
   }
 
   static std::string timestamp_now() {
@@ -216,11 +354,9 @@ struct Logger::Impl {
     auto overflow_policy = config.enable_backpressure ? spdlog::async_overflow_policy::block
                                                       : spdlog::async_overflow_policy::overrun_oldest;
 
-    if (!spdlog::thread_pool()) {
-      spdlog::init_thread_pool(config.max_queue_size, 1);
-    }
+    async_thread_pool_ = std::make_shared<spdlog::details::thread_pool>(std::max<size_t>(1, config.max_queue_size), 1);
 
-    spd_logger_ = std::make_shared<spdlog::async_logger>("unilink", dist_sink_, spdlog::thread_pool(), overflow_policy);
+    spd_logger_ = std::make_shared<spdlog::async_logger>("unilink", dist_sink_, async_thread_pool_, overflow_policy);
     spd_logger_->set_level(to_spdlog_level(current_level_.load()));
     apply_spdlog_pattern();
 
@@ -256,6 +392,9 @@ struct Logger::Impl {
     }
 
     spd_logger_.reset();
+    if (drop_success) {
+      async_thread_pool_.reset();
+    }
     dist_sink_->flush();
 
     // Create sync logger
@@ -314,31 +453,30 @@ LogLevel Logger::level() const { return get_impl()->current_level_.load(); }
 
 bool Logger::should_log(LogLevel level) const {
   const auto* impl = get_impl();
-  return impl->enabled_.load() && level >= impl->current_level_.load();
+  return impl->enabled_.load() && impl->has_outputs_unlocked() && level >= impl->current_level_.load();
 }
 
 void Logger::set_console_output(bool enable) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   if (enable) {
-    if (!impl_->console_sink_) {
-      impl_->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    }
-    impl_->dist_sink_->remove_sink(impl_->console_sink_);  // Ensure no duplicate
-    impl_->dist_sink_->add_sink(impl_->console_sink_);
-    impl_->apply_spdlog_pattern();
+    impl_->add_console_sinks();
     impl_->outputs_.fetch_or(static_cast<int>(LogOutput::CONSOLE));
   } else {
-    if (impl_->console_sink_) {
-      impl_->dist_sink_->remove_sink(impl_->console_sink_);
-      impl_->console_sink_.reset();
-    }
+    impl_->remove_console_sinks();
     impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::CONSOLE));
   }
+  impl_->clear_error();
 }
 
-void Logger::set_file_output(const std::string& filename) { set_file_output_with_rotation(filename); }
+void Logger::set_file_output(const std::string& filename) { (void)try_set_file_output_with_rotation(filename); }
+
+bool Logger::try_set_file_output(const std::string& filename) { return try_set_file_output_with_rotation(filename); }
 
 void Logger::set_file_output_with_rotation(const std::string& filename, const LogRotationConfig& config) {
+  (void)try_set_file_output_with_rotation(filename, config);
+}
+
+bool Logger::try_set_file_output_with_rotation(const std::string& filename, const LogRotationConfig& config) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
 
   if (filename.empty()) {
@@ -348,8 +486,18 @@ void Logger::set_file_output_with_rotation(const std::string& filename, const Lo
     }
     impl_->current_log_file_.clear();
     impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
+    impl_->clear_error();
+    return true;
   } else {
     try {
+      if (config.enable_compression) {
+        impl_->set_error("Log compression is not supported by the current rotating file sink");
+        return false;
+      }
+      if (config.file_pattern != LogRotationConfig{}.file_pattern) {
+        impl_->set_error("Custom log rotation file_pattern is not supported by the current rotating file sink");
+        return false;
+      }
       if (impl_->file_sink_) {
         impl_->dist_sink_->remove_sink(impl_->file_sink_);
       }
@@ -363,11 +511,15 @@ void Logger::set_file_output_with_rotation(const std::string& filename, const Lo
       impl_->dist_sink_->add_sink(impl_->file_sink_);
       impl_->apply_spdlog_pattern();
       impl_->outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
+      impl_->clear_error();
+      return true;
     } catch (const spdlog::spdlog_ex& e) {
-      std::cerr << "Failed to open log file: " << filename << " (" << e.what() << ")" << std::endl;
+      impl_->set_error("Failed to open log file: " + filename + " (" + e.what() + ")");
+      std::cerr << impl_->last_error_ << std::endl;
       impl_->file_sink_.reset();
       impl_->current_log_file_.clear();
       impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
+      return false;
     }
   }
 }
@@ -375,6 +527,9 @@ void Logger::set_file_output_with_rotation(const std::string& filename, const Lo
 void Logger::set_async_logging(bool enable, const AsyncLogConfig& config) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   if (enable) {
+    if (impl_->async_enabled_.load()) {
+      impl_->teardown_async_logging();
+    }
     impl_->setup_async_logging(config);
   } else {
     impl_->teardown_async_logging();
@@ -382,6 +537,11 @@ void Logger::set_async_logging(bool enable, const AsyncLogConfig& config) {
 }
 
 bool Logger::async_logging_enabled() const { return get_impl()->async_enabled_.load(); }
+
+void Logger::reload_from_environment() {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  impl_->apply_environment_settings();
+}
 
 void Logger::set_callback(LogCallback callback) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
@@ -392,6 +552,7 @@ void Logger::set_callback(LogCallback callback) {
       impl_->callback_sink_.reset();
     }
     impl_->outputs_.fetch_and(~static_cast<int>(LogOutput::CALLBACK));
+    impl_->clear_error();
     return;
   }
 
@@ -405,27 +566,21 @@ void Logger::set_callback(LogCallback callback) {
   }
   impl_->apply_spdlog_pattern();
   impl_->outputs_.fetch_or(static_cast<int>(LogOutput::CALLBACK));
+  impl_->clear_error();
 }
 
 void Logger::set_outputs(int outputs) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
-  impl_->outputs_.store(outputs);
+  int effective_outputs = 0;
 
   // Reconcile sinks in dist_sink_ based on the new bitmask
 
   // Console Sink
   if (outputs & static_cast<int>(LogOutput::CONSOLE)) {
-    if (!impl_->console_sink_) {
-      impl_->console_sink_ = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    }
-    impl_->dist_sink_->remove_sink(impl_->console_sink_);  // Ensure no duplicate
-    impl_->dist_sink_->add_sink(impl_->console_sink_);
-    impl_->apply_spdlog_pattern();
+    impl_->add_console_sinks();
+    effective_outputs |= static_cast<int>(LogOutput::CONSOLE);
   } else {
-    if (impl_->console_sink_) {
-      impl_->dist_sink_->remove_sink(impl_->console_sink_);
-      impl_->console_sink_.reset();
-    }
+    impl_->remove_console_sinks();
   }
 
   // File Sink
@@ -438,6 +593,7 @@ void Logger::set_outputs(int outputs) {
       impl_->dist_sink_->remove_sink(impl_->file_sink_);  // Ensure no duplicate
       impl_->dist_sink_->add_sink(impl_->file_sink_);
       impl_->apply_spdlog_pattern();
+      effective_outputs |= static_cast<int>(LogOutput::FILE);
     }
   } else {
     if (impl_->file_sink_) {
@@ -452,21 +608,33 @@ void Logger::set_outputs(int outputs) {
       impl_->dist_sink_->remove_sink(impl_->callback_sink_);  // Ensure no duplicate
       impl_->dist_sink_->add_sink(impl_->callback_sink_);
       impl_->apply_spdlog_pattern();
+      effective_outputs |= static_cast<int>(LogOutput::CALLBACK);
     }
   } else {
     if (impl_->callback_sink_) {
       impl_->dist_sink_->remove_sink(impl_->callback_sink_);
     }
   }
+
+  impl_->outputs_.store(effective_outputs);
+  impl_->clear_error();
 }
 
 void Logger::set_enabled(bool enabled) { impl_->enabled_.store(enabled); }
 
 bool Logger::enabled() const { return get_impl()->enabled_.load(); }
 
+bool Logger::has_outputs() const { return get_impl()->has_outputs_unlocked(); }
+
+std::string Logger::last_error() const {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  return impl_->last_error_;
+}
+
 void Logger::set_format(const std::string& format) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->set_format(format);
+  impl_->clear_error();
 }
 
 void Logger::flush() {
