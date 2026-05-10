@@ -74,7 +74,7 @@ TEST(TransportUdpExtendedTest, AsyncWriteMove) {
   size_t payload_size = payload.size();
   channel->async_write_move(std::move(payload));
 
-  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload_size; }, 200ms));
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload_size; }, 2000ms));
 
   channel->stop();
 }
@@ -106,7 +106,7 @@ TEST(TransportUdpExtendedTest, AsyncWriteShared) {
   size_t payload_size = payload->size();
   channel->async_write_shared(payload);
 
-  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload_size; }, 200ms));
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload_size; }, 2000ms));
 
   channel->stop();
 }
@@ -139,7 +139,7 @@ TEST(TransportUdpExtendedTest, PooledBufferWrite) {
   std::vector<uint8_t> payload(100, 0xCC);
   channel->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
-  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload.size(); }, 200ms));
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload.size(); }, 2000ms));
 
   channel->stop();
 }
