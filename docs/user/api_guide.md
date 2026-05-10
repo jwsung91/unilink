@@ -807,11 +807,21 @@ logger.critical("component", "operation", "Critical message");
 ```cpp
 // Enable async logging for better performance
 unilink::diagnostics::AsyncLogConfig config;
-config.batch_size = 100;                    // Process 100 logs at once
+config.max_queue_size = 10000;              // Queue capacity
+config.enable_backpressure = true;          // Block when the queue is full
 config.flush_interval = std::chrono::milliseconds(1000); // Flush every 1 second
 
 logger.set_async_logging(true, config);
 ```
+
+### Custom Format
+
+```cpp
+logger.set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
+```
+
+Supported placeholders are `{timestamp}`, `{level}`, `{component}`, `{operation}`, `{source}`, `{file}`, `{line}`,
+`{function}`, and `{message}`.
 
 ---
 

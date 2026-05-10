@@ -345,20 +345,56 @@ TEST_F(AdvancedLoggerCoverageTest, CallbackExceptionSafety) {
 }
 
 TEST_F(AdvancedLoggerCoverageTest, CustomFormatHandling) {
-  // spdlog format mapping is simplified in this migration.
-  // We'll just verify that setting a format doesn't crash.
+  std::vector<std::string> captured_logs;
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
   Logger::instance().set_level(LogLevel::INFO);
-  Logger::instance().set_format("[{level}] {message}");
+  Logger::instance().set_format("[{level}] {component}/{operation}: {message}");
 
-  UNILINK_LOG_INFO("test", "fmt", "msg");
+  UNILINK_LOG_INFO("test_component", "fmt_operation", "formatted message");
   Logger::instance().flush();
 
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("[info] test_component/fmt_operation: formatted message"), std::string::npos);
+
   Logger::instance().set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
+  Logger::instance().set_callback(nullptr);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, DisabledLoggerSkipsMacroMessageEvaluation) {
+  Logger::instance().set_enabled(false);
+  Logger::instance().set_level(LogLevel::DEBUG);
+
+  int evaluations = 0;
+  auto make_message = [&evaluations]() {
+    ++evaluations;
+    return std::string("expensive message");
+  };
+
+  UNILINK_LOG_DEBUG("test", "disabled", make_message());
+
+  EXPECT_EQ(evaluations, 0);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, CallbackReenabledAfterOutputsDisabled) {
+  std::vector<std::string> captured_logs;
+
+  Logger::instance().set_callback([](LogLevel, const std::string&) {});
+  Logger::instance().set_outputs(0);
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
+  Logger::instance().set_level(LogLevel::INFO);
+
+  UNILINK_LOG_INFO("test", "callback", "callback restored");
+  Logger::instance().flush();
+
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("callback restored"), std::string::npos);
 }
 
 TEST_F(AdvancedLoggerCoverageTest, OutputDisabling) {
   // Test set_file_output with empty string
-  Logger::instance().set_file_output("temp_test.log");
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_file_output("");  // Disable
 
   // Test set_callback with nullptr
