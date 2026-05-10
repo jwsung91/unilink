@@ -194,8 +194,22 @@ void UdsServerSession::maybe_flush_for_keep_latest(size_t added) {
   if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
 
   if (added >= bp_high_) {
+    // Compute bytes to remove from tx_ (excluding current_write_buffer_ which is in-flight)
+    size_t removed_bytes = 0;
+    for (const auto& buf : tx_) {
+      removed_bytes += std::visit(
+          [](auto&& b) -> size_t {
+            using T = std::decay_t<decltype(b)>;
+            if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+              return b ? b->size() : 0;
+            } else {
+              return b.size();
+            }
+          },
+          buf);
+    }
     tx_.clear();
-    queue_bytes_ = 0;
+    queue_bytes_ = (queue_bytes_ > removed_bytes) ? (queue_bytes_ - removed_bytes) : 0;
     return;
   }
 
