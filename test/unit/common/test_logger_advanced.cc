@@ -376,6 +376,42 @@ TEST_F(AdvancedLoggerCoverageTest, DisabledLoggerSkipsMacroMessageEvaluation) {
   EXPECT_EQ(evaluations, 0);
 }
 
+TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroUsesRuntimeLevel) {
+  std::vector<std::string> captured_logs;
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
+  Logger::instance().set_level(LogLevel::WARNING);
+
+  int level_evaluations = 0;
+  auto choose_level = [&level_evaluations]() {
+    ++level_evaluations;
+    return LogLevel::WARNING;
+  };
+
+  UNILINK_LOG(choose_level(), "test", "runtime_level", "runtime level message");
+  Logger::instance().flush();
+
+  EXPECT_EQ(level_evaluations, 1);
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("runtime level message"), std::string::npos);
+  Logger::instance().set_callback(nullptr);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroSkipsFilteredMessageEvaluation) {
+  Logger::instance().set_level(LogLevel::ERROR);
+
+  int evaluations = 0;
+  auto make_message = [&evaluations]() {
+    ++evaluations;
+    return std::string("filtered message");
+  };
+
+  const auto runtime_level = LogLevel::INFO;
+  UNILINK_LOG(runtime_level, "test", "filtered", make_message());
+
+  EXPECT_EQ(evaluations, 0);
+}
+
 TEST_F(AdvancedLoggerCoverageTest, CallbackReenabledAfterOutputsDisabled) {
   std::vector<std::string> captured_logs;
 

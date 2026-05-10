@@ -790,6 +790,10 @@ logger.info("component", "operation", "Info message");
 logger.warning("component", "operation", "Warning message");
 logger.error("component", "operation", "Error message");
 logger.critical("component", "operation", "Critical message");
+
+// Macro form keeps source location at the call site and avoids formatting filtered messages
+UNILINK_LOG(unilink::diagnostics::LogLevel::INFO, "component", "operation", "Info message");
+UNILINK_LOG_INFO("component", "operation", "Info message");
 ```
 
 ### Log Levels

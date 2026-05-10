@@ -226,40 +226,28 @@ class UNILINK_API Logger {
 /**
  * @brief Convenience macros for logging
  */
-#define UNILINK_LOG_DEBUG(component, operation, message)                                              \
+#define UNILINK_LOG(level, component, operation, message)                                             \
   do {                                                                                                \
-    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) { \
-      unilink::diagnostics::Logger::instance().debug(component, operation, message);                  \
+    const auto unilink_log_level = (level);                                                           \
+    if (unilink::diagnostics::Logger::instance().should_log(unilink_log_level)) {                     \
+      unilink::diagnostics::Logger::instance().log(unilink_log_level, component, operation, message); \
     }                                                                                                 \
   } while (0)
 
-#define UNILINK_LOG_INFO(component, operation, message)                                              \
-  do {                                                                                               \
-    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::INFO)) { \
-      unilink::diagnostics::Logger::instance().info(component, operation, message);                  \
-    }                                                                                                \
-  } while (0)
+#define UNILINK_LOG_DEBUG(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::DEBUG, component, operation, message)
 
-#define UNILINK_LOG_WARNING(component, operation, message)                                              \
-  do {                                                                                                  \
-    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::WARNING)) { \
-      unilink::diagnostics::Logger::instance().warning(component, operation, message);                  \
-    }                                                                                                   \
-  } while (0)
+#define UNILINK_LOG_INFO(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::INFO, component, operation, message)
 
-#define UNILINK_LOG_ERROR(component, operation, message)                                              \
-  do {                                                                                                \
-    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::ERROR)) { \
-      unilink::diagnostics::Logger::instance().error(component, operation, message);                  \
-    }                                                                                                 \
-  } while (0)
+#define UNILINK_LOG_WARNING(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::WARNING, component, operation, message)
 
-#define UNILINK_LOG_CRITICAL(component, operation, message)                                              \
-  do {                                                                                                   \
-    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::CRITICAL)) { \
-      unilink::diagnostics::Logger::instance().critical(component, operation, message);                  \
-    }                                                                                                    \
-  } while (0)
+#define UNILINK_LOG_ERROR(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::ERROR, component, operation, message)
+
+#define UNILINK_LOG_CRITICAL(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::CRITICAL, component, operation, message)
 
 /**
  * @brief Performance logging macros for expensive operations.
@@ -274,15 +262,16 @@ class UNILINK_API Logger {
           ? std::chrono::high_resolution_clock::now()                                              \
           : std::chrono::high_resolution_clock::time_point()
 
-#define UNILINK_LOG_PERF_END(component, operation)                                                                \
-  do {                                                                                                            \
-    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) {             \
-      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \
-      using _us_t = std::chrono::microseconds;                                                                    \
-      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \
-      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count();             \
-      UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
-    }                                                                                                             \
+#define UNILINK_LOG_PERF_END(component, operation)                                                    \
+  do {                                                                                                \
+    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) { \
+      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                         \
+      using _us_t = std::chrono::microseconds;                                                        \
+      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                       \
+      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count(); \
+      UNILINK_LOG(unilink::diagnostics::LogLevel::DEBUG, component, operation,                        \
+                  "Duration: " + std::to_string(_perf_duration_##operation) + " μs");                 \
+    }                                                                                                 \
   } while (0)
 
 }  // namespace diagnostics
