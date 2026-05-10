@@ -226,7 +226,7 @@ UdpServerBuilder<State>& UdpServerBuilder<State>::bind_address(const std::string
 }
 
 template <uint32_t State>
-UdpServerBuilder<State>& UdpServerBuilder<State>::max_clients(size_t max) {
+UdpServerBuilder<State>& UdpServerBuilder<State>::max_clients(uint32_t max) {
   max_clients_ = max;
   client_limit_enabled_ = true;
   return *this;

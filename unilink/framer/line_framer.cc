@@ -148,14 +148,15 @@ size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_st
 
     // Calculate message length (from end of previous processed data to end of current delimiter)
     size_t current_msg_total_len = match_end_idx - processed_count;
+    size_t content_len = current_msg_total_len - delimiter_.length();
 
-    // Check strict max_length constraint
-    if (current_msg_total_len > max_length_) {
+    // Check max_length against content length (delimiter excluded)
+    if (content_len > max_length_) {
       // Message exceeds limit. Skip it.
     } else {
       // Valid message
       if (on_message_) {
-        size_t payload_len = include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());
+        size_t payload_len = include_delimiter_ ? current_msg_total_len : content_len;
         on_message_(memory::ConstByteSpan(data.data() + processed_count, payload_len));
       }
     }

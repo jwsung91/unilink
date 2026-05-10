@@ -1,6 +1,7 @@
 #include "unilink/wrapper/uds_server/uds_server.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -19,8 +20,8 @@ namespace wrapper {
 struct UdsServer::Impl {
   std::string socket_path_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
+  std::atomic<bool> use_external_context_{false};
+  std::atomic<bool> manage_external_context_{false};
 
   mutable std::shared_mutex mutex_;
   std::mutex bp_mutex_;
@@ -38,6 +39,7 @@ struct UdsServer::Impl {
   std::atomic<bool> auto_start_{false};
   std::atomic<int> idle_timeout_ms_{0};
   std::atomic<size_t> max_clients_{0};
+  std::atomic<bool> client_limit_enabled_{false};
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
       base::constants::BackpressureStrategy::Reliable};
@@ -66,7 +68,8 @@ struct UdsServer::Impl {
   Impl(const std::string& socket_path, std::shared_ptr<boost::asio::io_context> external_ioc)
       : socket_path_(socket_path),
         external_ioc_(std::move(external_ioc)),
-        use_external_context_(external_ioc_ != nullptr) {}
+        use_external_context_(external_ioc_ != nullptr),
+        manage_external_context_(false) {}
 
   explicit Impl(std::shared_ptr<interface::Channel> channel) : socket_path_(""), server_(std::move(channel)) {
     setup_internal_handlers();
@@ -202,7 +205,7 @@ struct UdsServer::Impl {
     lock.unlock();
     server_->start();
 
-    if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+    if (use_external_context_.load() && manage_external_context_.load() && !external_thread_.joinable()) {
       if (external_ioc_ && external_ioc_->stopped()) {
         external_ioc_->restart();
       }
@@ -244,7 +247,8 @@ struct UdsServer::Impl {
         lock.lock();
       }
 
-      if (use_external_context_ && manage_external_context_) {
+      if (use_external_context_.load() && manage_external_context_.load()) {
+        if (work_guard_) work_guard_.reset();
         if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
@@ -523,8 +527,13 @@ UdsServer& UdsServer::idle_timeout(std::chrono::milliseconds timeout) {
 }
 
 UdsServer& UdsServer::max_clients(size_t max) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->max_clients_.store(max);
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  if (max == 0) {
+    impl_->client_limit_enabled_.store(false);
+  } else {
+    impl_->client_limit_enabled_.store(true);
+  }
   auto ts = std::dynamic_pointer_cast<transport::UdsServer>(impl_->server_);
   if (ts) ts->set_client_limit(max);
   return *this;
@@ -541,7 +550,7 @@ UdsServer& UdsServer::backpressure_strategy(base::constants::BackpressureStrateg
 }
 
 UdsServer& UdsServer::manage_external_context(bool manage) {
-  impl_->manage_external_context_ = manage;
+  impl_->manage_external_context_.store(manage);
   return *this;
 }
 

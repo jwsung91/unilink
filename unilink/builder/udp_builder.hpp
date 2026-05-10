@@ -159,7 +159,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   UdpServerBuilder<State>& local_address(const std::string& address) {
     return bind_address(address);
   }
-  UdpServerBuilder<State>& max_clients(size_t max);
+  UdpServerBuilder<State>& max_clients(uint32_t max);
   UdpServerBuilder<State>& broadcast(bool enable = true);
   UdpServerBuilder<State>& reuse_address(bool enable = true);
   UdpServerBuilder<State>& independent_context(bool use_independent = true);
@@ -174,7 +174,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   bool independent_context_;
   bool enable_broadcast_;
   bool reuse_address_;
-  size_t max_clients_ = 0;
+  uint32_t max_clients_ = 0;
   bool client_limit_enabled_ = false;
 };
 
