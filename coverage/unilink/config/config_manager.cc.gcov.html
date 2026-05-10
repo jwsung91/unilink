@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">72.8&nbsp;%</td>
-            <td class="headerCovTableEntry">239</td>
-            <td class="headerCovTableEntry">174</td>
+            <td class="headerCovTableEntryLo">72.9&nbsp;%</td>
+            <td class="headerCovTableEntry">240</td>
+            <td class="headerCovTableEntry">175</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-10 10:01:03</td>
+            <td class="headerValue">2026-05-10 14:28:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">75.9&nbsp;%</td>
@@ -215,10 +215,10 @@
 <span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         230 : std::any ConfigManager::get(const std::string&amp; key, const std::any&amp; default_value) const {</span></span>
 <span id="L131"><span class="lineNum">     131</span>         [<span class="tlaGBC" title="Branch 0 was taken 230 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         230 :   std::lock_guard&lt;std::mutex&gt; lock(get_impl()-&gt;mutex_);</span></span>
 <span id="L132"><span class="lineNum">     132</span>         [<span class="tlaGBC" title="Branch 0 was taken 230 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         230 :   auto it = get_impl()-&gt;config_items_.find(key);</span></span>
-<span id="L133"><span class="lineNum">     133</span>         [<span class="tlaGBC" title="Branch 0 was taken 213 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span>]:<span class="tlaGNC">         230 :   if (it != get_impl()-&gt;config_items_.end()) {</span></span>
-<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 213 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         213 :     return it-&gt;second.value;</span></span>
+<span id="L133"><span class="lineNum">     133</span>         [<span class="tlaGBC" title="Branch 0 was taken 218 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">         230 :   if (it != get_impl()-&gt;config_items_.end()) {</span></span>
+<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 218 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         218 :     return it-&gt;second.value;</span></span>
 <span id="L135"><span class="lineNum">     135</span>                 :             :   }</span>
-<span id="L136"><span class="lineNum">     136</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :   return default_value;</span></span>
+<span id="L136"><span class="lineNum">     136</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :   return default_value;</span></span>
 <span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">         230 : }</span></span>
 <span id="L138"><span class="lineNum">     138</span>                 :             : </span>
 <span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">          16 : bool ConfigManager::has(const std::string&amp; key) const {</span></span>
@@ -406,7 +406,7 @@
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 14 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span>]
 <span id="L307"><span class="lineNum">     307</span>                 :             :                               &quot;Validation failed for key '&quot; + key + &quot;': &quot; + result.error_message);</span>
 <span id="L308"><span class="lineNum">     308</span>                 :<span class="tlaGNC">           2 :             continue;</span></span>
-<span id="L309"><span class="lineNum">     309</span>                 :             :           }</span>
+<span id="L309"><span class="lineNum">     309</span>                 :<span class="tlaGNC">           2 :           }</span></span>
 <span id="L310"><span class="lineNum">     310</span>                 :             : </span>
 <span id="L311"><span class="lineNum">     311</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :           std::any old_value = it-&gt;second.value;</span></span>
 <span id="L312"><span class="lineNum">     312</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :           it-&gt;second.value = value;</span></span>

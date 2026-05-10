@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
-            <td class="headerCovTableEntry">11</td>
-            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">6</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-10 10:01:03</td>
+            <td class="headerValue">2026-05-10 14:28:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">35.0&nbsp;%</td>
-            <td class="headerCovTableEntry">20</td>
-            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">31.2&nbsp;%</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">5</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -143,10 +143,10 @@
 <span id="L65"><span class="lineNum">      65</span>                 :             : struct LogRotationConfig {</span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :   size_t max_file_size_bytes = 10 * 1024 * 1024;    // 10MB default</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :   size_t max_files = 10;                            // Keep 10 files max</span>
-<span id="L68"><span class="lineNum">      68</span>                 :             :   bool enable_compression = false;                  // Future feature</span>
-<span id="L69"><span class="lineNum">      69</span>                 :             :   std::string file_pattern = &quot;{name}.{index}.log&quot;;  // File naming pattern</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :   bool enable_compression = false;                  // Reserved for future use</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :   std::string file_pattern = &quot;{name}.{index}.log&quot;;  // Reserved for future use</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             : </span>
-<span id="L71"><span class="lineNum">      71</span>         [<span class="tlaGBC" title="Branch 0 was taken 251 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">         753 :   LogRotationConfig() = default;</span></span>
+<span id="L71"><span class="lineNum">      71</span>         [<span class="tlaGBC" title="Branch 0 was taken 277 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">         831 :   LogRotationConfig() = default;</span></span>
 <span id="L72"><span class="lineNum">      72</span>                 :             : </span>
 <span id="L73"><span class="lineNum">      73</span>                 :             :   LogRotationConfig(size_t max_size, size_t max_count) : max_file_size_bytes(max_size), max_files(max_count) {}</span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : };</span>
@@ -156,13 +156,13 @@
 <span id="L78"><span class="lineNum">      78</span>                 :             :  */</span>
 <span id="L79"><span class="lineNum">      79</span>                 :             : struct AsyncLogConfig {</span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :   size_t max_queue_size = 10000;                     // Maximum queue size</span>
-<span id="L81"><span class="lineNum">      81</span>                 :             :   size_t batch_size = 100;                           // [IGNORED] Batch processing size (handled by spdlog)</span>
-<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">         216 :   std::chrono::milliseconds flush_interval{100};     // Flush interval</span></span>
-<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">         216 :   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :   size_t batch_size = 100;                           // Reserved; spdlog manages batching internally</span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">         224 :   std::chrono::milliseconds flush_interval{100};     // Flush interval</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">         224 :   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :   bool enable_backpressure = true;                   // Enable backpressure handling (maps to spdlog block policy)</span>
-<span id="L85"><span class="lineNum">      85</span>                 :             :   bool enable_batch_processing = true;               // [IGNORED] Enable batch processing (handled by spdlog)</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :   bool enable_batch_processing = true;               // Reserved; spdlog manages batching internally</span>
 <span id="L86"><span class="lineNum">      86</span>                 :             : </span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">         216 :   AsyncLogConfig() = default;</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">         224 :   AsyncLogConfig() = default;</span></span>
 <span id="L88"><span class="lineNum">      88</span>                 :             : </span>
 <span id="L89"><span class="lineNum">      89</span>                 :             :   AsyncLogConfig(size_t max_q, size_t batch, std::chrono::milliseconds interval)</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :       : max_queue_size(max_q), batch_size(batch), flush_interval(interval) {}</span>
@@ -208,160 +208,188 @@
 <span id="L130"><span class="lineNum">     130</span>                 :             :   LogLevel level() const;</span>
 <span id="L131"><span class="lineNum">     131</span>                 :             : </span>
 <span id="L132"><span class="lineNum">     132</span>                 :             :   /**</span>
-<span id="L133"><span class="lineNum">     133</span>                 :             :    * @brief Enable/disable console output</span>
-<span id="L134"><span class="lineNum">     134</span>                 :             :    * @param enable True to enable console output</span>
-<span id="L135"><span class="lineNum">     135</span>                 :             :    */</span>
-<span id="L136"><span class="lineNum">     136</span>                 :             :   void set_console_output(bool enable);</span>
-<span id="L137"><span class="lineNum">     137</span>                 :             : </span>
-<span id="L138"><span class="lineNum">     138</span>                 :             :   /**</span>
-<span id="L139"><span class="lineNum">     139</span>                 :             :    * @brief Set file output</span>
-<span id="L140"><span class="lineNum">     140</span>                 :             :    * @param filename Log file path (empty string to disable file output)</span>
-<span id="L141"><span class="lineNum">     141</span>                 :             :    */</span>
-<span id="L142"><span class="lineNum">     142</span>                 :             :   void set_file_output(const std::string&amp; filename);</span>
-<span id="L143"><span class="lineNum">     143</span>                 :             : </span>
-<span id="L144"><span class="lineNum">     144</span>                 :             :   /**</span>
-<span id="L145"><span class="lineNum">     145</span>                 :             :    * @brief Set file output with rotation</span>
-<span id="L146"><span class="lineNum">     146</span>                 :             :    * @param filename Log file path</span>
-<span id="L147"><span class="lineNum">     147</span>                 :             :    * @param config Rotation configuration</span>
-<span id="L148"><span class="lineNum">     148</span>                 :             :    */</span>
-<span id="L149"><span class="lineNum">     149</span>                 :             :   void set_file_output_with_rotation(const std::string&amp; filename,</span>
-<span id="L150"><span class="lineNum">     150</span>                 :             :                                      const LogRotationConfig&amp; config = LogRotationConfig{});</span>
-<span id="L151"><span class="lineNum">     151</span>                 :             : </span>
-<span id="L152"><span class="lineNum">     152</span>                 :             :   /**</span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :    * @brief Enable/disable async logging</span>
-<span id="L154"><span class="lineNum">     154</span>                 :             :    * @param enable True to enable async logging</span>
-<span id="L155"><span class="lineNum">     155</span>                 :             :    * @param config Async logging configuration</span>
-<span id="L156"><span class="lineNum">     156</span>                 :             :    */</span>
-<span id="L157"><span class="lineNum">     157</span>                 :             :   void set_async_logging(bool enable, const AsyncLogConfig&amp; config = AsyncLogConfig{});</span>
-<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
-<span id="L159"><span class="lineNum">     159</span>                 :             :   /**</span>
-<span id="L160"><span class="lineNum">     160</span>                 :             :    * @brief Check if async logging is enabled</span>
-<span id="L161"><span class="lineNum">     161</span>                 :             :    */</span>
-<span id="L162"><span class="lineNum">     162</span>                 :             :   bool async_logging_enabled() const;</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :    * @brief Check whether a message at the given level would be logged.</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :    */</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :   bool should_log(LogLevel level) const;</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : </span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :   /**</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :    * @brief Enable/disable console output</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :    * @param enable True to enable console output</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :    */</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :   void set_console_output(bool enable);</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : </span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :   /**</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :    * @brief Set file output</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :    * @param filename Log file path (empty string to disable file output)</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :    */</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :   void set_file_output(const std::string&amp; filename);</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :   /**</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :    * @brief Set file output and report whether it succeeded.</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :    * @param filename Log file path (empty string to disable file output)</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :    * @return True when the requested output state was applied</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :    */</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :   bool try_set_file_output(const std::string&amp; filename);</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             : </span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :   /**</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :    * @brief Set file output with rotation</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :    * @param filename Log file path</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :    * @param config Rotation configuration</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :    */</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :   void set_file_output_with_rotation(const std::string&amp; filename,</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :                                      const LogRotationConfig&amp; config = LogRotationConfig{});</span>
 <span id="L163"><span class="lineNum">     163</span>                 :             : </span>
 <span id="L164"><span class="lineNum">     164</span>                 :             :   /**</span>
-<span id="L165"><span class="lineNum">     165</span>                 :             :    * @brief Set log callback</span>
-<span id="L166"><span class="lineNum">     166</span>                 :             :    * @param callback Function to call for each log message</span>
-<span id="L167"><span class="lineNum">     167</span>                 :             :    */</span>
-<span id="L168"><span class="lineNum">     168</span>                 :             :   void set_callback(LogCallback callback);</span>
-<span id="L169"><span class="lineNum">     169</span>                 :             : </span>
-<span id="L170"><span class="lineNum">     170</span>                 :             :   /**</span>
-<span id="L171"><span class="lineNum">     171</span>                 :             :    * @brief Set output destinations</span>
-<span id="L172"><span class="lineNum">     172</span>                 :             :    * @param outputs Bitwise OR of LogOutput flags</span>
-<span id="L173"><span class="lineNum">     173</span>                 :             :    */</span>
-<span id="L174"><span class="lineNum">     174</span>                 :             :   void set_outputs(int outputs);</span>
-<span id="L175"><span class="lineNum">     175</span>                 :             : </span>
-<span id="L176"><span class="lineNum">     176</span>                 :             :   /**</span>
-<span id="L177"><span class="lineNum">     177</span>                 :             :    * @brief Enable/disable logging</span>
-<span id="L178"><span class="lineNum">     178</span>                 :             :    * @param enabled True to enable logging</span>
-<span id="L179"><span class="lineNum">     179</span>                 :             :    */</span>
-<span id="L180"><span class="lineNum">     180</span>                 :             :   void set_enabled(bool enabled);</span>
-<span id="L181"><span class="lineNum">     181</span>                 :             : </span>
-<span id="L182"><span class="lineNum">     182</span>                 :             :   /**</span>
-<span id="L183"><span class="lineNum">     183</span>                 :             :    * @brief Check if logging is enabled</span>
-<span id="L184"><span class="lineNum">     184</span>                 :             :    */</span>
-<span id="L185"><span class="lineNum">     185</span>                 :             :   bool enabled() const;</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
-<span id="L187"><span class="lineNum">     187</span>                 :             :   /**</span>
-<span id="L188"><span class="lineNum">     188</span>                 :             :    * @brief Set log format</span>
-<span id="L189"><span class="lineNum">     189</span>                 :             :    * @param format Format string with placeholders: {timestamp}, {level}, {component}, {operation}, {message}</span>
-<span id="L190"><span class="lineNum">     190</span>                 :             :    */</span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :   void set_format(const std::string&amp; format);</span>
-<span id="L192"><span class="lineNum">     192</span>                 :             : </span>
-<span id="L193"><span class="lineNum">     193</span>                 :             :   /**</span>
-<span id="L194"><span class="lineNum">     194</span>                 :             :    * @brief Flush all outputs</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :    * @brief Set file output with rotation and report whether it succeeded.</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :    * @param filename Log file path</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :    * @param config Rotation configuration</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :    * @return True when the requested output state was applied</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :    */</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :   bool try_set_file_output_with_rotation(const std::string&amp; filename,</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :                                          const LogRotationConfig&amp; config = LogRotationConfig{});</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :   /**</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :    * @brief Enable/disable async logging</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :    * @param enable True to enable async logging</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :    * @param config Async logging configuration</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :    */</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :   void set_async_logging(bool enable, const AsyncLogConfig&amp; config = AsyncLogConfig{});</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             : </span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :   /**</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :    * @brief Check if async logging is enabled</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :    */</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :   bool async_logging_enabled() const;</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :   /**</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :    * @brief Re-apply supported logger settings from environment variables.</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :    *</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :    * Currently supports UNILINK_LOG_LEVEL values DEBUG, INFO, WARNING, ERROR, CRITICAL, and OFF.</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :    */</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :   void reload_from_environment();</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :   /**</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :    * @brief Set log callback</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :    * @param callback Function to call for each log message</span>
 <span id="L195"><span class="lineNum">     195</span>                 :             :    */</span>
-<span id="L196"><span class="lineNum">     196</span>                 :             :   void flush();</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :   void set_callback(LogCallback callback);</span>
 <span id="L197"><span class="lineNum">     197</span>                 :             : </span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :   // Main logging functions</span>
-<span id="L199"><span class="lineNum">     199</span>                 :             :   void log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L200"><span class="lineNum">     200</span>                 :             :            const std::source_location&amp; loc = std::source_location::current());</span>
-<span id="L201"><span class="lineNum">     201</span>                 :             : </span>
-<span id="L202"><span class="lineNum">     202</span>                 :             :   void debug(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">        2234 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
-<span id="L204"><span class="lineNum">     204</span>                 :             :   void info(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L205"><span class="lineNum">     205</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         752 :             const std::source_location&amp; loc = std::source_location::current());</span></span>
-<span id="L206"><span class="lineNum">     206</span>                 :             :   void warning(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          14 :                const std::source_location&amp; loc = std::source_location::current());</span></span>
-<span id="L208"><span class="lineNum">     208</span>                 :             :   void error(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L209"><span class="lineNum">     209</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          96 :              const std::source_location&amp; loc = std::source_location::current());</span></span>
-<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaUNC" title="Branch 12 was not taken"> - </span> 
-<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 13 was not taken"> - </span>]
-<span id="L210"><span class="lineNum">     210</span>                 :             :   void critical(std::string_view component, std::string_view operation, std::string_view message,</span>
-<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           4 :                 const std::source_location&amp; loc = std::source_location::current());</span></span>
-<span id="L212"><span class="lineNum">     212</span>                 :             : </span>
-<span id="L213"><span class="lineNum">     213</span>                 :             :  private:</span>
-<span id="L214"><span class="lineNum">     214</span>                 :             :   struct Impl;</span>
-<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">        1586 :   const Impl* get_impl() const { return impl_.get(); }</span></span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">        3101 :   Impl* get_impl() { return impl_.get(); }</span></span>
-<span id="L217"><span class="lineNum">     217</span>                 :             :   std::unique_ptr&lt;Impl&gt; impl_;</span>
-<span id="L218"><span class="lineNum">     218</span>                 :             : };</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :   /**</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :    * @brief Set output destinations</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :    * @param outputs Bitwise OR of LogOutput flags</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :    */</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :   void set_outputs(int outputs);</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             : </span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :   /**</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :    * @brief Enable/disable logging</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :    * @param enabled True to enable logging</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :    */</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :   void set_enabled(bool enabled);</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             : </span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :   /**</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :    * @brief Check if logging is enabled</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :    */</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :   bool enabled() const;</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             : </span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :   /**</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :    * @brief Return true when at least one output destination is active.</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :    */</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :   bool has_outputs() const;</span>
 <span id="L219"><span class="lineNum">     219</span>                 :             : </span>
-<span id="L220"><span class="lineNum">     220</span>                 :             : /**</span>
-<span id="L221"><span class="lineNum">     221</span>                 :             :  * @brief Convenience macros for logging</span>
-<span id="L222"><span class="lineNum">     222</span>                 :             :  */</span>
-<span id="L223"><span class="lineNum">     223</span>                 :             : #define UNILINK_LOG_DEBUG(component, operation, message)                                             \</span>
-<span id="L224"><span class="lineNum">     224</span>                 :             :   do {                                                                                               \</span>
-<span id="L225"><span class="lineNum">     225</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</span>
-<span id="L226"><span class="lineNum">     226</span>                 :             :       unilink::diagnostics::Logger::instance().debug(component, operation, message);                 \</span>
-<span id="L227"><span class="lineNum">     227</span>                 :             :     }                                                                                                \</span>
-<span id="L228"><span class="lineNum">     228</span>                 :             :   } while (0)</span>
-<span id="L229"><span class="lineNum">     229</span>                 :             : </span>
-<span id="L230"><span class="lineNum">     230</span>                 :             : #define UNILINK_LOG_INFO(component, operation, message)                                             \</span>
-<span id="L231"><span class="lineNum">     231</span>                 :             :   do {                                                                                              \</span>
-<span id="L232"><span class="lineNum">     232</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</span>
-<span id="L233"><span class="lineNum">     233</span>                 :             :       unilink::diagnostics::Logger::instance().info(component, operation, message);                 \</span>
-<span id="L234"><span class="lineNum">     234</span>                 :             :     }                                                                                               \</span>
-<span id="L235"><span class="lineNum">     235</span>                 :             :   } while (0)</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :   /**</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :    * @brief Last logger configuration error, empty when the last operation succeeded.</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :    */</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :   std::string last_error() const;</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             : </span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :   /**</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :    * @brief Set log format</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :    * @param format Format string with placeholders: {timestamp}, {level}, {component}, {operation}, {source}, {file},</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :    * {line}, {function}, {message}</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :    */</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :   void set_format(const std::string&amp; format);</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             : </span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :   /**</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :    * @brief Flush all outputs</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :    */</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :   void flush();</span>
 <span id="L236"><span class="lineNum">     236</span>                 :             : </span>
-<span id="L237"><span class="lineNum">     237</span>                 :             : #define UNILINK_LOG_WARNING(component, operation, message)                                             \</span>
-<span id="L238"><span class="lineNum">     238</span>                 :             :   do {                                                                                                 \</span>
-<span id="L239"><span class="lineNum">     239</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::WARNING) { \</span>
-<span id="L240"><span class="lineNum">     240</span>                 :             :       unilink::diagnostics::Logger::instance().warning(component, operation, message);                 \</span>
-<span id="L241"><span class="lineNum">     241</span>                 :             :     }                                                                                                  \</span>
-<span id="L242"><span class="lineNum">     242</span>                 :             :   } while (0)</span>
-<span id="L243"><span class="lineNum">     243</span>                 :             : </span>
-<span id="L244"><span class="lineNum">     244</span>                 :             : #define UNILINK_LOG_ERROR(component, operation, message)                                             \</span>
-<span id="L245"><span class="lineNum">     245</span>                 :             :   do {                                                                                               \</span>
-<span id="L246"><span class="lineNum">     246</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::ERROR) { \</span>
-<span id="L247"><span class="lineNum">     247</span>                 :             :       unilink::diagnostics::Logger::instance().error(component, operation, message);                 \</span>
-<span id="L248"><span class="lineNum">     248</span>                 :             :     }                                                                                                \</span>
-<span id="L249"><span class="lineNum">     249</span>                 :             :   } while (0)</span>
-<span id="L250"><span class="lineNum">     250</span>                 :             : </span>
-<span id="L251"><span class="lineNum">     251</span>                 :             : #define UNILINK_LOG_CRITICAL(component, operation, message)                                             \</span>
-<span id="L252"><span class="lineNum">     252</span>                 :             :   do {                                                                                                  \</span>
-<span id="L253"><span class="lineNum">     253</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::CRITICAL) { \</span>
-<span id="L254"><span class="lineNum">     254</span>                 :             :       unilink::diagnostics::Logger::instance().critical(component, operation, message);                 \</span>
-<span id="L255"><span class="lineNum">     255</span>                 :             :     }                                                                                                   \</span>
-<span id="L256"><span class="lineNum">     256</span>                 :             :   } while (0)</span>
-<span id="L257"><span class="lineNum">     257</span>                 :             : </span>
-<span id="L258"><span class="lineNum">     258</span>                 :             : /**</span>
-<span id="L259"><span class="lineNum">     259</span>                 :             :  * @brief Performance logging macros for expensive operations.</span>
-<span id="L260"><span class="lineNum">     260</span>                 :             :  *</span>
-<span id="L261"><span class="lineNum">     261</span>                 :             :  * Usage: UNILINK_LOG_PERF_START and UNILINK_LOG_PERF_END must use the same</span>
-<span id="L262"><span class="lineNum">     262</span>                 :             :  * `component` and `operation` tokens, and each `operation` token must be</span>
-<span id="L263"><span class="lineNum">     263</span>                 :             :  * unique within its enclosing scope (the token becomes part of a variable name).</span>
-<span id="L264"><span class="lineNum">     264</span>                 :             :  */</span>
-<span id="L265"><span class="lineNum">     265</span>                 :             : #define UNILINK_LOG_PERF_START(component, operation)                                              \</span>
-<span id="L266"><span class="lineNum">     266</span>                 :             :   auto _perf_start_##operation =                                                                  \</span>
-<span id="L267"><span class="lineNum">     267</span>                 :             :       (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) \</span>
-<span id="L268"><span class="lineNum">     268</span>                 :             :           ? std::chrono::high_resolution_clock::now()                                             \</span>
-<span id="L269"><span class="lineNum">     269</span>                 :             :           : std::chrono::high_resolution_clock::time_point()</span>
-<span id="L270"><span class="lineNum">     270</span>                 :             : </span>
-<span id="L271"><span class="lineNum">     271</span>                 :             : #define UNILINK_LOG_PERF_END(component, operation)                                                                \</span>
-<span id="L272"><span class="lineNum">     272</span>                 :             :   do {                                                                                                            \</span>
-<span id="L273"><span class="lineNum">     273</span>                 :             :     if (unilink::diagnostics::Logger::instance().level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {              \</span>
-<span id="L274"><span class="lineNum">     274</span>                 :             :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \</span>
-<span id="L275"><span class="lineNum">     275</span>                 :             :       using _us_t = std::chrono::microseconds;                                                                    \</span>
-<span id="L276"><span class="lineNum">     276</span>                 :             :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \</span>
-<span id="L277"><span class="lineNum">     277</span>                 :             :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();             \</span>
-<span id="L278"><span class="lineNum">     278</span>                 :             :       UNILINK_LOG_DEBUG(component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;); \</span>
-<span id="L279"><span class="lineNum">     279</span>                 :             :     }                                                                                                             \</span>
-<span id="L280"><span class="lineNum">     280</span>                 :             :   } while (0)</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :   // Main logging functions</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :   void log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message,</span>
+<span id="L239"><span class="lineNum">     239</span>   [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        1074 :            const std::source_location&amp; loc = std::source_location::current());</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 3 times"> + </span> 
+<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaUNC" title="Branch 12 was not taken"> - </span> 
+<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 13 was not taken"> - </span>]
+<span id="L240"><span class="lineNum">     240</span>                 :             : </span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :   void debug(std::string_view component, std::string_view operation, std::string_view message,</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :              const std::source_location&amp; loc = std::source_location::current());</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :   void info(std::string_view component, std::string_view operation, std::string_view message,</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :             const std::source_location&amp; loc = std::source_location::current());</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :   void warning(std::string_view component, std::string_view operation, std::string_view message,</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :                const std::source_location&amp; loc = std::source_location::current());</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :   void error(std::string_view component, std::string_view operation, std::string_view message,</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :              const std::source_location&amp; loc = std::source_location::current());</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :   void critical(std::string_view component, std::string_view operation, std::string_view message,</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :                 const std::source_location&amp; loc = std::source_location::current());</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             : </span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :  private:</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :   struct Impl;</span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">        2133 :   const Impl* get_impl() const { return impl_.get(); }</span></span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :   Impl* get_impl() { return impl_.get(); }</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :   std::unique_ptr&lt;Impl&gt; impl_;</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : };</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             : </span>
+<span id="L259"><span class="lineNum">     259</span>                 :             : /**</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :  * @brief Convenience macros for logging</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :  */</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             : #define UNILINK_LOG(level, component, operation, message)                                             \</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :   do {                                                                                                \</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     const auto unilink_log_level = (level);                                                           \</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :     if (unilink::diagnostics::Logger::instance().should_log(unilink_log_level)) {                     \</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :       unilink::diagnostics::Logger::instance().log(unilink_log_level, component, operation, message); \</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :     }                                                                                                 \</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :   } while (0)</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             : </span>
+<span id="L270"><span class="lineNum">     270</span>                 :             : #define UNILINK_LOG_DEBUG(component, operation, message) \</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :   UNILINK_LOG(unilink::diagnostics::LogLevel::DEBUG, component, operation, message)</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             : </span>
+<span id="L273"><span class="lineNum">     273</span>                 :             : #define UNILINK_LOG_INFO(component, operation, message) \</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :   UNILINK_LOG(unilink::diagnostics::LogLevel::INFO, component, operation, message)</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             : </span>
+<span id="L276"><span class="lineNum">     276</span>                 :             : #define UNILINK_LOG_WARNING(component, operation, message) \</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :   UNILINK_LOG(unilink::diagnostics::LogLevel::WARNING, component, operation, message)</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             : </span>
+<span id="L279"><span class="lineNum">     279</span>                 :             : #define UNILINK_LOG_ERROR(component, operation, message) \</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :   UNILINK_LOG(unilink::diagnostics::LogLevel::ERROR, component, operation, message)</span>
 <span id="L281"><span class="lineNum">     281</span>                 :             : </span>
-<span id="L282"><span class="lineNum">     282</span>                 :             : }  // namespace diagnostics</span>
-<span id="L283"><span class="lineNum">     283</span>                 :             : }  // namespace unilink</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             : #define UNILINK_LOG_CRITICAL(component, operation, message) \</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :   UNILINK_LOG(unilink::diagnostics::LogLevel::CRITICAL, component, operation, message)</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : </span>
+<span id="L285"><span class="lineNum">     285</span>                 :             : /**</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :  * @brief Performance logging macros for expensive operations.</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :  *</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :  * Usage: UNILINK_LOG_PERF_START and UNILINK_LOG_PERF_END must use the same</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :  * `component` and `operation` tokens, and each `operation` token must be</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :  * unique within its enclosing scope (the token becomes part of a variable name).</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             :  */</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             : #define UNILINK_LOG_PERF_START(component, operation)                                               \</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :   auto _perf_start_##operation =                                                                   \</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :       (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) \</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :           ? std::chrono::high_resolution_clock::now()                                              \</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :           : std::chrono::high_resolution_clock::time_point()</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             : </span>
+<span id="L298"><span class="lineNum">     298</span>                 :             : #define UNILINK_LOG_PERF_END(component, operation)                                                    \</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :   do {                                                                                                \</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :     if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) { \</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                         \</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :       using _us_t = std::chrono::microseconds;                                                        \</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                       \</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count(); \</span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :       UNILINK_LOG(unilink::diagnostics::LogLevel::DEBUG, component, operation,                        \</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :                   &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;);                 \</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :     }                                                                                                 \</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :   } while (0)</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             : </span>
+<span id="L310"><span class="lineNum">     310</span>                 :             : }  // namespace diagnostics</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
