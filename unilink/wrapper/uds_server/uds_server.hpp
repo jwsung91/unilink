@@ -99,6 +99,8 @@ class UNILINK_API UdsServer : public ServerInterface {
   UdsServer& backpressure_threshold(size_t threshold);
   UdsServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdsServer& manage_external_context(bool manage);
+  UdsServer& batch_size(size_t size);
+  UdsServer& batch_latency(std::chrono::milliseconds latency);
 
  private:
   struct Impl;

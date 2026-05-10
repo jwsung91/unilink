@@ -47,8 +47,8 @@ struct UdpClient::Impl {
   config::UdpConfig cfg;
   std::shared_ptr<interface::Channel> channel;
   std::shared_ptr<boost::asio::io_context> external_ioc;
-  bool use_external_context{false};
-  bool manage_external_context{false};
+  std::atomic<bool> use_external_context{false};
+  std::atomic<bool> manage_external_context{false};
   std::thread external_thread;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
@@ -278,17 +278,17 @@ struct UdpClient::Impl {
           data_batch_queue_.clear();
           lock.unlock();
           handler(batch);
+          lock.lock();
         } else if (data_batch_queue_.size() == 1) {
           schedule_batch_timer();
         }
-        return;
-      }
-
-      MessageHandler handler = data_handler;
-      if (handler) {
-        lock.unlock();
-        handler(MessageContext(0, memory::SafeDataBuffer(data)));
-        lock.lock();
+      } else {
+        MessageHandler handler = data_handler;
+        if (handler) {
+          lock.unlock();
+          handler(MessageContext(0, memory::SafeDataBuffer(data)));
+          lock.lock();
+        }
       }
 
       if (framer) {
@@ -402,9 +402,7 @@ struct UdpClient::Impl {
 UdpClient::UdpClient(const config::UdpConfig& cfg) : impl_(std::make_unique<Impl>(cfg)) {}
 UdpClient::UdpClient(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
     : impl_(std::make_unique<Impl>(cfg, ioc)) {}
-UdpClient::UdpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
-  impl_->setup_internal_handlers();
-}
+UdpClient::UdpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {}
 UdpClient::~UdpClient() = default;
 
 UdpClient::UdpClient(UdpClient&&) noexcept = default;
@@ -492,8 +490,19 @@ UdpClient& UdpClient::backpressure_strategy(base::constants::BackpressureStrateg
 }
 
 UdpClient& UdpClient::manage_external_context(bool m) {
+  impl_->manage_external_context.store(m);
+  return *this;
+}
+
+UdpClient& UdpClient::batch_size(size_t size) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->manage_external_context = m;
+  impl_->max_batch_size_ = size;
+  return *this;
+}
+
+UdpClient& UdpClient::batch_latency(std::chrono::milliseconds latency) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->max_batch_latency_ = latency;
   return *this;
 }
 

@@ -100,6 +100,8 @@ class UNILINK_API TcpServer : public ServerInterface {
   TcpServer& backpressure_threshold(size_t threshold);
   TcpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   TcpServer& manage_external_context(bool manage);
+  TcpServer& batch_size(size_t size);
+  TcpServer& batch_latency(std::chrono::milliseconds latency);
 
  private:
   struct Impl;

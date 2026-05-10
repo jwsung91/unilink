@@ -221,7 +221,7 @@ UdsServerBuilder<State>& UdsServerBuilder<State>::single_client() {
 template <uint32_t State>
 UdsServerBuilder<State>& UdsServerBuilder<State>::multi_client(size_t max) {
   if (max == 0) {
-    throw std::invalid_argument("multi_client max must be greater than 0");
+    throw diagnostics::BuilderException("multi_client max must be greater than 0");
   }
   max_clients_ = static_cast<uint32_t>(max);
   client_limit_enabled_ = true;

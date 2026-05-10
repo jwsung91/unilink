@@ -199,6 +199,9 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   if (client_limit_enabled_) {
     server->max_clients(max_clients_);
   }
+  if (idle_timeout_set_) {
+    server->idle_timeout(idle_timeout_);
+  }
 
   if (auto_start_) {
     server->auto_start(true);
@@ -226,7 +229,7 @@ UdpServerBuilder<State>& UdpServerBuilder<State>::bind_address(const std::string
 }
 
 template <uint32_t State>
-UdpServerBuilder<State>& UdpServerBuilder<State>::max_clients(size_t max) {
+UdpServerBuilder<State>& UdpServerBuilder<State>::max_clients(uint32_t max) {
   max_clients_ = max;
   client_limit_enabled_ = true;
   return *this;
@@ -247,6 +250,13 @@ UdpServerBuilder<State>& UdpServerBuilder<State>::reuse_address(bool enable) {
 template <uint32_t State>
 UdpServerBuilder<State>& UdpServerBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
+  return *this;
+}
+
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
+  idle_timeout_ = timeout;
+  idle_timeout_set_ = true;
   return *this;
 }
 

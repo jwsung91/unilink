@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "test_utils.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -138,5 +139,5 @@ TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
       {
         server_ = unilink::tcp_server(test_port).multi_client(0).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
       },
-      std::invalid_argument);
+      unilink::diagnostics::BuilderException);
 }
