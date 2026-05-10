@@ -46,6 +46,7 @@ var annotated_dup =
         [ "ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
         [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", "structunilink_1_1diagnostics_1_1ErrorInfo" ],
         [ "ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", "structunilink_1_1diagnostics_1_1ErrorStats" ],
+        [ "level_range_sink", "classunilink_1_1diagnostics_1_1level__range__sink.html", "classunilink_1_1diagnostics_1_1level__range__sink" ],
         [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
         [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
         [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],

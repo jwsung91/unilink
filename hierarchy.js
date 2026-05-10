@@ -117,6 +117,9 @@ var hierarchy =
       [ "unilink::wrapper::UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", null ]
     ] ],
     [ "unilink::wrapper::UdpServer::Impl::SessionEntry", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html", null ],
+    [ "spdlog::sinks::sink", null, [
+      [ "unilink::diagnostics::level_range_sink", "classunilink_1_1diagnostics_1_1level__range__sink.html", null ]
+    ] ],
     [ "std::span", null, [
       [ "unilink::memory::SafeSpan< T, Extent >", "classunilink_1_1memory_1_1SafeSpan.html", null ]
     ] ],

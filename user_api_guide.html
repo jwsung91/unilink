@@ -976,7 +976,9 @@ Basic Usage</h2>
 <div class="line"><span class="comment">// Configure logger</span></div>
 <div class="line">logger.set_level(<a class="code hl_enumvalue" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>);</div>
 <div class="line">logger.set_console_output(<span class="keyword">true</span>);</div>
-<div class="line">logger.set_file_output(<span class="stringliteral">&quot;app.log&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span> (!logger.try_set_file_output(<span class="stringliteral">&quot;app.log&quot;</span>)) {</div>
+<div class="line">  std::cerr &lt;&lt; logger.last_error() &lt;&lt; std::endl;</div>
+<div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Log messages</span></div>
 <div class="line">logger.debug(<span class="stringliteral">&quot;component&quot;</span>, <span class="stringliteral">&quot;operation&quot;</span>, <span class="stringliteral">&quot;Debug message&quot;</span>);</div>
@@ -984,8 +986,15 @@ Basic Usage</h2>
 <div class="line">logger.warning(<span class="stringliteral">&quot;component&quot;</span>, <span class="stringliteral">&quot;operation&quot;</span>, <span class="stringliteral">&quot;Warning message&quot;</span>);</div>
 <div class="line">logger.error(<span class="stringliteral">&quot;component&quot;</span>, <span class="stringliteral">&quot;operation&quot;</span>, <span class="stringliteral">&quot;Error message&quot;</span>);</div>
 <div class="line">logger.critical(<span class="stringliteral">&quot;component&quot;</span>, <span class="stringliteral">&quot;operation&quot;</span>, <span class="stringliteral">&quot;Critical message&quot;</span>);</div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00246">logger.cc:246</a></div></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Macro form keeps source location at the call site and avoids formatting filtered messages</span></div>
+<div class="line"><a class="code hl_define" href="logger_8hpp.html#a2ab137835ef53e0ae2575f24c3a7785e">UNILINK_LOG</a>(<a class="code hl_enumvalue" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a>, <span class="stringliteral">&quot;component&quot;</span>, <span class="stringliteral">&quot;operation&quot;</span>, <span class="stringliteral">&quot;Info message&quot;</span>);</div>
+<div class="line"><a class="code hl_define" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">UNILINK_LOG_INFO</a>(<span class="stringliteral">&quot;component&quot;</span>, <span class="stringliteral">&quot;operation&quot;</span>, <span class="stringliteral">&quot;Info message&quot;</span>);</div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00437">logger.cc:437</a></div></div>
 <div class="ttc" id="alogger_8hpp_html"><div class="ttname"><a href="logger_8hpp.html">logger.hpp</a></div></div>
+<div class="ttc" id="alogger_8hpp_html_a2ab137835ef53e0ae2575f24c3a7785e"><div class="ttname"><a href="logger_8hpp.html#a2ab137835ef53e0ae2575f24c3a7785e">UNILINK_LOG</a></div><div class="ttdeci">#define UNILINK_LOG(level, component, operation, message)</div><div class="ttdoc">Convenience macros for logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00262">logger.hpp:262</a></div></div>
+<div class="ttc" id="alogger_8hpp_html_ab49f7375e915c38d565d7247094e3565"><div class="ttname"><a href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">UNILINK_LOG_INFO</a></div><div class="ttdeci">#define UNILINK_LOG_INFO(component, operation, message)</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00273">logger.hpp:273</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a></div><div class="ttdeci">@ INFO</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a></div><div class="ttdeci">@ DEBUG</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md550"></a>
 Log Levels</h2>
@@ -1007,18 +1016,27 @@ Log Levels</h2>
 Async Logging</h2>
 <div class="fragment"><div class="line"><span class="comment">// Enable async logging for better performance</span></div>
 <div class="line"><a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
-<div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a> = 100;                    <span class="comment">// Process 100 logs at once</span></div>
+<div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aa94c79ae427e4cf21aaaa2eafaa18247">max_queue_size</a> = 10000;              <span class="comment">// Queue capacity</span></div>
+<div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#a41036d0ccef78d54a90ab808172b48a0">enable_backpressure</a> = <span class="keyword">true</span>;          <span class="comment">// Block when the queue is full</span></div>
 <div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">flush_interval</a> = std::chrono::milliseconds(1000); <span class="comment">// Flush every 1 second</span></div>
 <div class="line"> </div>
 <div class="line">logger.set_async_logging(<span class="keyword">true</span>, config);</div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a></div><div class="ttdoc">Async logging configuration.</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00079">logger.hpp:79</a></div></div>
-<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aca0467bc46f99891373b0338a43e5790"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">unilink::diagnostics::AsyncLogConfig::batch_size</a></div><div class="ttdeci">size_t batch_size</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00081">logger.hpp:81</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_a41036d0ccef78d54a90ab808172b48a0"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#a41036d0ccef78d54a90ab808172b48a0">unilink::diagnostics::AsyncLogConfig::enable_backpressure</a></div><div class="ttdeci">bool enable_backpressure</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00084">logger.hpp:84</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aa94c79ae427e4cf21aaaa2eafaa18247"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aa94c79ae427e4cf21aaaa2eafaa18247">unilink::diagnostics::AsyncLogConfig::max_queue_size</a></div><div class="ttdeci">size_t max_queue_size</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00080">logger.hpp:80</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_ad45fd1ba0889c92320635c03db237cea"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">unilink::diagnostics::AsyncLogConfig::flush_interval</a></div><div class="ttdeci">std::chrono::milliseconds flush_interval</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00082">logger.hpp:82</a></div></div>
-</div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md553"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md552"></a>
+Custom Format</h2>
+<div class="fragment"><div class="line">logger.set_format(<span class="stringliteral">&quot;{timestamp} [{level}] [{component}] [{operation}] {message}&quot;</span>);</div>
+</div><!-- fragment --><p>Supported placeholders are <code>{timestamp}</code>, <code>{level}</code>, <code>{component}</code>, <code>{operation}</code>, <code>{source}</code>, <code>{file}</code>, <code>{line}</code>, <code>{function}</code>, and <code>{message}</code>.</p>
+<h2><a class="anchor" id="autotoc_md553"></a>
+Environment</h2>
+<p><code>UNILINK_LOG_LEVEL</code> can be set to <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>, <code>CRITICAL</code>, or <code>OFF</code>. The logger reads it during initialization; call <code>logger.reload_from_environment()</code> to re-apply it later.</p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md555"></a>
 Configuration Management</h1>
 <p>_(Available when built with <code>UNILINK_ENABLE_CONFIG=ON</code>)_</p>
-<h2><a class="anchor" id="autotoc_md554"></a>
+<h2><a class="anchor" id="autotoc_md556"></a>
 Load Configuration from File</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;any&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="config__factory_8hpp.html">unilink/config/config_factory.hpp</a>&quot;</span></div>
@@ -1039,7 +1057,7 @@ Load Configuration from File</h2>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a60eed69944010bf2b5efd5d2991264a5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a60eed69944010bf2b5efd5d2991264a5">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder&lt; State &gt; &amp; retry_interval(std::chrono::milliseconds interval)</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00098">tcp_client_builder.cc:98</a></div></div>
 <div class="ttc" id="aclassunilink_1_1config_1_1ConfigFactory_html_a4edec9716691c78976092f69d6810ae5"><div class="ttname"><a href="classunilink_1_1config_1_1ConfigFactory.html#a4edec9716691c78976092f69d6810ae5">unilink::config::ConfigFactory::create_with_defaults</a></div><div class="ttdeci">static std::shared_ptr&lt; ConfigManagerInterface &gt; create_with_defaults()</div><div class="ttdef"><b>Definition</b> <a href="config__factory_8cc_source.html#l00031">config_factory.cc:31</a></div></div>
 <div class="ttc" id="aconfig__factory_8hpp_html"><div class="ttname"><a href="config__factory_8hpp.html">config_factory.hpp</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md555"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md557"></a>
 Configuration File Format</h2>
 <p>The current configuration manager reads simple <code>key=value</code> files.</p>
 <div class="fragment"><div class="line"># unilink.conf</div>
@@ -1055,9 +1073,9 @@ Configuration File Format</h2>
 <div class="line">serial.retry_interval_ms=5000</div>
 </div><!-- fragment --><p>Common preset keys are populated by <code><a class="el" href="classunilink_1_1config_1_1ConfigPresets.html">unilink::config::ConfigPresets</a></code> through <code>ConfigFactory::create_with_defaults()</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md557"></a>
+<h1><a class="anchor" id="autotoc_md559"></a>
 Best Practices</h1>
-<h2><a class="anchor" id="autotoc_md558"></a>
+<h2><a class="anchor" id="autotoc_md560"></a>
 1. Always Handle Errors</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#aa3078b3010a37b52fb7068bb8cdaa62b">on_error</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::ErrorContext</a>&amp; ctx) {</div>
@@ -1065,7 +1083,7 @@ Best Practices</h1>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_aa3078b3010a37b52fb7068bb8cdaa62b"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#aa3078b3010a37b52fb7068bb8cdaa62b">unilink::builder::BuilderInterface::on_error</a></div><div class="ttdeci">auto on_error(F &amp;&amp;handler)</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00145">ibuilder.hpp:145</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md559"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md561"></a>
 2. Use Explicit Lifecycle Control</h2>
 <div class="fragment"><div class="line"><span class="comment">// Always use explicit start/stop for clarity</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
@@ -1075,7 +1093,7 @@ Best Practices</h1>
 <div class="line">client-&gt;start();  <span class="comment">// Start when ready</span></div>
 <div class="line"><span class="comment">// ... use the client ...</span></div>
 <div class="line">client-&gt;stop();   <span class="comment">// Stop when done</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md560"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md562"></a>
 3. Set Appropriate Retry Intervals</h2>
 <div class="fragment"><div class="line"><span class="comment">// Fast retry for local connections</span></div>
 <div class="line"><span class="keyword">auto</span> local_client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
@@ -1086,13 +1104,13 @@ Best Practices</h1>
 <div class="line"><span class="keyword">auto</span> remote_client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;remote.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a60eed69944010bf2b5efd5d2991264a5">retry_interval</a>(10000ms)  <span class="comment">// 10 seconds</span></div>
 <div class="line">    .build();</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md561"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md563"></a>
 4. Enable Logging for Debugging</h2>
 <div class="fragment"><div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">set_level</a>(<a class="code hl_enumvalue" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>);</div>
 <div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">set_console_output</a>(<span class="keyword">true</span>);</div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2f634f2d64d5be96bd683f3c527a6416"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">unilink::diagnostics::Logger::set_console_output</a></div><div class="ttdeci">void set_console_output(bool enable)</div><div class="ttdoc">Enable/disable console output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00260">logger.cc:260</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7e8ec37c982ad0a16b56ad33ae62932b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">unilink::diagnostics::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00253">logger.cc:253</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md562"></a>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2f634f2d64d5be96bd683f3c527a6416"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">unilink::diagnostics::Logger::set_console_output</a></div><div class="ttdeci">void set_console_output(bool enable)</div><div class="ttdoc">Enable/disable console output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00459">logger.cc:459</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7e8ec37c982ad0a16b56ad33ae62932b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">unilink::diagnostics::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00444">logger.cc:444</a></div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md564"></a>
 5. Use Member Functions for OOP Design</h2>
 <div class="fragment"><div class="line"><span class="keyword">class </span>MyApplication {</div>
 <div class="line">    std::unique_ptr&lt;unilink::TcpClient&gt; client_;</div>
@@ -1106,26 +1124,27 @@ Best Practices</h1>
 <div class="line">    }</div>
 <div class="line">};</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md564"></a>
+<h1><a class="anchor" id="autotoc_md566"></a>
 Performance Tips</h1>
-<h2><a class="anchor" id="autotoc_md565"></a>
+<h2><a class="anchor" id="autotoc_md567"></a>
 1. Use Independent Context for Testing Only</h2>
 <div class="fragment"><div class="line"><span class="comment">// Testing (isolated IO thread)</span></div>
 <div class="line">.independent_context(<span class="keyword">true</span>)</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Production (shared IO thread - more efficient)</span></div>
 <div class="line">.independent_context(<span class="keyword">false</span>)  <span class="comment">// default</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md566"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md568"></a>
 2. Enable Async Logging</h2>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
 <div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a> = 100;</div>
 <div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">set_async_logging</a>(<span class="keyword">true</span>, config);</div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00313">logger.cc:313</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00527">logger.cc:527</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aca0467bc46f99891373b0338a43e5790"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">unilink::diagnostics::AsyncLogConfig::batch_size</a></div><div class="ttdeci">size_t batch_size</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00081">logger.hpp:81</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md568"></a>
+<h1><a class="anchor" id="autotoc_md570"></a>
 Backpressure Strategy</h1>
 <p>When a sender produces data faster than the network can deliver it, messages accumulate in the send queue. The <code>BackpressureStrategy</code> enum controls what happens when the queue approaches its threshold — trading off <b>completeness</b> against <b>freshness</b>.</p>
-<h2><a class="anchor" id="autotoc_md569"></a>
+<h2><a class="anchor" id="autotoc_md571"></a>
 Strategies</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -1137,7 +1156,7 @@ Strategies</h2>
 </table>
 <p><code>Reliable</code> is the default for all transports. It is the safe choice: no data is silently discarded.</p>
 <p><code>BestEffort</code> is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The <code>on_backpressure</code> callback fires each time the queue is flushed so callers can observe drops.</p>
-<h2><a class="anchor" id="autotoc_md570"></a>
+<h2><a class="anchor" id="autotoc_md572"></a>
 When to use each</h2>
 <p><b>Use <code>Reliable</code> (default) when:</b></p><ul>
 <li>Reliability is critical: file transfers, command sequences, logs, financial data</li>
@@ -1149,7 +1168,7 @@ When to use each</h2>
 <li>You are streaming robot joint angles, camera frames, or GNSS positions over a slow link</li>
 <li>A stale value is worse than a dropped value</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md571"></a>
+<h2><a class="anchor" id="autotoc_md573"></a>
 C++ Usage</h2>
 <p>Set the strategy via the transport config before starting:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
@@ -1188,7 +1207,7 @@ C++ Usage</h2>
 </div><!-- fragment --><p>The strategy can also be changed at runtime on a running transport:</p>
 <div class="fragment"><div class="line"><span class="comment">// Switch strategy dynamically (e.g. entering a high-rate burst mode)</span></div>
 <div class="line">client-&gt;set_backpressure_strategy(BackpressureStrategy::BestEffort);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md572"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md574"></a>
 Python Usage</h2>
 <div class="fragment"><div class="line"><span class="keyword">import</span> unilink_py <span class="keyword">as</span> unilink</div>
 <div class="line"> </div>
@@ -1197,7 +1216,7 @@ Python Usage</h2>
 <div class="line">client.backpressure_strategy  = unilink.BackpressureStrategy.BestEffort</div>
 <div class="line">client.start()</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdoc">Modernized TCP Client Wrapper.</div><div class="ttdef"><b>Definition</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00047">tcp_client.hpp:47</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md573"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md575"></a>
 Thresholds</h2>
 <p>Unilink uses <b>Dynamic Defaults</b> for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:</p>
 <table class="markdownTable">
@@ -1218,9 +1237,9 @@ Thresholds</h2>
 <td class="markdownTableBodyLeft">Hard cap (<code>bp_limit_</code>)   </td><td class="markdownTableBodyLeft">≥ 4 MiB   </td><td class="markdownTableBodyLeft">Per-message reject limit   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md575"></a>
+<h1><a class="anchor" id="autotoc_md577"></a>
 Security</h1>
-<h2><a class="anchor" id="autotoc_md576"></a>
+<h2><a class="anchor" id="autotoc_md578"></a>
 Validate All Input</h2>
 <p>Always validate data received from the network before processing it.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
@@ -1234,7 +1253,7 @@ Validate All Input</h2>
 <div class="line">    }</div>
 <div class="line">    process_message(msg);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md577"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md579"></a>
 Rate Limiting</h2>
 <p>Protect your server from abuse by limiting requests per client.</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>RateLimiter {</div>
@@ -1256,7 +1275,7 @@ Rate Limiting</h2>
 <div class="line">    <span class="keywordflow">if</span> (!limiter.is_allowed(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>())) <span class="keywordflow">return</span>;</div>
 <div class="line">    process_data(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>(), std::string(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>()));</div>
 <div class="line">});</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md578"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md580"></a>
 Connection Limits</h2>
 <p>Use <code>.multi_client(N)</code> to cap simultaneous connections, or enforce limits manually:</p>
 <div class="fragment"><div class="line"><span class="comment">// Built-in limit via builder</span></div>
@@ -1270,7 +1289,7 @@ Connection Limits</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 10 2026 09:54:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 10 2026 14:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

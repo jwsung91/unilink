@@ -10,12 +10,13 @@ var searchData=
   ['unilink_5fexport_7',['UNILINK_EXPORT',['../visibility_8hpp.html#a6bc7164dbe841703008a07aa5c7dc81d',1,'visibility.hpp']]],
   ['unilink_5ffeature_5flevel_8',['UNILINK_FEATURE_LEVEL',['../platform_8hpp.html#aab65e8c2881837b14f4a4622d3cd07db',1,'platform.hpp']]],
   ['unilink_5flocal_9',['UNILINK_LOCAL',['../visibility_8hpp.html#a768a108034a8fe14866b0f0a4673cfd6',1,'visibility.hpp']]],
-  ['unilink_5flog_5fcritical_10',['UNILINK_LOG_CRITICAL',['../logger_8hpp.html#adbcc470aa88aac2aac6ae713a2715531',1,'logger.hpp']]],
-  ['unilink_5flog_5fdebug_11',['UNILINK_LOG_DEBUG',['../logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e',1,'logger.hpp']]],
-  ['unilink_5flog_5ferror_12',['UNILINK_LOG_ERROR',['../logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e',1,'logger.hpp']]],
-  ['unilink_5flog_5finfo_13',['UNILINK_LOG_INFO',['../logger_8hpp.html#ab49f7375e915c38d565d7247094e3565',1,'logger.hpp']]],
-  ['unilink_5flog_5fperf_5fend_14',['UNILINK_LOG_PERF_END',['../logger_8hpp.html#aa8aed21d2fc4d95311ed6f292df6dd56',1,'logger.hpp']]],
-  ['unilink_5flog_5fperf_5fstart_15',['UNILINK_LOG_PERF_START',['../logger_8hpp.html#a3637a26f418d4d14dfd68fd2ee374fd6',1,'logger.hpp']]],
-  ['unilink_5flog_5fwarning_16',['UNILINK_LOG_WARNING',['../logger_8hpp.html#aa917f1cb16e9feb541d8ad6d14a4aa6a',1,'logger.hpp']]],
-  ['unilink_5fno_5fexport_17',['UNILINK_NO_EXPORT',['../visibility_8hpp.html#a7d22c17e5ca905a1548908e2b35d5e80',1,'visibility.hpp']]]
+  ['unilink_5flog_10',['UNILINK_LOG',['../logger_8hpp.html#a2ab137835ef53e0ae2575f24c3a7785e',1,'logger.hpp']]],
+  ['unilink_5flog_5fcritical_11',['UNILINK_LOG_CRITICAL',['../logger_8hpp.html#adbcc470aa88aac2aac6ae713a2715531',1,'logger.hpp']]],
+  ['unilink_5flog_5fdebug_12',['UNILINK_LOG_DEBUG',['../logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e',1,'logger.hpp']]],
+  ['unilink_5flog_5ferror_13',['UNILINK_LOG_ERROR',['../logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e',1,'logger.hpp']]],
+  ['unilink_5flog_5finfo_14',['UNILINK_LOG_INFO',['../logger_8hpp.html#ab49f7375e915c38d565d7247094e3565',1,'logger.hpp']]],
+  ['unilink_5flog_5fperf_5fend_15',['UNILINK_LOG_PERF_END',['../logger_8hpp.html#aa8aed21d2fc4d95311ed6f292df6dd56',1,'logger.hpp']]],
+  ['unilink_5flog_5fperf_5fstart_16',['UNILINK_LOG_PERF_START',['../logger_8hpp.html#a3637a26f418d4d14dfd68fd2ee374fd6',1,'logger.hpp']]],
+  ['unilink_5flog_5fwarning_17',['UNILINK_LOG_WARNING',['../logger_8hpp.html#aa917f1cb16e9feb541d8ad6d14a4aa6a',1,'logger.hpp']]],
+  ['unilink_5fno_5fexport_18',['UNILINK_NO_EXPORT',['../visibility_8hpp.html#a7d22c17e5ca905a1548908e2b35d5e80',1,'visibility.hpp']]]
 ];

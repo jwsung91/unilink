@@ -4,14 +4,14 @@ var searchData=
   ['4_20common_20utilities_1',['4. Common Utilities',['../index.html#autotoc_md111',1,'']]],
   ['4_20common_20utilities_20layer_2',['4. Common Utilities Layer',['../index.html#autotoc_md105',1,'']]],
   ['4_20debug_20reports_3',['4. Debug Reports',['../contrib_arch_memory.html#autotoc_md47',1,'']]],
-  ['4_20enable_20logging_20for_20debugging_4',['4. Enable Logging for Debugging',['../user_api_guide.html#autotoc_md561',1,'']]],
+  ['4_20enable_20logging_20for_20debugging_4',['4. Enable Logging for Debugging',['../user_api_guide.html#autotoc_md563',1,'']]],
   ['4_20externally_20supplied_20tt_20io_5fcontext_20tt_20can_20be_20reused_5',['4. Externally supplied &lt;tt&gt;io_context&lt;/tt&gt; can be reused',['../contrib_arch_wrapper.html#autotoc_md248',1,'']]],
   ['4_20memory_20tracking_6',['4. Memory Tracking',['../contrib_arch_memory.html#autotoc_md73',1,'']]],
   ['4_20safe_20data_20buffer_7',['4. Safe Data Buffer',['../index.html#autotoc_md135',1,'']]],
   ['4_20singleton_20pattern_8',['4. Singleton Pattern',['../index.html#autotoc_md117',1,'']]],
-  ['4_20when_20to_20use_20async_20vs_20sync_9',['4. When to Use Async vs Sync',['../user_tutorial_async.html#autotoc_md883',1,'']]],
+  ['4_20when_20to_20use_20async_20vs_20sync_9',['4. When to Use Async vs Sync',['../user_tutorial_async.html#autotoc_md885',1,'']]],
   ['4_3a_20build_20with_20custom_20boost_20location_10',['Example 4: Build with Custom Boost Location',['../contrib_build.html#autotoc_md288',1,'']]],
-  ['4_3a_20git_20submodule_20integration_11',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md607',1,'']]],
-  ['4_3a_20run_20both_20programs_12',['Step 4: Run Both Programs',['../tutorial_05.html#autotoc_md864',1,'']]],
-  ['4_3a_20test_20with_20a_20second_20terminal_13',['Step 4: Test With A Second Terminal',['../tutorial_04.html#autotoc_md847',1,'']]]
+  ['4_3a_20git_20submodule_20integration_11',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md609',1,'']]],
+  ['4_3a_20run_20both_20programs_12',['Step 4: Run Both Programs',['../tutorial_05.html#autotoc_md866',1,'']]],
+  ['4_3a_20test_20with_20a_20second_20terminal_13',['Step 4: Test With A Second Terminal',['../tutorial_04.html#autotoc_md849',1,'']]]
 ];

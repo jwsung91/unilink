@@ -52,91 +52,91 @@ var NAVTREE =
       [ "🔧 For Contributors", "docs_index.html#autotoc_md464", null ],
       [ "Examples and Tests", "docs_index.html#autotoc_md466", null ],
       [ "User Guide", "user_index.html", [
-        [ "Getting Started", "user_index.html#autotoc_md587", null ],
-        [ "API Reference", "user_index.html#autotoc_md589", null ],
-        [ "Tutorials", "user_index.html#autotoc_md591", null ],
-        [ "Guides", "user_index.html#autotoc_md593", null ],
+        [ "Getting Started", "user_index.html#autotoc_md589", null ],
+        [ "API Reference", "user_index.html#autotoc_md591", null ],
+        [ "Tutorials", "user_index.html#autotoc_md593", null ],
+        [ "Guides", "user_index.html#autotoc_md595", null ],
         [ "Unilink Quick Start Guide", "user_quickstart.html", [
-          [ "Installation", "user_quickstart.html#autotoc_md658", [
-            [ "Prerequisites", "user_quickstart.html#autotoc_md659", null ],
-            [ "Build & Install", "user_quickstart.html#autotoc_md660", null ]
+          [ "Installation", "user_quickstart.html#autotoc_md660", [
+            [ "Prerequisites", "user_quickstart.html#autotoc_md661", null ],
+            [ "Build & Install", "user_quickstart.html#autotoc_md662", null ]
           ] ],
-          [ "Your First TCP Client", "user_quickstart.html#autotoc_md662", null ],
-          [ "Your First TCP Server", "user_quickstart.html#autotoc_md664", null ],
-          [ "Your First Serial Device", "user_quickstart.html#autotoc_md666", null ],
-          [ "Common Patterns", "user_quickstart.html#autotoc_md668", [
-            [ "Pattern 1: Auto-Reconnection", "user_quickstart.html#autotoc_md669", null ],
-            [ "Pattern 2: Error Handling", "user_quickstart.html#autotoc_md670", null ],
-            [ "Pattern 3: Connection Limits (optional)", "user_quickstart.html#autotoc_md671", null ]
+          [ "Your First TCP Client", "user_quickstart.html#autotoc_md664", null ],
+          [ "Your First TCP Server", "user_quickstart.html#autotoc_md666", null ],
+          [ "Your First Serial Device", "user_quickstart.html#autotoc_md668", null ],
+          [ "Common Patterns", "user_quickstart.html#autotoc_md670", [
+            [ "Pattern 1: Auto-Reconnection", "user_quickstart.html#autotoc_md671", null ],
+            [ "Pattern 2: Error Handling", "user_quickstart.html#autotoc_md672", null ],
+            [ "Pattern 3: Connection Limits (optional)", "user_quickstart.html#autotoc_md673", null ]
           ] ],
-          [ "Next Steps", "user_quickstart.html#autotoc_md673", null ],
-          [ "Troubleshooting", "user_quickstart.html#autotoc_md675", [
-            [ "Can't connect to server?", "user_quickstart.html#autotoc_md676", null ],
-            [ "Port already in use?", "user_quickstart.html#autotoc_md677", null ],
-            [ "Need independent IO thread?", "user_quickstart.html#autotoc_md678", null ]
+          [ "Next Steps", "user_quickstart.html#autotoc_md675", null ],
+          [ "Troubleshooting", "user_quickstart.html#autotoc_md677", [
+            [ "Can't connect to server?", "user_quickstart.html#autotoc_md678", null ],
+            [ "Port already in use?", "user_quickstart.html#autotoc_md679", null ],
+            [ "Need independent IO thread?", "user_quickstart.html#autotoc_md680", null ]
           ] ],
-          [ "Support", "user_quickstart.html#autotoc_md680", null ]
+          [ "Support", "user_quickstart.html#autotoc_md682", null ]
         ] ],
         [ "Installation Guide", "user_installation.html", [
-          [ "Prerequisites", "user_installation.html#autotoc_md595", null ],
-          [ "Installation Methods", "user_installation.html#autotoc_md596", [
-            [ "Method 1: vcpkg (Recommended)", "user_installation.html#autotoc_md597", [
-              [ "Step 1: Install via vcpkg", "user_installation.html#autotoc_md598", null ],
-              [ "Step 2: Use in your project", "user_installation.html#autotoc_md599", null ]
+          [ "Prerequisites", "user_installation.html#autotoc_md597", null ],
+          [ "Installation Methods", "user_installation.html#autotoc_md598", [
+            [ "Method 1: vcpkg (Recommended)", "user_installation.html#autotoc_md599", [
+              [ "Step 1: Install via vcpkg", "user_installation.html#autotoc_md600", null ],
+              [ "Step 2: Use in your project", "user_installation.html#autotoc_md601", null ]
             ] ],
-            [ "Method 2: Install from Source (CMake Package)", "user_installation.html#autotoc_md600", [
-              [ "Step 1: Build and install", "user_installation.html#autotoc_md601", null ],
-              [ "Step 2: Use in your project", "user_installation.html#autotoc_md602", null ]
+            [ "Method 2: Install from Source (CMake Package)", "user_installation.html#autotoc_md602", [
+              [ "Step 1: Build and install", "user_installation.html#autotoc_md603", null ],
+              [ "Step 2: Use in your project", "user_installation.html#autotoc_md604", null ]
             ] ],
-            [ "Method 3: Release Packages", "user_installation.html#autotoc_md603", [
-              [ "Step 1: Download and extract", "user_installation.html#autotoc_md604", null ],
-              [ "Step 2: Install", "user_installation.html#autotoc_md605", null ],
-              [ "Step 3: Use in your project", "user_installation.html#autotoc_md606", null ]
+            [ "Method 3: Release Packages", "user_installation.html#autotoc_md605", [
+              [ "Step 1: Download and extract", "user_installation.html#autotoc_md606", null ],
+              [ "Step 2: Install", "user_installation.html#autotoc_md607", null ],
+              [ "Step 3: Use in your project", "user_installation.html#autotoc_md608", null ]
             ] ],
-            [ "Method 4: Git Submodule Integration", "user_installation.html#autotoc_md607", [
-              [ "Step 1: Add submodule", "user_installation.html#autotoc_md608", null ],
-              [ "Step 2: Use in CMake", "user_installation.html#autotoc_md609", null ]
+            [ "Method 4: Git Submodule Integration", "user_installation.html#autotoc_md609", [
+              [ "Step 1: Add submodule", "user_installation.html#autotoc_md610", null ],
+              [ "Step 2: Use in CMake", "user_installation.html#autotoc_md611", null ]
             ] ]
           ] ],
-          [ "Packaging Notes", "user_installation.html#autotoc_md610", null ],
-          [ "Build Options (Source Builds)", "user_installation.html#autotoc_md611", null ],
-          [ "Next Steps", "user_installation.html#autotoc_md612", null ]
+          [ "Packaging Notes", "user_installation.html#autotoc_md612", null ],
+          [ "Build Options (Source Builds)", "user_installation.html#autotoc_md613", null ],
+          [ "Next Steps", "user_installation.html#autotoc_md614", null ]
         ] ],
         [ "System Requirements", "user_requirements.html", [
-          [ "System Requirements", "user_requirements.html#autotoc_md682", [
-            [ "Recommended Platform", "user_requirements.html#autotoc_md683", null ],
-            [ "Supported Platforms", "user_requirements.html#autotoc_md684", null ]
+          [ "System Requirements", "user_requirements.html#autotoc_md684", [
+            [ "Recommended Platform", "user_requirements.html#autotoc_md685", null ],
+            [ "Supported Platforms", "user_requirements.html#autotoc_md686", null ]
           ] ],
-          [ "Dependencies", "user_requirements.html#autotoc_md686", [
-            [ "Core Library Dependencies", "user_requirements.html#autotoc_md687", null ],
-            [ "Dependency Details", "user_requirements.html#autotoc_md688", null ]
+          [ "Dependencies", "user_requirements.html#autotoc_md688", [
+            [ "Core Library Dependencies", "user_requirements.html#autotoc_md689", null ],
+            [ "Dependency Details", "user_requirements.html#autotoc_md690", null ]
           ] ],
-          [ "Compiler Requirements", "user_requirements.html#autotoc_md690", [
-            [ "Minimum Compiler Versions", "user_requirements.html#autotoc_md691", null ],
-            [ "C++ Standard", "user_requirements.html#autotoc_md692", null ]
+          [ "Compiler Requirements", "user_requirements.html#autotoc_md692", [
+            [ "Minimum Compiler Versions", "user_requirements.html#autotoc_md693", null ],
+            [ "C++ Standard", "user_requirements.html#autotoc_md694", null ]
           ] ],
-          [ "Runtime Requirements", "user_requirements.html#autotoc_md694", [
-            [ "For Applications Using unilink", "user_requirements.html#autotoc_md695", null ],
-            [ "Thread Support", "user_requirements.html#autotoc_md696", null ]
+          [ "Runtime Requirements", "user_requirements.html#autotoc_md696", [
+            [ "For Applications Using unilink", "user_requirements.html#autotoc_md697", null ],
+            [ "Thread Support", "user_requirements.html#autotoc_md698", null ]
           ] ],
-          [ "Platform-Specific Notes", "user_requirements.html#autotoc_md698", [
-            [ "Ubuntu 22.04 LTS", "user_requirements.html#autotoc_md699", null ],
-            [ "Ubuntu ARM64 / Jetson Orin Nano", "user_requirements.html#autotoc_md700", null ],
-            [ "Ubuntu 20.04 LTS", "user_requirements.html#autotoc_md701", null ],
-            [ "Other Linux Distributions", "user_requirements.html#autotoc_md702", null ]
+          [ "Platform-Specific Notes", "user_requirements.html#autotoc_md700", [
+            [ "Ubuntu 22.04 LTS", "user_requirements.html#autotoc_md701", null ],
+            [ "Ubuntu ARM64 / Jetson Orin Nano", "user_requirements.html#autotoc_md702", null ],
+            [ "Ubuntu 20.04 LTS", "user_requirements.html#autotoc_md703", null ],
+            [ "Other Linux Distributions", "user_requirements.html#autotoc_md704", null ]
           ] ],
-          [ "Verifying Your Environment", "user_requirements.html#autotoc_md704", [
-            [ "Check Compiler Version", "user_requirements.html#autotoc_md705", null ],
-            [ "Check CMake Version", "user_requirements.html#autotoc_md706", null ],
-            [ "Check Boost Version", "user_requirements.html#autotoc_md707", null ],
-            [ "Quick Environment Test", "user_requirements.html#autotoc_md708", null ]
+          [ "Verifying Your Environment", "user_requirements.html#autotoc_md706", [
+            [ "Check Compiler Version", "user_requirements.html#autotoc_md707", null ],
+            [ "Check CMake Version", "user_requirements.html#autotoc_md708", null ],
+            [ "Check Boost Version", "user_requirements.html#autotoc_md709", null ],
+            [ "Quick Environment Test", "user_requirements.html#autotoc_md710", null ]
           ] ],
-          [ "Troubleshooting", "user_requirements.html#autotoc_md710", [
-            [ "Problem: Compiler Too Old", "user_requirements.html#autotoc_md711", null ],
-            [ "Problem: Boost Not Found", "user_requirements.html#autotoc_md712", null ],
-            [ "Problem: CMake Too Old", "user_requirements.html#autotoc_md713", null ]
+          [ "Troubleshooting", "user_requirements.html#autotoc_md712", [
+            [ "Problem: Compiler Too Old", "user_requirements.html#autotoc_md713", null ],
+            [ "Problem: Boost Not Found", "user_requirements.html#autotoc_md714", null ],
+            [ "Problem: CMake Too Old", "user_requirements.html#autotoc_md715", null ]
           ] ],
-          [ "Next Steps", "user_requirements.html#autotoc_md715", null ]
+          [ "Next Steps", "user_requirements.html#autotoc_md717", null ]
         ] ],
         [ "Unilink API Guide", "user_api_guide.html", [
           [ "Table of Contents", "user_api_guide.html#autotoc_md476", null ],
@@ -225,215 +225,217 @@ var NAVTREE =
           [ "Logging System", "user_api_guide.html#autotoc_md548", [
             [ "Basic Usage", "user_api_guide.html#autotoc_md549", null ],
             [ "Log Levels", "user_api_guide.html#autotoc_md550", null ],
-            [ "Async Logging", "user_api_guide.html#autotoc_md551", null ]
+            [ "Async Logging", "user_api_guide.html#autotoc_md551", null ],
+            [ "Custom Format", "user_api_guide.html#autotoc_md552", null ],
+            [ "Environment", "user_api_guide.html#autotoc_md553", null ]
           ] ],
-          [ "Configuration Management", "user_api_guide.html#autotoc_md553", [
-            [ "Load Configuration from File", "user_api_guide.html#autotoc_md554", null ],
-            [ "Configuration File Format", "user_api_guide.html#autotoc_md555", null ]
+          [ "Configuration Management", "user_api_guide.html#autotoc_md555", [
+            [ "Load Configuration from File", "user_api_guide.html#autotoc_md556", null ],
+            [ "Configuration File Format", "user_api_guide.html#autotoc_md557", null ]
           ] ],
-          [ "Best Practices", "user_api_guide.html#autotoc_md557", [
-            [ "1. Always Handle Errors", "user_api_guide.html#autotoc_md558", null ],
-            [ "2. Use Explicit Lifecycle Control", "user_api_guide.html#autotoc_md559", null ],
-            [ "3. Set Appropriate Retry Intervals", "user_api_guide.html#autotoc_md560", null ],
-            [ "4. Enable Logging for Debugging", "user_api_guide.html#autotoc_md561", null ],
-            [ "5. Use Member Functions for OOP Design", "user_api_guide.html#autotoc_md562", null ]
+          [ "Best Practices", "user_api_guide.html#autotoc_md559", [
+            [ "1. Always Handle Errors", "user_api_guide.html#autotoc_md560", null ],
+            [ "2. Use Explicit Lifecycle Control", "user_api_guide.html#autotoc_md561", null ],
+            [ "3. Set Appropriate Retry Intervals", "user_api_guide.html#autotoc_md562", null ],
+            [ "4. Enable Logging for Debugging", "user_api_guide.html#autotoc_md563", null ],
+            [ "5. Use Member Functions for OOP Design", "user_api_guide.html#autotoc_md564", null ]
           ] ],
-          [ "Performance Tips", "user_api_guide.html#autotoc_md564", [
-            [ "1. Use Independent Context for Testing Only", "user_api_guide.html#autotoc_md565", null ],
-            [ "2. Enable Async Logging", "user_api_guide.html#autotoc_md566", null ]
+          [ "Performance Tips", "user_api_guide.html#autotoc_md566", [
+            [ "1. Use Independent Context for Testing Only", "user_api_guide.html#autotoc_md567", null ],
+            [ "2. Enable Async Logging", "user_api_guide.html#autotoc_md568", null ]
           ] ],
-          [ "Backpressure Strategy", "user_api_guide.html#autotoc_md568", [
-            [ "Strategies", "user_api_guide.html#autotoc_md569", null ],
-            [ "When to use each", "user_api_guide.html#autotoc_md570", null ],
-            [ "C++ Usage", "user_api_guide.html#autotoc_md571", null ],
-            [ "Python Usage", "user_api_guide.html#autotoc_md572", null ],
-            [ "Thresholds", "user_api_guide.html#autotoc_md573", null ]
+          [ "Backpressure Strategy", "user_api_guide.html#autotoc_md570", [
+            [ "Strategies", "user_api_guide.html#autotoc_md571", null ],
+            [ "When to use each", "user_api_guide.html#autotoc_md572", null ],
+            [ "C++ Usage", "user_api_guide.html#autotoc_md573", null ],
+            [ "Python Usage", "user_api_guide.html#autotoc_md574", null ],
+            [ "Thresholds", "user_api_guide.html#autotoc_md575", null ]
           ] ],
-          [ "Security", "user_api_guide.html#autotoc_md575", [
-            [ "Validate All Input", "user_api_guide.html#autotoc_md576", null ],
-            [ "Rate Limiting", "user_api_guide.html#autotoc_md577", null ],
-            [ "Connection Limits", "user_api_guide.html#autotoc_md578", null ]
+          [ "Security", "user_api_guide.html#autotoc_md577", [
+            [ "Validate All Input", "user_api_guide.html#autotoc_md578", null ],
+            [ "Rate Limiting", "user_api_guide.html#autotoc_md579", null ],
+            [ "Connection Limits", "user_api_guide.html#autotoc_md580", null ]
           ] ]
         ] ],
         [ "Tutorials", "user_tutorials.html", [
           [ "Getting Started with Unilink", "tutorial_01.html", [
-            [ "What You'll Build", "tutorial_01.html#autotoc_md796", null ],
-            [ "Step 1: Create The Client", "tutorial_01.html#autotoc_md798", null ],
-            [ "Step 2: Build With CMake", "tutorial_01.html#autotoc_md800", null ],
-            [ "Step 3: Run Against A Test Server", "tutorial_01.html#autotoc_md802", null ],
-            [ "API Patterns Used In This Tutorial", "tutorial_01.html#autotoc_md804", null ],
-            [ "Use The Full Example If You Want More", "tutorial_01.html#autotoc_md806", null ],
-            [ "Next Steps", "tutorial_01.html#autotoc_md808", null ]
+            [ "What You'll Build", "tutorial_01.html#autotoc_md798", null ],
+            [ "Step 1: Create The Client", "tutorial_01.html#autotoc_md800", null ],
+            [ "Step 2: Build With CMake", "tutorial_01.html#autotoc_md802", null ],
+            [ "Step 3: Run Against A Test Server", "tutorial_01.html#autotoc_md804", null ],
+            [ "API Patterns Used In This Tutorial", "tutorial_01.html#autotoc_md806", null ],
+            [ "Use The Full Example If You Want More", "tutorial_01.html#autotoc_md808", null ],
+            [ "Next Steps", "tutorial_01.html#autotoc_md810", null ]
           ] ],
           [ "Building a TCP Server", "tutorial_02.html", [
-            [ "What You'll Build", "tutorial_02.html#autotoc_md811", null ],
-            [ "Step 1: Create The Server", "tutorial_02.html#autotoc_md813", null ],
-            [ "Step 2: Run It", "tutorial_02.html#autotoc_md815", null ],
-            [ "Step 3: Understand The Current Server API", "tutorial_02.html#autotoc_md817", null ],
-            [ "Client Limits", "tutorial_02.html#autotoc_md819", null ],
-            [ "Use The Full Example Programs For More", "tutorial_02.html#autotoc_md821", null ],
-            [ "Next Steps", "tutorial_02.html#autotoc_md823", null ]
+            [ "What You'll Build", "tutorial_02.html#autotoc_md813", null ],
+            [ "Step 1: Create The Server", "tutorial_02.html#autotoc_md815", null ],
+            [ "Step 2: Run It", "tutorial_02.html#autotoc_md817", null ],
+            [ "Step 3: Understand The Current Server API", "tutorial_02.html#autotoc_md819", null ],
+            [ "Client Limits", "tutorial_02.html#autotoc_md821", null ],
+            [ "Use The Full Example Programs For More", "tutorial_02.html#autotoc_md823", null ],
+            [ "Next Steps", "tutorial_02.html#autotoc_md825", null ]
           ] ],
           [ "UDS Communication", "tutorial_03.html", [
-            [ "What You'll Build", "tutorial_03.html#autotoc_md826", null ],
-            [ "Step 1: Create A UDS Server", "tutorial_03.html#autotoc_md828", null ],
-            [ "Step 2: Create A UDS Client", "tutorial_03.html#autotoc_md830", null ],
-            [ "Why Use UDS Instead Of TCP", "tutorial_03.html#autotoc_md832", null ],
-            [ "Operational Notes", "tutorial_03.html#autotoc_md834", null ],
-            [ "Next Steps", "tutorial_03.html#autotoc_md836", null ]
+            [ "What You'll Build", "tutorial_03.html#autotoc_md828", null ],
+            [ "Step 1: Create A UDS Server", "tutorial_03.html#autotoc_md830", null ],
+            [ "Step 2: Create A UDS Client", "tutorial_03.html#autotoc_md832", null ],
+            [ "Why Use UDS Instead Of TCP", "tutorial_03.html#autotoc_md834", null ],
+            [ "Operational Notes", "tutorial_03.html#autotoc_md836", null ],
+            [ "Next Steps", "tutorial_03.html#autotoc_md838", null ]
           ] ],
           [ "Serial Communication", "tutorial_04.html", [
-            [ "What You'll Build", "tutorial_04.html#autotoc_md839", null ],
-            [ "Step 1: Choose A Device Path", "tutorial_04.html#autotoc_md841", null ],
-            [ "Step 2: Create A Minimal Serial Terminal", "tutorial_04.html#autotoc_md843", null ],
-            [ "Step 3: Build And Run", "tutorial_04.html#autotoc_md845", null ],
-            [ "Step 4: Test With A Second Terminal", "tutorial_04.html#autotoc_md847", null ],
-            [ "Common Adjustments", "tutorial_04.html#autotoc_md849", null ],
-            [ "When To Use The Example Programs Instead", "tutorial_04.html#autotoc_md851", null ],
-            [ "Next Steps", "tutorial_04.html#autotoc_md853", null ]
+            [ "What You'll Build", "tutorial_04.html#autotoc_md841", null ],
+            [ "Step 1: Choose A Device Path", "tutorial_04.html#autotoc_md843", null ],
+            [ "Step 2: Create A Minimal Serial Terminal", "tutorial_04.html#autotoc_md845", null ],
+            [ "Step 3: Build And Run", "tutorial_04.html#autotoc_md847", null ],
+            [ "Step 4: Test With A Second Terminal", "tutorial_04.html#autotoc_md849", null ],
+            [ "Common Adjustments", "tutorial_04.html#autotoc_md851", null ],
+            [ "When To Use The Example Programs Instead", "tutorial_04.html#autotoc_md853", null ],
+            [ "Next Steps", "tutorial_04.html#autotoc_md855", null ]
           ] ],
           [ "UDP Communication", "tutorial_05.html", [
-            [ "What You'll Build", "tutorial_05.html#autotoc_md856", null ],
-            [ "Step 1: Create A Receiver", "tutorial_05.html#autotoc_md858", null ],
-            [ "Step 2: Create A Sender", "tutorial_05.html#autotoc_md860", null ],
-            [ "Step 3: Build The Two Programs", "tutorial_05.html#autotoc_md862", null ],
-            [ "Step 4: Run Both Programs", "tutorial_05.html#autotoc_md864", null ],
-            [ "What Is Different About UDP", "tutorial_05.html#autotoc_md866", null ],
-            [ "Practical Notes", "tutorial_05.html#autotoc_md868", null ],
-            [ "Use The Full Examples For Repeated Testing", "tutorial_05.html#autotoc_md870", null ],
-            [ "Next Steps", "tutorial_05.html#autotoc_md872", null ]
+            [ "What You'll Build", "tutorial_05.html#autotoc_md858", null ],
+            [ "Step 1: Create A Receiver", "tutorial_05.html#autotoc_md860", null ],
+            [ "Step 2: Create A Sender", "tutorial_05.html#autotoc_md862", null ],
+            [ "Step 3: Build The Two Programs", "tutorial_05.html#autotoc_md864", null ],
+            [ "Step 4: Run Both Programs", "tutorial_05.html#autotoc_md866", null ],
+            [ "What Is Different About UDP", "tutorial_05.html#autotoc_md868", null ],
+            [ "Practical Notes", "tutorial_05.html#autotoc_md870", null ],
+            [ "Use The Full Examples For Repeated Testing", "tutorial_05.html#autotoc_md872", null ],
+            [ "Next Steps", "tutorial_05.html#autotoc_md874", null ]
           ] ]
         ] ],
         [ "Troubleshooting Guide", "user_troubleshooting.html", [
-          [ "Table of Contents", "user_troubleshooting.html#autotoc_md717", null ],
-          [ "Connection Issues", "user_troubleshooting.html#autotoc_md719", [
-            [ "Problem: Connection Refused", "user_troubleshooting.html#autotoc_md720", [
-              [ "1. Server Not Running", "user_troubleshooting.html#autotoc_md721", null ],
-              [ "2. Wrong Host/Port", "user_troubleshooting.html#autotoc_md722", null ],
-              [ "3. Firewall Blocking", "user_troubleshooting.html#autotoc_md723", null ]
+          [ "Table of Contents", "user_troubleshooting.html#autotoc_md719", null ],
+          [ "Connection Issues", "user_troubleshooting.html#autotoc_md721", [
+            [ "Problem: Connection Refused", "user_troubleshooting.html#autotoc_md722", [
+              [ "1. Server Not Running", "user_troubleshooting.html#autotoc_md723", null ],
+              [ "2. Wrong Host/Port", "user_troubleshooting.html#autotoc_md724", null ],
+              [ "3. Firewall Blocking", "user_troubleshooting.html#autotoc_md725", null ]
             ] ],
-            [ "Problem: Connection Timeout", "user_troubleshooting.html#autotoc_md725", [
-              [ "1. Network Unreachable", "user_troubleshooting.html#autotoc_md726", null ],
-              [ "2. Server Overloaded", "user_troubleshooting.html#autotoc_md727", null ]
+            [ "Problem: Connection Timeout", "user_troubleshooting.html#autotoc_md727", [
+              [ "1. Network Unreachable", "user_troubleshooting.html#autotoc_md728", null ],
+              [ "2. Server Overloaded", "user_troubleshooting.html#autotoc_md729", null ]
             ] ],
-            [ "Problem: Connection Drops Randomly", "user_troubleshooting.html#autotoc_md729", [
-              [ "1. Network Instability", "user_troubleshooting.html#autotoc_md730", null ],
-              [ "2. Server Closing Connection", "user_troubleshooting.html#autotoc_md731", null ],
-              [ "3. Keep-Alive Not Set", "user_troubleshooting.html#autotoc_md732", null ]
+            [ "Problem: Connection Drops Randomly", "user_troubleshooting.html#autotoc_md731", [
+              [ "1. Network Instability", "user_troubleshooting.html#autotoc_md732", null ],
+              [ "2. Server Closing Connection", "user_troubleshooting.html#autotoc_md733", null ],
+              [ "3. Keep-Alive Not Set", "user_troubleshooting.html#autotoc_md734", null ]
             ] ],
-            [ "Problem: Port Already in Use", "user_troubleshooting.html#autotoc_md734", [
-              [ "1. Kill Existing Process", "user_troubleshooting.html#autotoc_md735", null ],
-              [ "2. Use Different Port", "user_troubleshooting.html#autotoc_md736", null ],
-              [ "3. Enable Port Retry", "user_troubleshooting.html#autotoc_md737", null ]
+            [ "Problem: Port Already in Use", "user_troubleshooting.html#autotoc_md736", [
+              [ "1. Kill Existing Process", "user_troubleshooting.html#autotoc_md737", null ],
+              [ "2. Use Different Port", "user_troubleshooting.html#autotoc_md738", null ],
+              [ "3. Enable Port Retry", "user_troubleshooting.html#autotoc_md739", null ]
             ] ]
           ] ],
-          [ "Compilation Errors", "user_troubleshooting.html#autotoc_md739", [
-            [ "Problem: unilink/unilink.hpp Not Found", "user_troubleshooting.html#autotoc_md740", [
-              [ "1. Install unilink", "user_troubleshooting.html#autotoc_md741", null ],
-              [ "2. Add Include Path", "user_troubleshooting.html#autotoc_md742", null ],
-              [ "3. Use as Subdirectory", "user_troubleshooting.html#autotoc_md743", null ]
+          [ "Compilation Errors", "user_troubleshooting.html#autotoc_md741", [
+            [ "Problem: unilink/unilink.hpp Not Found", "user_troubleshooting.html#autotoc_md742", [
+              [ "1. Install unilink", "user_troubleshooting.html#autotoc_md743", null ],
+              [ "2. Add Include Path", "user_troubleshooting.html#autotoc_md744", null ],
+              [ "3. Use as Subdirectory", "user_troubleshooting.html#autotoc_md745", null ]
             ] ],
-            [ "Problem: Undefined Reference to unilink Symbols", "user_troubleshooting.html#autotoc_md745", [
-              [ "1. Link unilink Library", "user_troubleshooting.html#autotoc_md746", null ],
-              [ "2. Check Library Path", "user_troubleshooting.html#autotoc_md747", null ]
+            [ "Problem: Undefined Reference to unilink Symbols", "user_troubleshooting.html#autotoc_md747", [
+              [ "1. Link unilink Library", "user_troubleshooting.html#autotoc_md748", null ],
+              [ "2. Check Library Path", "user_troubleshooting.html#autotoc_md749", null ]
             ] ],
-            [ "Problem: Boost Not Found", "user_troubleshooting.html#autotoc_md749", [
-              [ "Recommended vcpkg setup", "user_troubleshooting.html#autotoc_md750", null ],
-              [ "System Boost setup", "user_troubleshooting.html#autotoc_md751", null ],
-              [ "Windows (vcpkg)", "user_troubleshooting.html#autotoc_md752", null ],
-              [ "Manual Boost Path", "user_troubleshooting.html#autotoc_md753", null ]
+            [ "Problem: Boost Not Found", "user_troubleshooting.html#autotoc_md751", [
+              [ "Recommended vcpkg setup", "user_troubleshooting.html#autotoc_md752", null ],
+              [ "System Boost setup", "user_troubleshooting.html#autotoc_md753", null ],
+              [ "Windows (vcpkg)", "user_troubleshooting.html#autotoc_md754", null ],
+              [ "Manual Boost Path", "user_troubleshooting.html#autotoc_md755", null ]
             ] ]
           ] ],
-          [ "Runtime Errors", "user_troubleshooting.html#autotoc_md755", [
-            [ "Problem: Segmentation Fault", "user_troubleshooting.html#autotoc_md756", [
-              [ "1. Enable Core Dumps", "user_troubleshooting.html#autotoc_md757", null ],
-              [ "2. Common Causes", "user_troubleshooting.html#autotoc_md758", null ]
+          [ "Runtime Errors", "user_troubleshooting.html#autotoc_md757", [
+            [ "Problem: Segmentation Fault", "user_troubleshooting.html#autotoc_md758", [
+              [ "1. Enable Core Dumps", "user_troubleshooting.html#autotoc_md759", null ],
+              [ "2. Common Causes", "user_troubleshooting.html#autotoc_md760", null ]
             ] ],
-            [ "Problem: Callbacks Not Being Called", "user_troubleshooting.html#autotoc_md760", [
-              [ "1. Callback Not Registered", "user_troubleshooting.html#autotoc_md761", null ],
-              [ "2. Client Not Started", "user_troubleshooting.html#autotoc_md762", null ],
-              [ "3. Application Exits Too Quickly", "user_troubleshooting.html#autotoc_md763", null ]
+            [ "Problem: Callbacks Not Being Called", "user_troubleshooting.html#autotoc_md762", [
+              [ "1. Callback Not Registered", "user_troubleshooting.html#autotoc_md763", null ],
+              [ "2. Client Not Started", "user_troubleshooting.html#autotoc_md764", null ],
+              [ "3. Application Exits Too Quickly", "user_troubleshooting.html#autotoc_md765", null ]
             ] ]
           ] ],
-          [ "Performance Issues", "user_troubleshooting.html#autotoc_md765", [
-            [ "Problem: High CPU Usage", "user_troubleshooting.html#autotoc_md766", [
-              [ "1. Busy Loop in Callback", "user_troubleshooting.html#autotoc_md767", null ],
-              [ "2. Too Many Retries", "user_troubleshooting.html#autotoc_md768", null ],
-              [ "3. Excessive Logging", "user_troubleshooting.html#autotoc_md769", null ]
+          [ "Performance Issues", "user_troubleshooting.html#autotoc_md767", [
+            [ "Problem: High CPU Usage", "user_troubleshooting.html#autotoc_md768", [
+              [ "1. Busy Loop in Callback", "user_troubleshooting.html#autotoc_md769", null ],
+              [ "2. Too Many Retries", "user_troubleshooting.html#autotoc_md770", null ],
+              [ "3. Excessive Logging", "user_troubleshooting.html#autotoc_md771", null ]
             ] ],
-            [ "Problem: High Memory Usage", "user_troubleshooting.html#autotoc_md771", [
-              [ "1. Fix Memory Leaks", "user_troubleshooting.html#autotoc_md772", null ],
-              [ "3. Limit Buffer Sizes", "user_troubleshooting.html#autotoc_md773", null ]
+            [ "Problem: High Memory Usage", "user_troubleshooting.html#autotoc_md773", [
+              [ "1. Fix Memory Leaks", "user_troubleshooting.html#autotoc_md774", null ],
+              [ "3. Limit Buffer Sizes", "user_troubleshooting.html#autotoc_md775", null ]
             ] ],
-            [ "Problem: Slow Data Transfer", "user_troubleshooting.html#autotoc_md775", [
-              [ "1. Batch Small Messages", "user_troubleshooting.html#autotoc_md776", null ],
-              [ "2. Use Binary Protocol", "user_troubleshooting.html#autotoc_md777", null ],
-              [ "3. Enable Async Logging", "user_troubleshooting.html#autotoc_md778", null ]
+            [ "Problem: Slow Data Transfer", "user_troubleshooting.html#autotoc_md777", [
+              [ "1. Batch Small Messages", "user_troubleshooting.html#autotoc_md778", null ],
+              [ "2. Use Binary Protocol", "user_troubleshooting.html#autotoc_md779", null ],
+              [ "3. Enable Async Logging", "user_troubleshooting.html#autotoc_md780", null ]
             ] ]
           ] ],
-          [ "Memory Issues", "user_troubleshooting.html#autotoc_md780", [
-            [ "Problem: Memory Leak Detected", "user_troubleshooting.html#autotoc_md781", null ]
+          [ "Memory Issues", "user_troubleshooting.html#autotoc_md782", [
+            [ "Problem: Memory Leak Detected", "user_troubleshooting.html#autotoc_md783", null ]
           ] ],
-          [ "Thread Safety Issues", "user_troubleshooting.html#autotoc_md783", [
-            [ "Problem: Race Condition / Data Corruption", "user_troubleshooting.html#autotoc_md784", [
-              [ "1. Protect Shared State", "user_troubleshooting.html#autotoc_md785", null ]
+          [ "Thread Safety Issues", "user_troubleshooting.html#autotoc_md785", [
+            [ "Problem: Race Condition / Data Corruption", "user_troubleshooting.html#autotoc_md786", [
+              [ "1. Protect Shared State", "user_troubleshooting.html#autotoc_md787", null ]
             ] ]
           ] ],
-          [ "Debugging Tips", "user_troubleshooting.html#autotoc_md787", [
-            [ "Enable Debug Logging", "user_troubleshooting.html#autotoc_md788", null ],
-            [ "Use GDB for Debugging", "user_troubleshooting.html#autotoc_md789", null ],
-            [ "Network Debugging with tcpdump", "user_troubleshooting.html#autotoc_md790", null ],
-            [ "Test with netcat", "user_troubleshooting.html#autotoc_md791", null ]
+          [ "Debugging Tips", "user_troubleshooting.html#autotoc_md789", [
+            [ "Enable Debug Logging", "user_troubleshooting.html#autotoc_md790", null ],
+            [ "Use GDB for Debugging", "user_troubleshooting.html#autotoc_md791", null ],
+            [ "Network Debugging with tcpdump", "user_troubleshooting.html#autotoc_md792", null ],
+            [ "Test with netcat", "user_troubleshooting.html#autotoc_md793", null ]
           ] ],
-          [ "Getting Help", "user_troubleshooting.html#autotoc_md793", null ]
+          [ "Getting Help", "user_troubleshooting.html#autotoc_md795", null ]
         ] ],
         [ "Python Bindings Guide", "user_python_bindings.html", [
-          [ "🚀 Getting Started", "user_python_bindings.html#autotoc_md634", [
-            [ "Installation", "user_python_bindings.html#autotoc_md635", null ]
+          [ "🚀 Getting Started", "user_python_bindings.html#autotoc_md636", [
+            [ "Installation", "user_python_bindings.html#autotoc_md637", null ]
           ] ],
-          [ "🔌 TCP Client", "user_python_bindings.html#autotoc_md637", [
-            [ "Basic Usage", "user_python_bindings.html#autotoc_md638", null ]
+          [ "🔌 TCP Client", "user_python_bindings.html#autotoc_md639", [
+            [ "Basic Usage", "user_python_bindings.html#autotoc_md640", null ]
           ] ],
-          [ "🖥️ TCP Server", "user_python_bindings.html#autotoc_md640", [
-            [ "Basic Usage", "user_python_bindings.html#autotoc_md641", null ]
+          [ "🖥️ TCP Server", "user_python_bindings.html#autotoc_md642", [
+            [ "Basic Usage", "user_python_bindings.html#autotoc_md643", null ]
           ] ],
-          [ "📟 Serial Communication", "user_python_bindings.html#autotoc_md643", [
-            [ "Basic Usage", "user_python_bindings.html#autotoc_md644", null ]
+          [ "📟 Serial Communication", "user_python_bindings.html#autotoc_md645", [
+            [ "Basic Usage", "user_python_bindings.html#autotoc_md646", null ]
           ] ],
-          [ "🌐 UDP Communication", "user_python_bindings.html#autotoc_md646", [
-            [ "Basic Usage", "user_python_bindings.html#autotoc_md647", null ]
+          [ "🌐 UDP Communication", "user_python_bindings.html#autotoc_md648", [
+            [ "Basic Usage", "user_python_bindings.html#autotoc_md649", null ]
           ] ],
-          [ "📂 UDS Communication", "user_python_bindings.html#autotoc_md649", [
-            [ "Basic Usage", "user_python_bindings.html#autotoc_md650", null ]
+          [ "📂 UDS Communication", "user_python_bindings.html#autotoc_md651", [
+            [ "Basic Usage", "user_python_bindings.html#autotoc_md652", null ]
           ] ],
-          [ "🛠️ Advanced Features", "user_python_bindings.html#autotoc_md652", [
-            [ "Message Framing (Line/Packet)", "user_python_bindings.html#autotoc_md653", null ],
-            [ "Threading & GIL", "user_python_bindings.html#autotoc_md654", null ],
-            [ "Lifecycle Management", "user_python_bindings.html#autotoc_md655", null ],
-            [ "Configuration", "user_python_bindings.html#autotoc_md656", null ],
-            [ "Backpressure Strategy", "user_python_bindings.html#autotoc_md657", null ]
+          [ "🛠️ Advanced Features", "user_python_bindings.html#autotoc_md654", [
+            [ "Message Framing (Line/Packet)", "user_python_bindings.html#autotoc_md655", null ],
+            [ "Threading & GIL", "user_python_bindings.html#autotoc_md656", null ],
+            [ "Lifecycle Management", "user_python_bindings.html#autotoc_md657", null ],
+            [ "Configuration", "user_python_bindings.html#autotoc_md658", null ],
+            [ "Backpressure Strategy", "user_python_bindings.html#autotoc_md659", null ]
           ] ]
         ] ],
         [ "Performance Guide", "user_performance.html", [
-          [ "Table of Contents", "user_performance.html#autotoc_md614", null ],
-          [ "Runtime Optimization", "user_performance.html#autotoc_md616", [
-            [ "1. Threading Model & IO Context", "user_performance.html#autotoc_md617", null ],
-            [ "2. Async Logging", "user_performance.html#autotoc_md618", null ],
-            [ "3. Non-Blocking Callbacks", "user_performance.html#autotoc_md619", null ]
+          [ "Table of Contents", "user_performance.html#autotoc_md616", null ],
+          [ "Runtime Optimization", "user_performance.html#autotoc_md618", [
+            [ "1. Threading Model & IO Context", "user_performance.html#autotoc_md619", null ],
+            [ "2. Async Logging", "user_performance.html#autotoc_md620", null ],
+            [ "3. Non-Blocking Callbacks", "user_performance.html#autotoc_md621", null ]
           ] ],
-          [ "Memory Optimization", "user_performance.html#autotoc_md621", [
-            [ "1. Avoid Data Copies", "user_performance.html#autotoc_md622", null ],
-            [ "2. Reserve Vector Capacity", "user_performance.html#autotoc_md623", null ]
+          [ "Memory Optimization", "user_performance.html#autotoc_md623", [
+            [ "1. Avoid Data Copies", "user_performance.html#autotoc_md624", null ],
+            [ "2. Reserve Vector Capacity", "user_performance.html#autotoc_md625", null ]
           ] ],
-          [ "Network Optimization", "user_performance.html#autotoc_md625", [
-            [ "1. Batch Small Messages", "user_performance.html#autotoc_md626", null ],
-            [ "2. Connection Reuse", "user_performance.html#autotoc_md627", null ],
-            [ "3. Socket Tuning", "user_performance.html#autotoc_md628", null ]
+          [ "Network Optimization", "user_performance.html#autotoc_md627", [
+            [ "1. Batch Small Messages", "user_performance.html#autotoc_md628", null ],
+            [ "2. Connection Reuse", "user_performance.html#autotoc_md629", null ],
+            [ "3. Socket Tuning", "user_performance.html#autotoc_md630", null ]
           ] ],
           [ "Backpressure Management", "user_performance.html#backpressure-management", [
-            [ "1. Choosing a Strategy", "user_performance.html#autotoc_md630", null ],
-            [ "2. High-Throughput Sensors (LiDAR/Camera)", "user_performance.html#autotoc_md631", null ],
-            [ "3. Critical Reliable Data", "user_performance.html#autotoc_md632", null ]
+            [ "1. Choosing a Strategy", "user_performance.html#autotoc_md632", null ],
+            [ "2. High-Throughput Sensors (LiDAR/Camera)", "user_performance.html#autotoc_md633", null ],
+            [ "3. Critical Reliable Data", "user_performance.html#autotoc_md634", null ]
           ] ]
         ] ]
       ] ],
@@ -749,26 +751,26 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Benchmark Results", "user_benchmark.html", [
-      [ "1. TCP Performance (RTT & Throughput)", "user_benchmark.html#autotoc_md579", [
-        [ "Ping-Pong (Latency)", "user_benchmark.html#autotoc_md580", null ],
-        [ "Throughput (1KB Chunks)", "user_benchmark.html#autotoc_md581", null ]
+      [ "1. TCP Performance (RTT & Throughput)", "user_benchmark.html#autotoc_md581", [
+        [ "Ping-Pong (Latency)", "user_benchmark.html#autotoc_md582", null ],
+        [ "Throughput (1KB Chunks)", "user_benchmark.html#autotoc_md583", null ]
       ] ],
-      [ "2. UDP & UDS Performance", "user_benchmark.html#autotoc_md582", [
-        [ "UDP Latency (Zero-Copy)", "user_benchmark.html#autotoc_md583", null ],
-        [ "UDS Throughput", "user_benchmark.html#autotoc_md584", null ]
+      [ "2. UDP & UDS Performance", "user_benchmark.html#autotoc_md584", [
+        [ "UDP Latency (Zero-Copy)", "user_benchmark.html#autotoc_md585", null ],
+        [ "UDS Throughput", "user_benchmark.html#autotoc_md586", null ]
       ] ],
-      [ "3. Optimization Recommendations", "user_benchmark.html#autotoc_md585", null ]
+      [ "3. Optimization Recommendations", "user_benchmark.html#autotoc_md587", null ]
     ] ],
     [ "Asynchronous Programming Patterns", "user_tutorial_async.html", [
-      [ "1. Non-Blocking Startup", "user_tutorial_async.html#autotoc_md875", [
-        [ "The Async Pattern", "user_tutorial_async.html#autotoc_md876", null ]
+      [ "1. Non-Blocking Startup", "user_tutorial_async.html#autotoc_md877", [
+        [ "The Async Pattern", "user_tutorial_async.html#autotoc_md878", null ]
       ] ],
-      [ "2. Shared Ownership in Callbacks", "user_tutorial_async.html#autotoc_md878", [
-        [ "Safe Capture Pattern", "user_tutorial_async.html#autotoc_md879", null ]
+      [ "2. Shared Ownership in Callbacks", "user_tutorial_async.html#autotoc_md880", [
+        [ "Safe Capture Pattern", "user_tutorial_async.html#autotoc_md881", null ]
       ] ],
-      [ "3. Parallel Initialization", "user_tutorial_async.html#autotoc_md881", null ],
-      [ "4. When to Use Async vs Sync", "user_tutorial_async.html#autotoc_md883", null ],
-      [ "Summary", "user_tutorial_async.html#autotoc_md885", null ]
+      [ "3. Parallel Initialization", "user_tutorial_async.html#autotoc_md883", null ],
+      [ "4. When to Use Async vs Sync", "user_tutorial_async.html#autotoc_md885", null ],
+      [ "Summary", "user_tutorial_async.html#autotoc_md887", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -810,26 +812,26 @@ var NAVTREEINDEX =
 "annotated.html",
 "classunilink_1_1builder_1_1UdpClientBuilder.html#a20e852fc56d2d43b8e124280f34c9ce7",
 "classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17",
-"classunilink_1_1diagnostics_1_1Logger.html#af51329390a3c9fd12a6b53b28b6e508c",
-"classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410da71726adf0ff60cd03eaf3c515883eeb8",
-"classunilink_1_1transport_1_1BoostTcpSocket.html#a3aa4ccb299d8b2e752a6f916c054bf48",
-"classunilink_1_1transport_1_1UdpChannel.html#a001d7e4693e20c664d7474e379a9581e",
-"classunilink_1_1wrapper_1_1ChannelInterface.html",
-"classunilink_1_1wrapper_1_1TcpClient.html#a32eda832b5e20562cff98f8156fbfe67",
-"classunilink_1_1wrapper_1_1UdpServer.html#aa1862cc3cb126aed83ef73df25174c6a",
-"constants_8hpp.html#a630d0f50312403602cb2384308cfc8c1",
-"contrib_testing.html#autotoc_md383",
-"index.html#autotoc_md103",
-"namespaceunilink_1_1base_1_1safe__convert.html#ae8b9bd48777b1bdb6a786123eb155819",
-"structunilink_1_1config_1_1SerialConfig.html#aa93fec717b98438e20efe4a6c7bf6b54",
-"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a1010b32f814447316da185a64f408c5f",
-"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#aba907a38ed02e723bc2309dcb3990987",
-"structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a85a899fb5f0df22e272328771afc647d",
-"structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a5eb42ea9060878e32eb41bc7c2f08b69",
-"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ac2dcfb67fd0de18e77b88c93da57133d",
-"structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#ae561871a7035a1717682daa3d833ee14",
-"unilink_8hpp.html#acd1c7353a285192fac404d4d1f472aff",
-"user_troubleshooting.html#autotoc_md769"
+"classunilink_1_1diagnostics_1_1Logger.html#ae27d90acc4c3646587ab4aa620bef18f",
+"classunilink_1_1memory_1_1GlobalMemoryPool.html#a461620376714b8a86c6367d6d5b89a63",
+"classunilink_1_1transport_1_1BoostTcpAcceptor.html",
+"classunilink_1_1transport_1_1TcpServerSession.html#a8a3a1b2fcaa3d6e679ba6ec8376ada7c",
+"classunilink_1_1util_1_1InputValidator.html#aa9bbfdd2e61cc4b8189476591302ac3f",
+"classunilink_1_1wrapper_1_1ServerInterface.html#af6f5d7163923cf82721385246b448a69",
+"classunilink_1_1wrapper_1_1UdpServer.html#a75b170fbd0dbfcacfb161933c96db6b8",
+"config__manager_8cc_source.html",
+"contrib_orin_nano_validation.html#autotoc_md356",
+"ibuilder_8hpp.html#aaaa1844bc1ccddbe03c66b32e48b9c3ea2aa66522e2ae14a52d343f9c42dbfb3b",
+"namespaceunilink_1_1base_1_1constants.html#a7b379983f9b9fc5e7446e38718933434",
+"structunilink_1_1config_1_1SerialConfig.html#a2a9446231ccba59c4f3efe82fe6e10f5",
+"structunilink_1_1diagnostics_1_1ErrorStats.html#ae8f4b7c56716afcdd8fef640ec14b76d",
+"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a463b01095f92ec5aa250eb52499a4cf9",
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl_1_1TxItem.html#a93c409890d1e9e5d981739ac3d2d95b0",
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ad5a753342c72ae42750a3c4ce373eff1",
+"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a17efd2fae16763e2af3cba7743faf536",
+"structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a4e0f485c00e9bb442f409553d7c77e75",
+"tutorial_04.html#autotoc_md851",
+"user_requirements.html#autotoc_md693"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

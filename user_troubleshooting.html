@@ -161,7 +161,7 @@ $(document).ready(function(){initNavTree('user_troubleshooting.html',''); initRe
 <div class="contents">
 <div class="textblock"><p>Common issues and solutions when using unilink.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md717"></a>
+<h1><a class="anchor" id="autotoc_md719"></a>
 Table of Contents</h1>
 <ol type="1">
 <li>Connection Issues</li>
@@ -173,28 +173,28 @@ Table of Contents</h1>
 <li>Debugging Tips</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md719"></a>
+<h1><a class="anchor" id="autotoc_md721"></a>
 Connection Issues</h1>
-<h2><a class="anchor" id="autotoc_md720"></a>
+<h2><a class="anchor" id="autotoc_md722"></a>
 Problem: Connection Refused</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">✗ Error: Connection refused</div>
 </div><!-- fragment --><p><b>Possible Causes &amp; Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md721"></a>
+<h3><a class="anchor" id="autotoc_md723"></a>
 1. Server Not Running</h3>
 <div class="fragment"><div class="line"># Check if server is running</div>
 <div class="line">netstat -an | grep 8080</div>
 <div class="line"># or</div>
 <div class="line">lsof -i :8080</div>
 </div><!-- fragment --><p><b>Solution:</b> Start the server before connecting client.</p>
-<h3><a class="anchor" id="autotoc_md722"></a>
+<h3><a class="anchor" id="autotoc_md724"></a>
 2. Wrong Host/Port</h3>
 <div class="fragment"><div class="line"><span class="comment">// Check your configuration</span></div>
 <div class="line"><span class="keyword">auto</span> client = tcp_client(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)  <span class="comment">// Correct port?</span></div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3209a5f18973c46d60299428afcc4e62"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00044">tcp_client_builder.cc:44</a></div></div>
 </div><!-- fragment --><p><b>Solution:</b> Verify server address and port number.</p>
-<h3><a class="anchor" id="autotoc_md723"></a>
+<h3><a class="anchor" id="autotoc_md725"></a>
 3. Firewall Blocking</h3>
 <div class="fragment"><div class="line"># Check firewall rules (Linux)</div>
 <div class="line">sudo iptables -L | grep 8080</div>
@@ -202,18 +202,18 @@ Problem: Connection Refused</h2>
 <div class="line"># Allow port (Ubuntu)</div>
 <div class="line">sudo ufw allow 8080</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md725"></a>
+<h2><a class="anchor" id="autotoc_md727"></a>
 Problem: Connection Timeout</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">✗ Error: Connection timeout</div>
 </div><!-- fragment --><p><b>Possible Causes &amp; Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md726"></a>
+<h3><a class="anchor" id="autotoc_md728"></a>
 1. Network Unreachable</h3>
 <div class="fragment"><div class="line"># Test connectivity</div>
 <div class="line">ping server.com</div>
 <div class="line">telnet server.com 8080</div>
 </div><!-- fragment --><p><b>Solution:</b> Check network connectivity, DNS resolution.</p>
-<h3><a class="anchor" id="autotoc_md727"></a>
+<h3><a class="anchor" id="autotoc_md729"></a>
 2. Server Overloaded</h3>
 <p><b>Solution:</b> Increase retry interval:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span>std::chrono_literals;</div>
@@ -222,7 +222,7 @@ Problem: Connection Timeout</h2>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a60eed69944010bf2b5efd5d2991264a5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a60eed69944010bf2b5efd5d2991264a5">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder&lt; State &gt; &amp; retry_interval(std::chrono::milliseconds interval)</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00098">tcp_client_builder.cc:98</a></div></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md729"></a>
+<h2><a class="anchor" id="autotoc_md731"></a>
 Problem: Connection Drops Randomly</h2>
 <p><b>Symptoms:</b></p>
 <ul>
@@ -230,7 +230,7 @@ Problem: Connection Drops Randomly</h2>
 <li><code>on_disconnect()</code> called without <code>stop()</code></li>
 </ul>
 <p><b>Possible Causes &amp; Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md730"></a>
+<h3><a class="anchor" id="autotoc_md732"></a>
 1. Network Instability</h3>
 <div class="fragment"><div class="line"><span class="comment">// Enable auto-reconnection</span></div>
 <div class="line"><span class="keyword">auto</span> client = tcp_client(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -240,7 +240,7 @@ Problem: Connection Drops Randomly</h2>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00075">context.hpp:75</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md731"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md733"></a>
 2. Server Closing Connection</h3>
 <div class="fragment"><div class="line"><span class="comment">// Log disconnect reason</span></div>
 <div class="line">.on_disconnect([<span class="keyword">this</span>](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
@@ -249,7 +249,7 @@ Problem: Connection Drops Randomly</h2>
 <div class="line">        log_warning(<span class="stringliteral">&quot;Unexpected disconnect from server&quot;</span>);</div>
 <div class="line">    }</div>
 <div class="line">})</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md732"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md734"></a>
 3. Keep-Alive Not Set</h3>
 <div class="fragment"><div class="line"><span class="comment">// Implement heartbeat</span></div>
 <div class="line">std::thread heartbeat_thread([<span class="keyword">this</span>]() {</div>
@@ -261,12 +261,12 @@ Problem: Connection Drops Randomly</h2>
 <div class="line">    }</div>
 <div class="line">});</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md734"></a>
+<h2><a class="anchor" id="autotoc_md736"></a>
 Problem: Port Already in Use</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">✗ Error: Address already in use</div>
 </div><!-- fragment --><p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md735"></a>
+<h3><a class="anchor" id="autotoc_md737"></a>
 1. Kill Existing Process</h3>
 <div class="fragment"><div class="line"># Find process using port</div>
 <div class="line">lsof -i :8080</div>
@@ -275,56 +275,56 @@ Problem: Port Already in Use</h2>
 <div class="line"> </div>
 <div class="line"># Kill process</div>
 <div class="line">kill -9 &lt;PID&gt;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md736"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md738"></a>
 2. Use Different Port</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = tcp_server(8081)  <span class="comment">// Try different port</span></div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a0c0029f7ca4b8ae9bf08f467a1b2348c"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00047">tcp_server_builder.cc:47</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md737"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md739"></a>
 3. Enable Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = tcp_server(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Retry 5 times</span></div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a40e2d5173a8dd92c7ed8d4fcc79995e7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00143">tcp_server_builder.cc:143</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md739"></a>
+<h1><a class="anchor" id="autotoc_md741"></a>
 Compilation Errors</h1>
-<h2><a class="anchor" id="autotoc_md740"></a>
+<h2><a class="anchor" id="autotoc_md742"></a>
 Problem: unilink/unilink.hpp Not Found</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">fatal error: unilink/unilink.hpp: No such file or directory</div>
 </div><!-- fragment --><p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md741"></a>
+<h3><a class="anchor" id="autotoc_md743"></a>
 1. Install unilink</h3>
 <div class="fragment"><div class="line">cd unilink</div>
 <div class="line">cmake -S . -B build</div>
 <div class="line">sudo cmake --install build</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md742"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md744"></a>
 2. Add Include Path</h3>
 <div class="fragment"><div class="line"># CMake</div>
 <div class="line">target_include_directories(your_app PRIVATE /path/to/unilink/include)</div>
 <div class="line"> </div>
 <div class="line"># g++</div>
 <div class="line">g++ -I/path/to/unilink/include ...</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md743"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md745"></a>
 3. Use as Subdirectory</h3>
 <div class="fragment"><div class="line"># CMakeLists.txt</div>
 <div class="line">add_subdirectory(unilink)</div>
 <div class="line">target_link_libraries(your_app PRIVATE unilink::unilink)</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md745"></a>
+<h2><a class="anchor" id="autotoc_md747"></a>
 Problem: Undefined Reference to unilink Symbols</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">undefined reference to `unilink::tcp_client(std::string const&amp;, unsigned short)&#39;</div>
 </div><!-- fragment --><p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md746"></a>
+<h3><a class="anchor" id="autotoc_md748"></a>
 1. Link unilink Library</h3>
 <div class="fragment"><div class="line"># g++</div>
 <div class="line">g++ main.cpp -o app -lunilink -lboost_system -pthread</div>
 <div class="line"> </div>
 <div class="line"># CMake</div>
 <div class="line">target_link_libraries(your_app PRIVATE unilink Boost::system pthread)</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md747"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md749"></a>
 2. Check Library Path</h3>
 <div class="fragment"><div class="line"># Add to LD_LIBRARY_PATH</div>
 <div class="line">export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH</div>
@@ -333,35 +333,35 @@ Problem: Undefined Reference to unilink Symbols</h2>
 <div class="line">sudo sh -c &#39;echo &quot;/usr/local/lib&quot; &gt; /etc/ld.so.conf.d/unilink.conf&#39;</div>
 <div class="line">sudo ldconfig</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md749"></a>
+<h2><a class="anchor" id="autotoc_md751"></a>
 Problem: Boost Not Found</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">CMake Error: Could not find Boost</div>
 </div><!-- fragment --><p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md750"></a>
+<h3><a class="anchor" id="autotoc_md752"></a>
 Recommended vcpkg setup</h3>
 <div class="fragment"><div class="line">vcpkg install boost-asio boost-system spdlog</div>
 <div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md751"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md753"></a>
 System Boost setup</h3>
 <div class="fragment"><div class="line">cmake -S . -B build -DBOOST_ROOT=/path/to/boost-1.83-or-newer</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md752"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md754"></a>
 Windows (vcpkg)</h3>
 <div class="fragment"><div class="line">vcpkg install boost-asio boost-system spdlog</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md753"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md755"></a>
 Manual Boost Path</h3>
 <div class="fragment"><div class="line">set(BOOST_ROOT /path/to/boost)</div>
 <div class="line">find_package(Boost REQUIRED COMPONENTS system)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md755"></a>
+<h1><a class="anchor" id="autotoc_md757"></a>
 Runtime Errors</h1>
-<h2><a class="anchor" id="autotoc_md756"></a>
+<h2><a class="anchor" id="autotoc_md758"></a>
 Problem: Segmentation Fault</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">Segmentation fault (core dumped)</div>
 </div><!-- fragment --><p><b>Debugging Steps:</b></p>
-<h3><a class="anchor" id="autotoc_md757"></a>
+<h3><a class="anchor" id="autotoc_md759"></a>
 1. Enable Core Dumps</h3>
 <div class="fragment"><div class="line">ulimit -c unlimited</div>
 <div class="line">./your_app</div>
@@ -370,7 +370,7 @@ Problem: Segmentation Fault</h2>
 <div class="line"># Analyze with gdb</div>
 <div class="line">gdb ./your_app core</div>
 <div class="line">(gdb) bt  # backtrace</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md758"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md760"></a>
 2. Common Causes</h3>
 <p><b>Dangling Pointer:</b></p>
 <div class="fragment"><div class="line"><span class="comment">// BAD</span></div>
@@ -391,7 +391,7 @@ Problem: Segmentation Fault</h2>
 <div class="line">    client-&gt;send(<span class="stringliteral">&quot;data&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md760"></a>
+<h2><a class="anchor" id="autotoc_md762"></a>
 Problem: Callbacks Not Being Called</h2>
 <p><b>Symptoms:</b></p>
 <ul>
@@ -399,7 +399,7 @@ Problem: Callbacks Not Being Called</h2>
 <li><code>on_data()</code> not receiving data</li>
 </ul>
 <p><b>Possible Causes &amp; Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md761"></a>
+<h3><a class="anchor" id="autotoc_md763"></a>
 1. Callback Not Registered</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Forgot to register callback</span></div>
 <div class="line"><span class="keyword">auto</span> client = tcp_client(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -414,7 +414,7 @@ Problem: Callbacks Not Being Called</h2>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_aa76600ac60f66b354b35e174ab444841"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#aa76600ac60f66b354b35e174ab444841">unilink::builder::BuilderInterface::on_data</a></div><div class="ttdeci">auto on_data(F &amp;&amp;handler)</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00085">ibuilder.hpp:85</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00035">context.hpp:35</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a49d3f7b0aeac37cb41885b5fc2fa6423"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">unilink::wrapper::MessageContext::data</a></div><div class="ttdeci">std::string_view data() const</div><div class="ttdoc">Get the received data as a view.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00049">context.hpp:49</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md762"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md764"></a>
 2. Client Not Started</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Forgot to start</span></div>
 <div class="line"><span class="keyword">auto</span> client = tcp_client(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -425,7 +425,7 @@ Problem: Callbacks Not Being Called</h2>
 <div class="line"><span class="keyword">auto</span> client = tcp_client(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">build</a>();</div>
 <div class="line">client-&gt;start();  <span class="comment">// Start the connection</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md763"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md765"></a>
 3. Application Exits Too Quickly</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD</span></div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
@@ -449,9 +449,9 @@ Problem: Callbacks Not Being Called</h2>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ad8d6c30285a36b3a466a37d06f7460dd"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(F &amp;&amp;handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00111">ibuilder.hpp:111</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md765"></a>
+<h1><a class="anchor" id="autotoc_md767"></a>
 Performance Issues</h1>
-<h2><a class="anchor" id="autotoc_md766"></a>
+<h2><a class="anchor" id="autotoc_md768"></a>
 Problem: High CPU Usage</h2>
 <p><b>Symptoms:</b></p>
 <ul>
@@ -459,7 +459,7 @@ Problem: High CPU Usage</h2>
 <li>System becomes slow</li>
 </ul>
 <p><b>Possible Causes &amp; Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md767"></a>
+<h3><a class="anchor" id="autotoc_md769"></a>
 1. Busy Loop in Callback</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Blocks I/O thread</span></div>
 <div class="line">.on_data([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
@@ -472,14 +472,14 @@ Problem: High CPU Usage</h2>
 <div class="line">.on_data([<span class="keyword">this</span>](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
 <div class="line">    message_queue_.push(std::string(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>()));  <span class="comment">// Queue for processing</span></div>
 <div class="line">})</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md768"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md770"></a>
 2. Too Many Retries</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Retries too often</span></div>
 <div class="line">.retry_interval(10)  <span class="comment">// Retry every 10ms!</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// GOOD</span></div>
 <div class="line">.retry_interval(3000ms)  <span class="comment">// Retry every 3 seconds</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md769"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md771"></a>
 3. Excessive Logging</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Log every byte</span></div>
 <div class="line">.on_data([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
@@ -493,7 +493,7 @@ Problem: High CPU Usage</h2>
 <div class="line">    logger.debug(<span class="stringliteral">&quot;data&quot;</span>, <span class="stringliteral">&quot;received&quot;</span>, <span class="stringliteral">&quot;Received &quot;</span> + std::to_string(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>().size()) + <span class="stringliteral">&quot; bytes&quot;</span>);</div>
 <div class="line">})</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md771"></a>
+<h2><a class="anchor" id="autotoc_md773"></a>
 Problem: High Memory Usage</h2>
 <p><b>Symptoms:</b></p>
 <ul>
@@ -501,7 +501,7 @@ Problem: High Memory Usage</h2>
 <li>Out of memory errors</li>
 </ul>
 <p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md772"></a>
+<h3><a class="anchor" id="autotoc_md774"></a>
 1. Fix Memory Leaks</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Circular reference</span></div>
 <div class="line"><span class="keyword">class </span>Client {</div>
@@ -515,7 +515,7 @@ Problem: High Memory Usage</h2>
 <div class="line"><span class="keyword">class </span>Handler {</div>
 <div class="line">    std::weak_ptr&lt;Client&gt; client_;  <span class="comment">// Weak reference</span></div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md773"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md775"></a>
 3. Limit Buffer Sizes</h3>
 <div class="fragment"><div class="line"><span class="comment">// Limit message queue size</span></div>
 <div class="line">std::deque&lt;std::string&gt; message_queue_;</div>
@@ -528,7 +528,7 @@ Problem: High Memory Usage</h2>
 <div class="line">    message_queue_.push_back(msg);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md775"></a>
+<h2><a class="anchor" id="autotoc_md777"></a>
 Problem: Slow Data Transfer</h2>
 <p><b>Symptoms:</b></p>
 <ul>
@@ -536,7 +536,7 @@ Problem: Slow Data Transfer</h2>
 <li>Messages take long to arrive</li>
 </ul>
 <p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md776"></a>
+<h3><a class="anchor" id="autotoc_md778"></a>
 1. Batch Small Messages</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Send each character</span></div>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">char</span> c : message) {</div>
@@ -545,7 +545,7 @@ Problem: Slow Data Transfer</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// GOOD - Send whole message</span></div>
 <div class="line">client-&gt;send(message);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md777"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md779"></a>
 2. Use Binary Protocol</h3>
 <div class="fragment"><div class="line"><span class="comment">// Instead of text: &quot;LENGTH:1024\nDATA:...&quot;</span></div>
 <div class="line"><span class="comment">// Use binary: [4 bytes length][data]</span></div>
@@ -557,20 +557,20 @@ Problem: Slow Data Transfer</h2>
 <div class="line">    msg.insert(msg.end(), data.begin(), data.end());</div>
 <div class="line">    <span class="keywordflow">return</span> msg;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md778"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md780"></a>
 3. Enable Async Logging</h3>
 <div class="fragment"><div class="line"><span class="comment">// Don&#39;t let logging slow down I/O</span></div>
 <div class="line"><a class="code hl_struct" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
 <div class="line">config.<a class="code hl_variable" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a> = 100;</div>
 <div class="line"><a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code hl_function" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">set_async_logging</a>(<span class="keyword">true</span>, config);</div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00246">logger.cc:246</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00313">logger.cc:313</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00437">logger.cc:437</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00527">logger.cc:527</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a></div><div class="ttdoc">Async logging configuration.</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00079">logger.hpp:79</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aca0467bc46f99891373b0338a43e5790"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">unilink::diagnostics::AsyncLogConfig::batch_size</a></div><div class="ttdeci">size_t batch_size</div><div class="ttdef"><b>Definition</b> <a href="logger_8hpp_source.html#l00081">logger.hpp:81</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md780"></a>
+<h1><a class="anchor" id="autotoc_md782"></a>
 Memory Issues</h1>
-<h2><a class="anchor" id="autotoc_md781"></a>
+<h2><a class="anchor" id="autotoc_md783"></a>
 Problem: Memory Leak Detected</h2>
 <p><b>Symptoms:</b></p>
 <div class="fragment"><div class="line">Memory leak detected: 1024 bytes at 0x...</div>
@@ -599,9 +599,9 @@ Problem: Memory Leak Detected</h2>
 <div class="line">server-&gt;stop();</div>
 <div class="line">server.reset();</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md783"></a>
+<h1><a class="anchor" id="autotoc_md785"></a>
 Thread Safety Issues</h1>
-<h2><a class="anchor" id="autotoc_md784"></a>
+<h2><a class="anchor" id="autotoc_md786"></a>
 Problem: Race Condition / Data Corruption</h2>
 <p><b>Symptoms:</b></p>
 <ul>
@@ -610,7 +610,7 @@ Problem: Race Condition / Data Corruption</h2>
 <li>Inconsistent state</li>
 </ul>
 <p><b>Solutions:</b></p>
-<h3><a class="anchor" id="autotoc_md785"></a>
+<h3><a class="anchor" id="autotoc_md787"></a>
 1. Protect Shared State</h3>
 <div class="fragment"><div class="line"><span class="comment">// BAD - No protection</span></div>
 <div class="line">std::map&lt;size_t, ClientInfo&gt; clients_;</div>
@@ -628,9 +628,9 @@ Problem: Race Condition / Data Corruption</h2>
 <div class="line">    clients_[id] = ClientInfo{};  <span class="comment">// Safe</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md787"></a>
+<h1><a class="anchor" id="autotoc_md789"></a>
 Debugging Tips</h1>
-<h2><a class="anchor" id="autotoc_md788"></a>
+<h2><a class="anchor" id="autotoc_md790"></a>
 Enable Debug Logging</h2>
 <div class="fragment"><div class="line"><span class="comment">// In main() or initialization</span></div>
 <div class="line"><span class="keywordtype">void</span> setup_debugging() {</div>
@@ -652,14 +652,14 @@ Enable Debug Logging</h2>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1ErrorHandler_html_aadba4fe9b3095f294930ba66c2f26a01"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1ErrorHandler.html#aadba4fe9b3095f294930ba66c2f26a01">unilink::diagnostics::ErrorHandler::instance</a></div><div class="ttdeci">static ErrorHandler &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition</b> <a href="error__handler_8cc_source.html#l00033">error_handler.cc:33</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1ErrorHandler_html_af0b34d289b01281f75ce494b6ca44587"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1ErrorHandler.html#af0b34d289b01281f75ce494b6ca44587">unilink::diagnostics::ErrorHandler::register_callback</a></div><div class="ttdeci">void register_callback(ErrorCallback callback)</div><div class="ttdoc">Register error callback.</div><div class="ttdef"><b>Definition</b> <a href="error__handler_8cc_source.html#l00060">error_handler.cc:60</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1ErrorHandler_html_afccd40762ed2ebd05c3e4bc6d71ea122"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1ErrorHandler.html#afccd40762ed2ebd05c3e4bc6d71ea122">unilink::diagnostics::ErrorHandler::set_min_error_level</a></div><div class="ttdeci">void set_min_error_level(ErrorLevel level)</div><div class="ttdoc">Set minimum error level to report.</div><div class="ttdef"><b>Definition</b> <a href="error__handler_8cc_source.html#l00070">error_handler.cc:70</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2f634f2d64d5be96bd683f3c527a6416"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">unilink::diagnostics::Logger::set_console_output</a></div><div class="ttdeci">void set_console_output(bool enable)</div><div class="ttdoc">Enable/disable console output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00260">logger.cc:260</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7e8ec37c982ad0a16b56ad33ae62932b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">unilink::diagnostics::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00253">logger.cc:253</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_ae27d90acc4c3646587ab4aa620bef18f"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#ae27d90acc4c3646587ab4aa620bef18f">unilink::diagnostics::Logger::set_file_output</a></div><div class="ttdeci">void set_file_output(const std::string &amp;filename)</div><div class="ttdoc">Set file output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00278">logger.cc:278</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2f634f2d64d5be96bd683f3c527a6416"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">unilink::diagnostics::Logger::set_console_output</a></div><div class="ttdeci">void set_console_output(bool enable)</div><div class="ttdoc">Enable/disable console output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00459">logger.cc:459</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7e8ec37c982ad0a16b56ad33ae62932b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">unilink::diagnostics::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00444">logger.cc:444</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_ae27d90acc4c3646587ab4aa620bef18f"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#ae27d90acc4c3646587ab4aa620bef18f">unilink::diagnostics::Logger::set_file_output</a></div><div class="ttdeci">void set_file_output(const std::string &amp;filename)</div><div class="ttdoc">Set file output.</div><div class="ttdef"><b>Definition</b> <a href="logger_8cc_source.html#l00471">logger.cc:471</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::ErrorLevel::INFO</a></div><div class="ttdeci">@ INFO</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a></div><div class="ttdeci">@ DEBUG</div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html">unilink::diagnostics::ErrorInfo</a></div><div class="ttdoc">Comprehensive error information structure.</div><div class="ttdef"><b>Definition</b> <a href="error__types_8hpp_source.html#l00064">error_types.hpp:64</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_a4d85e558731498aec9200046191a3c99"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a4d85e558731498aec9200046191a3c99">unilink::diagnostics::ErrorInfo::summary</a></div><div class="ttdeci">std::string summary() const</div><div class="ttdoc">Get formatted error summary.</div><div class="ttdef"><b>Definition</b> <a href="error__types_8hpp_source.html#l00165">error_types.hpp:165</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md789"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md791"></a>
 Use GDB for Debugging</h2>
 <div class="fragment"><div class="line"># Compile with debug symbols</div>
 <div class="line">cmake -DCMAKE_BUILD_TYPE=Debug ..</div>
@@ -676,7 +676,7 @@ Use GDB for Debugging</h2>
 <div class="line">(gdb) print variable_name</div>
 <div class="line">(gdb) bt  # backtrace</div>
 <div class="line">(gdb) info threads</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md790"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md792"></a>
 Network Debugging with tcpdump</h2>
 <div class="fragment"><div class="line"># Capture traffic on port 8080</div>
 <div class="line">sudo tcpdump -i any -nn port 8080 -A</div>
@@ -686,7 +686,7 @@ Network Debugging with tcpdump</h2>
 <div class="line"> </div>
 <div class="line"># View with Wireshark</div>
 <div class="line">wireshark capture.pcap</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md791"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md793"></a>
 Test with netcat</h2>
 <div class="fragment"><div class="line"># Server mode - listen on port 8080</div>
 <div class="line">nc -l 8080</div>
@@ -697,7 +697,7 @@ Test with netcat</h2>
 <div class="line"># Send file</div>
 <div class="line">nc localhost 8080 &lt; test_data.txt</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md793"></a>
+<h1><a class="anchor" id="autotoc_md795"></a>
 Getting Help</h1>
 <p>If you're still experiencing issues:</p>
 <ol type="1">
@@ -724,7 +724,7 @@ Getting Help</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 10 2026 09:54:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 10 2026 14:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

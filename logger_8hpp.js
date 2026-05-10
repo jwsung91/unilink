@@ -3,6 +3,7 @@ var logger_8hpp =
     [ "unilink::diagnostics::LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
     [ "unilink::diagnostics::AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", "structunilink_1_1diagnostics_1_1AsyncLogConfig" ],
     [ "unilink::diagnostics::Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
+    [ "UNILINK_LOG", "logger_8hpp.html#a2ab137835ef53e0ae2575f24c3a7785e", null ],
     [ "UNILINK_LOG_CRITICAL", "logger_8hpp.html#adbcc470aa88aac2aac6ae713a2715531", null ],
     [ "UNILINK_LOG_DEBUG", "logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e", null ],
     [ "UNILINK_LOG_ERROR", "logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e", null ],
