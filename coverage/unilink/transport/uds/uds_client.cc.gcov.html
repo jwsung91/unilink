@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 23:05:33</td>
+            <td class="headerValue">2026-05-10 10:01:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">76.4&nbsp;%</td>
@@ -263,10 +263,10 @@
 <span id="L180"><span class="lineNum">     180</span>                 :             : </span>
 <span id="L181"><span class="lineNum">     181</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          15 :   if (impl_-&gt;owns_ioc_ &amp;&amp; impl_-&gt;ioc_thread_.joinable()) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 11 times"> + </span>]
-<span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           4 :     if (std::this_thread::get_id() != impl_-&gt;ioc_thread_.get_id()) {</span></span>
-<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">           2 :       impl_-&gt;ioc_thread_.join();</span></span>
+<span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           4 :     if (std::this_thread::get_id() != impl_-&gt;ioc_thread_.get_id()) {</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">           3 :       impl_-&gt;ioc_thread_.join();</span></span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :     } else {</span>
-<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">           2 :       impl_-&gt;ioc_thread_.detach();</span></span>
+<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">           1 :       impl_-&gt;ioc_thread_.detach();</span></span>
 <span id="L186"><span class="lineNum">     186</span>                 :             :     }</span>
 <span id="L187"><span class="lineNum">     187</span>                 :             :   }</span>
 <span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          30 : }</span></span>

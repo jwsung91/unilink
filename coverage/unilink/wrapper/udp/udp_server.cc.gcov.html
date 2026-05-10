@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">58.2&nbsp;%</td>
-            <td class="headerCovTableEntry">428</td>
+            <td class="headerCovTableEntryLo">56.8&nbsp;%</td>
+            <td class="headerCovTableEntry">438</td>
             <td class="headerCovTableEntry">249</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 23:05:33</td>
+            <td class="headerValue">2026-05-10 10:01:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">65.2&nbsp;%</td>
-            <td class="headerCovTableEntry">66</td>
+            <td class="headerCovTableEntryLo">63.2&nbsp;%</td>
+            <td class="headerCovTableEntry">68</td>
             <td class="headerCovTableEntry">43</td>
           </tr>
           <tr>
@@ -56,8 +56,8 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">31.2&nbsp;%</td>
-            <td class="headerCovTableEntry">560</td>
+            <td class="headerCovTableEntryLo">31.0&nbsp;%</td>
+            <td class="headerCovTableEntry">564</td>
             <td class="headerCovTableEntry">175</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -264,15 +264,15 @@
 <span id="L183"><span class="lineNum">     183</span>                 :             : </span>
 <span id="L184"><span class="lineNum">     184</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           7 :     reaper_timer-&gt;expires_after(interval);</span></span>
 <span id="L185"><span class="lineNum">     185</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :     reaper_timer-&gt;async_wait([this, alive = std::weak_ptr&lt;bool&gt;(is_alive)](const boost::system::error_code&amp; ec) {</span></span>
-<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">           6 :       auto lock = alive.lock();</span></span>
-<span id="L187"><span class="lineNum">     187</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span> :<span class="tlaGNC">           6 :       if (!lock || !(*lock)) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 4 times"> + </span>]
+<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">           5 :       auto lock = alive.lock();</span></span>
+<span id="L187"><span class="lineNum">     187</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span> :<span class="tlaGNC">           5 :       if (!lock || !(*lock)) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 3 times"> + </span>]
 <span id="L188"><span class="lineNum">     188</span>                 :             : </span>
-<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">           4 :       if (!ec) {</span></span>
+<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           3 :       if (!ec) {</span></span>
 <span id="L190"><span class="lineNum">     190</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :         run_reaper();</span></span>
 <span id="L191"><span class="lineNum">     191</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         schedule_reaper();</span></span>
 <span id="L192"><span class="lineNum">     192</span>                 :             :       }</span>
-<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC tlaBgGNC">           6 :     });</span></span>
+<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC tlaBgGNC">           5 :     });</span></span>
 <span id="L194"><span class="lineNum">     194</span>                 :             :   }</span>
 <span id="L195"><span class="lineNum">     195</span>                 :             : </span>
 <span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaUNC tlaBgUNC">           0 :   void run_reaper() {</span></span>
@@ -769,8 +769,20 @@
 <span id="L670"><span class="lineNum">     670</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
 <span id="L671"><span class="lineNum">     671</span>                 :             : }</span>
 <span id="L672"><span class="lineNum">     672</span>                 :             : </span>
-<span id="L673"><span class="lineNum">     673</span>                 :             : }  // namespace wrapper</span>
-<span id="L674"><span class="lineNum">     674</span>                 :             : }  // namespace unilink</span>
+<span id="L673"><span class="lineNum">     673</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpServer&amp; UdpServer::batch_size(size_t size) {</span></span>
+<span id="L674"><span class="lineNum">     674</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex);</span></span>
+<span id="L675"><span class="lineNum">     675</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;max_batch_size_ = size;</span></span>
+<span id="L676"><span class="lineNum">     676</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L677"><span class="lineNum">     677</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L678"><span class="lineNum">     678</span>                 :             : </span>
+<span id="L679"><span class="lineNum">     679</span>                 :<span class="tlaUNC">           0 : UdpServer&amp; UdpServer::batch_latency(std::chrono::milliseconds latency) {</span></span>
+<span id="L680"><span class="lineNum">     680</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex);</span></span>
+<span id="L681"><span class="lineNum">     681</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;max_batch_latency_ = latency;</span></span>
+<span id="L682"><span class="lineNum">     682</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L683"><span class="lineNum">     683</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L684"><span class="lineNum">     684</span>                 :             : </span>
+<span id="L685"><span class="lineNum">     685</span>                 :             : }  // namespace wrapper</span>
+<span id="L686"><span class="lineNum">     686</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

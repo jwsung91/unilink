@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 23:05:33</td>
+            <td class="headerValue">2026-05-10 10:01:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">21.7&nbsp;%</td>
@@ -56,8 +56,8 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">41.1&nbsp;%</td>
-            <td class="headerCovTableEntry">202</td>
+            <td class="headerCovTableEntryLo">39.9&nbsp;%</td>
+            <td class="headerCovTableEntry">208</td>
             <td class="headerCovTableEntry">83</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -317,7 +317,8 @@
 <span id="L221"><span class="lineNum">     221</span>                 :             : template &lt;uint32_t State&gt;</span>
 <span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaUNC">           0 : UdsServerBuilder&lt;State&gt;&amp; UdsServerBuilder&lt;State&gt;::multi_client(size_t max) {</span></span>
 <span id="L223"><span class="lineNum">     223</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   if (max == 0) {</span></span>
-<span id="L224"><span class="lineNum">     224</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     throw std::invalid_argument(&quot;multi_client max must be greater than 0&quot;);</span></span>
+<span id="L224"><span class="lineNum">     224</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     throw diagnostics::BuilderException(&quot;multi_client max must be greater than 0&quot;);</span></span>
+<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span>]
 <span id="L225"><span class="lineNum">     225</span>                 :             :   }</span>
 <span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaUNC">           0 :   max_clients_ = static_cast&lt;uint32_t&gt;(max);</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaUNC">           0 :   client_limit_enabled_ = true;</span></span>

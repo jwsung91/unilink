@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">65.1&nbsp;%</td>
-            <td class="headerCovTableEntry">370</td>
-            <td class="headerCovTableEntry">241</td>
+            <td class="headerCovTableEntryLo">63.3&nbsp;%</td>
+            <td class="headerCovTableEntry">379</td>
+            <td class="headerCovTableEntry">240</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 23:05:33</td>
+            <td class="headerValue">2026-05-10 10:01:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">72.9&nbsp;%</td>
-            <td class="headerCovTableEntry">59</td>
+            <td class="headerCovTableEntryLo">70.5&nbsp;%</td>
+            <td class="headerCovTableEntry">61</td>
             <td class="headerCovTableEntry">43</td>
           </tr>
           <tr>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">36.4&nbsp;%</td>
+            <td class="headerCovTableEntryLo">35.8&nbsp;%</td>
             <td class="headerCovTableEntry">508</td>
-            <td class="headerCovTableEntry">185</td>
+            <td class="headerCovTableEntry">182</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -123,8 +123,8 @@
 <span id="L45"><span class="lineNum">      45</span>                 :             :   std::string socket_path_;</span>
 <span id="L46"><span class="lineNum">      46</span>                 :             :   std::shared_ptr&lt;interface::Channel&gt; channel_;</span>
 <span id="L47"><span class="lineNum">      47</span>                 :             :   std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc_;</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :   bool use_external_context_{false};</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :   bool manage_external_context_{false};</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :   std::atomic&lt;bool&gt; use_external_context_{false};</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :   std::atomic&lt;bool&gt; manage_external_context_{false};</span>
 <span id="L50"><span class="lineNum">      50</span>                 :             :   std::thread external_thread_;</span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :   std::unique_ptr&lt;boost::asio::executor_work_guard&lt;boost::asio::io_context::executor_type&gt;&gt; work_guard_;</span>
 <span id="L52"><span class="lineNum">      52</span>                 :             : </span>
@@ -440,27 +440,26 @@
 <span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaUNC">           0 :           data_batch_queue_.clear();</span></span>
 <span id="L354"><span class="lineNum">     354</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :           lock.unlock();</span></span>
 <span id="L355"><span class="lineNum">     355</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :           handler(batch);</span></span>
-<span id="L356"><span class="lineNum">     356</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         } else if (data_batch_queue_.size() == 1) {</span></span>
-<span id="L357"><span class="lineNum">     357</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :           schedule_batch_timer();</span></span>
-<span id="L358"><span class="lineNum">     358</span>                 :             :         }</span>
-<span id="L359"><span class="lineNum">     359</span>                 :<span class="tlaUNC">           0 :         return;</span></span>
-<span id="L360"><span class="lineNum">     360</span>                 :             :       }</span>
-<span id="L361"><span class="lineNum">     361</span>                 :             : </span>
-<span id="L362"><span class="lineNum">     362</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           1 :       MessageHandler handler = data_handler_;</span></span>
-<span id="L363"><span class="lineNum">     363</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :       if (handler) {</span></span>
-<span id="L364"><span class="lineNum">     364</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :         lock.unlock();</span></span>
-<span id="L365"><span class="lineNum">     365</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           1 :         handler(MessageContext(0, memory::SafeDataBuffer(data)));</span></span>
+<span id="L356"><span class="lineNum">     356</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :           lock.lock();</span></span>
+<span id="L357"><span class="lineNum">     357</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :         } else if (data_batch_queue_.size() == 1) {</span></span>
+<span id="L358"><span class="lineNum">     358</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :           schedule_batch_timer();</span></span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :         }</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :       } else {</span>
+<span id="L361"><span class="lineNum">     361</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           1 :         MessageHandler handler = data_handler_;</span></span>
+<span id="L362"><span class="lineNum">     362</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :         if (handler) {</span></span>
+<span id="L363"><span class="lineNum">     363</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :           lock.unlock();</span></span>
+<span id="L364"><span class="lineNum">     364</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           1 :           handler(MessageContext(0, memory::SafeDataBuffer(data)));</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L366"><span class="lineNum">     366</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :         lock.lock();</span></span>
-<span id="L367"><span class="lineNum">     367</span>                 :             :       }</span>
+<span id="L365"><span class="lineNum">     365</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :           lock.lock();</span></span>
+<span id="L366"><span class="lineNum">     366</span>                 :             :         }</span>
+<span id="L367"><span class="lineNum">     367</span>                 :<span class="tlaGNC">           1 :       }</span></span>
 <span id="L368"><span class="lineNum">     368</span>                 :             : </span>
 <span id="L369"><span class="lineNum">     369</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           1 :       if (framer_) {</span></span>
 <span id="L370"><span class="lineNum">     370</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         framer_to_push = framer_;</span></span>
 <span id="L371"><span class="lineNum">     371</span>                 :             :       }</span>
 <span id="L372"><span class="lineNum">     372</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           1 :       lock.unlock();</span></span>
 <span id="L373"><span class="lineNum">     373</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           1 :       if (framer_to_push) framer_to_push-&gt;push_bytes(data);</span></span>
-<span id="L374"><span class="lineNum">     374</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           1 :     });</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L374"><span class="lineNum">     374</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     });</span></span>
 <span id="L375"><span class="lineNum">     375</span>                 :             : </span>
 <span id="L376"><span class="lineNum">     376</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           9 :     channel_-&gt;on_backpressure([this, weak_alive](size_t queued) {</span></span>
 <span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       bp_cv_.notify_all();</span></span>
@@ -656,13 +655,24 @@
 <span id="L562"><span class="lineNum">     562</span>                 :<span class="tlaGNC">           1 : }</span></span>
 <span id="L563"><span class="lineNum">     563</span>                 :             : </span>
 <span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaGNC">           5 : UdsClient&amp; UdsClient::manage_external_context(bool manage) {</span></span>
-<span id="L565"><span class="lineNum">     565</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L566"><span class="lineNum">     566</span>                 :<span class="tlaGNC">           5 :   impl_-&gt;manage_external_context_ = manage;</span></span>
-<span id="L567"><span class="lineNum">     567</span>                 :<span class="tlaGNC">           5 :   return *this;</span></span>
-<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaGNC">           5 : }</span></span>
-<span id="L569"><span class="lineNum">     569</span>                 :             : </span>
-<span id="L570"><span class="lineNum">     570</span>                 :             : }  // namespace wrapper</span>
-<span id="L571"><span class="lineNum">     571</span>                 :             : }  // namespace unilink</span>
+<span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaGNC">           5 :   impl_-&gt;manage_external_context_.store(manage);</span></span>
+<span id="L566"><span class="lineNum">     566</span>                 :<span class="tlaGNC">           5 :   return *this;</span></span>
+<span id="L567"><span class="lineNum">     567</span>                 :             : }</span>
+<span id="L568"><span class="lineNum">     568</span>                 :             : </span>
+<span id="L569"><span class="lineNum">     569</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdsClient&amp; UdsClient::batch_size(size_t size) {</span></span>
+<span id="L570"><span class="lineNum">     570</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;max_batch_size_ = size;</span></span>
+<span id="L572"><span class="lineNum">     572</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L573"><span class="lineNum">     573</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L574"><span class="lineNum">     574</span>                 :             : </span>
+<span id="L575"><span class="lineNum">     575</span>                 :<span class="tlaUNC">           0 : UdsClient&amp; UdsClient::batch_latency(std::chrono::milliseconds latency) {</span></span>
+<span id="L576"><span class="lineNum">     576</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L577"><span class="lineNum">     577</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;max_batch_latency_ = latency;</span></span>
+<span id="L578"><span class="lineNum">     578</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L579"><span class="lineNum">     579</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L580"><span class="lineNum">     580</span>                 :             : </span>
+<span id="L581"><span class="lineNum">     581</span>                 :             : }  // namespace wrapper</span>
+<span id="L582"><span class="lineNum">     582</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">87.1&nbsp;%</td>
-            <td class="headerCovTableEntry">70</td>
-            <td class="headerCovTableEntry">61</td>
+            <td class="headerCovTableEntryMed">87.3&nbsp;%</td>
+            <td class="headerCovTableEntry">71</td>
+            <td class="headerCovTableEntry">62</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 23:05:33</td>
+            <td class="headerValue">2026-05-10 10:01:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">83.3&nbsp;%</td>
@@ -226,37 +226,38 @@
 <span id="L148"><span class="lineNum">     148</span>                 :             : </span>
 <span id="L149"><span class="lineNum">     149</span>                 :             :     // Calculate message length (from end of previous processed data to end of current delimiter)</span>
 <span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">        1212 :     size_t current_msg_total_len = match_end_idx - processed_count;</span></span>
-<span id="L151"><span class="lineNum">     151</span>                 :             : </span>
-<span id="L152"><span class="lineNum">     152</span>                 :             :     // Check strict max_length constraint</span>
-<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        1212 :     if (current_msg_total_len &gt; max_length_) {</span></span>
-<span id="L154"><span class="lineNum">     154</span>                 :             :       // Message exceeds limit. Skip it.</span>
-<span id="L155"><span class="lineNum">     155</span>                 :             :     } else {</span>
-<span id="L156"><span class="lineNum">     156</span>                 :             :       // Valid message</span>
-<span id="L157"><span class="lineNum">     157</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1211 :       if (on_message_) {</span></span>
-<span id="L158"><span class="lineNum">     158</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1210 times"> + </span>]:<span class="tlaGNC">        1211 :         size_t payload_len = include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());</span></span>
-<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1211 :         on_message_(memory::ConstByteSpan(data.data() + processed_count, payload_len));</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :             :       }</span>
-<span id="L161"><span class="lineNum">     161</span>                 :             :     }</span>
-<span id="L162"><span class="lineNum">     162</span>                 :             : </span>
-<span id="L163"><span class="lineNum">     163</span>                 :             :     // Mark these bytes as processed</span>
-<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">        1212 :     processed_count = match_end_idx;</span></span>
-<span id="L165"><span class="lineNum">     165</span>                 :             : </span>
-<span id="L166"><span class="lineNum">     166</span>                 :             :     // Advance search cursor to start strictly after the current delimiter</span>
-<span id="L167"><span class="lineNum">     167</span>                 :<span class="tlaGNC">        1212 :     search_cursor = processed_count;</span></span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">        1212 :   }</span></span>
-<span id="L169"><span class="lineNum">     169</span>                 :             : </span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">        1013 :   return processed_count;</span></span>
-<span id="L171"><span class="lineNum">     171</span>                 :             : }</span>
-<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          37 : void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></span>
-<span id="L174"><span class="lineNum">     174</span>                 :             : </span>
-<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaUNC tlaBgUNC">           0 : void LineFramer::reset() {</span></span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaUNC">           0 :   buffer_.clear();</span></span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaUNC">           0 :   scanned_idx_ = 0;</span></span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaUNC">           0 : }</span></span>
-<span id="L179"><span class="lineNum">     179</span>                 :             : </span>
-<span id="L180"><span class="lineNum">     180</span>                 :             : }  // namespace framer</span>
-<span id="L181"><span class="lineNum">     181</span>                 :             : }  // namespace unilink</span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">        1212 :     size_t content_len = current_msg_total_len - delimiter_.length();</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :             : </span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :     // Check max_length against content length (delimiter excluded)</span>
+<span id="L154"><span class="lineNum">     154</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        1212 :     if (content_len &gt; max_length_) {</span></span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :       // Message exceeds limit. Skip it.</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :     } else {</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :       // Valid message</span>
+<span id="L158"><span class="lineNum">     158</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1211 :       if (on_message_) {</span></span>
+<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1210 times"> + </span>]:<span class="tlaGNC">        1211 :         size_t payload_len = include_delimiter_ ? current_msg_total_len : content_len;</span></span>
+<span id="L160"><span class="lineNum">     160</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1211 :         on_message_(memory::ConstByteSpan(data.data() + processed_count, payload_len));</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :       }</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     }</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : </span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     // Mark these bytes as processed</span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">        1212 :     processed_count = match_end_idx;</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     // Advance search cursor to start strictly after the current delimiter</span>
+<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">        1212 :     search_cursor = processed_count;</span></span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">        1212 :   }</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :             : </span>
+<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC">        1013 :   return processed_count;</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : }</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             : </span>
+<span id="L174"><span class="lineNum">     174</span>                 :<span class="tlaGNC">          37 : void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></span>
+<span id="L175"><span class="lineNum">     175</span>                 :             : </span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaUNC tlaBgUNC">           0 : void LineFramer::reset() {</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaUNC">           0 :   buffer_.clear();</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaUNC">           0 :   scanned_idx_ = 0;</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :             : }  // namespace framer</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

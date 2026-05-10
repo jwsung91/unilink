@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">92.2&nbsp;%</td>
-            <td class="headerCovTableEntry">51</td>
-            <td class="headerCovTableEntry">47</td>
+            <td class="headerCovTableEntryHi">92.6&nbsp;%</td>
+            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">50</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-09 23:05:33</td>
+            <td class="headerValue">2026-05-10 10:01:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">38.9&nbsp;%</td>
@@ -208,62 +208,67 @@
 <span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           5 :         enable_broadcast_(other.enable_broadcast_),</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">           5 :         reuse_address_(other.reuse_address_),</span></span>
 <span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">           5 :         max_clients_(other.max_clients_),</span></span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">           5 :         client_limit_enabled_(other.client_limit_enabled_) {</span></span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
-<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
-<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
-<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
-<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">           5 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
-<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
-<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">           5 :   }</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
-<span id="L149"><span class="lineNum">     149</span>                 :             :   // Delete copy</span>
-<span id="L150"><span class="lineNum">     150</span>                 :             :   UdpServerBuilder(const UdpServerBuilder&amp;) = delete;</span>
-<span id="L151"><span class="lineNum">     151</span>                 :             :   UdpServerBuilder&amp; operator=(const UdpServerBuilder&amp;) = delete;</span>
-<span id="L152"><span class="lineNum">     152</span>                 :             : </span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :   std::unique_ptr&lt;wrapper::UdpServer&gt; build() override;</span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">           5 :         client_limit_enabled_(other.client_limit_enabled_),</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">           5 :         idle_timeout_(other.idle_timeout_),</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">           5 :         idle_timeout_set_(other.idle_timeout_set_) {</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">           5 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">           5 :   }</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : </span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :   // Delete copy</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :   UdpServerBuilder(const UdpServerBuilder&amp;) = delete;</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :   UdpServerBuilder&amp; operator=(const UdpServerBuilder&amp;) = delete;</span>
 <span id="L154"><span class="lineNum">     154</span>                 :             : </span>
-<span id="L155"><span class="lineNum">     155</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; auto_start(bool auto_start = true) override;</span>
-<span id="L156"><span class="lineNum">     156</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; local_port(uint16_t port);</span>
-<span id="L157"><span class="lineNum">     157</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; bind_address(const std::string&amp; address);</span>
-<span id="L158"><span class="lineNum">     158</span>                 :             :   [[deprecated(&quot;Use bind_address instead&quot;)]]</span>
-<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaUNC tlaBgUNC">           0 :   UdpServerBuilder&lt;State&gt;&amp; local_address(const std::string&amp; address) {</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaUNC">           0 :     return bind_address(address);</span></span>
-<span id="L161"><span class="lineNum">     161</span>                 :             :   }</span>
-<span id="L162"><span class="lineNum">     162</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; max_clients(size_t max);</span>
-<span id="L163"><span class="lineNum">     163</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; broadcast(bool enable = true);</span>
-<span id="L164"><span class="lineNum">     164</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; reuse_address(bool enable = true);</span>
-<span id="L165"><span class="lineNum">     165</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; independent_context(bool use_independent = true);</span>
-<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
-<span id="L167"><span class="lineNum">     167</span>                 :             :  private:</span>
-<span id="L168"><span class="lineNum">     168</span>                 :             :   template &lt;uint32_t S&gt;</span>
-<span id="L169"><span class="lineNum">     169</span>                 :             :   friend class UdpServerBuilder;</span>
-<span id="L170"><span class="lineNum">     170</span>                 :             : </span>
-<span id="L171"><span class="lineNum">     171</span>                 :             :   uint16_t local_port_;</span>
-<span id="L172"><span class="lineNum">     172</span>                 :             :   std::string bind_address_;</span>
-<span id="L173"><span class="lineNum">     173</span>                 :             :   bool auto_start_;</span>
-<span id="L174"><span class="lineNum">     174</span>                 :             :   bool independent_context_;</span>
-<span id="L175"><span class="lineNum">     175</span>                 :             :   bool enable_broadcast_;</span>
-<span id="L176"><span class="lineNum">     176</span>                 :             :   bool reuse_address_;</span>
-<span id="L177"><span class="lineNum">     177</span>                 :             :   size_t max_clients_ = 0;</span>
-<span id="L178"><span class="lineNum">     178</span>                 :             :   bool client_limit_enabled_ = false;</span>
-<span id="L179"><span class="lineNum">     179</span>                 :             : };</span>
-<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
-<span id="L181"><span class="lineNum">     181</span>                 :             : using UdpServerBuilderDefault = UdpServerBuilder&lt;BuilderState::None&gt;;</span>
-<span id="L182"><span class="lineNum">     182</span>                 :             : </span>
-<span id="L183"><span class="lineNum">     183</span>                 :             : #ifdef _MSC_VER</span>
-<span id="L184"><span class="lineNum">     184</span>                 :             : #pragma warning(pop)</span>
-<span id="L185"><span class="lineNum">     185</span>                 :             : #endif</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
-<span id="L187"><span class="lineNum">     187</span>                 :             : }  // namespace builder</span>
-<span id="L188"><span class="lineNum">     188</span>                 :             : }  // namespace unilink</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :   std::unique_ptr&lt;wrapper::UdpServer&gt; build() override;</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             : </span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; auto_start(bool auto_start = true) override;</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; local_port(uint16_t port);</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; bind_address(const std::string&amp; address);</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :   [[deprecated(&quot;Use bind_address instead&quot;)]]</span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaUNC tlaBgUNC">           0 :   UdpServerBuilder&lt;State&gt;&amp; local_address(const std::string&amp; address) {</span></span>
+<span id="L162"><span class="lineNum">     162</span>                 :<span class="tlaUNC">           0 :     return bind_address(address);</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :   }</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; max_clients(uint32_t max);</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; broadcast(bool enable = true);</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; reuse_address(bool enable = true);</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; independent_context(bool use_independent = true);</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; idle_timeout(std::chrono::milliseconds timeout);</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             : </span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :  private:</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :   template &lt;uint32_t S&gt;</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :   friend class UdpServerBuilder;</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             : </span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :   uint16_t local_port_;</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :   std::string bind_address_;</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :   bool auto_start_;</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :   bool independent_context_;</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :   bool enable_broadcast_;</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :   bool reuse_address_;</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :   uint32_t max_clients_ = 0;</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :   bool client_limit_enabled_ = false;</span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC tlaBgGNC">           2 :   std::chrono::milliseconds idle_timeout_{0};</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :   bool idle_timeout_set_ = false;</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : };</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             : </span>
+<span id="L186"><span class="lineNum">     186</span>                 :             : using UdpServerBuilderDefault = UdpServerBuilder&lt;BuilderState::None&gt;;</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             : </span>
+<span id="L188"><span class="lineNum">     188</span>                 :             : #ifdef _MSC_VER</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : #pragma warning(pop)</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : #endif</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :             : }  // namespace builder</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
