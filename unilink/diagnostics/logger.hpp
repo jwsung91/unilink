@@ -65,8 +65,8 @@ enum class LogOutput { CONSOLE = 0x01, FILE = 0x02, CALLBACK = 0x04 };
 struct LogRotationConfig {
   size_t max_file_size_bytes = 10 * 1024 * 1024;    // 10MB default
   size_t max_files = 10;                            // Keep 10 files max
-  bool enable_compression = false;                  // Future feature
-  std::string file_pattern = "{name}.{index}.log";  // File naming pattern
+  bool enable_compression = false;                  // Reserved for future use
+  std::string file_pattern = "{name}.{index}.log";  // Reserved for future use
 
   LogRotationConfig() = default;
 
@@ -78,11 +78,11 @@ struct LogRotationConfig {
  */
 struct AsyncLogConfig {
   size_t max_queue_size = 10000;                     // Maximum queue size
-  size_t batch_size = 100;                           // [IGNORED] Batch processing size (handled by spdlog)
+  size_t batch_size = 100;                           // Reserved; spdlog manages batching internally
   std::chrono::milliseconds flush_interval{100};     // Flush interval
   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout
   bool enable_backpressure = true;                   // Enable backpressure handling (maps to spdlog block policy)
-  bool enable_batch_processing = true;               // [IGNORED] Enable batch processing (handled by spdlog)
+  bool enable_batch_processing = true;               // Reserved; spdlog manages batching internally
 
   AsyncLogConfig() = default;
 
@@ -130,6 +130,11 @@ class UNILINK_API Logger {
   LogLevel level() const;
 
   /**
+   * @brief Check whether a message at the given level would be logged.
+   */
+  bool should_log(LogLevel level) const;
+
+  /**
    * @brief Enable/disable console output
    * @param enable True to enable console output
    */
@@ -142,12 +147,28 @@ class UNILINK_API Logger {
   void set_file_output(const std::string& filename);
 
   /**
+   * @brief Set file output and report whether it succeeded.
+   * @param filename Log file path (empty string to disable file output)
+   * @return True when the requested output state was applied
+   */
+  bool try_set_file_output(const std::string& filename);
+
+  /**
    * @brief Set file output with rotation
    * @param filename Log file path
    * @param config Rotation configuration
    */
   void set_file_output_with_rotation(const std::string& filename,
                                      const LogRotationConfig& config = LogRotationConfig{});
+
+  /**
+   * @brief Set file output with rotation and report whether it succeeded.
+   * @param filename Log file path
+   * @param config Rotation configuration
+   * @return True when the requested output state was applied
+   */
+  bool try_set_file_output_with_rotation(const std::string& filename,
+                                         const LogRotationConfig& config = LogRotationConfig{});
 
   /**
    * @brief Enable/disable async logging
@@ -160,6 +181,13 @@ class UNILINK_API Logger {
    * @brief Check if async logging is enabled
    */
   bool async_logging_enabled() const;
+
+  /**
+   * @brief Re-apply supported logger settings from environment variables.
+   *
+   * Currently supports UNILINK_LOG_LEVEL values DEBUG, INFO, WARNING, ERROR, CRITICAL, and OFF.
+   */
+  void reload_from_environment();
 
   /**
    * @brief Set log callback
@@ -185,8 +213,19 @@ class UNILINK_API Logger {
   bool enabled() const;
 
   /**
+   * @brief Return true when at least one output destination is active.
+   */
+  bool has_outputs() const;
+
+  /**
+   * @brief Last logger configuration error, empty when the last operation succeeded.
+   */
+  std::string last_error() const;
+
+  /**
    * @brief Set log format
-   * @param format Format string with placeholders: {timestamp}, {level}, {component}, {operation}, {message}
+   * @param format Format string with placeholders: {timestamp}, {level}, {component}, {operation}, {source}, {file},
+   * {line}, {function}, {message}
    */
   void set_format(const std::string& format);
 
@@ -220,40 +259,28 @@ class UNILINK_API Logger {
 /**
  * @brief Convenience macros for logging
  */
-#define UNILINK_LOG_DEBUG(component, operation, message)                                             \
-  do {                                                                                               \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) { \
-      unilink::diagnostics::Logger::instance().debug(component, operation, message);                 \
-    }                                                                                                \
+#define UNILINK_LOG(level, component, operation, message)                                             \
+  do {                                                                                                \
+    const auto unilink_log_level = (level);                                                           \
+    if (unilink::diagnostics::Logger::instance().should_log(unilink_log_level)) {                     \
+      unilink::diagnostics::Logger::instance().log(unilink_log_level, component, operation, message); \
+    }                                                                                                 \
   } while (0)
 
-#define UNILINK_LOG_INFO(component, operation, message)                                             \
-  do {                                                                                              \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::INFO) { \
-      unilink::diagnostics::Logger::instance().info(component, operation, message);                 \
-    }                                                                                               \
-  } while (0)
+#define UNILINK_LOG_DEBUG(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::DEBUG, component, operation, message)
 
-#define UNILINK_LOG_WARNING(component, operation, message)                                             \
-  do {                                                                                                 \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::WARNING) { \
-      unilink::diagnostics::Logger::instance().warning(component, operation, message);                 \
-    }                                                                                                  \
-  } while (0)
+#define UNILINK_LOG_INFO(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::INFO, component, operation, message)
 
-#define UNILINK_LOG_ERROR(component, operation, message)                                             \
-  do {                                                                                               \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::ERROR) { \
-      unilink::diagnostics::Logger::instance().error(component, operation, message);                 \
-    }                                                                                                \
-  } while (0)
+#define UNILINK_LOG_WARNING(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::WARNING, component, operation, message)
 
-#define UNILINK_LOG_CRITICAL(component, operation, message)                                             \
-  do {                                                                                                  \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::CRITICAL) { \
-      unilink::diagnostics::Logger::instance().critical(component, operation, message);                 \
-    }                                                                                                   \
-  } while (0)
+#define UNILINK_LOG_ERROR(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::ERROR, component, operation, message)
+
+#define UNILINK_LOG_CRITICAL(component, operation, message) \
+  UNILINK_LOG(unilink::diagnostics::LogLevel::CRITICAL, component, operation, message)
 
 /**
  * @brief Performance logging macros for expensive operations.
@@ -262,21 +289,22 @@ class UNILINK_API Logger {
  * `component` and `operation` tokens, and each `operation` token must be
  * unique within its enclosing scope (the token becomes part of a variable name).
  */
-#define UNILINK_LOG_PERF_START(component, operation)                                              \
-  auto _perf_start_##operation =                                                                  \
-      (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) \
-          ? std::chrono::high_resolution_clock::now()                                             \
+#define UNILINK_LOG_PERF_START(component, operation)                                               \
+  auto _perf_start_##operation =                                                                   \
+      (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) \
+          ? std::chrono::high_resolution_clock::now()                                              \
           : std::chrono::high_resolution_clock::time_point()
 
-#define UNILINK_LOG_PERF_END(component, operation)                                                                \
-  do {                                                                                                            \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) {              \
-      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \
-      using _us_t = std::chrono::microseconds;                                                                    \
-      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \
-      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count();             \
-      UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
-    }                                                                                                             \
+#define UNILINK_LOG_PERF_END(component, operation)                                                    \
+  do {                                                                                                \
+    if (unilink::diagnostics::Logger::instance().should_log(unilink::diagnostics::LogLevel::DEBUG)) { \
+      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                         \
+      using _us_t = std::chrono::microseconds;                                                        \
+      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                       \
+      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count(); \
+      UNILINK_LOG(unilink::diagnostics::LogLevel::DEBUG, component, operation,                        \
+                  "Duration: " + std::to_string(_perf_duration_##operation) + " μs");                 \
+    }                                                                                                 \
   } while (0)
 
 }  // namespace diagnostics

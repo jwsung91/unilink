@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -345,20 +346,136 @@ TEST_F(AdvancedLoggerCoverageTest, CallbackExceptionSafety) {
 }
 
 TEST_F(AdvancedLoggerCoverageTest, CustomFormatHandling) {
-  // spdlog format mapping is simplified in this migration.
-  // We'll just verify that setting a format doesn't crash.
+  std::vector<std::string> captured_logs;
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
   Logger::instance().set_level(LogLevel::INFO);
-  Logger::instance().set_format("[{level}] {message}");
+  Logger::instance().set_format("[{level}] {component}/{operation}: {message}");
 
-  UNILINK_LOG_INFO("test", "fmt", "msg");
+  UNILINK_LOG_INFO("test_component", "fmt_operation", "formatted message");
   Logger::instance().flush();
 
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("[info] test_component/fmt_operation: formatted message"), std::string::npos);
+
   Logger::instance().set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
+  Logger::instance().set_callback(nullptr);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, DisabledLoggerSkipsMacroMessageEvaluation) {
+  Logger::instance().set_enabled(false);
+  Logger::instance().set_level(LogLevel::DEBUG);
+
+  int evaluations = 0;
+  auto make_message = [&evaluations]() {
+    ++evaluations;
+    return std::string("expensive message");
+  };
+
+  UNILINK_LOG_DEBUG("test", "disabled", make_message());
+
+  EXPECT_EQ(evaluations, 0);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroUsesRuntimeLevel) {
+  std::vector<std::string> captured_logs;
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
+  Logger::instance().set_level(LogLevel::WARNING);
+
+  int level_evaluations = 0;
+  auto choose_level = [&level_evaluations]() {
+    ++level_evaluations;
+    return LogLevel::WARNING;
+  };
+
+  UNILINK_LOG(choose_level(), "test", "runtime_level", "runtime level message");
+  Logger::instance().flush();
+
+  EXPECT_EQ(level_evaluations, 1);
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("runtime level message"), std::string::npos);
+  Logger::instance().set_callback(nullptr);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroSkipsFilteredMessageEvaluation) {
+  Logger::instance().set_level(LogLevel::ERROR);
+
+  int evaluations = 0;
+  auto make_message = [&evaluations]() {
+    ++evaluations;
+    return std::string("filtered message");
+  };
+
+  const auto runtime_level = LogLevel::INFO;
+  UNILINK_LOG(runtime_level, "test", "filtered", make_message());
+
+  EXPECT_EQ(evaluations, 0);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, OutputsDisabledSkipsMessageEvaluation) {
+  Logger::instance().set_enabled(true);
+  Logger::instance().set_level(LogLevel::DEBUG);
+  Logger::instance().set_outputs(0);
+
+  int evaluations = 0;
+  auto make_message = [&evaluations]() {
+    ++evaluations;
+    return std::string("no output message");
+  };
+
+  UNILINK_LOG_INFO("test", "outputs_disabled", make_message());
+
+  EXPECT_FALSE(Logger::instance().has_outputs());
+  EXPECT_EQ(evaluations, 0);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, ReloadsLogLevelFromEnvironment) {
+#ifdef _WIN32
+  _putenv_s("UNILINK_LOG_LEVEL", "WARNING");
+#else
+  setenv("UNILINK_LOG_LEVEL", "WARNING", 1);
+#endif
+
+  Logger::instance().reload_from_environment();
+  EXPECT_TRUE(Logger::instance().enabled());
+  EXPECT_EQ(Logger::instance().level(), LogLevel::WARNING);
+
+#ifdef _WIN32
+  _putenv_s("UNILINK_LOG_LEVEL", "OFF");
+#else
+  setenv("UNILINK_LOG_LEVEL", "OFF", 1);
+#endif
+
+  Logger::instance().reload_from_environment();
+  EXPECT_FALSE(Logger::instance().enabled());
+
+#ifdef _WIN32
+  _putenv_s("UNILINK_LOG_LEVEL", "");
+#else
+  unsetenv("UNILINK_LOG_LEVEL");
+#endif
+}
+
+TEST_F(AdvancedLoggerCoverageTest, CallbackReenabledAfterOutputsDisabled) {
+  std::vector<std::string> captured_logs;
+
+  Logger::instance().set_callback([](LogLevel, const std::string&) {});
+  Logger::instance().set_outputs(0);
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
+  Logger::instance().set_level(LogLevel::INFO);
+
+  UNILINK_LOG_INFO("test", "callback", "callback restored");
+  Logger::instance().flush();
+
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("callback restored"), std::string::npos);
 }
 
 TEST_F(AdvancedLoggerCoverageTest, OutputDisabling) {
   // Test set_file_output with empty string
-  Logger::instance().set_file_output("temp_test.log");
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_file_output("");  // Disable
 
   // Test set_callback with nullptr
@@ -386,7 +503,16 @@ TEST_F(AdvancedLoggerCoverageTest, FileOpenFailure) {
 #endif
 
   // This should print error to stderr but not throw
-  EXPECT_NO_THROW(Logger::instance().set_file_output(invalid_path));
+  EXPECT_FALSE(Logger::instance().try_set_file_output(invalid_path));
+  EXPECT_FALSE(Logger::instance().last_error().empty());
+}
+
+TEST_F(AdvancedLoggerCoverageTest, UnsupportedRotationOptionsReportFailure) {
+  LogRotationConfig config;
+  config.enable_compression = true;
+
+  EXPECT_FALSE(Logger::instance().try_set_file_output_with_rotation(test_log_file_.string(), config));
+  EXPECT_FALSE(Logger::instance().last_error().empty());
 }
 
 TEST_F(AdvancedLoggerCoverageTest, ConsoleErrorStreamSelection) {

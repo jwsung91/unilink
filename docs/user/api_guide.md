@@ -782,7 +782,9 @@ auto& logger = unilink::diagnostics::Logger::instance();
 // Configure logger
 logger.set_level(unilink::diagnostics::LogLevel::DEBUG);
 logger.set_console_output(true);
-logger.set_file_output("app.log");
+if (!logger.try_set_file_output("app.log")) {
+  std::cerr << logger.last_error() << std::endl;
+}
 
 // Log messages
 logger.debug("component", "operation", "Debug message");
@@ -790,6 +792,10 @@ logger.info("component", "operation", "Info message");
 logger.warning("component", "operation", "Warning message");
 logger.error("component", "operation", "Error message");
 logger.critical("component", "operation", "Critical message");
+
+// Macro form keeps source location at the call site and avoids formatting filtered messages
+UNILINK_LOG(unilink::diagnostics::LogLevel::INFO, "component", "operation", "Info message");
+UNILINK_LOG_INFO("component", "operation", "Info message");
 ```
 
 ### Log Levels
@@ -807,11 +813,26 @@ logger.critical("component", "operation", "Critical message");
 ```cpp
 // Enable async logging for better performance
 unilink::diagnostics::AsyncLogConfig config;
-config.batch_size = 100;                    // Process 100 logs at once
+config.max_queue_size = 10000;              // Queue capacity
+config.enable_backpressure = true;          // Block when the queue is full
 config.flush_interval = std::chrono::milliseconds(1000); // Flush every 1 second
 
 logger.set_async_logging(true, config);
 ```
+
+### Custom Format
+
+```cpp
+logger.set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
+```
+
+Supported placeholders are `{timestamp}`, `{level}`, `{component}`, `{operation}`, `{source}`, `{file}`, `{line}`,
+`{function}`, and `{message}`.
+
+### Environment
+
+`UNILINK_LOG_LEVEL` can be set to `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`, or `OFF`. The logger reads it
+during initialization; call `logger.reload_from_environment()` to re-apply it later.
 
 ---
 
