@@ -10,6 +10,8 @@ var classunilink_1_1wrapper_1_1Serial =
     [ "auto_start", "classunilink_1_1wrapper_1_1Serial.html#a6a5dc7c9fb83aeb36f19160386f57e83", null ],
     [ "backpressure_strategy", "classunilink_1_1wrapper_1_1Serial.html#ad3b0f8cb2de040bc3da96efa4cea3c80", null ],
     [ "backpressure_threshold", "classunilink_1_1wrapper_1_1Serial.html#a4c058dcf2c435f02acb3b98c3314a367", null ],
+    [ "batch_latency", "classunilink_1_1wrapper_1_1Serial.html#a6b692af4af182cfd79d73960aa4a481e", null ],
+    [ "batch_size", "classunilink_1_1wrapper_1_1Serial.html#ac9c208ade70521e07d87560331b2e679", null ],
     [ "baud_rate", "classunilink_1_1wrapper_1_1Serial.html#a062c7d4e703bf3f79f52f11941c95a85", null ],
     [ "build_config", "classunilink_1_1wrapper_1_1Serial.html#a187aba4ee4b20cc58f9bf6715291983b", null ],
     [ "connected", "classunilink_1_1wrapper_1_1Serial.html#a5b9f553c0f4fe67d316a9c30e391c3d8", null ],

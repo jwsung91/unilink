@@ -10,6 +10,8 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "auto_start", "classunilink_1_1wrapper_1_1TcpServer.html#a2d8c7983984c7816c6bba7bf91fee7bc", null ],
     [ "backpressure_strategy", "classunilink_1_1wrapper_1_1TcpServer.html#a2e167784621f76de54d67834b1477721", null ],
     [ "backpressure_threshold", "classunilink_1_1wrapper_1_1TcpServer.html#a59fea2993947bb6e974d650b646e3a9d", null ],
+    [ "batch_latency", "classunilink_1_1wrapper_1_1TcpServer.html#a649a0604768c4227e77ac54bb34946a4", null ],
+    [ "batch_size", "classunilink_1_1wrapper_1_1TcpServer.html#af10d525dabd4c11a6ecfe588ff1f78d0", null ],
     [ "bind_address", "classunilink_1_1wrapper_1_1TcpServer.html#ad8dcc11759c860452353dd3a16a16c08", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181", null ],
     [ "broadcast_line", "classunilink_1_1wrapper_1_1TcpServer.html#ae1575d3f34f582f2c0a40c260ead4c04", null ],

@@ -39,7 +39,7 @@ var structunilink_1_1wrapper_1_1UdsClient_1_1Impl =
     [ "external_ioc_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a724699ca503b9c9ae9ab974ce38e46dc", null ],
     [ "external_thread_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#ae24a233909743560a247f7bbdad1928f", null ],
     [ "framer_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a7e5da37d5bbd05c80e0627e624caee88", null ],
-    [ "manage_external_context_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a65fba29894dfe291ef6c1d7bc55bbf8b", null ],
+    [ "manage_external_context_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a033bfe6b210637f970a0688acfe16614", null ],
     [ "max_batch_latency_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a5b4acce2b9e9f806c55182995645f6e3", null ],
     [ "max_batch_size_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a96b8df2ff598741d539ba837e7fe78d9", null ],
     [ "max_retries_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a92dee357c0fc69fe3425a5e944c99423", null ],
@@ -51,6 +51,6 @@ var structunilink_1_1wrapper_1_1UdsClient_1_1Impl =
     [ "retry_interval_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a8f062e78ab56519b223923d973d58cfa", null ],
     [ "socket_path_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a6c0b9dd1a37171dba40299c999d04377", null ],
     [ "started_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a12ddd80ae32df8206f835169febd1eee", null ],
-    [ "use_external_context_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a78f0d61dc0277d3693bfb3100707203f", null ],
+    [ "use_external_context_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a7796fa7f81c7c9e3ebb888f88ed96c7f", null ],
     [ "work_guard_", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#ac74480f18bb0434bc587ad821194cdd3", null ]
 ];

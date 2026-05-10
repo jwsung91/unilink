@@ -43,7 +43,7 @@ var structunilink_1_1wrapper_1_1Serial_1_1Impl =
     [ "external_thread", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a41db5150dfe7a9ee36bbb6175915fecd", null ],
     [ "flow_control", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a02ef8d444b0cbd39e532ee6905845686", null ],
     [ "framer", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5505f2fd78751a7a19fdffa03aadd443", null ],
-    [ "manage_external_context", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a208dfb7931409bf2aa576350bad58c58", null ],
+    [ "manage_external_context", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#aa161af1e0c7b479b1c2ee0014af069a0", null ],
     [ "max_batch_latency_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a529147bd18ce7b826fb81c33abf121dc", null ],
     [ "max_batch_size_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#af93b38560d51425059bb3ac877e8a232", null ],
     [ "message_batch_handler_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5c3927ef81829828d65390306e181b86", null ],
@@ -55,6 +55,6 @@ var structunilink_1_1wrapper_1_1Serial_1_1Impl =
     [ "retry_interval", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#aa34dba8723e269b6cb648e4c6eb89b30", null ],
     [ "started_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ad5a753342c72ae42750a3c4ce373eff1", null ],
     [ "stop_bits", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5b1f72a07f672d8a75d6291a68fa1e4e", null ],
-    [ "use_external_context", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ad3336fa250b4417a8fa20a15606570ff", null ],
+    [ "use_external_context", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a9a3cc4067435544eff597627624c65b3", null ],
     [ "work_guard_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a1dee5398b69ece67526c084eecd945bf", null ]
 ];

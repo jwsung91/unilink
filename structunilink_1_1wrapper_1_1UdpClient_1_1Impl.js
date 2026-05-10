@@ -37,7 +37,7 @@ var structunilink_1_1wrapper_1_1UdpClient_1_1Impl =
     [ "external_ioc", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#af55e10ca2cc1bb6f0fd46506d0a030e6", null ],
     [ "external_thread", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a2e114e314340adb14afb4d3f8bc1314e", null ],
     [ "framer", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ab6f1ae0c776b57c2807a39117488cd33", null ],
-    [ "manage_external_context", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a96e50b1f11ec35ac416159e52a8bd855", null ],
+    [ "manage_external_context", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a39fbe4c8babeaea9401239f8c2b43365", null ],
     [ "max_batch_latency_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ace89cf7938615c98a7e5534c1e6a7fdb", null ],
     [ "max_batch_size_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ae8568bc4ca9d731a4312593d5d511ad0", null ],
     [ "message_batch_handler_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a49591027bca886f8bc4130fc08566fa0", null ],
@@ -46,6 +46,6 @@ var structunilink_1_1wrapper_1_1UdpClient_1_1Impl =
     [ "mutex_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a43852bf6409e163399c434b314808613", null ],
     [ "pending_promises", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a2aafa9c1ccd8ca94c18bb5ab52f9c9d3", null ],
     [ "started_", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ac42dea365518f29345c8564ad0ebbb25", null ],
-    [ "use_external_context", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ac5f6bb19bb87cb0afebc25ff44ba1b65", null ],
+    [ "use_external_context", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#aa8a8ebb19a842e9d376fbbcbfbfc846d", null ],
     [ "work_guard", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a5838ce6b428e872f9390ef61a2e21086", null ]
 ];

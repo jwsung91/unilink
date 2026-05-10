@@ -232,10 +232,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a017910d38ece7beb209a8ad8aebcb2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a438f3ac1f81c2f8d1292c066746714c8" id="r_a438f3ac1f81c2f8d1292c066746714c8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; boost::asio::io_context &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a438f3ac1f81c2f8d1292c066746714c8">external_ioc</a></td></tr>
 <tr class="separator:a438f3ac1f81c2f8d1292c066746714c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3336fa250b4417a8fa20a15606570ff" id="r_ad3336fa250b4417a8fa20a15606570ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ad3336fa250b4417a8fa20a15606570ff">use_external_context</a> {false}</td></tr>
-<tr class="separator:ad3336fa250b4417a8fa20a15606570ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a208dfb7931409bf2aa576350bad58c58" id="r_a208dfb7931409bf2aa576350bad58c58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a208dfb7931409bf2aa576350bad58c58">manage_external_context</a> {false}</td></tr>
-<tr class="separator:a208dfb7931409bf2aa576350bad58c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a3cc4067435544eff597627624c65b3" id="r_a9a3cc4067435544eff597627624c65b3"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a9a3cc4067435544eff597627624c65b3">use_external_context</a> {false}</td></tr>
+<tr class="separator:a9a3cc4067435544eff597627624c65b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa161af1e0c7b479b1c2ee0014af069a0" id="r_aa161af1e0c7b479b1c2ee0014af069a0"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#aa161af1e0c7b479b1c2ee0014af069a0">manage_external_context</a> {false}</td></tr>
+<tr class="separator:aa161af1e0c7b479b1c2ee0014af069a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41db5150dfe7a9ee36bbb6175915fecd" id="r_a41db5150dfe7a9ee36bbb6175915fecd"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a41db5150dfe7a9ee36bbb6175915fecd">external_thread</a></td></tr>
 <tr class="separator:a41db5150dfe7a9ee36bbb6175915fecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dee5398b69ece67526c084eecd945bf" id="r_a1dee5398b69ece67526c084eecd945bf"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; boost::asio::executor_work_guard&lt; boost::asio::io_context::executor_type &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a1dee5398b69ece67526c084eecd945bf">work_guard_</a></td></tr>
@@ -1444,14 +1444,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a208dfb7931409bf2aa576350bad58c58" name="a208dfb7931409bf2aa576350bad58c58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a208dfb7931409bf2aa576350bad58c58">&#9670;&#160;</a></span>manage_external_context</h2>
+<a id="aa161af1e0c7b479b1c2ee0014af069a0" name="aa161af1e0c7b479b1c2ee0014af069a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa161af1e0c7b479b1c2ee0014af069a0">&#9670;&#160;</a></span>manage_external_context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool unilink::wrapper::Serial::Impl::manage_external_context {false}</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::wrapper::Serial::Impl::manage_external_context {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1644,14 +1644,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad3336fa250b4417a8fa20a15606570ff" name="ad3336fa250b4417a8fa20a15606570ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3336fa250b4417a8fa20a15606570ff">&#9670;&#160;</a></span>use_external_context</h2>
+<a id="a9a3cc4067435544eff597627624c65b3" name="a9a3cc4067435544eff597627624c65b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a3cc4067435544eff597627624c65b3">&#9670;&#160;</a></span>use_external_context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool unilink::wrapper::Serial::Impl::use_external_context {false}</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::wrapper::Serial::Impl::use_external_context {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1685,7 +1685,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat May 9 2026 22:56:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 10 2026 09:54:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -279,13 +279,13 @@ Problem: Port Already in Use</h2>
 2. Use Different Port</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = tcp_server(8081)  <span class="comment">// Try different port</span></div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">build</a>();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a0c0029f7ca4b8ae9bf08f467a1b2348c"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00046">tcp_server_builder.cc:46</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a0c0029f7ca4b8ae9bf08f467a1b2348c"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a0c0029f7ca4b8ae9bf08f467a1b2348c">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00047">tcp_server_builder.cc:47</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md737"></a>
 3. Enable Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = tcp_server(8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Retry 5 times</span></div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a40e2d5173a8dd92c7ed8d4fcc79995e7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00142">tcp_server_builder.cc:142</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a40e2d5173a8dd92c7ed8d4fcc79995e7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder&lt; State &gt; &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition</b> <a href="tcp__server__builder_8cc_source.html#l00143">tcp_server_builder.cc:143</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md739"></a>
 Compilation Errors</h1>
@@ -724,7 +724,7 @@ Getting Help</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 9 2026 22:56:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 10 2026 09:54:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

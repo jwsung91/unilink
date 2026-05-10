@@ -10,6 +10,8 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "auto_start", "classunilink_1_1wrapper_1_1UdsServer.html#a555d7306f5283a1d798179a7341e6897", null ],
     [ "backpressure_strategy", "classunilink_1_1wrapper_1_1UdsServer.html#ade8129e1be329a00c6eb957e382035d6", null ],
     [ "backpressure_threshold", "classunilink_1_1wrapper_1_1UdsServer.html#ae33d0fa65793d73359e4ca41befc4637", null ],
+    [ "batch_latency", "classunilink_1_1wrapper_1_1UdsServer.html#aee41f632b84fa7489f1ffc49565b982b", null ],
+    [ "batch_size", "classunilink_1_1wrapper_1_1UdsServer.html#a5d174333dffff26c63a123554f86c6f0", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1UdsServer.html#a43983c237bfa6949654c1248c75e8dfe", null ],
     [ "broadcast_line", "classunilink_1_1wrapper_1_1UdsServer.html#a1f33f49e6511858698e6b5c0b67faa16", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1UdsServer.html#aef6a244b6ff21ab3e46912208ef08110", null ],

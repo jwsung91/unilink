@@ -283,6 +283,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1db51695b256dd136e478ec6eacc4fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb383ccd2147ab18196434ed60517564" id="r_abb383ccd2147ab18196434ed60517564"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#abb383ccd2147ab18196434ed60517564">manage_external_context</a> (bool manage)</td></tr>
 <tr class="separator:abb383ccd2147ab18196434ed60517564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3335fe6c9b307e0200b811b211dcb41" id="r_ab3335fe6c9b307e0200b811b211dcb41"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ab3335fe6c9b307e0200b811b211dcb41">batch_size</a> (size_t size)</td></tr>
+<tr class="separator:ab3335fe6c9b307e0200b811b211dcb41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eaa061122756f0a6f4c4c5704268b66" id="r_a7eaa061122756f0a6f4c4c5704268b66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a7eaa061122756f0a6f4c4c5704268b66">batch_latency</a> (std::chrono::milliseconds latency)</td></tr>
+<tr class="separator:a7eaa061122756f0a6f4c4c5704268b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1wrapper_1_1ServerInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">unilink::wrapper::ServerInterface</a></td></tr>
 <tr class="memitem:a0696d9e529521e5b5a016e769bd95537 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface" id="r_a0696d9e529521e5b5a016e769bd95537"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a0696d9e529521e5b5a016e769bd95537">~ServerInterface</a> ()=default</td></tr>
 <tr class="separator:a0696d9e529521e5b5a016e769bd95537 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -575,6 +579,46 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00653">653</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a7eaa061122756f0a6f4c4c5704268b66" name="a7eaa061122756f0a6f4c4c5704268b66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eaa061122756f0a6f4c4c5704268b66">&#9670;&#160;</a></span>batch_latency()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a> &amp; unilink::wrapper::UdpServer::batch_latency </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>latency</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00679">679</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="ab3335fe6c9b307e0200b811b211dcb41" name="ab3335fe6c9b307e0200b811b211dcb41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3335fe6c9b307e0200b811b211dcb41">&#9670;&#160;</a></span>batch_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a> &amp; unilink::wrapper::UdpServer::batch_size </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00673">673</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1588,7 +1632,7 @@ false Dropped or client not found. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a></li>
-    <li class="footer">Generated on Sat May 9 2026 22:56:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 10 2026 09:54:49 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
