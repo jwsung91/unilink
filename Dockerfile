@@ -1,5 +1,5 @@
 # Multi-stage build for optimized production image
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:26.04 AS builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -52,7 +52,7 @@ RUN rm -rf build && mkdir build && cd build && \
     cmake --build . -j $(nproc)
 
 # Production stage
-FROM ubuntu:24.04 AS production
+FROM ubuntu:26.04 AS production
 
 RUN apt-get update && apt-get install -y libstdc++6 && rm -rf /var/lib/apt/lists/*
 
