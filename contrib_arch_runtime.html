@@ -474,7 +474,7 @@ Reconnection Best Practices</h2>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md207"></a>
 Backpressure Handling</h1>
-<p>When the send queue grows too large (network slower than application), <code>unilink</code> applies internal backpressure protection in the transport layer. The public wrapper/builder API does not currently expose an <code>on_backpressure()</code> callback, so applications should implement rate limiting and queue monitoring at the application level and react to send failures or error callbacks.</p>
+<p>When the send queue grows too large (network slower than application), <code>unilink</code> applies internal backpressure protection in the transport layer. Applications can monitor backpressure via the wrapper-level <code>on_backpressure</code> builder method callback, or implement additional rate limiting and queue monitoring at the application level.</p>
 <h2><a class="anchor" id="autotoc_md208"></a>
 Backpressure Flow</h2>
 <p><br  />
@@ -573,7 +573,7 @@ Memory Safety</h2>
 <li>✅ Queue size is monitored continuously</li>
 <li>✅ Queue growth is bounded internally in the transport layer</li>
 <li>✅ Applications can add their own send throttling policy</li>
-<li>⚠️ Wrapper-level backpressure callbacks are not part of the current public API</li>
+<li>✅ Wrapper-level backpressure callbacks are available via the <code>on_backpressure</code> builder method</li>
 <li>✅ Memory pools reduce allocation overhead for small buffers (&lt;64KB)</li>
 </ul>
 <hr  />
@@ -673,7 +673,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 10 2026 14:23:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Mon May 11 2026 00:56:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
