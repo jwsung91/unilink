@@ -259,8 +259,8 @@ TEST_F(TransportTcpClientTest, MoveWriteRespectsQueueLimit) {
     if (bytes > 0) backpressure_seen = true;
   });
 
-  // 2MB > bp_high (1KB): write is enqueued and backpressure fires
-  std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xCD);
+  // 512KB > bp_high (1KB) and < bp_limit (1MB): write is enqueued and backpressure fires
+  std::vector<uint8_t> huge(cfg.backpressure_threshold * 512, 0xCD);
   client_->async_write_move(std::move(huge));
 
   ioc.run_for(std::chrono::milliseconds(20));
@@ -285,8 +285,8 @@ TEST_F(TransportTcpClientTest, SharedWriteRespectsQueueLimit) {
     if (bytes > 0) backpressure_seen = true;
   });
 
-  // 2MB > bp_high (1KB): write is enqueued and backpressure fires
-  auto huge = std::make_shared<const std::vector<uint8_t>>(cfg.backpressure_threshold * 2048, 0xAB);
+  // 512KB > bp_high (1KB) and < bp_limit (1MB): write is enqueued and backpressure fires
+  auto huge = std::make_shared<const std::vector<uint8_t>>(cfg.backpressure_threshold * 512, 0xAB);
   client_->async_write_shared(huge);
 
   ioc.run_for(std::chrono::milliseconds(20));

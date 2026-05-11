@@ -340,7 +340,7 @@ client.reset();
 
 ## Backpressure Handling
 
-When the send queue grows too large (network slower than application), `unilink` applies internal backpressure protection in the transport layer. The public wrapper/builder API does not currently expose an `on_backpressure()` callback, so applications should implement rate limiting and queue monitoring at the application level and react to send failures or error callbacks.
+When the send queue grows too large (network slower than application), `unilink` applies internal backpressure protection in the transport layer. Applications can monitor backpressure via the wrapper-level `on_backpressure` builder method callback, or implement additional rate limiting and queue monitoring at the application level.
 
 ### Backpressure Flow
 
@@ -464,7 +464,7 @@ Backpressure handling ensures:
 - ✅ Queue size is monitored continuously
 - ✅ Queue growth is bounded internally in the transport layer
 - ✅ Applications can add their own send throttling policy
-- ⚠️ Wrapper-level backpressure callbacks are not part of the current public API
+- ✅ Wrapper-level backpressure callbacks are available via the `on_backpressure` builder method
 - ✅ Memory pools reduce allocation overhead for small buffers (<64KB)
 
 ---

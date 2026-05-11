@@ -31,6 +31,7 @@
 #include <vector>
 
 // Include logger for log_message function
+#include "unilink/base/constants.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/diagnostics/logger.hpp"
 
@@ -122,8 +123,8 @@ inline void safe_memcpy(uint8_t* dest, const uint8_t* src, size_t size) {
   if (size == 0) {
     return;  // Nothing to copy
   }
-  if (size > 1024 * 1024) {  // 1MB limit
-    throw std::invalid_argument("Copy size too large (max 1MB)");
+  if (size > constants::MAX_BUFFER_SIZE) {
+    throw std::invalid_argument("Copy size too large (max MAX_BUFFER_SIZE)");
   }
 
   std::memcpy(dest, src, size);

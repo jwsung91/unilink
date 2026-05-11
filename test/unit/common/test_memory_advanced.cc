@@ -163,7 +163,7 @@ TEST(BaseUtilityTest, SafeMemcpy) {
 
   EXPECT_THROW(safe_memcpy(nullptr, src, 5), std::invalid_argument);
   EXPECT_THROW(safe_memcpy(dest, nullptr, 5), std::invalid_argument);
-  EXPECT_THROW(safe_memcpy(dest, src, 1024 * 1024 + 1), std::invalid_argument);
+  EXPECT_THROW(safe_memcpy(dest, src, unilink::base::constants::MAX_BUFFER_SIZE + 1), std::invalid_argument);
   EXPECT_NO_THROW(safe_memcpy(dest, src, 0));
 }
 
