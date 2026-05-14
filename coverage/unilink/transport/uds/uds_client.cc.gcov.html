@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">70.8&nbsp;%</td>
+            <td class="headerCovTableEntryLo">71.1&nbsp;%</td>
             <td class="headerCovTableEntry">329</td>
-            <td class="headerCovTableEntry">233</td>
+            <td class="headerCovTableEntry">234</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-14 13:20:07</td>
+            <td class="headerValue">2026-05-14 20:57:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">78.8&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">39.4&nbsp;%</td>
+            <td class="headerCovTableEntryLo">39.6&nbsp;%</td>
             <td class="headerCovTableEntry">480</td>
-            <td class="headerCovTableEntry">189</td>
+            <td class="headerCovTableEntry">190</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -214,20 +214,20 @@
 <span id="L134"><span class="lineNum">     134</span>                 :             :   void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,</span>
 <span id="L135"><span class="lineNum">     135</span>                 :             :                     const boost::system::error_code&amp; ec, std::string_view msg, bool retryable, uint32_t retry_count);</span>
 <span id="L136"><span class="lineNum">     136</span>                 :             : </span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          14 :   ~Impl() {</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">          14 :     stop_requested_ = true;</span></span>
-<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">          14 :     stopping_ = true;</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          15 :   ~Impl() {</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">          15 :     stop_requested_ = true;</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">          15 :     stopping_ = true;</span></span>
 <span id="L140"><span class="lineNum">     140</span>                 :             : </span>
-<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">          14 :     retry_timer_.cancel();</span></span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          14 :     connect_timer_.cancel();</span></span>
-<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">          14 :     close_socket();</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">          15 :     retry_timer_.cancel();</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          15 :     connect_timer_.cancel();</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">          15 :     close_socket();</span></span>
 <span id="L144"><span class="lineNum">     144</span>                 :             : </span>
-<span id="L145"><span class="lineNum">     145</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          14 :     if (work_guard_) {</span></span>
+<span id="L145"><span class="lineNum">     145</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :     if (work_guard_) {</span></span>
 <span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       work_guard_.reset();</span></span>
 <span id="L147"><span class="lineNum">     147</span>                 :             :     }</span>
 <span id="L148"><span class="lineNum">     148</span>                 :             : </span>
-<span id="L149"><span class="lineNum">     149</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 11 times"> + </span> :<span class="tlaGNC tlaBgGNC">          14 :     if (ioc_ &amp;&amp; owns_ioc_ &amp;&amp; ioc_thread_.joinable()) {</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 14 times"> + </span>]
+<span id="L149"><span class="lineNum">     149</span>   [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 11 times"> + </span> :<span class="tlaGNC tlaBgGNC">          15 :     if (ioc_ &amp;&amp; owns_ioc_ &amp;&amp; ioc_thread_.joinable()) {</span></span>
+<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 15 times"> + </span>]
 <span id="L150"><span class="lineNum">     150</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :       if (std::this_thread::get_id() == ioc_thread_.get_id()) {</span></span>
 <span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaUNC">           0 :         ioc_thread_.detach();</span></span>
 <span id="L152"><span class="lineNum">     152</span>                 :             :       } else {</span>
@@ -235,7 +235,7 @@
 <span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaUNC">           0 :         ioc_thread_.join();</span></span>
 <span id="L155"><span class="lineNum">     155</span>                 :             :       }</span>
 <span id="L156"><span class="lineNum">     156</span>                 :             :     }</span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC tlaBgGNC">          14 :   }</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC tlaBgGNC">          15 :   }</span></span>
 <span id="L158"><span class="lineNum">     158</span>                 :             : };</span>
 <span id="L159"><span class="lineNum">     159</span>                 :             : </span>
 <span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">           4 : std::shared_ptr&lt;UdsClient&gt; UdsClient::create(const UdsClientConfig&amp; cfg) {</span></span>
@@ -263,18 +263,18 @@
 <span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">           7 :                      boost::asio::io_context&amp; ioc)</span></span>
 <span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :     : impl_(std::make_unique&lt;Impl&gt;(cfg, &amp;ioc, std::move(socket))) {}</span></span>
 <span id="L181"><span class="lineNum">     181</span>                 :             : </span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          28 : UdsClient::~UdsClient() {</span></span>
-<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">          14 :   stop();</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          30 : UdsClient::~UdsClient() {</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">          15 :   stop();</span></span>
 <span id="L184"><span class="lineNum">     184</span>                 :             : </span>
-<span id="L185"><span class="lineNum">     185</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          14 :   if (impl_-&gt;owns_ioc_ &amp;&amp; impl_-&gt;ioc_thread_.joinable()) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 11 times"> + </span>]
-<span id="L186"><span class="lineNum">     186</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :     if (std::this_thread::get_id() != impl_-&gt;ioc_thread_.get_id()) {</span></span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">           3 :       impl_-&gt;ioc_thread_.join();</span></span>
+<span id="L185"><span class="lineNum">     185</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          15 :   if (impl_-&gt;owns_ioc_ &amp;&amp; impl_-&gt;ioc_thread_.joinable()) {</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 11 times"> + </span>]
+<span id="L186"><span class="lineNum">     186</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           4 :     if (std::this_thread::get_id() != impl_-&gt;ioc_thread_.get_id()) {</span></span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">           2 :       impl_-&gt;ioc_thread_.join();</span></span>
 <span id="L188"><span class="lineNum">     188</span>                 :             :     } else {</span>
-<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       impl_-&gt;ioc_thread_.detach();</span></span>
+<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">           2 :       impl_-&gt;ioc_thread_.detach();</span></span>
 <span id="L190"><span class="lineNum">     190</span>                 :             :     }</span>
 <span id="L191"><span class="lineNum">     191</span>                 :             :   }</span>
-<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC tlaBgGNC">          28 : }</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          30 : }</span></span>
 <span id="L193"><span class="lineNum">     193</span>                 :             : </span>
 <span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdsClient::UdsClient(UdsClient&amp;&amp;) noexcept = default;</span></span>
 <span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaUNC">           0 : UdsClient&amp; UdsClient::operator=(UdsClient&amp;&amp;) noexcept = default;</span></span>
@@ -301,10 +301,10 @@
 <span id="L215"><span class="lineNum">     215</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :     impl_-&gt;ioc_thread_ = std::jthread([ioc = impl_-&gt;owned_ioc_](std::stop_token st) {</span></span>
 <span id="L216"><span class="lineNum">     216</span>                 :             :       try {</span>
 <span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">           4 :         std::stop_callback cb(st, [ioc] { ioc-&gt;stop(); });</span></span>
-<span id="L218"><span class="lineNum">     218</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :         ioc-&gt;run();</span></span>
-<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">           3 :       } catch (...) {</span></span>
+<span id="L218"><span class="lineNum">     218</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :         ioc-&gt;run();</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">           4 :       } catch (...) {</span></span>
 <span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       }</span></span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC tlaBgGNC">           7 :     });</span></span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC tlaBgGNC">           8 :     });</span></span>
 <span id="L222"><span class="lineNum">     222</span>                 :             :   }</span>
 <span id="L223"><span class="lineNum">     223</span>                 :             : </span>
 <span id="L224"><span class="lineNum">     224</span>   [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          13 :   net::post(impl_-&gt;strand_, [self = shared_from_this(), seq]() {</span></span>
@@ -314,9 +314,9 @@
 <span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">          13 :   });</span></span>
 <span id="L228"><span class="lineNum">     228</span>                 :             : }</span>
 <span id="L229"><span class="lineNum">     229</span>                 :             : </span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          29 : void UdsClient::stop() {</span></span>
-<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          29 :   bool already_stopping = impl_-&gt;stopping_.exchange(true);</span></span>
-<span id="L232"><span class="lineNum">     232</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          29 :   if (already_stopping) return;</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          30 : void UdsClient::stop() {</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          30 :   bool already_stopping = impl_-&gt;stopping_.exchange(true);</span></span>
+<span id="L232"><span class="lineNum">     232</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          30 :   if (already_stopping) return;</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :             : </span>
 <span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">          15 :   impl_-&gt;stop_requested_ = true;</span></span>
 <span id="L235"><span class="lineNum">     235</span>                 :             : </span>
@@ -524,8 +524,8 @@
 <span id="L426"><span class="lineNum">     426</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           4 :   retry_timer_.expires_after(decision.delay.value_or(std::chrono::milliseconds(cfg_.retry_interval_ms)));</span></span>
 <span id="L427"><span class="lineNum">     427</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :   retry_timer_.async_wait(net::bind_executor(strand_, [self, seq](const boost::system::error_code&amp; ec) {</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L428"><span class="lineNum">     428</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           3 :     if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L428"><span class="lineNum">     428</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :     if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L429"><span class="lineNum">     429</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     self-&gt;impl_-&gt;do_connect(self, seq);</span></span>
 <span id="L430"><span class="lineNum">     430</span>                 :             :   }));</span>
 <span id="L431"><span class="lineNum">     431</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           4 : }</span></span>
@@ -533,8 +533,8 @@
 <span id="L433"><span class="lineNum">     433</span>                 :<span class="tlaGNC">          10 : void UdsClient::Impl::start_read(std::shared_ptr&lt;UdsClient&gt; self, uint64_t seq) {</span></span>
 <span id="L434"><span class="lineNum">     434</span>   [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          20 :   socket_-&gt;async_read_some(net::buffer(rx_),</span></span>
 <span id="L435"><span class="lineNum">     435</span>   [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          20 :                            net::bind_executor(strand_, [self, seq](const boost::system::error_code&amp; ec, size_t bytes) {</span></span>
-<span id="L436"><span class="lineNum">     436</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">           8 :                              if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
+<span id="L436"><span class="lineNum">     436</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">           9 :                              if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
 <span id="L437"><span class="lineNum">     437</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :                              if (ec) {</span></span>
 <span id="L438"><span class="lineNum">     438</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :                                self-&gt;impl_-&gt;handle_close(self, seq, ec);</span></span>
 <span id="L439"><span class="lineNum">     439</span>                 :<span class="tlaGNC">           1 :                                return;</span></span>
@@ -612,10 +612,10 @@
 <span id="L509"><span class="lineNum">     509</span>   [<span class="tlaGBC" title="Branch 0 was taken 20 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 20 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          27 :   if (cb) cb(next);</span></span>
 <span id="L510"><span class="lineNum">     510</span>                 :<span class="tlaGNC">          27 : }</span></span>
 <span id="L511"><span class="lineNum">     511</span>                 :             : </span>
-<span id="L512"><span class="lineNum">     512</span>                 :<span class="tlaGNC">          30 : void UdsClient::Impl::close_socket() {</span></span>
-<span id="L513"><span class="lineNum">     513</span>                 :<span class="tlaGNC">          30 :   boost::system::error_code ec;</span></span>
-<span id="L514"><span class="lineNum">     514</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :   socket_-&gt;close(ec);</span></span>
-<span id="L515"><span class="lineNum">     515</span>                 :<span class="tlaGNC">          30 : }</span></span>
+<span id="L512"><span class="lineNum">     512</span>                 :<span class="tlaGNC">          31 : void UdsClient::Impl::close_socket() {</span></span>
+<span id="L513"><span class="lineNum">     513</span>                 :<span class="tlaGNC">          31 :   boost::system::error_code ec;</span></span>
+<span id="L514"><span class="lineNum">     514</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          31 :   socket_-&gt;close(ec);</span></span>
+<span id="L515"><span class="lineNum">     515</span>                 :<span class="tlaGNC">          31 : }</span></span>
 <span id="L516"><span class="lineNum">     516</span>                 :             : </span>
 <span id="L517"><span class="lineNum">     517</span>                 :<span class="tlaGNC">          28 : void UdsClient::Impl::recalculate_backpressure_bounds() {</span></span>
 <span id="L518"><span class="lineNum">     518</span>                 :<span class="tlaGNC">          28 :   bp_high_ = cfg_.backpressure_threshold;</span></span>
