@@ -88,17 +88,29 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
       base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
-      if (queue_bytes_ + size > bp_limit_) return false;
+      if (queue_bytes_ + pending_bytes_ + size > bp_limit_) return false;
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
         const auto added = buf.size();
+
+        // Reliable: route to pending_ when backpressure is active
+        if (self->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+            self->backpressure_active_.load()) {
+          if (self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
+            UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
+            return;
+          }
+          self->pending_bytes_ += added;
+          self->pending_.emplace_back(std::move(buf));
+          return;
+        }
+
         self->maybe_flush_for_keep_latest(added);
         if (self->queue_bytes_ + added > self->bp_limit_) {
           UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
           self->report_backpressure(self->queue_bytes_ + added);
           return;
         }
-
         self->queue_bytes_ += added;
         self->tx_.emplace_back(std::move(buf));
         self->report_backpressure(self->queue_bytes_);
@@ -109,19 +121,31 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
   }
 
   // Fallback to regular allocation for large buffers or pool exhaustion
-  if (queue_bytes_ + size > bp_limit_) return false;
+  if (queue_bytes_ + pending_bytes_ + size > bp_limit_) return false;
   std::vector<uint8_t> fallback(data.begin(), data.end());
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
     const auto added = buf.size();
+
+    // Reliable: route to pending_ when backpressure is active
+    if (self->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+        self->backpressure_active_.load()) {
+      if (self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
+        UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
+        return;
+      }
+      self->pending_bytes_ += added;
+      self->pending_.emplace_back(std::move(buf));
+      return;
+    }
+
     self->maybe_flush_for_keep_latest(added);
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
       self->report_backpressure(self->queue_bytes_ + added);
       return;
     }
-
     self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
     self->report_backpressure(self->queue_bytes_);
@@ -137,16 +161,28 @@ bool TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return false;
   }
-  if (queue_bytes_ + added > bp_limit_) return false;
+  if (queue_bytes_ + pending_bytes_ + added > bp_limit_) return false;
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
+
+    // Reliable: route to pending_ when backpressure is active
+    if (self->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+        self->backpressure_active_.load()) {
+      if (self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
+        UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
+        return;
+      }
+      self->pending_bytes_ += added;
+      self->pending_.emplace_back(std::move(buf));
+      return;
+    }
+
     self->maybe_flush_for_keep_latest(added);
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
       self->report_backpressure(self->queue_bytes_ + added);
       return;
     }
-
     self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
     self->report_backpressure(self->queue_bytes_);
@@ -162,16 +198,28 @@ bool TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return false;
   }
-  if (queue_bytes_ + added > bp_limit_) return false;
+  if (queue_bytes_ + pending_bytes_ + added > bp_limit_) return false;
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
+
+    // Reliable: route to pending_ when backpressure is active
+    if (self->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+        self->backpressure_active_.load()) {
+      if (self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
+        UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
+        return;
+      }
+      self->pending_bytes_ += added;
+      self->pending_.emplace_back(std::move(buf));
+      return;
+    }
+
     self->maybe_flush_for_keep_latest(added);
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
       self->report_backpressure(self->queue_bytes_ + added);
       return;
     }
-
     self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
     self->report_backpressure(self->queue_bytes_);
@@ -330,6 +378,8 @@ void TcpServerSession::do_close() {
   // Release memory immediately
   tx_.clear();
   queue_bytes_ = 0;
+  pending_.clear();
+  pending_bytes_ = 0;
 
   if (close_cb) {
     try {
@@ -396,15 +446,21 @@ void TcpServerSession::report_backpressure(size_t queued_bytes) {
       UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
     }
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
-    backpressure_active_ = false;
-    try {
-      on_bp_(queued_bytes);
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
-                        "Exception in backpressure callback: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+    // Flush pending_ → tx_
+    const size_t moved = pending_bytes_.exchange(0);
+    queue_bytes_ += moved;
+    while (!pending_.empty()) {
+      tx_.emplace_back(std::move(pending_.front()));
+      pending_.pop_front();
     }
+    backpressure_active_ = false;
+    try { on_bp_(queued_bytes); } catch (...) {}  // fire OFF with pre-flush queue size
+    // If post-flush queue is still high, fire ON again
+    if (queue_bytes_ >= bp_high_) {
+      backpressure_active_ = true;
+      try { on_bp_(queue_bytes_); } catch (...) {}
+    }
+    if (!writing_) do_write();
   }
 }
 

@@ -91,6 +91,8 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   std::unique_ptr<interface::TcpSocketInterface> socket_;
   std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<BufferVariant> tx_;
+  std::deque<BufferVariant> pending_;
+  std::atomic<size_t> pending_bytes_{0};
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   std::atomic<size_t> queue_bytes_{0};
