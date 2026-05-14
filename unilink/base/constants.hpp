@@ -27,7 +27,7 @@ namespace constants {
 
 // Backpressure strategy
 enum class BackpressureStrategy {
-  Reliable,    // Queue until hard limit; completeness first (default, safe for all transports)
+  Reliable,    // Queue until hard limit; completeness first (default). For UDP: prevents sender-side queue drops only — no receiver-side flow control (UDP is connectionless).
   BestEffort,  // Drop oldest queued data when threshold is reached; freshness first (real-time/sensor use)
 };
 

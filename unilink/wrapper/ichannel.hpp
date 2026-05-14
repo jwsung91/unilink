@@ -43,10 +43,22 @@ class UNILINK_API ChannelInterface {
   virtual ~ChannelInterface() = default;
 
   // Lifecycle
+
+  /**
+   * @brief Start the channel asynchronously.
+   *
+   * @return A future that resolves to true when the channel is connected/listening,
+   *         or false if startup failed (e.g. connection refused, max retries exhausted).
+   *         On false, the registered on_error() callback will have been invoked with
+   *         the specific failure reason.
+   */
   [[nodiscard]] virtual std::future<bool> start() = 0;
 
   /**
-   * @brief Synchronously start the channel/server and wait for the result.
+   * @brief Synchronously start the channel and wait for the result.
+   *
+   * @return true if connected/listening, false on failure. On false, the registered
+   *         on_error() callback will have been invoked with the specific failure reason.
    */
   [[nodiscard]] virtual bool start_sync() { return start().get(); }
 
