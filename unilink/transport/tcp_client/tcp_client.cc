@@ -840,8 +840,7 @@ void TcpClient::Impl::recalculate_backpressure_bounds() {
 }
 
 void TcpClient::Impl::maybe_flush_for_keep_latest(size_t added) {
-  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_,
-                                               backpressure_active_);
+  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
 }
 
 void TcpClient::Impl::report_backpressure(std::shared_ptr<TcpClient> self, size_t queued_bytes) {
@@ -873,11 +872,17 @@ void TcpClient::Impl::report_backpressure(std::shared_ptr<TcpClient> self, size_
       pending_.pop_front();
     }
     backpressure_active_ = false;
-    try { on_bp(queued_bytes); } catch (...) {}  // fire OFF with pre-flush queue size
+    try {
+      on_bp(queued_bytes);
+    } catch (...) {
+    }  // fire OFF with pre-flush queue size
     // If post-flush queue is still high, fire ON again
     if (queue_bytes_ >= bp_high_) {
       backpressure_active_ = true;
-      try { on_bp(queue_bytes_); } catch (...) {}
+      try {
+        on_bp(queue_bytes_);
+      } catch (...) {
+      }
     }
     if (!writing_) do_write(self, current_seq_.load());
   }

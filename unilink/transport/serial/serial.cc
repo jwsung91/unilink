@@ -396,11 +396,17 @@ struct Serial::Impl {
         pending_.pop_front();
       }
       backpressure_active_ = false;
-      try { on_bp_(qb); } catch (...) {}  // fire OFF with pre-flush queue size
+      try {
+        on_bp_(qb);
+      } catch (...) {
+      }  // fire OFF with pre-flush queue size
       // If post-flush queue is still high, fire ON again
       if (queued_bytes_ >= bp_high_) {
         backpressure_active_ = true;
-        try { on_bp_(queued_bytes_); } catch (...) {}
+        try {
+          on_bp_(queued_bytes_);
+        } catch (...) {
+        }
       }
     }
   }
@@ -576,8 +582,7 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
     const auto added = buf.size();
 
     // Reliable: route to pending_ when backpressure is active
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
-        impl->backpressure_active_.load()) {
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::Reliable && impl->backpressure_active_.load()) {
       if (impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
         UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded, dropping message");
         return;
@@ -638,8 +643,7 @@ bool Serial::async_write_move(std::vector<uint8_t>&& data) {
     auto impl = self->get_impl();
 
     // Reliable: route to pending_ when backpressure is active
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
-        impl->backpressure_active_.load()) {
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::Reliable && impl->backpressure_active_.load()) {
       if (impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
         UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded, dropping message");
         return;
@@ -701,8 +705,7 @@ bool Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
     auto impl = self->get_impl();
 
     // Reliable: route to pending_ when backpressure is active
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
-        impl->backpressure_active_.load()) {
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::Reliable && impl->backpressure_active_.load()) {
       if (impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
         UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded, dropping message");
         return;

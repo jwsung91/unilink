@@ -26,8 +26,6 @@
 
 #include "test_utils.hpp"
 #include "unilink/base/constants.hpp"
-#include "unilink/interface/itcp_socket.hpp"
-#include "unilink/transport/tcp_server/tcp_server_session.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/udp_builder.hpp"
 #include "unilink/builder/uds_builder.hpp"
@@ -35,8 +33,10 @@
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/config/uds_config.hpp"
+#include "unilink/interface/itcp_socket.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
+#include "unilink/transport/tcp_server/tcp_server_session.hpp"
 #include "unilink/transport/udp/udp.hpp"
 #include "unilink/transport/uds/uds_client.hpp"
 #include "unilink/transport/uds/uds_server.hpp"
@@ -305,7 +305,7 @@ class StallingTcpSocket : public unilink::interface::TcpSocketInterface {
 // drain_and_stop: stops the session and completes any stalled writes to break
 // the shared_ptr cycle between the session and the write handlers it owns.
 static void drain_and_stop(StallingTcpSocket* sock, std::shared_ptr<transport::TcpServerSession> session,
-                            net::io_context& ioc) {
+                           net::io_context& ioc) {
   session->stop();
   ioc.poll();
   while (sock->pending_write_count() > 0) {
@@ -324,8 +324,8 @@ TEST(BackpressureStrategyTest, Reliable_PendingQueue_AccumulatesWhenBackpressure
 
   auto socket = std::make_unique<StallingTcpSocket>(ioc);
   auto* sock = socket.get();
-  auto session = std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0,
-                                                               BackpressureStrategy::Reliable);
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
 
   std::vector<size_t> bp_events;
   session->on_backpressure([&](size_t q) { bp_events.push_back(q); });
@@ -362,8 +362,8 @@ TEST(BackpressureStrategyTest, Reliable_PendingQueue_DeliveredAfterBackpressureC
 
   auto socket = std::make_unique<StallingTcpSocket>(ioc);
   auto* sock = socket.get();
-  auto session = std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0,
-                                                               BackpressureStrategy::Reliable);
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
 
   session->on_backpressure([](size_t) {});
   session->start();
@@ -405,14 +405,14 @@ TEST(BackpressureStrategyTest, Reliable_CombinedLimit_LargeWriteRejected) {
   // bp_limit_ = min(max(kBpHigh*4, DEFAULT_BACKPRESSURE_THRESHOLD), MAX_BUFFER_SIZE)
   //           = min(max(4096, 1MiB), 64MiB) = 1 MiB
   constexpr size_t kBpLimit = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;  // 1 MiB
-  constexpr size_t kHalfLimit = kBpLimit / 2;                                  // 512 KiB
+  constexpr size_t kHalfLimit = kBpLimit / 2;                                   // 512 KiB
 
   net::io_context ioc;
   auto work = net::make_work_guard(ioc);
   auto socket = std::make_unique<StallingTcpSocket>(ioc);
   auto* sock = socket.get();
-  auto session = std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0,
-                                                               BackpressureStrategy::Reliable);
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
 
   session->on_backpressure([](size_t) {});
   session->start();
@@ -447,8 +447,8 @@ TEST(BackpressureStrategyTest, Reliable_BurstOnOFF_ImmediateOnReactivation) {
 
   auto socket = std::make_unique<StallingTcpSocket>(ioc);
   auto* sock = socket.get();
-  auto session = std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0,
-                                                               BackpressureStrategy::Reliable);
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
 
   std::vector<size_t> bp_events;
   session->on_backpressure([&](size_t q) { bp_events.push_back(q); });

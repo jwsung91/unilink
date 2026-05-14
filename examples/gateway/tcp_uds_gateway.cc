@@ -78,30 +78,23 @@ int main(int argc, char* argv[]) {
       .on_disconnect([](const unilink::ConnectionContext& ctx) {
         std::cout << "[TCP] Client disconnected: ID=" << ctx.client_id() << "\n";
       })
-      .on_error([](const unilink::ErrorContext& ctx) {
-        std::cerr << "[TCP Error] " << ctx.message() << "\n";
-      });
+      .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[TCP Error] " << ctx.message() << "\n"; });
 
   tcp_srv = tcp_builder.build();
 
   // --- UDS Client (backend-facing) ---
   auto uds_builder = unilink::uds_client(uds_path);
   uds_builder
-      .on_connect([](const unilink::ConnectionContext&) {
-        std::cout << "[UDS] Connected to backend service.\n";
-      })
+      .on_connect([](const unilink::ConnectionContext&) { std::cout << "[UDS] Connected to backend service.\n"; })
       .on_data([&tcp_srv](const unilink::MessageContext& ctx) {
         std::cout << "[UDS->TCP] Broadcasting: " << ctx.data() << "\n";
         if (tcp_srv) {
           tcp_srv->broadcast(ctx.data());
         }
       })
-      .on_disconnect([](const unilink::ConnectionContext&) {
-        std::cout << "[UDS] Disconnected from backend service.\n";
-      })
-      .on_error([](const unilink::ErrorContext& ctx) {
-        std::cerr << "[UDS Error] " << ctx.message() << "\n";
-      });
+      .on_disconnect(
+          [](const unilink::ConnectionContext&) { std::cout << "[UDS] Disconnected from backend service.\n"; })
+      .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[UDS Error] " << ctx.message() << "\n"; });
 
   uds_cli = uds_builder.build();
 

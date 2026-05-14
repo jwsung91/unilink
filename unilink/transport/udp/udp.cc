@@ -423,17 +423,24 @@ struct UdpChannel::Impl {
         pending_.pop_front();
       }
       backpressure_active_ = false;
-      try { on_bp_(queued_bytes); } catch (...) {}  // fire OFF with pre-flush queue size
+      try {
+        on_bp_(queued_bytes);
+      } catch (...) {
+      }  // fire OFF with pre-flush queue size
       // If post-flush queue is still high, fire ON again
       if (queue_bytes_ >= bp_high_) {
         backpressure_active_ = true;
-        try { on_bp_(queue_bytes_); } catch (...) {}
+        try {
+          on_bp_(queue_bytes_);
+        } catch (...) {
+        }
       }
       if (!writing_) do_write(self);
     }
   }
 
-  bool enqueue_buffer(std::shared_ptr<UdpChannel> self, BufferVariant&& buffer, size_t size, std::optional<udp::endpoint> dest = std::nullopt) {
+  bool enqueue_buffer(std::shared_ptr<UdpChannel> self, BufferVariant&& buffer, size_t size,
+                      std::optional<udp::endpoint> dest = std::nullopt) {
     if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||
         state_.is_state(LinkState::Error)) {
       return false;
@@ -442,7 +449,8 @@ struct UdpChannel::Impl {
     // Reliable: route to pending_ when backpressure is active
     if (bp_strategy_ == base::constants::BackpressureStrategy::Reliable && backpressure_active_.load()) {
       if (queue_bytes_ + pending_bytes_ + size > bp_limit_) {
-        UNILINK_LOG_ERROR("udp", "write", fmt::format("Queue limit exceeded ({} bytes)", queue_bytes_ + pending_bytes_ + size));
+        UNILINK_LOG_ERROR("udp", "write",
+                          fmt::format("Queue limit exceeded ({} bytes)", queue_bytes_ + pending_bytes_ + size));
         return false;
       }
       pending_bytes_ += size;

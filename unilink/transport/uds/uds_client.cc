@@ -266,8 +266,7 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
     size_t added = data.size();
 
     // Reliable: route to pending_ when backpressure is active
-    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
-        impl_->backpressure_active_.load()) {
+    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable && impl_->backpressure_active_.load()) {
       if (impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
         UNILINK_LOG_ERROR("uds_client", "write",
                           fmt::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
@@ -302,8 +301,7 @@ bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     size_t added = data->size();
 
     // Reliable: route to pending_ when backpressure is active
-    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
-        impl_->backpressure_active_.load()) {
+    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable && impl_->backpressure_active_.load()) {
       if (impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
         UNILINK_LOG_ERROR("uds_client", "write",
                           fmt::format("Queue limit exceeded ({} bytes)", impl_->queue_bytes_ + added));
@@ -527,8 +525,7 @@ void UdsClient::Impl::recalculate_backpressure_bounds() {
 }
 
 void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
-  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_,
-                                               backpressure_active_);
+  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
 }
 
 void UdsClient::Impl::report_backpressure(std::shared_ptr<UdsClient> self, size_t queued_bytes) {
@@ -560,11 +557,17 @@ void UdsClient::Impl::report_backpressure(std::shared_ptr<UdsClient> self, size_
       pending_.pop_front();
     }
     backpressure_active_ = false;
-    try { on_bp(queued_bytes); } catch (...) {}  // fire OFF with pre-flush queue size
+    try {
+      on_bp(queued_bytes);
+    } catch (...) {
+    }  // fire OFF with pre-flush queue size
     // If post-flush queue is still high, fire ON again
     if (queue_bytes_ >= bp_high_) {
       backpressure_active_ = true;
-      try { on_bp(queue_bytes_); } catch (...) {}
+      try {
+        on_bp(queue_bytes_);
+      } catch (...) {
+      }
     }
     if (!writing_) do_write(self, current_seq_.load());
   }
