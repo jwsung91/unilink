@@ -556,13 +556,8 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
         }
 
         if (impl->queued_bytes_ + added > impl->bp_limit_) {
+          UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded, dropping message");
           impl->report_backpressure(impl->queued_bytes_ + added);
-          impl->tx_.clear();
-          impl->queued_bytes_ = 0;
-          impl->writing_ = false;
-          impl->state_.set_state(LinkState::Error);
-          impl->notify_state();
-          impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
           return;
         }
         impl->queued_bytes_ += added;
