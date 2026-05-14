@@ -104,9 +104,7 @@ elseif(UNIX)
          "spdlog-devel >= ${UNILINK_MIN_SPDLOG_VERSION}"
     )
   endif()
-  string(JOIN ", " CPACK_RPM_PACKAGE_REQUIRES
-         ${_unilink_rpm_package_requires}
-  )
+  string(JOIN ", " CPACK_RPM_PACKAGE_REQUIRES ${_unilink_rpm_package_requires})
   set(CPACK_RPM_PACKAGE_SUGGESTS "cmake, pkg-config")
   set(CPACK_RPM_PACKAGE_RECOMMENDS "glibc-devel")
 
