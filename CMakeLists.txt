@@ -115,6 +115,7 @@ set(UNILINK_HEADERS
     unilink/memory/safe_span.hpp
     unilink/transport/serial/boost_serial_port.hpp
     unilink/transport/serial/serial.hpp
+    unilink/transport/base/bp_utils.hpp
     unilink/transport/base/reconnect_policy.hpp
     unilink/transport/tcp_client/tcp_client.hpp
     unilink/transport/tcp_server/boost_tcp_acceptor.hpp

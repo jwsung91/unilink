@@ -38,6 +38,7 @@
 #include "unilink/diagnostics/error_mapping.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
+#include "unilink/transport/base/bp_utils.hpp"
 #include "unilink/transport/uds/boost_uds_socket.hpp"
 #include "unilink/transport/uds/detail/reconnect_decider.hpp"
 
@@ -525,44 +526,8 @@ void UdsClient::Impl::recalculate_backpressure_bounds() {
 }
 
 void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
-  if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
-
-  if (added >= bp_high_) {
-    // Compute bytes to remove from tx_ (excluding current_write_buffer_ which is in-flight)
-    size_t removed_bytes = 0;
-    for (const auto& buf : tx_) {
-      removed_bytes += std::visit(
-          [](auto&& b) -> size_t {
-            using T = std::decay_t<decltype(b)>;
-            if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-              return b ? b->size() : 0;
-            } else {
-              return b.size();
-            }
-          },
-          buf);
-    }
-    tx_.clear();
-    queue_bytes_ = (queue_bytes_ > removed_bytes) ? (queue_bytes_ - removed_bytes) : 0;
-    return;
-  }
-
-  if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
-    while (!tx_.empty() && (queue_bytes_ + added > bp_high_)) {
-      size_t oldest_size = std::visit(
-          [](auto&& buf) -> size_t {
-            using T = std::decay_t<decltype(buf)>;
-            if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-              return buf ? buf->size() : 0;
-            } else {
-              return buf.size();
-            }
-          },
-          tx_.front());
-      queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
-      tx_.pop_front();
-    }
-  }
+  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_,
+                                               backpressure_active_);
 }
 
 void UdsClient::Impl::report_backpressure(std::shared_ptr<UdsClient> self, size_t queued_bytes) {
