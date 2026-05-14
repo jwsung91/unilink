@@ -293,7 +293,9 @@ bool TcpClient::async_write_copy(memory::ConstByteSpan data) {
       if (pooled_buffer.valid()) {
         base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
         const auto added = pooled_buffer.size();
-        if (impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) return false;
+        if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+            impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_)
+          return false;
         net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
           if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
               self->impl_->state_.is_state(LinkState::Error)) {
@@ -360,6 +362,13 @@ bool TcpClient::async_write_copy(memory::ConstByteSpan data) {
 
     self->impl_->maybe_flush_for_keep_latest(added);
 
+    if (self->impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+        self->impl_->queue_bytes_ + self->impl_->pending_bytes_ + added > self->impl_->bp_limit_) {
+      UNILINK_LOG_ERROR("tcp_client", "write",
+                        fmt::format("Queue limit exceeded ({} bytes)", self->impl_->queue_bytes_ + added));
+      return;
+    }
+
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "write",
                         fmt::format("Queue limit exceeded ({} bytes)", self->impl_->queue_bytes_ + added));
@@ -394,7 +403,9 @@ bool TcpClient::async_write_move(std::vector<uint8_t>&& data) {
   }
 
   const auto added = size;
-  if (impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) return false;
+  if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+      impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_)
+    return false;
   net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
         self->impl_->state_.is_state(LinkState::Error)) {
@@ -450,7 +461,9 @@ bool TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   }
 
   const auto added = size;
-  if (impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) return false;
+  if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::Reliable &&
+      impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_)
+    return false;
   net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
         self->impl_->state_.is_state(LinkState::Error)) {
