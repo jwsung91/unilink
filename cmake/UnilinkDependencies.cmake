@@ -10,6 +10,10 @@ set(UNILINK_MIN_BOOST_VERSION
     1.83.0
     CACHE STRING "Minimum supported Boost version"
 )
+set(UNILINK_MIN_SPDLOG_VERSION
+    1.9
+    CACHE STRING "Minimum supported spdlog version"
+)
 
 # Normalize Boost lookup variants to avoid missing component builds. vcpkg's
 # built-in Linux triplets (x64-linux, arm64-linux) use static libraries by
@@ -137,9 +141,15 @@ if(NOT UNILINK_BOOST_INCLUDE_DIR)
   endif()
 endif()
 
-find_package(spdlog 1.9 CONFIG QUIET)
+find_package(spdlog ${UNILINK_MIN_SPDLOG_VERSION} CONFIG QUIET)
 if(NOT spdlog_FOUND)
   include(FetchContent)
+  if(UNILINK_ENABLE_INSTALL)
+    set(SPDLOG_INSTALL
+        ON
+        CACHE BOOL "Install FetchContent-provided spdlog with unilink" FORCE
+    )
+  endif()
   FetchContent_Declare(
     spdlog
     GIT_REPOSITORY https://github.com/gabime/spdlog.git
@@ -249,27 +259,17 @@ if(_UNILINK_SPDLOG_BUILD_TARGET)
   )
 endif()
 if(UNILINK_LINK_BOOST_SYSTEM)
-  if(UNILINK_BOOST_FETCHED)
-    # For local targets (FetchContent), use BUILD_INTERFACE to avoid export
-    # errors and INSTALL_INTERFACE with a proxy target to avoid conflicts with
-    # the local target
+  target_link_libraries(
+    unilink_dependencies
+    INTERFACE $<BUILD_INTERFACE:Boost::system>
+              $<INSTALL_INTERFACE:unilink_boost_system_proxy>
+  )
+  if(TARGET Boost::asio)
     target_link_libraries(
       unilink_dependencies
-      INTERFACE $<BUILD_INTERFACE:Boost::system>
-                $<INSTALL_INTERFACE:unilink_boost_system_proxy>
+      INTERFACE $<BUILD_INTERFACE:Boost::asio>
+                $<INSTALL_INTERFACE:unilink_boost_asio_proxy>
     )
-    if(TARGET Boost::asio)
-      target_link_libraries(
-        unilink_dependencies
-        INTERFACE $<BUILD_INTERFACE:Boost::asio>
-                  $<INSTALL_INTERFACE:unilink_boost_asio_proxy>
-      )
-    endif()
-  else()
-    target_link_libraries(unilink_dependencies INTERFACE Boost::system)
-    if(TARGET Boost::asio)
-      target_link_libraries(unilink_dependencies INTERFACE Boost::asio)
-    endif()
   endif()
 endif()
 
@@ -341,3 +341,10 @@ set(UNILINK_DEPENDENCIES
     ${_UNILINK_DEPENDENCY_TARGETS}
     CACHE INTERNAL "Unilink dependencies"
 )
+set(UNILINK_CONFIG_REQUIRES_THREADS ON)
+set(UNILINK_CONFIG_REQUIRES_BOOST ${UNILINK_LINK_BOOST_SYSTEM})
+if(_UNILINK_SPDLOG_BUILD_TARGET)
+  set(UNILINK_CONFIG_REQUIRES_SPDLOG ON)
+else()
+  set(UNILINK_CONFIG_REQUIRES_SPDLOG OFF)
+endif()

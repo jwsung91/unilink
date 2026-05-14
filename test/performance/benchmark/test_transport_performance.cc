@@ -116,6 +116,7 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   cfg.host = "127.0.0.1";
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
+  cfg.backpressure_threshold = 1 << 20;
 
   client_ = TcpClient::create(cfg);
 
@@ -131,8 +132,8 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   // --- Test Logic ---
   client_->start();
 
-  // Send large amount of data exceeding bp_high (4MB); data queued while disconnected, backpressure fires
-  const size_t large_data_size = 5 * (1 << 20);  // 5MB
+  // Send data exceeding bp_high but below the hard queue limit so it is queued while disconnected.
+  const size_t large_data_size = cfg.backpressure_threshold * 2;
   std::vector<uint8_t> large_data(large_data_size, 0xAA);
   client_->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
