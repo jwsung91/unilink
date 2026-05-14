@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iterator>
+#include <limits>
 #include <stdexcept>
 
 namespace unilink {
@@ -32,6 +33,12 @@ void append_bytes(std::vector<uint8_t>& buffer, memory::ConstByteSpan data, size
 
   const size_t append_size = data.size() - offset;
   const size_t old_size = buffer.size();
+
+  // Check for size_t overflow before resize
+  if (append_size > std::numeric_limits<size_t>::max() - old_size) {
+    throw std::length_error("append_bytes: size overflow");
+  }
+
   buffer.resize(old_size + append_size);
   std::memcpy(buffer.data() + old_size, data.data() + offset, append_size);
 }
