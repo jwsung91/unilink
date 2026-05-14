@@ -413,6 +413,26 @@ int main() {
 
 ---
 
+### Problem: UDP with Reliable Strategy Still Drops Packets
+
+**Symptoms:**
+
+- UDP channel uses `BackpressureStrategy::Reliable` but the receiver still loses packets.
+
+**Explanation:**
+
+`Reliable` only controls the *sender-side* tx queue: it blocks the calling thread instead of dropping data when the queue is full. Because UDP is connectionless, there is no receiver-side flow control — the OS network stack or the remote receiver can still discard datagrams independently of the sender queue strategy. If you need guaranteed delivery over UDP, implement an application-level acknowledgment protocol.
+
+```cpp
+// Reliable prevents sender-side queue drops, but cannot prevent
+// network-level or receiver-side packet loss.
+auto udp = unilink::udp_client("192.168.1.100", 9000)
+    .backpressure_strategy(unilink::BackpressureStrategy::Reliable)
+    .build();
+```
+
+---
+
 ## Performance Issues
 
 ### Problem: High CPU Usage

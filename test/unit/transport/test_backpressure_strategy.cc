@@ -19,6 +19,8 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
+#include <deque>
+#include <functional>
 #include <thread>
 #include <vector>
 
@@ -31,8 +33,10 @@
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/config/uds_config.hpp"
+#include "unilink/interface/itcp_socket.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
+#include "unilink/transport/tcp_server/tcp_server_session.hpp"
 #include "unilink/transport/udp/udp.hpp"
 #include "unilink/transport/uds/uds_client.hpp"
 #include "unilink/transport/uds/uds_server.hpp"
@@ -234,4 +238,250 @@ TEST(BackpressureStrategyTest, UdpChannel_SetBackpressureStrategyRuntime) {
   // Must not crash when called before start
   channel->set_backpressure_strategy(BackpressureStrategy::BestEffort);
   channel->set_backpressure_strategy(BackpressureStrategy::Reliable);
+}
+
+// ─── StallingTcpSocket: test double that holds write completions ──────────────
+// async_write stores the handler without completing it.  complete_one() posts
+// the completion to the ioc so ioc.poll() drives on_write on the strand.
+// Tests must use net::make_work_guard(ioc) + ioc.poll() — not ioc.run_for() —
+// because run_for() marks the ioc stopped when outstanding_work_==0, causing
+// subsequent calls to silently skip all posted handlers.
+
+namespace {
+class StallingTcpSocket : public unilink::interface::TcpSocketInterface {
+ public:
+  struct WriteEntry {
+    size_t size;
+    std::function<void(const boost::system::error_code&, std::size_t)> handler;
+  };
+
+  explicit StallingTcpSocket(net::io_context& ioc) : ioc_(ioc) {}
+
+  void async_read_some(const net::mutable_buffer&,
+                       std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
+    read_handler_ = std::move(handler);
+  }
+
+  void async_write(const net::const_buffer& buf,
+                   std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
+    write_queue_.push_back({buf.size(), std::move(handler)});
+  }
+
+  bool complete_one(boost::system::error_code ec = {}) {
+    if (write_queue_.empty()) return false;
+    auto entry = std::move(write_queue_.front());
+    write_queue_.pop_front();
+    total_bytes_completed_ += entry.size;
+    net::post(ioc_, [h = std::move(entry.handler), ec, n = entry.size]() mutable { h(ec, n); });
+    return true;
+  }
+
+  size_t total_bytes_completed() const { return total_bytes_completed_; }
+  size_t pending_write_count() const { return write_queue_.size(); }
+
+  void shutdown(tcp::socket::shutdown_type, boost::system::error_code& ec) override { ec.clear(); }
+
+  void close(boost::system::error_code& ec) override {
+    if (read_handler_) {
+      auto h = std::move(read_handler_);
+      net::post(ioc_, [h = std::move(h)]() mutable { h(boost::asio::error::operation_aborted, 0); });
+    }
+    ec.clear();
+  }
+
+  tcp::endpoint remote_endpoint(boost::system::error_code& ec) const override {
+    ec.clear();
+    return tcp::endpoint(net::ip::make_address("127.0.0.1"), 12345);
+  }
+
+ private:
+  net::io_context& ioc_;
+  std::function<void(const boost::system::error_code&, std::size_t)> read_handler_;
+  std::deque<WriteEntry> write_queue_;
+  size_t total_bytes_completed_ = 0;
+};
+}  // namespace
+
+// drain_and_stop: stops the session and completes any stalled writes to break
+// the shared_ptr cycle between the session and the write handlers it owns.
+static void drain_and_stop(StallingTcpSocket* sock, std::shared_ptr<transport::TcpServerSession> session,
+                           net::io_context& ioc) {
+  session->stop();
+  ioc.poll();
+  while (sock->pending_write_count() > 0) {
+    sock->complete_one();
+    ioc.poll();
+  }
+}
+
+// ─── Reliable auto-FC: pending_ queue tests ───────────────────────────────────
+
+// Writes during active backpressure go to pending_ and return true (not dropped).
+TEST(BackpressureStrategyTest, Reliable_PendingQueue_AccumulatesWhenBackpressureActive) {
+  constexpr size_t kBpHigh = 1024;
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);  // prevents ioc from stopping between polls
+
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
+
+  std::vector<size_t> bp_events;
+  session->on_backpressure([&](size_t q) { bp_events.push_back(q); });
+  session->start();
+  ioc.poll();
+
+  // chunk1 (600 B) → tx_, socket stalls (no completion yet)
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAA)));
+  ioc.poll();
+
+  // chunk2 (600 B) → tx_, queue=1200 > bp_high_=1024 → BP ON fires
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAB)));
+  ioc.poll();
+  ASSERT_EQ(bp_events.size(), 1u);
+  EXPECT_GE(bp_events[0], kBpHigh);
+  EXPECT_TRUE(session->is_backpressure_active());
+
+  // chunk3 during active BP → Reliable: must return true and go to pending_
+  bool result = session->async_write_move(std::vector<uint8_t>(300, 0xAC));
+  ioc.poll();
+  EXPECT_TRUE(result);
+  EXPECT_EQ(bp_events.size(), 1u);  // no new BP event; chunk3 is buffered
+  EXPECT_TRUE(session->is_backpressure_active());
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
+}
+
+// All bytes written to pending_ during backpressure are eventually delivered.
+TEST(BackpressureStrategyTest, Reliable_PendingQueue_DeliveredAfterBackpressureClears) {
+  constexpr size_t kBpHigh = 1024;
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
+
+  session->on_backpressure([](size_t) {});
+  session->start();
+  ioc.poll();
+
+  // Establish BP ON: chunk1 in-flight (stalled), chunk2 queued → queue=1200
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAA)));
+  ioc.poll();
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAB)));
+  ioc.poll();
+  EXPECT_TRUE(session->is_backpressure_active());
+
+  // chunk3 goes to pending_ (300 B)
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(300, 0xAC)));
+  ioc.poll();
+
+  // Complete chunk1: queue=600, still above bp_low_(512), no OFF yet
+  EXPECT_TRUE(sock->complete_one());
+  ioc.poll();
+
+  // Complete chunk2: queue=0 <= bp_low_(512) → OFF fires, pending_ flushed to tx_
+  EXPECT_TRUE(sock->complete_one());
+  ioc.poll();
+
+  // chunk3 is now in tx_ (moved from pending_), complete it
+  EXPECT_TRUE(sock->complete_one());
+  ioc.poll();
+
+  // All three chunks must have reached the socket
+  EXPECT_EQ(sock->total_bytes_completed(), 600u + 600u + 300u);
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
+}
+
+// async_write returns false when queue_bytes_ + pending_bytes_ + new > bp_limit_.
+TEST(BackpressureStrategyTest, Reliable_CombinedLimit_LargeWriteRejected) {
+  constexpr size_t kBpHigh = 1024;
+  // bp_limit_ = min(max(kBpHigh*4, DEFAULT_BACKPRESSURE_THRESHOLD), MAX_BUFFER_SIZE)
+  //           = min(max(4096, 1MiB), 64MiB) = 1 MiB
+  constexpr size_t kBpLimit = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;  // 1 MiB
+  constexpr size_t kHalfLimit = kBpLimit / 2;                                   // 512 KiB
+
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
+
+  session->on_backpressure([](size_t) {});
+  session->start();
+  ioc.poll();
+
+  // Establish BP ON
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAA)));
+  ioc.poll();
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAB)));
+  ioc.poll();
+  EXPECT_TRUE(session->is_backpressure_active());
+
+  // Fill pending_ with ~512 KiB: queue(1200) + pending(0) + 512K < 1MiB → accepted
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(kHalfLimit, 0xAC)));
+  ioc.poll();  // pending_bytes_ updated to 512K on strand
+
+  // Second 512 KiB: queue(1200) + pending(512K) + 512K > 1MiB → rejected
+  bool result = session->async_write_move(std::vector<uint8_t>(kHalfLimit, 0xAD));
+  EXPECT_FALSE(result);
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
+}
+
+// When OFF fires and the flushed pending_ bytes push queue above bp_high_,
+// the ON callback is re-fired immediately in the same report_backpressure call.
+TEST(BackpressureStrategyTest, Reliable_BurstOnOFF_ImmediateOnReactivation) {
+  constexpr size_t kBpHigh = 1024;
+  constexpr size_t kBpLow = kBpHigh / 2;  // 512
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
+
+  std::vector<size_t> bp_events;
+  session->on_backpressure([&](size_t q) { bp_events.push_back(q); });
+  session->start();
+  ioc.poll();
+
+  // chunk1 (600 B) in-flight (stalled), chunk2 (600 B) in tx_ → queue=1200 → ON
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAA)));
+  ioc.poll();
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAB)));
+  ioc.poll();
+  ASSERT_EQ(bp_events.size(), 1u);
+  EXPECT_GE(bp_events[0], kBpHigh);
+
+  // big_chunk (2000 B) in pending_; post-flush queue will be 2000 > kBpHigh → burst
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(2000, 0xAC)));
+  ioc.poll();
+
+  // Complete chunk1: queue=1200-600=600, 600 > kBpLow(512) → no OFF
+  EXPECT_TRUE(sock->complete_one());
+  ioc.poll();
+  EXPECT_EQ(bp_events.size(), 1u);
+
+  // Complete chunk2: queue=600-600=0, 0 <= kBpLow → OFF fires,
+  // pending_ (2000 B) flushed to tx_, queue=2000 >= kBpHigh → ON re-fires
+  EXPECT_TRUE(sock->complete_one());
+  ioc.poll();
+
+  ASSERT_EQ(bp_events.size(), 3u);
+  EXPECT_GE(bp_events[0], kBpHigh);  // first ON
+  EXPECT_LE(bp_events[1], kBpLow);   // OFF (value is pre-flush queue size)
+  EXPECT_GE(bp_events[2], kBpHigh);  // ON re-fired (burst-on-OFF)
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
 }
