@@ -165,13 +165,10 @@ jobs:
           find_package(unilink CONFIG REQUIRED)
 
           add_executable(vcpkg_consumer main.cpp)
-          if(TARGET unilink::unilink_shared)
-            target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_shared)
-          elseif(TARGET unilink::unilink)
-            target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink)
-          else()
-            target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_static)
+          if(NOT TARGET unilink::unilink)
+            message(FATAL_ERROR "Expected vcpkg package to provide unilink::unilink")
           endif()
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink)
           EOF
 
           cat > "${WORKDIR}/main.cpp" <<'EOF'
@@ -211,13 +208,10 @@ jobs:
           find_package(unilink CONFIG REQUIRED)
 
           add_executable(vcpkg_consumer main.cpp)
-          if(TARGET unilink::unilink_shared)
-            target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_shared)
-          elseif(TARGET unilink::unilink)
-            target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink)
-          else()
-            target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_static)
+          if(NOT TARGET unilink::unilink)
+            message(FATAL_ERROR "Expected vcpkg package to provide unilink::unilink")
           endif()
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink)
           "@ | Set-Content -Path (Join-Path $workDir "CMakeLists.txt")
 
           @"

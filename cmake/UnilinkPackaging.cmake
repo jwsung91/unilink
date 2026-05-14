@@ -78,8 +78,16 @@ elseif(UNIX)
   )
   set(CPACK_DEBIAN_PACKAGE_SECTION "libs")
   set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS
+  set(_unilink_debian_package_depends
       "libboost-system-dev (>= ${UNILINK_MIN_BOOST_VERSION})"
+  )
+  if(NOT UNILINK_SPDLOG_BUNDLED)
+    list(APPEND _unilink_debian_package_depends
+         "libspdlog-dev (>= ${UNILINK_MIN_SPDLOG_VERSION})"
+    )
+  endif()
+  string(JOIN ", " CPACK_DEBIAN_PACKAGE_DEPENDS
+         ${_unilink_debian_package_depends}
   )
   set(CPACK_DEBIAN_PACKAGE_SUGGESTS "cmake, pkg-config")
   set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libc6-dev")
@@ -88,7 +96,15 @@ elseif(UNIX)
   set(CPACK_RPM_PACKAGE_LICENSE "Apache-2.0")
   set(CPACK_RPM_PACKAGE_GROUP "Development/Libraries")
   set(CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_HOMEPAGE_URL}")
-  set(CPACK_RPM_PACKAGE_REQUIRES "boost-system >= ${UNILINK_MIN_BOOST_VERSION}")
+  set(_unilink_rpm_package_requires
+      "boost-system >= ${UNILINK_MIN_BOOST_VERSION}"
+  )
+  if(NOT UNILINK_SPDLOG_BUNDLED)
+    list(APPEND _unilink_rpm_package_requires
+         "spdlog-devel >= ${UNILINK_MIN_SPDLOG_VERSION}"
+    )
+  endif()
+  string(JOIN ", " CPACK_RPM_PACKAGE_REQUIRES ${_unilink_rpm_package_requires})
   set(CPACK_RPM_PACKAGE_SUGGESTS "cmake, pkg-config")
   set(CPACK_RPM_PACKAGE_RECOMMENDS "glibc-devel")
 

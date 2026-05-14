@@ -30,7 +30,7 @@ jobs:
       - name: Set up C++ toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config
           
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
             echo "CC=gcc" >> $GITHUB_ENV
@@ -52,6 +52,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_C_COMPILER=$CC \
             -DCMAKE_CXX_COMPILER=$CXX \
+            -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/unilink-install" \
             -DUNILINK_ENABLE_INSTALL=ON \
             -DUNILINK_ENABLE_PKGCONFIG=ON \
             -DUNILINK_ENABLE_EXPORT_HEADER=ON \
@@ -62,28 +63,35 @@ jobs:
         run: cmake --build build --config Release -- -v
 
       - name: Install
-        run: sudo cmake --install build
+        run: cmake --install build --prefix "$RUNNER_TEMP/unilink-install"
 
       - name: Consume as package (find_package)
         run: |
-          mkdir -p /tmp/consumer && cd /tmp/consumer
+          install_prefix="$RUNNER_TEMP/unilink-install"
+          mkdir -p "$RUNNER_TEMP/consumer" && cd "$RUNNER_TEMP/consumer"
           cat > CMakeLists.txt <<'EOF'
           cmake_minimum_required(VERSION 3.12)
           project(consumer CXX)
           set(CMAKE_CXX_STANDARD 20)
           find_package(unilink CONFIG REQUIRED)
+          if(NOT TARGET unilink::unilink)
+            message(FATAL_ERROR "Expected installed package to provide unilink::unilink")
+          endif()
           add_executable(consumer main.cpp)
-          target_link_libraries(consumer PRIVATE unilink::unilink_shared)
+          target_link_libraries(consumer PRIVATE unilink::unilink)
           EOF
           cat > main.cpp <<'EOF'
           #include <unilink/unilink.hpp>
           #include <iostream>
           int main(){ 
+            unilink::diagnostics::Logger::instance().set_console_output(false);
+            unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::INFO);
             std::cout << "unilink package consumed successfully!\n"; 
             return 0; 
           }
           EOF
           cmake -S . -B build -G Ninja \
+            -DCMAKE_PREFIX_PATH="$install_prefix" \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
             -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
           cmake --build build --config Release
@@ -91,6 +99,7 @@ jobs:
 
       - name: Test pkg-config
         run: |
+          export PKG_CONFIG_PATH="$RUNNER_TEMP/unilink-install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
           echo "Testing pkg-config integration..."
           pkg-config --cflags --libs unilink
           echo "pkg-config test completed successfully!"
