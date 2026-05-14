@@ -41,7 +41,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a9d889ecf83033b9fcdf137115a26c64c" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a4a285bf7d9f865446768b2147b7e4074" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="268,-41 152,-41 152,0 268,0 268,-41"/>
 <text text-anchor="start" x="160" y="-29" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::transport</text>
 <text text-anchor="start" x="160" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">::UdpChannel::Impl::</text>
@@ -53,8 +53,17 @@
 <g id="edge2_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge2_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M116.14,-20.5C124.38,-20.5 132.92,-20.5 141.34,-20.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="141.53,-24 151.53,-20.5 141.53,-17 141.53,-24"/>
+<path fill="none" stroke="#63b8ff" d="M116.14,-13.92C124.38,-13.76 132.92,-13.71 141.34,-13.78"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="141.48,-17.28 151.53,-13.92 141.57,-10.28 141.48,-17.28"/>
+</a>
+</g>
+</g>
+<!-- Node2&#45;&gt;Node1 -->
+<g id="edge3_Node000002_Node000001" class="edge">
+<title>Node2&#45;&gt;Node1</title>
+<g id="a_edge3_Node000002_Node000001"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M151.53,-27.08C143.28,-27.24 134.73,-27.29 126.31,-27.22"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="126.18,-23.72 116.14,-27.08 126.09,-30.72 126.18,-23.72"/>
 </a>
 </g>
 </g>

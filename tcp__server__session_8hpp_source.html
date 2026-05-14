@@ -253,26 +253,28 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  std::unique_ptr&lt;interface::TcpSocketInterface&gt; socket_;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  std::array&lt;uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  std::deque&lt;BufferVariant&gt; tx_;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  std::optional&lt;BufferVariant&gt; current_write_buffer_;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordtype">bool</span> writing_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  std::atomic&lt;size_t&gt; queue_bytes_{0};</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keywordtype">size_t</span> bp_high_;   <span class="comment">// Configurable backpressure threshold</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keywordtype">size_t</span> bp_limit_;  <span class="comment">// Hard cap for queued bytes</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">size_t</span> bp_low_;    <span class="comment">// Backpressure relief threshold</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  std::atomic&lt;bool&gt; backpressure_active_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">int</span> idle_timeout_ms_ = 0;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  OnBytes on_bytes_;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  OnBackpressure on_bp_;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  OnClose on_close_;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  std::atomic&lt;bool&gt; alive_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  std::atomic&lt;bool&gt; closing_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  std::atomic&lt;bool&gt; cleanup_done_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>};</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  std::deque&lt;BufferVariant&gt; pending_;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  std::atomic&lt;size_t&gt; pending_bytes_{0};</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  std::optional&lt;BufferVariant&gt; current_write_buffer_;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">bool</span> writing_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  std::atomic&lt;size_t&gt; queue_bytes_{0};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">size_t</span> bp_high_;   <span class="comment">// Configurable backpressure threshold</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keywordtype">size_t</span> bp_limit_;  <span class="comment">// Hard cap for queued bytes</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">size_t</span> bp_low_;    <span class="comment">// Backpressure relief threshold</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  std::atomic&lt;bool&gt; backpressure_active_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordtype">int</span> idle_timeout_ms_ = 0;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  OnBytes on_bytes_;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  OnBackpressure on_bp_;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  OnClose on_close_;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  std::atomic&lt;bool&gt; alive_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  std::atomic&lt;bool&gt; closing_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  std::atomic&lt;bool&gt; cleanup_done_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>};</div>
 </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel_8hpp_html"><div class="ttname"><a href="channel_8hpp.html">channel.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_acbaa1d8f93fac54ed516ef6e1caac3a5"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">unilink::interface::Channel::OnBackpressure</a></div><div class="ttdeci">std::function&lt; void(size_t)&gt; OnBackpressure</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00033">channel.hpp:33</a></div></div>
@@ -291,7 +293,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div class="ttc" id="anamespaceboost_1_1asio_html"><div class="ttname"><a href="namespaceboost_1_1asio.html">boost::asio</a></div><div class="ttdef"><b>Definition</b> <a href="transport_2serial_2serial_8hpp_source.html#l00028">serial.hpp:28</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_1_1constants_html_af1e6ca56552bcb7c548ec6091a4d2e0a"><div class="ttname"><a href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">unilink::base::constants::BackpressureStrategy</a></div><div class="ttdeci">BackpressureStrategy</div><div class="ttdef"><b>Definition</b> <a href="constants_8hpp_source.html#l00029">constants.hpp:29</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition</b> <a href="common_8hpp_source.html#l00047">common.hpp:47</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1transport_html_ab1ed8ce969aa0a469a6bf23c93f46a32"><div class="ttname"><a href="namespaceunilink_1_1transport.html#ab1ed8ce969aa0a469a6bf23c93f46a32">unilink::transport::tcp</a></div><div class="ttdeci">net::ip::tcp tcp</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__client_2tcp__client_8cc_source.html#l00060">tcp_client.cc:60</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1transport_html_ab1ed8ce969aa0a469a6bf23c93f46a32"><div class="ttname"><a href="namespaceunilink_1_1transport.html#ab1ed8ce969aa0a469a6bf23c93f46a32">unilink::transport::tcp</a></div><div class="ttdeci">net::ip::tcp tcp</div><div class="ttdef"><b>Definition</b> <a href="transport_2tcp__client_2tcp__client_8cc_source.html#l00061">tcp_client.cc:61</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition</b> <a href="common_8hpp_source.html#l00038">common.hpp:38</a></div></div>
 <div class="ttc" id="aplatform_8hpp_html"><div class="ttname"><a href="platform_8hpp.html">platform.hpp</a></div></div>
 <div class="ttc" id="asafe__span_8hpp_html"><div class="ttname"><a href="safe__span_8hpp.html">safe_span.hpp</a></div></div>
@@ -303,7 +305,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_bdae376d6a766a2d984a51161a7f5788.html">tcp_server</a></li><li class="navelem"><a class="el" href="tcp__server__session_8hpp.html">tcp_server_session.hpp</a></li>
-    <li class="footer">Generated on Mon May 11 2026 00:56:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 14 2026 13:15:25 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

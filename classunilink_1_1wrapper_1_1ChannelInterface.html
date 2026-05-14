@@ -199,9 +199,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abddae5fa4d73b824ca5ef57c0d6bd003" id="r_abddae5fa4d73b824ca5ef57c0d6bd003"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abddae5fa4d73b824ca5ef57c0d6bd003">~ChannelInterface</a> ()=default</td></tr>
 <tr class="separator:abddae5fa4d73b824ca5ef57c0d6bd003"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2060c51ac6a3120e7245cef5117dc021" id="r_a2060c51ac6a3120e7245cef5117dc021"><td class="memItemLeft" align="right" valign="top">virtual std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2060c51ac6a3120e7245cef5117dc021">start</a> ()=0</td></tr>
+<tr class="memdesc:a2060c51ac6a3120e7245cef5117dc021"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start the channel asynchronously.  <br /></td></tr>
 <tr class="separator:a2060c51ac6a3120e7245cef5117dc021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae98d24f5b572c9ae0aa13d428f01fcac" id="r_ae98d24f5b572c9ae0aa13d428f01fcac"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae98d24f5b572c9ae0aa13d428f01fcac">start_sync</a> ()</td></tr>
-<tr class="memdesc:ae98d24f5b572c9ae0aa13d428f01fcac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously start the channel/server and wait for the result.  <br /></td></tr>
+<tr class="memdesc:ae98d24f5b572c9ae0aa13d428f01fcac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously start the channel and wait for the result.  <br /></td></tr>
 <tr class="separator:ae98d24f5b572c9ae0aa13d428f01fcac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8b698aa572dffa18e0e9df5d465c6d0" id="r_ad8b698aa572dffa18e0e9df5d465c6d0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">stop</a> ()=0</td></tr>
 <tr class="memdesc:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the channel and block until all pending async operations are cancelled.  <br /></td></tr>
@@ -474,7 +475,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a691435de162ec7a5cc4da3621f3d9260">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd0d53e98349d037b977c876a936535e">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a71f925263ff0e584ecaa90b5291a213c">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ac2723395fb6d0652997da82bc76d4e6e">unilink::wrapper::UdsClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00148">148</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00160">160</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -843,6 +844,9 @@ false Channel stopped while waiting. </dd></dl>
 </table>
 </div><div class="memdoc">
 
+<p>Start the channel asynchronously. </p>
+<dl class="section return"><dt>Returns</dt><dd>A future that resolves to true when the channel is connected/listening, or false if startup failed (e.g. connection refused, max retries exhausted). On false, the registered <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">on_error()</a> callback will have been invoked with the specific failure reason. </dd></dl>
+
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a1d0c46c79487050268065fedda5fec4a">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#af28e9e16877808ff5b8b6765a6a70227">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aad3d1eca8457045707edc7dd37e169c0">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ae95799bd17d533a9f5d613a40d3a19c9">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
@@ -870,9 +874,10 @@ false Channel stopped while waiting. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Synchronously start the channel/server and wait for the result. </p>
+<p>Synchronously start the channel and wait for the result. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if connected/listening, false on failure. On false, the registered <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">on_error()</a> callback will have been invoked with the specific failure reason. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00051">51</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00063">63</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -982,7 +987,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Mon May 11 2026 00:56:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 14 2026 13:15:25 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

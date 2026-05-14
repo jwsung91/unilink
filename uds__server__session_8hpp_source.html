@@ -252,25 +252,27 @@ $(document).ready(function(){initNavTree('uds__server__session_8hpp_source.html'
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  std::unique_ptr&lt;interface::UdsSocketInterface&gt; socket_;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  std::array&lt;uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  std::deque&lt;BufferVariant&gt; tx_;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  std::optional&lt;BufferVariant&gt; current_write_buffer_;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keywordtype">bool</span> writing_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  std::atomic&lt;size_t&gt; queue_bytes_{0};</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">size_t</span> bp_high_;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keywordtype">size_t</span> bp_low_;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keywordtype">size_t</span> bp_limit_;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  std::atomic&lt;bool&gt; backpressure_active_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keywordtype">int</span> idle_timeout_ms_ = 0;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  OnBytes on_bytes_;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  OnBackpressure on_bp_;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  OnClose on_close_;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  std::atomic&lt;bool&gt; alive_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  std::atomic&lt;bool&gt; closing_{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>};</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  std::deque&lt;BufferVariant&gt; pending_;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  std::atomic&lt;size_t&gt; pending_bytes_{0};</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  std::optional&lt;BufferVariant&gt; current_write_buffer_;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keywordtype">bool</span> writing_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  std::atomic&lt;size_t&gt; queue_bytes_{0};</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keywordtype">size_t</span> bp_high_;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">size_t</span> bp_low_;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keywordtype">size_t</span> bp_limit_;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  std::atomic&lt;bool&gt; backpressure_active_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="keywordtype">int</span> idle_timeout_ms_ = 0;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  OnBytes on_bytes_;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  OnBackpressure on_bp_;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  OnClose on_close_;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  std::atomic&lt;bool&gt; alive_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  std::atomic&lt;bool&gt; closing_{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>};</div>
 </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel_8hpp_html"><div class="ttname"><a href="channel_8hpp.html">channel.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_acbaa1d8f93fac54ed516ef6e1caac3a5"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">unilink::interface::Channel::OnBackpressure</a></div><div class="ttdeci">std::function&lt; void(size_t)&gt; OnBackpressure</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00033">channel.hpp:33</a></div></div>
@@ -301,7 +303,7 @@ $(document).ready(function(){initNavTree('uds__server__session_8hpp_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="uds__server__session_8hpp.html">uds_server_session.hpp</a></li>
-    <li class="footer">Generated on Mon May 11 2026 00:56:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 14 2026 13:15:25 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

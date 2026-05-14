@@ -1,6 +1,10 @@
 var namespaceunilink_1_1transport =
 [
     [ "detail", "namespaceunilink_1_1transport_1_1detail.html", "namespaceunilink_1_1transport_1_1detail" ],
+    [ "queue_util", "namespaceunilink_1_1transport_1_1queue__util.html", [
+      [ "maybe_flush_for_keep_latest", "namespaceunilink_1_1transport_1_1queue__util.html#af2da4fca05512c14f792648bd05f4c63", null ],
+      [ "variant_buffer_size", "namespaceunilink_1_1transport_1_1queue__util.html#a969f23360d48a823427a3ca737024c4e", null ]
+    ] ],
     [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
     [ "BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", "classunilink_1_1transport_1_1BoostTcpAcceptor" ],
     [ "BoostTcpSocket", "classunilink_1_1transport_1_1BoostTcpSocket.html", "classunilink_1_1transport_1_1BoostTcpSocket" ],

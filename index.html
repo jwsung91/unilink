@@ -314,7 +314,7 @@ Core Components</h1>
 <div class="line">    class <a class="code hl_typedef" href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">TcpServer</a> : <span class="keyword">public</span> ServerInterface;</div>
 <div class="line">    class <a class="code hl_typedef" href="namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f">UdsServer</a> : <span class="keyword">public</span> ServerInterface;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a2060c51ac6a3120e7245cef5117dc021"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2060c51ac6a3120e7245cef5117dc021">unilink::wrapper::ChannelInterface::start</a></div><div class="ttdeci">virtual std::future&lt; bool &gt; start()=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a2060c51ac6a3120e7245cef5117dc021"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2060c51ac6a3120e7245cef5117dc021">unilink::wrapper::ChannelInterface::start</a></div><div class="ttdeci">virtual std::future&lt; bool &gt; start()=0</div><div class="ttdoc">Start the channel asynchronously.</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a2110813c183960be6a743c1fa5477dfa"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">unilink::wrapper::ChannelInterface::connected</a></div><div class="ttdeci">virtual bool connected() const =0</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_ad8b698aa572dffa18e0e9df5d465c6d0"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">unilink::wrapper::ChannelInterface::stop</a></div><div class="ttdeci">virtual void stop()=0</div><div class="ttdoc">Stop the channel and block until all pending async operations are cancelled.</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aea0f1a7ed2e31e0dad1680a996687b48"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">unilink::wrapper::ChannelInterface::send</a></div><div class="ttdeci">virtual bool send(std::string_view data)=0</div><div class="ttdoc">Enqueue data for transmission, honouring the backpressure strategy.</div></div>
@@ -350,7 +350,7 @@ Core Components</h1>
 <div class="line">    <span class="comment">// Serial transport</span></div>
 <div class="line">    <span class="keyword">class </span><a class="code hl_typedef" href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">Serial</a> { ... };</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespaceunilink_1_1transport_html"><div class="ttname"><a href="namespaceunilink_1_1transport.html">unilink::transport</a></div><div class="ttdef"><b>Definition</b> <a href="base_2reconnect__decider_8hpp_source.html#l00028">reconnect_decider.hpp:28</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1transport_html"><div class="ttname"><a href="namespaceunilink_1_1transport.html">unilink::transport</a></div><div class="ttdef"><b>Definition</b> <a href="bp__utils_8hpp_source.html#l00028">bp_utils.hpp:28</a></div></div>
 </div><!-- fragment --><p><b>Key Features:</b></p>
 <ul>
 <li>Boost.Asio based</li>
@@ -822,7 +822,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 11 2026 00:56:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 14 2026 13:15:25 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

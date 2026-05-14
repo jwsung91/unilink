@@ -207,6 +207,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa6441abbce2f20580548dcbef8d3a77" id="r_afa6441abbce2f20580548dcbef8d3a77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#afa6441abbce2f20580548dcbef8d3a77">operator=</a> (const <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a> &amp;)=delete</td></tr>
 <tr class="separator:afa6441abbce2f20580548dcbef8d3a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae95799bd17d533a9f5d613a40d3a19c9" id="r_ae95799bd17d533a9f5d613a40d3a19c9"><td class="memItemLeft" align="right" valign="top">std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ae95799bd17d533a9f5d613a40d3a19c9">start</a> () override</td></tr>
+<tr class="memdesc:ae95799bd17d533a9f5d613a40d3a19c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start the channel asynchronously.  <br /></td></tr>
 <tr class="separator:ae95799bd17d533a9f5d613a40d3a19c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af158de7b71848d08c1655e43bc5c39eb" id="r_af158de7b71848d08c1655e43bc5c39eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#af158de7b71848d08c1655e43bc5c39eb">stop</a> () override</td></tr>
 <tr class="memdesc:af158de7b71848d08c1655e43bc5c39eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the channel and block until all pending async operations are cancelled.  <br /></td></tr>
@@ -276,7 +277,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abddae5fa4d73b824ca5ef57c0d6bd003 inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface" id="r_abddae5fa4d73b824ca5ef57c0d6bd003"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abddae5fa4d73b824ca5ef57c0d6bd003">~ChannelInterface</a> ()=default</td></tr>
 <tr class="separator:abddae5fa4d73b824ca5ef57c0d6bd003 inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae98d24f5b572c9ae0aa13d428f01fcac inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface" id="r_ae98d24f5b572c9ae0aa13d428f01fcac"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae98d24f5b572c9ae0aa13d428f01fcac">start_sync</a> ()</td></tr>
-<tr class="memdesc:ae98d24f5b572c9ae0aa13d428f01fcac inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously start the channel/server and wait for the result.  <br /></td></tr>
+<tr class="memdesc:ae98d24f5b572c9ae0aa13d428f01fcac inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronously start the channel and wait for the result.  <br /></td></tr>
 <tr class="separator:ae98d24f5b572c9ae0aa13d428f01fcac inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
@@ -1216,6 +1217,9 @@ false Channel stopped while waiting. </dd></dl>
 </table>
 </div><div class="memdoc">
 
+<p>Start the channel asynchronously. </p>
+<dl class="section return"><dt>Returns</dt><dd>A future that resolves to true when the channel is connected/listening, or false if startup failed (e.g. connection refused, max retries exhausted). On false, the registered <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a225e86d383fe802af663365cde7b1e4c">on_error()</a> callback will have been invoked with the specific failure reason. </dd></dl>
+
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2060c51ac6a3120e7245cef5117dc021">unilink::wrapper::ChannelInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2uds__client_2uds__client_8cc_source.html#l00448">448</a> of file <a class="el" href="wrapper_2uds__client_2uds__client_8cc_source.html">uds_client.cc</a>.</p>
@@ -1349,7 +1353,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a></li>
-    <li class="footer">Generated on Mon May 11 2026 00:56:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu May 14 2026 13:15:25 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

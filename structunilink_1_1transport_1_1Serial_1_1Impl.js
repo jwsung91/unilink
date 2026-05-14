@@ -27,6 +27,8 @@ var structunilink_1_1transport_1_1Serial_1_1Impl =
     [ "on_state_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a0467c0824620098701d1d88cb4e54e6f", null ],
     [ "opened_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a76efa4a2950c9d93ff945e365b5d6b34", null ],
     [ "owns_ioc_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a4f29358bccd608caa04e23fe09bb7ee2", null ],
+    [ "pending_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#ad87e37f48af136a31fe77ee67a128712", null ],
+    [ "pending_bytes_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a3fa67fb6faf7e61822e8a55e1a7ceadc", null ],
     [ "port_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#ac3825c76979da28a0f796b73f732adc3", null ],
     [ "queued_bytes_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a2abe03468ac53c511d9d28084ae9fa2b", null ],
     [ "retry_timer_", "structunilink_1_1transport_1_1Serial_1_1Impl.html#ac3b58158bcb3223db8a6503755b5e5da", null ],

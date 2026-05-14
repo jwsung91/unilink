@@ -4,7 +4,7 @@ var searchData=
   ['enable_5fport_5fretry_1',['enable_port_retry',['../classunilink_1_1builder_1_1TcpServerBuilder.html#a2c2a0f459ee2d225872925488de94e21',1,'unilink::builder::TcpServerBuilder']]],
   ['enable_5ftracking_2',['enable_tracking',['../classunilink_1_1memory_1_1MemoryTracker.html#adbe4ba53b37ec3e4e076695ec46a8a81',1,'unilink::memory::MemoryTracker']]],
   ['enabled_3',['enabled',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#a833420426946d96942ab593753f22824',1,'unilink::diagnostics::ErrorHandler::enabled()'],['../classunilink_1_1diagnostics_1_1Logger.html#af0d271521653c3a590f00889471e7bcb',1,'unilink::diagnostics::Logger::enabled()']]],
-  ['enqueue_5fbuffer_4',['enqueue_buffer',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acf617233e3487454b0f11e395739b037',1,'unilink::transport::UdpChannel::Impl']]],
+  ['enqueue_5fbuffer_4',['enqueue_buffer',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a9397ef06bddbc9e3c5518067f4a6abda',1,'unilink::transport::UdpChannel::Impl']]],
   ['ensure_5fio_5fcontext_5frunning_5',['ensure_io_context_running',['../classunilink_1_1builder_1_1AutoInitializer.html#a4158d61c97d2450ea92796565b93b2bc',1,'unilink::builder::AutoInitializer']]],
   ['error_6',['error',['../structunilink_1_1config_1_1ValidationResult.html#ad1b3fb0aa207ad2ec6885b23204ce4d1',1,'unilink::config::ValidationResult::error()'],['../classunilink_1_1diagnostics_1_1Logger.html#aa55074fbfd3d754a6f311505220ac746',1,'unilink::diagnostics::Logger::error()']]],
   ['error_5fcount_7',['error_count',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#ace4b78e5340d0a507a1d13250afed6f9',1,'unilink::diagnostics::ErrorHandler']]],

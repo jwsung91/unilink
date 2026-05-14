@@ -18,6 +18,7 @@ var searchData=
   ['unilink_3a_3amemory_3a_3asafe_5fbuffer_5ffactory_15',['safe_buffer_factory',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html',1,'unilink::memory']]],
   ['unilink_3a_3atransport_16',['transport',['../namespaceunilink_1_1transport.html',1,'unilink']]],
   ['unilink_3a_3atransport_3a_3adetail_17',['detail',['../namespaceunilink_1_1transport_1_1detail.html',1,'unilink::transport']]],
-  ['unilink_3a_3autil_18',['util',['../namespaceunilink_1_1util.html',1,'unilink']]],
-  ['unilink_3a_3awrapper_19',['wrapper',['../namespaceunilink_1_1wrapper.html',1,'unilink']]]
+  ['unilink_3a_3atransport_3a_3aqueue_5futil_18',['queue_util',['../namespaceunilink_1_1transport_1_1queue__util.html',1,'unilink::transport']]],
+  ['unilink_3a_3autil_19',['util',['../namespaceunilink_1_1util.html',1,'unilink']]],
+  ['unilink_3a_3awrapper_20',['wrapper',['../namespaceunilink_1_1wrapper.html',1,'unilink']]]
 ];
