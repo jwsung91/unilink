@@ -17,11 +17,26 @@
 #include "unilink/framer/packet_framer.hpp"
 
 #include <algorithm>
+#include <cstring>
 #include <iterator>
 #include <stdexcept>
 
 namespace unilink {
 namespace framer {
+namespace {
+
+void append_bytes(std::vector<uint8_t>& buffer, memory::ConstByteSpan data, size_t offset = 0) {
+  if (offset >= data.size()) {
+    return;
+  }
+
+  const size_t append_size = data.size() - offset;
+  const size_t old_size = buffer.size();
+  buffer.resize(old_size + append_size);
+  std::memcpy(buffer.data() + old_size, data.data() + offset, append_size);
+}
+
+}  // namespace
 
 PacketFramer::PacketFramer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
                            size_t max_length)
@@ -94,7 +109,7 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
     }
 
     if (processed_count < data.size()) {
-      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(processed_count), data.end());
+      append_bytes(buffer_, data, processed_count);
 
       // Update state if we buffered a partial packet starting with start_pattern
       if (state_ == State::Sync && !buffer_.empty()) {
@@ -109,7 +124,7 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
     return;
   }
 
-  buffer_.insert(buffer_.end(), data.begin(), data.end());
+  append_bytes(buffer_, data);
 
   while (true) {
     if (state_ == State::Sync) {

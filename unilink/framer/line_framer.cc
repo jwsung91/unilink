@@ -23,6 +23,20 @@
 
 namespace unilink {
 namespace framer {
+namespace {
+
+void append_bytes(std::vector<uint8_t>& buffer, memory::ConstByteSpan data, size_t offset = 0) {
+  if (offset >= data.size()) {
+    return;
+  }
+
+  const size_t append_size = data.size() - offset;
+  const size_t old_size = buffer.size();
+  buffer.resize(old_size + append_size);
+  std::memcpy(buffer.data() + old_size, data.data() + offset, append_size);
+}
+
+}  // namespace
 
 LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_t max_length)
     : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length) {
@@ -58,7 +72,7 @@ void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {
 
     // If we haven't processed everything, append the remainder to the buffer
     if (processed_count < data.size()) {
-      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(processed_count), data.end());
+      append_bytes(buffer_, data, processed_count);
       scanned_idx_ = buffer_.size();  // We scanned all of it
 
       // DoS protection for partial message overflow
@@ -74,7 +88,7 @@ void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {
   }
 
   // Slow Path: Append new data to buffer and process
-  buffer_.insert(buffer_.end(), data.begin(), data.end());
+  append_bytes(buffer_, data);
 
   // Determine where to start searching to avoid re-scanning
   // We back up by delimiter length - 1 to catch split delimiters
