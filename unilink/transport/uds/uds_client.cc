@@ -200,6 +200,7 @@ void UdsClient::start() {
     return;
   }
 
+  impl_->recalculate_backpressure_bounds();
   impl_->stop_requested_ = false;
   impl_->stopping_ = false;
   impl_->current_seq_++;
