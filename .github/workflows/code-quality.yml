@@ -85,7 +85,7 @@ jobs:
           --xml --xml-version=2 \
           --output-file=cppcheck-results.xml \
           --error-exitcode=1 \
-          unilink/ examples/ test/ || true
+          unilink/ test/ || true
 
     - name: Upload cppcheck results
       uses: actions/upload-artifact@v7

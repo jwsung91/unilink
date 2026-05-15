@@ -103,11 +103,11 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 
 ### 💡 Examples
 
-* [TCP Examples](examples/tcp/)
-* [UDP Examples](examples/udp/)
-* [Serial Examples](examples/serial/)
-* [UDS Examples](examples/uds/)
-* [Common Examples](examples/common/)
+* [External examples repository](https://github.com/unilink-lab/unilink-examples)
+* [TCP Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/tcp)
+* [UDP Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/udp)
+* [Serial Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/serial)
+* [UDS Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/uds)
 * [Documentation Index](docs/index.md)
 
 ---

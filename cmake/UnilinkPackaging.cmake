@@ -135,7 +135,6 @@ set(CPACK_SOURCE_IGNORE_FILES
     "/docs/html/"
     "/Testing/"
     "/test/"
-    "/examples/"
     "CMakeCache.txt"
     "CMakeFiles/"
     "Makefile"
@@ -148,9 +147,7 @@ set(CPACK_SOURCE_IGNORE_FILES
 )
 
 # Component-based packaging
-set(CPACK_COMPONENTS_ALL libraries headers cmake pkgconfig documentation
-                         examples
-)
+set(CPACK_COMPONENTS_ALL libraries headers cmake pkgconfig documentation)
 
 if(BUILD_PYTHON_BINDINGS)
   list(APPEND CPACK_COMPONENTS_ALL python)
@@ -180,10 +177,6 @@ set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION
     "API documentation and user guides"
 )
 set(CPACK_COMPONENT_DOCUMENTATION_DEPENDS headers)
-
-set(CPACK_COMPONENT_EXAMPLES_DISPLAY_NAME "Examples")
-set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION "Example programs and tutorials")
-set(CPACK_COMPONENT_EXAMPLES_DEPENDS libraries headers)
 
 if(BUILD_PYTHON_BINDINGS)
   set(CPACK_COMPONENT_PYTHON_DISPLAY_NAME "Python Bindings")
@@ -315,18 +308,6 @@ if(UNILINK_ENABLE_INSTALL)
     )
   endif()
 
-  if(UNILINK_BUILD_EXAMPLES)
-    install(
-      DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples/
-      COMPONENT examples
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unilink/examples
-      FILES_MATCHING
-      PATTERN "*.cc"
-      PATTERN "*.cpp"
-      PATTERN "*.hpp"
-      PATTERN "*.h"
-    )
-  endif()
 endif()
 
 # Package versioning

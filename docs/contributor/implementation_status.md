@@ -12,7 +12,7 @@ The repository currently contains implemented source trees for:
 - Diagnostics and logging
 - Configuration management
 - Memory and framing utilities
-- Examples and test suites
+- Test suites
 - Optional Python bindings
 
 ## C++ API Surface
@@ -74,6 +74,6 @@ If you are trying to understand "what is implemented right now", read in this or
 
 1. `unilink/unilink.hpp`
 2. [API Guide](../user/api_guide.md)
-3. [Examples Directory](../../examples/README.md)
+3. [Examples Repository](https://github.com/unilink-lab/unilink-examples)
 4. [Test Structure](test_structure.md)
 5. [Architecture Overview](architecture/README.md)

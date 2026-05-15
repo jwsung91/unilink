@@ -344,11 +344,6 @@ if(UNILINK_ENABLE_EXPORT_HEADER)
   endif()
 endif()
 
-# Examples
-if(UNILINK_BUILD_EXAMPLES)
-  add_subdirectory(examples)
-endif()
-
 # Testing
 if(UNILINK_BUILD_TESTS)
   include(CTest)

@@ -149,7 +149,7 @@ Other package managers (e.g., Conan) are not yet officially supported.
 | ---------------------------------- | ------- | ------------------------------------ |
 | `UNILINK_BUILD_SHARED`             | `ON`    | Build shared library                 |
 | `UNILINK_BUILD_STATIC`             | `ON`    | Build static library                 |
-| `UNILINK_BUILD_EXAMPLES`           | `ON`    | Build example programs               |
+| `UNILINK_BUILD_EXAMPLES`           | `OFF`   | Deprecated no-op; examples moved to `unilink-examples` |
 | `UNILINK_BUILD_TESTS`              | `ON`    | Build tests                          |
 | `UNILINK_BUILD_DOCS`               | `ON`    | Build documentation                  |
 | `UNILINK_ENABLE_CONFIG`            | `ON`    | Enable configuration management API  |
@@ -163,7 +163,6 @@ Example:
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DUNILINK_BUILD_SHARED=OFF \
-  -DUNILINK_BUILD_EXAMPLES=OFF \
   -DUNILINK_BUILD_TESTS=OFF
 ```
 
@@ -171,4 +170,4 @@ cmake -S . -B build \
 
 - [Quick Start Guide](quickstart.md)
 - [API Reference](api_guide.md)
-- [Examples](../../examples/)
+- [Examples](https://github.com/unilink-lab/unilink-examples)

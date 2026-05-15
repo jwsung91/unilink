@@ -139,9 +139,9 @@ For simple local tests, UDP is useful when you want low overhead and can tolerat
 
 For ready-to-run maintained examples, use:
 
-- [examples/udp/README.md](../../../examples/udp/README.md)
-- [examples/udp/sync/receiver.cc](../../../examples/udp/sync/receiver.cc)
-- [examples/udp/sync/sender.cc](../../../examples/udp/sync/sender.cc)
+- [examples/udp/README.md](https://github.com/unilink-lab/unilink-examples/blob/main/examples/udp/README.md)
+- [examples/udp/sync/receiver.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/udp/sync/receiver.cc)
+- [examples/udp/sync/sender.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/udp/sync/sender.cc)
 
 ---
 

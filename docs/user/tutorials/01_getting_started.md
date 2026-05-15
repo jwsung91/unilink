@@ -145,9 +145,9 @@ After the client is running, use:
 
 ## Use The Full Example If You Want More
 
-The repository includes ready-to-build examples:
+Ready-to-build examples are maintained in the external examples repository:
 
-- [examples/tcp/sync/echo_client.cc](../../../examples/tcp/sync/echo_client.cc)
+- [examples/tcp/sync/echo_client.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/tcp/sync/echo_client.cc)
 
 This tutorial stays smaller than the example sources on purpose.
 
