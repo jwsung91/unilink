@@ -94,7 +94,6 @@ From the repository root:
 ```bash
 cmake -S . -B build-orin \
   -DCMAKE_BUILD_TYPE=Debug \
-  -DUNILINK_BUILD_EXAMPLES=OFF \
   -DUNILINK_BUILD_DOCS=OFF \
   -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
@@ -113,7 +112,6 @@ If you only want a C++ validation pass and do not need Python bindings:
 ```bash
 cmake -S . -B build-orin \
   -DCMAKE_BUILD_TYPE=Debug \
-  -DUNILINK_BUILD_EXAMPLES=OFF \
   -DUNILINK_BUILD_DOCS=OFF \
   -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \

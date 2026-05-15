@@ -732,7 +732,7 @@ nc localhost 8080 < test_data.txt
 
 If you're still experiencing issues:
 
-1. **Check Examples**: Look at `examples/` directory
+1. **Check Examples**: Look at <https://github.com/unilink-lab/unilink-examples>
 2. **Read API Guide**: See `docs/user/api_guide.md`
 3. **Search Issues**: <https://github.com/jwsung91/unilink/issues>
 4. **Ask Community**: Create a new issue with:

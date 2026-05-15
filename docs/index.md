@@ -56,11 +56,11 @@ You are developing or extending unilink itself.
 
 ## Examples and Tests
 
-- [Examples Directory](../examples/README.md)
-- [Protocol Examples](../examples/tcp/README.md)
-- [Serial Examples](../examples/serial/README.md)
-- [UDP Examples](../examples/udp/README.md)
-- [UDS Examples](../examples/uds/README.md)
+- [Examples Repository](https://github.com/unilink-lab/unilink-examples)
+- [TCP Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/tcp)
+- [Serial Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/serial)
+- [UDP Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/udp)
+- [UDS Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/uds)
 - [Top-level Test Notes](../test/README.md)
 
 [Back to Main README](../README.md)

@@ -42,7 +42,6 @@ RUN rm -rf build && mkdir build && cd build && \
         -DUNILINK_ENABLE_INSTALL=ON \
         -DUNILINK_ENABLE_PKGCONFIG=ON \
         -DUNILINK_ENABLE_EXPORT_HEADER=ON \
-        -DUNILINK_BUILD_EXAMPLES=ON \
         -DUNILINK_BUILD_TESTS=OFF \
         -DUNILINK_BUILD_DOCS=OFF && \
     cmake --build . -j $(nproc)

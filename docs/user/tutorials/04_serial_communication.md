@@ -156,9 +156,9 @@ serial->flow_control("none");
 
 If you want a fuller interactive sample, use the existing example programs:
 
-- [examples/serial/README.md](../../../examples/serial/README.md)
-- [examples/serial/echo/README.md](../../../examples/serial/echo/README.md)
-- [examples/serial/chat/README.md](../../../examples/serial/chat/README.md)
+- [examples/serial/README.md](https://github.com/unilink-lab/unilink-examples/blob/main/examples/serial/README.md)
+- [examples/serial/sync/echo.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/serial/sync/echo.cc)
+- [examples/serial/async/echo.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/serial/async/echo.cc)
 
 Those examples are a better fit for device bring-up and manual testing than this short tutorial.
 
@@ -168,7 +168,7 @@ Those examples are a better fit for device bring-up and manual testing than this
 
 - [UDP Communication](05_udp_communication.md)
 - [API Reference](../api_guide.md#serial-communication)
-- [Examples Directory](../../../examples/serial/README.md)
+- [Serial Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/serial)
 
 ---
 

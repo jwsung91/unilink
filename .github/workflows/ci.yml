@@ -77,7 +77,6 @@ jobs:
               -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
               -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
               -DUNILINK_ENABLE_CONFIG=${{ matrix.enable_config }} \
-              -DUNILINK_BUILD_EXAMPLES=ON \
               -DUNILINK_BUILD_TESTS=OFF \
               -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
               -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
@@ -88,7 +87,6 @@ jobs:
               -DCMAKE_CXX_COMPILER=$CXX \
               -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
               -DUNILINK_ENABLE_CONFIG=${{ matrix.enable_config }} \
-              -DUNILINK_BUILD_EXAMPLES=ON \
               -DUNILINK_BUILD_TESTS=OFF \
               -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
               -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
@@ -172,7 +170,6 @@ jobs:
             -DCMAKE_CXX_COMPILER=$CXX \
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
@@ -191,7 +188,6 @@ jobs:
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
@@ -258,7 +254,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} `
             -DUNILINK_ENABLE_CONFIG=ON `
-            -DUNILINK_BUILD_EXAMPLES=OFF `
             -DUNILINK_BUILD_TESTS=ON `
             -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
             -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
@@ -315,7 +310,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
@@ -371,7 +365,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
@@ -434,7 +427,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
@@ -499,7 +491,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
@@ -606,7 +597,6 @@ jobs:
             -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
             -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
 

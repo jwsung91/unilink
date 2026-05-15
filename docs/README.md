@@ -96,7 +96,7 @@ python3 -m http.server 8000
 - Prefer documenting verified behavior over aspirational behavior.
 - Keep public wrapper/builder APIs and transport-internal behavior in separate documents.
 - When documenting callbacks or methods, verify signatures against headers under `unilink/wrapper/` and `unilink/builder/`.
-- Treat runnable examples under `examples/` as the preferred source for tutorial snippets when possible.
+- Treat runnable examples in `unilink-lab/unilink-examples` as the preferred source for tutorial snippets when possible.
 - For compile-checked tutorial snippets, keep the `<!-- doc-compile: ... -->` marker attached to the canonical fenced C++ block.
 - When build flags or defaults change, update `README.md`, `docs/index.md`, and `docs/contributor/build_guide.md` together.
 - When adding public APIs, update `docs/user/api_guide.md` and `docs/contributor/implementation_status.md`.
@@ -105,4 +105,4 @@ python3 -m http.server 8000
   - `quickstart`: shortest successful path
   - `tutorials`: step-by-step workflows
   - `user/api_guide.md`: protocol and API surface details
-  - `examples/*/README.md`: runnable example commands and CLI usage
+  - `unilink-examples/examples/*/README.md`: runnable example commands and CLI usage

@@ -92,7 +92,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 2: Build library + examples
+# Step 2: Build library
 # ---------------------------------------------------------------------------
 section "Step 2: Building project (Debug)"
 if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then

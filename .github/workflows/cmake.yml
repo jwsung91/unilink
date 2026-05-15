@@ -247,7 +247,6 @@ jobs:
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
@@ -274,7 +273,6 @@ jobs:
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
-            -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
@@ -298,7 +296,6 @@ jobs:
             -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
             -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
             -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
-            -DUNILINK_BUILD_EXAMPLES=OFF `
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF `

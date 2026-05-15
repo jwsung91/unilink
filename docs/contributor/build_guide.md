@@ -122,7 +122,7 @@ cmake --build build -j
 | `CMAKE_BUILD_TYPE`       | `Release` | Build type: `Release`, `Debug`, `RelWithDebInfo` |
 | `UNILINK_BUILD_SHARED`   | `ON`      | Build shared library                             |
 | `UNILINK_BUILD_STATIC`   | `ON`      | Build static library                             |
-| `UNILINK_BUILD_EXAMPLES` | `ON`      | Build example applications                       |
+| `UNILINK_BUILD_EXAMPLES` | `OFF`     | Deprecated no-op; examples moved to `unilink-examples` |
 | `UNILINK_BUILD_TESTS`    | `ON`      | Build tests                                      |
 | `UNILINK_BUILD_DOCS`     | `ON`      | Enable documentation targets                     |
 | `UNILINK_ENABLE_CONFIG`  | `ON`      | Enable configuration management API              |
@@ -203,7 +203,6 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DUNILINK_ENABLE_CONFIG=OFF \
-  -DUNILINK_BUILD_EXAMPLES=OFF \
   -DUNILINK_BUILD_TESTS=OFF
 
 cmake --build build -j
@@ -212,13 +211,12 @@ sudo cmake --install build
 
 ---
 
-### Example 2: Development Build with Examples
+### Example 2: Development Build
 
 ```bash
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_ENABLE_CONFIG=ON \
-  -DUNILINK_BUILD_EXAMPLES=ON \
   -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_MEMORY_TRACKING=ON
 
@@ -332,7 +330,6 @@ cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_STANDARD=20 \
   -DUNILINK_ENABLE_CONFIG=ON \
-  -DUNILINK_BUILD_EXAMPLES=ON \
   -DUNILINK_BUILD_TESTS=ON \
   -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 

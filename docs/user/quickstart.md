@@ -182,7 +182,7 @@ auto server = unilink::tcp_server(8080)
 ## Next Steps
 
 1. **Read the API Guide**: `docs/user/api_guide.md`
-2. **Check Examples**: `examples/` directory
+2. **Check Examples**: <https://github.com/unilink-lab/unilink-examples>
 3. **View Full Docs**: `docs/html/index.html` (run `cmake --build build --target docs` first)
 
 ---
@@ -220,11 +220,6 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
 
 - **GitHub Issues**: https://github.com/jwsung91/unilink/issues
 - **Documentation**: `docs/` directory
-- **Examples**: `examples/` directory
-
-Happy coding! 🚀
-ttps://github.com/jwsung91/unilink/issues
-- **Documentation**: `docs/` directory
-- **Examples**: `examples/` directory
+- **Examples**: <https://github.com/unilink-lab/unilink-examples>
 
 Happy coding! 🚀
