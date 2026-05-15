@@ -12,7 +12,7 @@ The repository currently contains implemented source trees for:
 - Diagnostics and logging
 - Configuration management
 - Memory and framing utilities
-- Examples and test suites
+- Test suites
 - Optional Python bindings
 
 ## C++ API Surface
