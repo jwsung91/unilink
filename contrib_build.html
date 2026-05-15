@@ -262,7 +262,7 @@ Core Options</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>UNILINK_BUILD_STATIC</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build static library    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_BUILD_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build example applications    </td></tr>
+<td class="markdownTableBodyNone"><code>UNILINK_BUILD_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Deprecated no-op; examples moved to <code>unilink-examples</code>    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>UNILINK_BUILD_TESTS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build tests    </td></tr>
 <tr class="markdownTableRowEven">
@@ -341,18 +341,16 @@ Example 1: Minimal Production Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=OFF \</div>
-<div class="line">  -DUNILINK_BUILD_EXAMPLES=OFF \</div>
 <div class="line">  -DUNILINK_BUILD_TESTS=OFF</div>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
 <div class="line">sudo cmake --install build</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md284"></a>
-Example 2: Development Build with Examples</h2>
+Example 2: Development Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=ON \</div>
-<div class="line">  -DUNILINK_BUILD_EXAMPLES=ON \</div>
 <div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
 <div class="line">  -DUNILINK_ENABLE_MEMORY_TRACKING=ON</div>
 <div class="line"> </div>
@@ -442,7 +440,6 @@ Build Steps</h3>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
 <div class="line">  -DCMAKE_CXX_STANDARD=20 \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=ON \</div>
-<div class="line">  -DUNILINK_BUILD_EXAMPLES=ON \</div>
 <div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 <div class="line"> </div>
@@ -655,7 +652,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu May 14 2026 22:27:39 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Fri May 15 2026 23:31:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

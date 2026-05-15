@@ -466,7 +466,7 @@ var NAVTREE =
           ] ],
           [ "Advanced Build Examples", "contrib_build.html#autotoc_md281", [
             [ "Example 1: Minimal Production Build", "contrib_build.html#autotoc_md282", null ],
-            [ "Example 2: Development Build with Examples", "contrib_build.html#autotoc_md284", null ],
+            [ "Example 2: Development Build", "contrib_build.html#autotoc_md284", null ],
             [ "Example 3: Testing with Sanitizers", "contrib_build.html#autotoc_md286", null ],
             [ "Example 4: Build with Custom Boost Location", "contrib_build.html#autotoc_md288", null ],
             [ "Example 5: Build with Specific Compiler", "contrib_build.html#autotoc_md290", null ]

@@ -43,7 +43,7 @@ var searchData=
   ['2_3a_20create_20a_20minimal_20serial_20terminal_40',['Step 2: Create A Minimal Serial Terminal',['../tutorial_04.html#autotoc_md847',1,'']]],
   ['2_3a_20create_20a_20sender_41',['Step 2: Create A Sender',['../tutorial_05.html#autotoc_md864',1,'']]],
   ['2_3a_20create_20a_20uds_20client_42',['Step 2: Create A UDS Client',['../tutorial_03.html#autotoc_md834',1,'']]],
-  ['2_3a_20development_20build_20with_20examples_43',['Example 2: Development Build with Examples',['../contrib_build.html#autotoc_md284',1,'']]],
+  ['2_3a_20development_20build_43',['Example 2: Development Build',['../contrib_build.html#autotoc_md284',1,'']]],
   ['2_3a_20error_20handling_44',['Pattern 2: Error Handling',['../user_quickstart.html#autotoc_md672',1,'']]],
   ['2_3a_20install_45',['Step 2: Install',['../user_installation.html#autotoc_md607',1,'']]],
   ['2_3a_20install_20from_20source_20cmake_20package_46',['Method 2: Install from Source (CMake Package)',['../user_installation.html#autotoc_md602',1,'']]],
