@@ -249,7 +249,6 @@ jobs:
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
             -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
             -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
@@ -275,7 +274,6 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
             -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
             -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
@@ -298,7 +296,6 @@ jobs:
             -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF `
             -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} `
             @pythonCmakeArgs
 

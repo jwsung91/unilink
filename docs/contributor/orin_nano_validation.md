@@ -96,7 +96,6 @@ cmake -S . -B build-orin \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_BUILD_DOCS=OFF \
   -DUNILINK_BUILD_TESTS=ON \
-  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
   -DBUILD_PYTHON_BINDINGS=ON \
   -DPython3_EXECUTABLE="$(python3 -c 'import sys; print(sys.executable)')" \
   -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
@@ -114,7 +113,6 @@ cmake -S . -B build-orin \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_BUILD_DOCS=OFF \
   -DUNILINK_BUILD_TESTS=ON \
-  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
   -DBUILD_PYTHON_BINDINGS=OFF \
   -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
   -DVCPKG_TARGET_TRIPLET=arm64-linux
@@ -152,13 +150,13 @@ ctest --test-dir build-orin \
   -L e2e
 ```
 
-Run everything except performance benchmarks:
+Run everything except documentation snippets:
 
 ```bash
 ctest --test-dir build-orin \
   --output-on-failure \
   --parallel 2 \
-  -LE "performance|docs_snippets"
+  -LE "docs_snippets"
 ```
 
 ---

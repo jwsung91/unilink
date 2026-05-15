@@ -11,9 +11,6 @@ option(
 )
 option(UNILINK_BUILD_TESTS "Build tests" ON)
 option(UNILINK_BUILD_DOCS "Build documentation" ON)
-option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests"
-       OFF
-)
 
 # Feature options
 option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)

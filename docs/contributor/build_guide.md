@@ -133,7 +133,6 @@ cmake --build build -j
 | ---------------------------------- | ------- | -------------------------------------------- |
 | `UNILINK_ENABLE_MEMORY_TRACKING`   | `OFF`   | Enable memory tracking for debugging         |
 | `UNILINK_ENABLE_SANITIZERS`        | `OFF`   | Enable AddressSanitizer and other sanitizers |
-| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF`   | Enable performance/benchmark tests           |
 | `CMAKE_EXPORT_COMPILE_COMMANDS`    | `OFF`   | Generate `compile_commands.json` for IDEs    |
 
 ### Installation Options

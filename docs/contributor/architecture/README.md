@@ -652,7 +652,6 @@ Unilink provides a Docker Compose-based environment to maintain a consistent dev
 | ------- | ------------- | ------------------------------------------------------------ |
 | `dev`   | Development   | Debug build, interactive shell provided                      |
 | `test`  | Testing       | Sanitizers (ASan/UBSan) and memory tracking enabled          |
-| `perf`  | Performance   | Release build-based performance benchmarks                   |
 | `docs`  | Documentation | Doxygen documentation generation and HTTP server (port 8000) |
 | `prod`  | Production    | Optimized production image build                             |
 
