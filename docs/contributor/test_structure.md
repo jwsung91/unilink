@@ -9,7 +9,6 @@ test/
 ├── unit/          # Unit and transport-focused tests
 ├── integration/   # Cross-component and real I/O integration tests
 ├── e2e/           # End-to-end scenarios and stress tests
-├── fixtures/      # Shared mocks and fixtures
 ├── mocks/         # Additional mock types used by tests
 ├── utils/         # Shared test helpers and constants
 └── CMakeLists.txt # Main test registration
@@ -60,6 +59,10 @@ ctest -L builder
 # Security and contract checks
 ctest -L security
 ctest -L contract
+
+# Structured scope/component filters
+ctest -L "unit.*transport.*tcp"
+ctest -L "integration.*serial"
 ```
 
 ### Inspect What Is Currently Registered
@@ -75,7 +78,9 @@ Use these commands instead of storing counts in documentation. The exact number 
 
 ## Notes
 
-- Label sets are not necessarily exclusive.
+- Labels use structured tokens such as `unit_transport_tcp_fast` so broad
+  filters (`unit`, `tcp`) and composed regex filters
+  (`unit.*transport.*tcp`) both work.
 - When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.
 
 ## CI/CD Integration

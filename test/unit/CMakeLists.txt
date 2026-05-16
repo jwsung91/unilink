@@ -142,7 +142,7 @@ foreach(test_file test_pool_limits.cc)
 
   gtest_discover_tests(
     run_unit_${test_name}
-    PROPERTIES
+    PROPERTIES LABELS "unit_memory_fast"
     TIMEOUT 30
   )
 endforeach()
@@ -153,7 +153,7 @@ foreach(
   test_tcp_server_advanced.cc
   test_tcp_client_advanced.cc
   test_serial_advanced.cc
-  test_udp_stop_perf.cc
+  test_udp_stop_lifecycle.cc
   test_udp_options.cc
   test_udp_failure.cc
   test_udp_state.cc
@@ -178,9 +178,20 @@ foreach(
                                   ${CMAKE_SOURCE_DIR}/test/fixtures
   )
 
+  set(test_label "unit_wrapper")
+  if(test_name MATCHES "tcp")
+    set(test_label "unit_wrapper_tcp")
+  elseif(test_name MATCHES "udp")
+    set(test_label "unit_wrapper_udp")
+  elseif(test_name MATCHES "uds")
+    set(test_label "unit_wrapper_uds")
+  elseif(test_name MATCHES "serial")
+    set(test_label "unit_wrapper_serial")
+  endif()
+
   gtest_discover_tests(
     run_unit_${test_name}
-    PROPERTIES LABELS "unit_wrapper"
+    PROPERTIES LABELS "${test_label}"
     TIMEOUT 120 RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
@@ -292,9 +303,26 @@ foreach(
                                   ${CMAKE_SOURCE_DIR}/test/fixtures
   )
 
+  set(test_label "unit_transport_fast")
+  if(test_name MATCHES "tcp")
+    set(test_label "unit_transport_tcp_fast")
+  elseif(test_name MATCHES "udp")
+    set(test_label "unit_transport_udp_fast")
+  elseif(test_name MATCHES "uds")
+    set(test_label "unit_transport_uds_fast")
+  elseif(test_name MATCHES "serial")
+    set(test_label "unit_transport_serial_fast")
+  endif()
+  if(test_name MATCHES "reconnect")
+    set(test_label "unit_transport_reconnect_fast")
+  endif()
+  if(test_name MATCHES "backpressure")
+    set(test_label "unit_transport_backpressure_fast")
+  endif()
+
   gtest_discover_tests(
     run_unit_${test_name}
-    PROPERTIES LABELS "unit_transport_fast"
+    PROPERTIES LABELS "${test_label}"
     TIMEOUT 30
   )
 endforeach()
@@ -315,7 +343,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_test_reconnect_decider
-  PROPERTIES LABELS "stable"
+  PROPERTIES LABELS "unit_transport_reconnect_stable"
   TIMEOUT 30
 )
 
@@ -356,25 +384,27 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_test_tcp_abort
-  PROPERTIES LABELS "unit_transport_error"
+  PROPERTIES LABELS "unit_transport_tcp_error"
   TIMEOUT 30
 )
 
 add_executable(
-  run_unit_test_tcp_rst ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_rst.cpp
+  run_unit_test_tcp_server_connectivity
+  ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_server_connectivity.cc
 )
 target_link_libraries(
-  run_unit_test_tcp_rst PRIVATE ${_unilink_test_lib} GTest::gtest
-                                GTest::gtest_main GTest::gmock
+  run_unit_test_tcp_server_connectivity PRIVATE ${_unilink_test_lib}
+                                                GTest::gtest
+                                                GTest::gtest_main GTest::gmock
 )
-unilink_set_test_warning_options(run_unit_test_tcp_rst)
+unilink_set_test_warning_options(run_unit_test_tcp_server_connectivity)
 target_include_directories(
-  run_unit_test_tcp_rst PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                ${CMAKE_SOURCE_DIR}/test/fixtures
+  run_unit_test_tcp_server_connectivity
+  PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
 )
 gtest_discover_tests(
-  run_unit_test_tcp_rst
-  PROPERTIES LABELS "unit_transport_error"
+  run_unit_test_tcp_server_connectivity
+  PROPERTIES LABELS "unit_transport_tcp_connectivity"
   TIMEOUT 30
 )
 
@@ -393,7 +423,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_test_udp_error
-  PROPERTIES LABELS "unit_transport_error"
+  PROPERTIES LABELS "unit_transport_udp_error"
   TIMEOUT 30
 )
 
@@ -412,7 +442,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_test_serial_fail
-  PROPERTIES LABELS "unit_wrapper_error"
+  PROPERTIES LABELS "unit_wrapper_serial_error"
   TIMEOUT 30
 )
 
@@ -432,7 +462,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_transport_tcp_server_session
-  PROPERTIES LABELS "unit_transport_session"
+  PROPERTIES LABELS "unit_transport_tcp_session"
   TIMEOUT 30
 )
 
@@ -452,7 +482,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_transport_tcp_fuzz_test
-  PROPERTIES LABELS "unit_transport_fuzz"
+  PROPERTIES LABELS "unit_transport_tcp_fuzz"
   TIMEOUT 30
 )
 
@@ -472,7 +502,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_transport_tcp_timeout_test
-  PROPERTIES LABELS "unit_transport_timeout"
+  PROPERTIES LABELS "unit_transport_tcp_timeout"
   TIMEOUT 30
 )
 
@@ -492,7 +522,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_transport_tcp_server_security_test
-  PROPERTIES LABELS "unit_transport_security"
+  PROPERTIES LABELS "unit_transport_tcp_security"
   TIMEOUT 30
 )
 
@@ -512,7 +542,7 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_unit_transport_uds_server_security_test
-  PROPERTIES LABELS "unit_transport_security"
+  PROPERTIES LABELS "unit_transport_uds_security"
   TIMEOUT 30
 )
 
@@ -547,37 +577,60 @@ add_dependencies(
   unilink_unit_tests
   run_unit_test_core
   run_unit_test_memory
-  run_unit_test_pool_limits
-  run_unit_test_pool_stress
+  run_unit_test_pooled_buffer
   run_unit_test_boundary
   run_unit_test_error_handler
   run_unit_test_input_validator
+  run_unit_test_input_validator_edge
   run_unit_test_logger_advanced
+  run_unit_test_memory_advanced
+  run_unit_test_pool_stress
+  run_unit_test_io_context_manager_coverage
+  run_unit_test_error_mapping
+  run_unit_test_error_mapping_exhaustive
+  run_unit_test_error_codes_coverage
+  run_unit_test_error_mapping_branches
+  run_unit_test_memory_pool_branches
   run_unit_test_builder
+  run_unit_test_udp_builder_coverage
+  run_unit_test_uds_builder_coverage
   run_unit_test_config
+  run_unit_test_config_security
+  run_unit_test_config_failure
+  run_unit_test_pool_limits
   run_unit_test_tcp_server_advanced
   run_unit_test_tcp_client_advanced
+  run_unit_test_serial_advanced
+  run_unit_test_udp_stop_lifecycle
   run_unit_test_udp_options
+  run_unit_test_udp_failure
   run_unit_test_udp_state
   run_unit_test_tcp_client_error_mapping
-  run_unit_test_error_mapping
+  run_unit_test_uds_advanced
+  run_unit_test_udp_server_advanced
+  run_unit_test_udp_server_coverage
+  run_unit_test_udp_client_coverage
+  run_unit_test_serial_coverage
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
   run_unit_transport_uds_client
   run_unit_transport_uds_server
+  run_unit_transport_uds_error_test
   run_unit_transport_serial
+  run_unit_transport_udp
   run_unit_transport_udp_extended
-  run_unit_transport_tcp_server_session
-  run_unit_transport_tcp_fuzz_test
-  run_unit_transport_tcp_timeout_test
+  run_unit_transport_tcp_client_policy
+  run_unit_reconnect_logic_test
+  run_unit_transport_uds_session_coverage
+  run_unit_test_tcp_client_lifecycle
+  run_unit_test_backpressure_strategy
+  run_unit_test_reconnect_decider
   run_unit_test_contract_compliance
   run_unit_test_tcp_abort
-  run_unit_test_tcp_rst
+  run_unit_test_tcp_server_connectivity
   run_unit_test_udp_error
   run_unit_test_serial_fail
-  run_unit_test_config_security
-  run_unit_test_config_failure
   run_unit_transport_tcp_server_session
   run_unit_transport_tcp_fuzz_test
   run_unit_transport_tcp_timeout_test
@@ -585,6 +638,4 @@ add_dependencies(
   run_unit_transport_uds_server_security_test
   run_unit_test_line_framer
   run_unit_test_packet_framer
-  run_unit_transport_tcp_client_policy
-  run_unit_test_reconnect_decider
 )

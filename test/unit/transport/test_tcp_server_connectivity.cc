@@ -30,7 +30,7 @@ namespace {
 using namespace unilink;
 using namespace unilink::test;
 
-class TcpRstTest : public ::testing::Test {
+class TcpServerConnectivityTest : public ::testing::Test {
  protected:
   void SetUp() override {
     port_ = TestUtils::getAvailableTestPort();
@@ -53,6 +53,6 @@ class TcpRstTest : public ::testing::Test {
   std::atomic<int> disconnected_clients_{0};
 };
 
-TEST_F(TcpRstTest, BasicServerConnectivity) { EXPECT_TRUE(server_->listening()); }
+TEST_F(TcpServerConnectivityTest, StartsListeningOnAvailablePort) { EXPECT_TRUE(server_->listening()); }
 
 }  // namespace
