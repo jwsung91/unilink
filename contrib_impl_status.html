@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -160,7 +174,7 @@ $(document).ready(function(){initNavTree('contrib_impl_status.html',''); initRes
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>This page summarizes the implementation scope of the repository without duplicating release-specific values that already live elsewhere.</p>
-<h1><a class="anchor" id="autotoc_md334"></a>
+<h1><a class="anchor" id="autotoc_md337"></a>
 Scope</h1>
 <p>The repository currently contains implemented source trees for:</p>
 <ul>
@@ -173,7 +187,7 @@ Scope</h1>
 <li>Test suites</li>
 <li>Optional Python bindings</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md335"></a>
+<h1><a class="anchor" id="autotoc_md338"></a>
 C++ API Surface</h1>
 <p>The public umbrella header <code><a class="el" href="unilink_8hpp.html">unilink/unilink.hpp</a></code> exposes wrappers and builders for:</p>
 <ul>
@@ -185,7 +199,7 @@ C++ API Surface</h1>
 <li>UDS server</li>
 </ul>
 <p>If you need the exact public entry points, treat <code><a class="el" href="unilink_8hpp.html">unilink/unilink.hpp</a></code> and the headers under <code>unilink/wrapper/</code> and <code>unilink/builder/</code> as the source of truth.</p>
-<h1><a class="anchor" id="autotoc_md336"></a>
+<h1><a class="anchor" id="autotoc_md339"></a>
 Python Binding Scope</h1>
 <p>The Python extension module is generated from <code>bindings/python/module.cpp.in</code>.</p>
 <p>At a high level, the <code>unilink</code> Python package covers:</p>
@@ -198,7 +212,7 @@ Python Binding Scope</h1>
 <li>UDS server</li>
 </ul>
 <p>If binding coverage changes, update this section only when the exposed API surface changes, not when the package version changes.</p>
-<h1><a class="anchor" id="autotoc_md337"></a>
+<h1><a class="anchor" id="autotoc_md340"></a>
 Build And Test Status</h1>
 <p>Dynamic build defaults and flags should be read from:</p>
 <ul>
@@ -222,7 +236,7 @@ Build And Test Status</h1>
 <li>See <a class="el" href="orin__nano__validation_8md.html">Orin Nano Validation</a> for the reproducible runbook and scope boundaries</li>
 </ul>
 <p>This document intentionally does not repeat exact version numbers, build-cache values, or test counts, because those change more often than the implementation scope itself.</p>
-<h1><a class="anchor" id="autotoc_md338"></a>
+<h1><a class="anchor" id="autotoc_md341"></a>
 Recommended Reading Order</h1>
 <p>If you are trying to understand "what is implemented right now", read in this order:</p>
 <ol type="1">
@@ -238,7 +252,7 @@ Recommended Reading Order</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

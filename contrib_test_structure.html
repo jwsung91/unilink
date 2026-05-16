@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -160,7 +174,7 @@ $(document).ready(function(){initNavTree('contrib_test_structure.html',''); init
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>This document describes how the test tree is organized and how to work with it, without embedding release-specific counts or dated snapshots.</p>
-<h1><a class="anchor" id="autotoc_md372"></a>
+<h1><a class="anchor" id="autotoc_md375"></a>
 Layout</h1>
 <div class="fragment"><div class="line">test/</div>
 <div class="line">├── unit/          # Unit and transport-focused tests</div>
@@ -169,7 +183,7 @@ Layout</h1>
 <div class="line">├── mocks/         # Additional mock types used by tests</div>
 <div class="line">├── utils/         # Shared test helpers and constants</div>
 <div class="line">└── CMakeLists.txt # Main test registration</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md373"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md376"></a>
 What Each Area Covers</h1>
 <ul>
 <li><code>unit/</code>: isolated component behavior, transport edge cases, wrapper behavior, framing, config, and utility coverage</li>
@@ -177,26 +191,26 @@ What Each Area Covers</h1>
 <li><code>e2e/</code>: scenario-level behavior, recovery cases, and stress-oriented coverage</li>
 </ul>
 <p>Prefer adding new tests to the smallest scope that matches their behavior. If a test opens localhost sockets, binds ports, creates UDS socket paths, or relies on real OS I/O, place it in <code>integration/</code> unless it is intentionally tied to a narrow unit fixture.</p>
-<h1><a class="anchor" id="autotoc_md374"></a>
+<h1><a class="anchor" id="autotoc_md377"></a>
 Build-Time Controls</h1>
 <p>The test tree is controlled by CMake options rather than hardcoded assumptions in this document.</p>
 <ul>
 <li><code>UNILINK_BUILD_TESTS</code>: enables test targets</li>
 </ul>
 <p>Treat <code>test/CMakeLists.txt</code> and the active build directory as the source of truth for what is currently registered.</p>
-<h1><a class="anchor" id="autotoc_md375"></a>
+<h1><a class="anchor" id="autotoc_md378"></a>
 Running Tests</h1>
-<h2><a class="anchor" id="autotoc_md376"></a>
+<h2><a class="anchor" id="autotoc_md379"></a>
 Run All Registered Tests</h2>
 <div class="fragment"><div class="line">cd build</div>
 <div class="line">ctest --output-on-failure</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md377"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md380"></a>
 Run By Broad Category</h2>
 <div class="fragment"><div class="line">ctest -L unit</div>
 <div class="line">ctest -L integration</div>
 <div class="line">ctest -L e2e</div>
 </div><!-- fragment --><p>Standalone benchmarks are maintained in the <code>unilink-lab/unilink-benchmarks</code> repository.</p>
-<h2><a class="anchor" id="autotoc_md378"></a>
+<h2><a class="anchor" id="autotoc_md381"></a>
 Useful Focused Runs</h2>
 <div class="fragment"><div class="line"># TCP-heavy tests</div>
 <div class="line">ctest -L tcp</div>
@@ -211,14 +225,14 @@ Useful Focused Runs</h2>
 <div class="line"># Structured scope/component filters</div>
 <div class="line">ctest -L &quot;integration.*transport.*tcp&quot;</div>
 <div class="line">ctest -L &quot;integration.*serial&quot;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md379"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md382"></a>
 Inspect What Is Currently Registered</h2>
 <div class="fragment"><div class="line">ctest -N</div>
 <div class="line">ctest -N -L unit</div>
 <div class="line">ctest -N -L integration</div>
 <div class="line">ctest -N -L e2e</div>
 </div><!-- fragment --><p>Use these commands instead of storing counts in documentation. The exact number of tests changes as coverage grows.</p>
-<h1><a class="anchor" id="autotoc_md380"></a>
+<h1><a class="anchor" id="autotoc_md383"></a>
 Notes</h1>
 <ul>
 <li>Labels use structured tokens such as <code>integration_transport_tcp_medium</code> so broad filters (<code>unit</code>, <code>tcp</code>) and composed regex filters (<code>integration.*transport.*tcp</code>) both work.</li>
@@ -226,7 +240,7 @@ Notes</h1>
 <li>Tests that allocate ports, open localhost sockets, or create UDS socket paths belong under <code>integration/</code>, even if they exercise a focused transport or wrapper behavior.</li>
 <li>When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md381"></a>
+<h1><a class="anchor" id="autotoc_md384"></a>
 CI/CD Integration</h1>
 <p>Repository workflows live under <code>.github/workflows/</code>. If labels or test grouping changes, keep CI filters in sync with the commands documented here. </p>
 </div></div><!-- contents -->
@@ -235,7 +249,7 @@ CI/CD Integration</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

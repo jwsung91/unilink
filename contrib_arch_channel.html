@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -160,17 +174,17 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><b>Internal architecture note:</b> This document describes the transport-layer <code><a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></code> contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in <code><a class="el" href="api__guide_8md.html">docs/user/api_guide.md</a></code>.</p>
-<h1><a class="anchor" id="autotoc_md0"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 1. Introduction</h1>
 <p>The unilink library provides flexible communication channels (TCP, UDP, Serial, UDS) that abstract away low-level networking and hardware details. To keep behavior consistent across these transports, the transport layer follows a formal "Channel Contract". This document outlines the guarantees expected from internal channel implementations and the runtime assumptions built on top of them.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 2. Core Principles</h1>
 <p>The Channel Contract is built upon the following core principles:</p><ul>
 <li><b>Predictability:</b> Channel behavior should be consistent regardless of the underlying transport.</li>
 <li><b>Robustness:</b> Channels must handle errors and lifecycle events gracefully, preventing crashes and undefined behavior.</li>
 <li><b>Safety:</b> Resources must be managed correctly, especially during stop/shutdown sequences.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 3. Stop Semantics: No Callbacks After Stop()</h1>
 <p>One of the most critical aspects of the Channel Contract is the "Stop Semantics."</p>
 <p><b>Contract Rule:</b> Once <code>Channel::stop()</code> is called and returns, no further transport-layer asynchronous callbacks (for example <code>on_state</code>, <code>on_bytes</code>, <code>on_backpressure</code>) related to that specific channel instance shall be invoked.</p>
@@ -200,7 +214,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 4. Backpressure Policy</h1>
 <p>To prevent memory exhaustion and manage flow control, channels implement a backpressure mechanism based on the size of the internal write queue.</p>
 <p><b>Contract Rules:</b></p><ol type="1">
@@ -216,7 +230,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 5. Error Handling Consistency</h1>
 <p>All transport implementations report errors through the <code><a class="el" href="namespaceunilink_1_1diagnostics.html">unilink::diagnostics</a></code> error reporting API using a shared <code>ErrorInfo</code> structure. This ensures consistent error propagation across transports.</p>
 <p>**Error severity levels (<code>ErrorLevel</code>):**</p>
@@ -258,7 +272,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <div class="line">report_communication_error(component, operation, message, retryable);</div>
 <div class="line">report_configuration_error(component, operation, message);</div>
 <div class="line">report_memory_error(component, operation, message);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 6. State Transitions</h1>
 <p>Transport channels use <code><a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></code> to track lifecycle state.</p>
 <div class="fragment"><div class="line"><span class="keyword">enum class</span> LinkState { Idle, Connecting, Listening, Connected, Closed, Error };</div>
@@ -287,7 +301,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

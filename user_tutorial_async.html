@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -161,10 +175,10 @@ $(document).ready(function(){initNavTree('user_tutorial_async.html',''); initRes
 <div class="contents">
 <div class="textblock"><p>Unilink is designed as an asynchronous, event-driven library from the ground up. While <code>start_sync()</code> is available for convenience, mastering asynchronous patterns is key to building high-performance applications.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md869"></a>
+<h1><a class="anchor" id="autotoc_md872"></a>
 1. Non-Blocking Startup</h1>
 <p>When you call <code>start()</code>, the library initiates the connection process (for clients) or port binding (for servers) in a background thread.</p>
-<h2><a class="anchor" id="autotoc_md870"></a>
+<h2><a class="anchor" id="autotoc_md873"></a>
 The Async Pattern</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code hl_function" href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1BuilderInterface.html#ad8d6c30285a36b3a466a37d06f7460dd">on_connect</a>([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
@@ -181,10 +195,10 @@ The Async Pattern</h2>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00075">context.hpp:75</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a3a4bdb4df1849be592d03452cb48278c"><div class="ttname"><a href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilderDefault tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md872"></a>
+<h1><a class="anchor" id="autotoc_md875"></a>
 2. Shared Ownership in Callbacks</h1>
 <p>Since callbacks fire from background threads at unpredictable times, you must ensure that the communication objects (like <code>client</code> or <code>server</code>) remain alive.</p>
-<h2><a class="anchor" id="autotoc_md873"></a>
+<h2><a class="anchor" id="autotoc_md876"></a>
 Safe Capture Pattern</h2>
 <p>The recommended way is to use <code>std::shared_ptr</code> and capture it by value or reference in the callback.</p>
 <div class="fragment"><div class="line"><span class="comment">// 1. Declare a shared pointer</span></div>
@@ -201,7 +215,7 @@ Safe Capture Pattern</h2>
 <div class="line">client = builder.build();</div>
 <div class="line">client-&gt;start();</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md875"></a>
+<h1><a class="anchor" id="autotoc_md878"></a>
 3. Parallel Initialization</h1>
 <p>Asynchronous startup allows you to initialize multiple connections simultaneously without waiting for each one to complete sequentially.</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> sensor1 = <a class="code hl_function" href="namespaceunilink.html#a1d0a99a790f1a6fd8fba2c04dc88797d">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>, 115200).<a class="code hl_function" href="classunilink_1_1builder_1_1SerialBuilder.html#aa804e78bd46394d49545000cca88c77a">build</a>();</div>
@@ -219,7 +233,7 @@ Safe Capture Pattern</h2>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3209a5f18973c46d60299428afcc4e62"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3209a5f18973c46d60299428afcc4e62">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00044">tcp_client_builder.cc:44</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a1d0a99a790f1a6fd8fba2c04dc88797d"><div class="ttname"><a href="namespaceunilink.html#a1d0a99a790f1a6fd8fba2c04dc88797d">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilderDefault serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00121">unilink.hpp:121</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md877"></a>
+<h1><a class="anchor" id="autotoc_md880"></a>
 4. When to Use Async vs Sync</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -234,7 +248,7 @@ Safe Capture Pattern</h2>
 <td class="markdownTableBodyNone"><b>Best For</b>   </td><td class="markdownTableBodyNone">CLI tools, simple scripts   </td><td class="markdownTableBodyNone">GUI apps, High-throughput servers, Multi-channel systems   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md879"></a>
+<h1><a class="anchor" id="autotoc_md882"></a>
 Summary</h1>
 <ul>
 <li>Use <code>start()</code> for non-blocking execution.</li>
@@ -248,7 +262,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

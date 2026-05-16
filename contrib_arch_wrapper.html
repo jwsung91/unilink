@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -160,13 +174,13 @@ $(document).ready(function(){initNavTree('contrib_arch_wrapper.html',''); initRe
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><b>Public wrapper behavior note:</b> This document describes the intended application-facing behavior of the wrapper layer: <code>TcpClient</code>, <code>TcpServer</code>, <code>UdpClient</code>, <code>UdpServer</code>, <code>Serial</code>, <code>UdsClient</code>, and <code>UdsServer</code>. For lower-level transport guarantees, see <code><a class="el" href="channel__contract_8md.html">docs/contributor/architecture/channel_contract.md</a></code>.</p>
-<h1><a class="anchor" id="autotoc_md242"></a>
+<h1><a class="anchor" id="autotoc_md245"></a>
 Scope</h1>
 <p>The wrapper layer exists to provide a predictable, transport-agnostic surface over the internal transport implementations. The goal is not that every transport behaves identically at the protocol level, but that lifecycle and callback behavior remain consistent enough that users can switch transports without relearning control flow.</p>
 <p>This document captures the behavioral contract currently enforced by the wrapper implementation and wrapper-focused tests.</p>
-<h1><a class="anchor" id="autotoc_md243"></a>
+<h1><a class="anchor" id="autotoc_md246"></a>
 Core Rules</h1>
-<h2><a class="anchor" id="autotoc_md244"></a>
+<h2><a class="anchor" id="autotoc_md247"></a>
 1. &lt;tt&gt;start()&lt;/tt&gt; reflects real transport state</h2>
 <ul>
 <li><code>start()</code> returns <code>std::future&lt;bool&gt;</code>.</li>
@@ -178,7 +192,7 @@ Core Rules</h1>
 </li>
 <li><code>false</code> means startup failed or the wrapper was stopped before startup completed.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md245"></a>
+<h2><a class="anchor" id="autotoc_md248"></a>
 2. Repeated &lt;tt&gt;start()&lt;/tt&gt; and &lt;tt&gt;stop()&lt;/tt&gt; are safe</h2>
 <ul>
 <li>Repeated <code>start()</code> calls are tolerated.</li>
@@ -186,23 +200,23 @@ Core Rules</h1>
 <li><code>stop()</code> is intended to be idempotent from the caller's perspective.</li>
 <li>Shutdown may clear pending startup futures with <code>false</code> when startup did not complete.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md246"></a>
+<h2><a class="anchor" id="autotoc_md249"></a>
 3. &lt;tt&gt;auto_start(true)&lt;/tt&gt; follows the same startup contract</h2>
 <ul>
 <li>Enabling <code>auto_start(true)</code> triggers the same wrapper startup path used by explicit <code>start()</code>.</li>
 <li>Auto-managed startup is not a separate fast path with weaker guarantees.</li>
 <li>Callback registration should still happen before enabling <code>auto_start(true)</code> or before calling <code>start()</code>.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md247"></a>
+<h1><a class="anchor" id="autotoc_md250"></a>
 External &lt;tt&gt;io_context&lt;/tt&gt; Contract</h1>
-<h2><a class="anchor" id="autotoc_md248"></a>
+<h2><a class="anchor" id="autotoc_md251"></a>
 4. Externally supplied &lt;tt&gt;io_context&lt;/tt&gt; can be reused</h2>
 <ul>
 <li>Wrappers that accept an external <code>boost::asio::io_context</code> must tolerate the context already being in a stopped state.</li>
 <li>Managed wrappers restart a stopped external <code>io_context</code> before beginning work.</li>
 <li>This allows restart flows to behave consistently across wrapper families.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md249"></a>
+<h2><a class="anchor" id="autotoc_md252"></a>
 5. Managed and unmanaged external contexts have different ownership rules</h2>
 <ul>
 <li><code>manage_external_context(false)</code> means the wrapper uses the external context but does not own its run loop.</li>
@@ -220,23 +234,23 @@ External &lt;tt&gt;io_context&lt;/tt&gt; Contract</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md250"></a>
+<h1><a class="anchor" id="autotoc_md253"></a>
 Callback Contract</h1>
-<h2><a class="anchor" id="autotoc_md251"></a>
+<h2><a class="anchor" id="autotoc_md254"></a>
 6. Handler replacement uses the latest callback</h2>
 <ul>
 <li>Re-registering <code>on_connect</code>, <code>on_disconnect</code>, <code>on_data</code>, <code>on_message</code>, or <code>on_error</code> replaces the previous handler.</li>
 <li>Internal callback dispatch uses handler snapshots before invocation.</li>
 <li>The wrapper should not invoke a stale handler after replacement purely because dispatch raced with registration.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md252"></a>
+<h2><a class="anchor" id="autotoc_md255"></a>
 7. No wrapper callbacks after &lt;tt&gt;stop()&lt;/tt&gt; returns</h2>
 <ul>
 <li>Once wrapper <code>stop()</code> returns, wrapper-level callbacks from that wrapper instance should not continue to reach user code.</li>
 <li>This applies to late state callbacks and late data callbacks arriving from transport cleanup paths.</li>
 <li>Internally, wrappers achieve this by detaching handlers from the transport and guarding asynchronous paths.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md253"></a>
+<h2><a class="anchor" id="autotoc_md256"></a>
 8. Generic fallback errors are normalized</h2>
 <ul>
 <li>When transport-specific error mapping is unavailable, wrappers use stable generic messages.</li>
@@ -244,7 +258,7 @@ Callback Contract</h1>
 <li>Server wrappers use <code>Server error</code>.</li>
 <li>More specific transport error information may still be surfaced when available.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md254"></a>
+<h1><a class="anchor" id="autotoc_md257"></a>
 Transport-Agnostic Expectations</h1>
 <p>These expectations apply across TCP, UDP, Serial, and UDS wrappers where the concept is meaningful:</p>
 <ul>
@@ -261,7 +275,7 @@ Transport-Agnostic Expectations</h1>
 <li>transport-specific configuration still varies by builder and wrapper type</li>
 </ul>
 <p>Those differences are expected. The contract here is about wrapper control flow and callback safety, not protocol equivalence.</p>
-<h1><a class="anchor" id="autotoc_md255"></a>
+<h1><a class="anchor" id="autotoc_md258"></a>
 Testing Status</h1>
 <p>The wrapper test suite validates this contract through:</p>
 <ul>
@@ -277,7 +291,7 @@ Testing Status</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

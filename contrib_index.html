@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -161,7 +175,7 @@ $(document).ready(function(){initNavTree('contrib_index.html',''); initResizable
 <div class="contents">
 <div class="textblock"><p>Documentation for developers building, extending, or contributing to unilink itself.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md340"></a>
+<h1><a class="anchor" id="autotoc_md343"></a>
 Building the Library</h1>
 <ul>
 <li><a class="el" href="build__guide_8md.html">Build Guide</a> — CMake options, build profiles, sanitizers, platform-specific notes</li>
@@ -171,7 +185,7 @@ Building the Library</h1>
 <li><a class="el" href="test__structure_8md.html">Test Structure</a> — Test organization and coverage breakdown</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md342"></a>
+<h1><a class="anchor" id="autotoc_md345"></a>
 Architecture</h1>
 <p>Internal design and contracts that all transport implementations must follow:</p>
 <table class="markdownTable">
@@ -189,7 +203,7 @@ Architecture</h1>
 <td class="markdownTableBodyNone"><a class="el" href="wrapper__contract_8md.html">Wrapper Contract</a>   </td><td class="markdownTableBodyNone">Wrapper lifecycle and callback guarantees   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md344"></a>
+<h1><a class="anchor" id="autotoc_md347"></a>
 Quick Links (User Docs)</h1>
 <ul>
 <li><a class="el" href="api__guide_8md.html">API Reference</a></li>
@@ -197,14 +211,14 @@ Quick Links (User Docs)</h1>
 </ul>
 <hr  />
 <p><a class="el" href="index_8md.html">← Documentation Index</a></p>
-<p><a class="el" href="contrib_build.html">Build Guide</a> <a class="el" href="contrib_testing.html">Testing Guide</a> <a class="el" href="contrib_impl_status.html">Implementation Status</a> <a class="el" href="contrib_test_structure.html">Test Structure</a> <a class="el" href="index.html#contrib_arch">Unilink System Architecture</a> </p>
+<p><a class="el" href="contrib_build.html">Build Guide</a> <a class="el" href="contrib_testing.html">Testing Guide</a> <a class="el" href="contrib_impl_status.html">Implementation Status</a> <a class="el" href="contrib_test_structure.html">Test Structure</a> <a class="el" href="contrib_arch.html">Unilink System Architecture</a> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

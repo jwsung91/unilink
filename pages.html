@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,6 +102,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
    <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
    </div>
@@ -160,34 +174,37 @@ $(document).ready(function(){initNavTree('pages.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock">Here is a list of all related documentation pages:</div><div class="directory">
-<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span><span onclick="javascript:toggleLevel(4);">4</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="contrib_orin_nano_validation.html" target="_self">Orin Nano Validation</a></td><td class="desc"></td></tr>
-<tr id="row_1_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_1_" class="arrow" onclick="toggleFolder('1_')">&#9660;</span><a class="el" href="docs_index.html" target="_self">Unilink Documentation</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_1_0_" class="arrow" onclick="toggleFolder('1_0_')">&#9660;</span><a class="el" href="user_index.html" target="_self">User Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_0_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_quickstart.html" target="_self">Unilink Quick Start Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_installation.html" target="_self">Installation Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_2_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_requirements.html" target="_self">System Requirements</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_3_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_api_guide.html" target="_self">Unilink API Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_1_0_4_" class="arrow" onclick="toggleFolder('1_0_4_')">&#9660;</span><a class="el" href="user_tutorials.html" target="_self">Tutorials</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_0_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="tutorial_01.html" target="_self">Getting Started with Unilink</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_1_" class="odd"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="tutorial_02.html" target="_self">Building a TCP Server</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_2_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="tutorial_03.html" target="_self">UDS Communication</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_3_" class="odd"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="tutorial_04.html" target="_self">Serial Communication</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_4_4_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="tutorial_05.html" target="_self">UDP Communication</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_5_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_troubleshooting.html" target="_self">Troubleshooting Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_6_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_python_bindings.html" target="_self">Python Bindings Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_0_7_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="user_performance.html" target="_self">Performance Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_1_1_" class="arrow" onclick="toggleFolder('1_1_')">&#9660;</span><a class="el" href="contrib_index.html" target="_self">Contributor Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_0_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_build.html" target="_self">Build Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_testing.html" target="_self">Testing Guide</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_2_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_impl_status.html" target="_self">Implementation Status</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_3_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_test_structure.html" target="_self">Test Structure</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_4_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_1_1_4_" class="arrow" onclick="toggleFolder('1_1_4_')">&#9660;</span><a class="el" href="contrib_arch.html" target="_self">Unilink System Architecture</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_4_0_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_runtime.html" target="_self">Runtime Behavior Model</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_4_1_" class="odd"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_memory.html" target="_self">Memory Safety Architecture</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_4_2_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_channel.html" target="_self">Transport Channel Contract</a></td><td class="desc"></td></tr>
-<tr id="row_1_1_4_3_" class="odd"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_wrapper.html" target="_self">Wrapper Contract</a></td><td class="desc"></td></tr>
-<tr id="row_2_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="user_tutorial_async.html" target="_self">Asynchronous Programming Patterns</a></td><td class="desc"></td></tr>
+<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span>]</div><table class="directory">
+<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md_docs_2assets_2logo_2README.html" target="_self">unilink Logo Assets</a></td><td class="desc"></td></tr>
+<tr id="row_1_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_1_" class="arrow" onclick="toggleFolder('1_')">&#9660;</span><a class="el" href="contrib_index.html" target="_self">Contributor Guide</a></td><td class="desc"></td></tr>
+<tr id="row_1_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="contrib_build.html" target="_self">Build Guide</a></td><td class="desc"></td></tr>
+<tr id="row_1_1_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="contrib_testing.html" target="_self">Testing Guide</a></td><td class="desc"></td></tr>
+<tr id="row_1_2_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="contrib_impl_status.html" target="_self">Implementation Status</a></td><td class="desc"></td></tr>
+<tr id="row_1_3_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="contrib_test_structure.html" target="_self">Test Structure</a></td><td class="desc"></td></tr>
+<tr id="row_1_4_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_1_4_" class="arrow" onclick="toggleFolder('1_4_')">&#9660;</span><a class="el" href="contrib_arch.html" target="_self">Unilink System Architecture</a></td><td class="desc"></td></tr>
+<tr id="row_1_4_0_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_runtime.html" target="_self">Runtime Behavior Model</a></td><td class="desc"></td></tr>
+<tr id="row_1_4_1_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_memory.html" target="_self">Memory Safety Architecture</a></td><td class="desc"></td></tr>
+<tr id="row_1_4_2_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_channel.html" target="_self">Transport Channel Contract</a></td><td class="desc"></td></tr>
+<tr id="row_1_4_3_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="contrib_arch_wrapper.html" target="_self">Wrapper Contract</a></td><td class="desc"></td></tr>
+<tr id="row_2_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="contrib_orin_nano_validation.html" target="_self">Orin Nano Validation</a></td><td class="desc"></td></tr>
+<tr id="row_3_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_3_" class="arrow" onclick="toggleFolder('3_')">&#9660;</span><a class="el" href="user_index.html" target="_self">User Guide</a></td><td class="desc"></td></tr>
+<tr id="row_3_0_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_quickstart.html" target="_self">Unilink Quick Start Guide</a></td><td class="desc"></td></tr>
+<tr id="row_3_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_installation.html" target="_self">Installation Guide</a></td><td class="desc"></td></tr>
+<tr id="row_3_2_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_requirements.html" target="_self">System Requirements</a></td><td class="desc"></td></tr>
+<tr id="row_3_3_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_api_guide.html" target="_self">Unilink API Guide</a></td><td class="desc"></td></tr>
+<tr id="row_3_4_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_3_4_" class="arrow" onclick="toggleFolder('3_4_')">&#9660;</span><a class="el" href="user_tutorials.html" target="_self">Tutorials</a></td><td class="desc"></td></tr>
+<tr id="row_3_4_0_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="tutorial_01.html" target="_self">Getting Started with Unilink</a></td><td class="desc"></td></tr>
+<tr id="row_3_4_1_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="tutorial_02.html" target="_self">Building a TCP Server</a></td><td class="desc"></td></tr>
+<tr id="row_3_4_2_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="tutorial_03.html" target="_self">UDS Communication</a></td><td class="desc"></td></tr>
+<tr id="row_3_4_3_" class="odd"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="tutorial_04.html" target="_self">Serial Communication</a></td><td class="desc"></td></tr>
+<tr id="row_3_4_4_" class="even"><td class="entry"><span style="width:48px;display:inline-block;">&#160;</span><a class="el" href="tutorial_05.html" target="_self">UDP Communication</a></td><td class="desc"></td></tr>
+<tr id="row_3_5_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_troubleshooting.html" target="_self">Troubleshooting Guide</a></td><td class="desc"></td></tr>
+<tr id="row_3_6_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_python_bindings.html" target="_self">Python Bindings Guide</a></td><td class="desc"></td></tr>
+<tr id="row_3_7_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="user_performance.html" target="_self">Performance Guide</a></td><td class="desc"></td></tr>
+<tr id="row_4_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md_docs_2README.html" target="_self">unilink Documentation</a></td><td class="desc"></td></tr>
+<tr id="row_5_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="user_tutorial_async.html" target="_self">Asynchronous Programming Patterns</a></td><td class="desc"></td></tr>
+<tr id="row_6_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md_test_2README.html" target="_self">unilink tests</a></td><td class="desc"></td></tr>
+<tr id="row_7_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md_README.html" target="_self">unilink</a></td><td class="desc"></td></tr>
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
@@ -195,7 +212,7 @@ $(document).ready(function(){initNavTree('pages.html',''); initResizable(); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
