@@ -32,7 +32,9 @@
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/config/config_factory.hpp"
 #include "unilink/config/config_manager.hpp"
+#include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/config/uds_config.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
 using namespace unilink;
@@ -263,6 +265,153 @@ TEST_F(ConfigTest, TcpClientConfigDirectValidation) {
   // Restore valid host
   config.host = "localhost";
   EXPECT_TRUE(config.is_valid());
+}
+
+TEST_F(ConfigTest, SerialConfigDirectValidationAndClamping) {
+  SerialConfig config;
+
+  EXPECT_TRUE(config.is_valid());
+  EXPECT_FALSE(config.device.empty());
+
+  config.device.clear();
+  EXPECT_FALSE(config.is_valid());
+  config.device = "loopback";
+
+  config.baud_rate = 0;
+  EXPECT_FALSE(config.is_valid());
+  config.baud_rate = 9600;
+
+  config.char_size = 4;
+  EXPECT_FALSE(config.is_valid());
+  config.char_size = 8;
+
+  config.stop_bits = 3;
+  EXPECT_FALSE(config.is_valid());
+  config.stop_bits = 2;
+
+  config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  EXPECT_FALSE(config.is_valid());
+  config.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  EXPECT_FALSE(config.is_valid());
+  config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS;
+
+  config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  EXPECT_FALSE(config.is_valid());
+  config.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  EXPECT_FALSE(config.is_valid());
+  config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+
+  config.max_retries = -2;
+  EXPECT_FALSE(config.is_valid());
+  config.max_retries = base::constants::MAX_RETRIES_LIMIT + 1;
+  EXPECT_FALSE(config.is_valid());
+  config.max_retries = -1;
+  EXPECT_TRUE(config.is_valid());
+
+  SerialConfig low_values;
+  low_values.char_size = 4;
+  low_values.stop_bits = 0;
+  low_values.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  low_values.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  low_values.max_retries = base::constants::MAX_RETRIES_LIMIT + 1;
+  low_values.validate_and_clamp();
+  EXPECT_EQ(low_values.char_size, 5u);
+  EXPECT_EQ(low_values.stop_bits, 1u);
+  EXPECT_EQ(low_values.retry_interval_ms, base::constants::MIN_RETRY_INTERVAL_MS);
+  EXPECT_EQ(low_values.backpressure_threshold, base::constants::MIN_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(low_values.max_retries, base::constants::MAX_RETRIES_LIMIT);
+
+  SerialConfig high_values;
+  high_values.char_size = 9;
+  high_values.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  high_values.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  high_values.max_retries = -1;
+  high_values.validate_and_clamp();
+  EXPECT_EQ(high_values.char_size, 8u);
+  EXPECT_EQ(high_values.retry_interval_ms, base::constants::MAX_RETRY_INTERVAL_MS);
+  EXPECT_EQ(high_values.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(high_values.max_retries, -1);
+}
+
+TEST_F(ConfigTest, UdsConfigDirectValidationAndClamping) {
+  UdsClientConfig client_config;
+  client_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-client").string();
+  EXPECT_TRUE(client_config.is_valid());
+
+  client_config.socket_path.clear();
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-client-valid").string();
+
+  client_config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS;
+
+  client_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+
+  client_config.max_retries = -2;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.max_retries = -1;
+  EXPECT_TRUE(client_config.is_valid());
+
+  UdsClientConfig low_client;
+  low_client.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  low_client.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  low_client.max_retries = base::constants::MAX_RETRIES_LIMIT + 1;
+  low_client.validate_and_clamp();
+  EXPECT_EQ(low_client.retry_interval_ms, base::constants::MIN_RETRY_INTERVAL_MS);
+  EXPECT_EQ(low_client.backpressure_threshold, base::constants::MIN_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(low_client.max_retries, base::constants::MAX_RETRIES_LIMIT);
+
+  UdsClientConfig high_client;
+  high_client.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  high_client.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  high_client.max_retries = -1;
+  high_client.validate_and_clamp();
+  EXPECT_EQ(high_client.retry_interval_ms, base::constants::MAX_RETRY_INTERVAL_MS);
+  EXPECT_EQ(high_client.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(high_client.max_retries, -1);
+
+  UdsServerConfig server_config;
+  server_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-server").string();
+  EXPECT_TRUE(server_config.is_valid());
+
+  server_config.socket_path.clear();
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-server-valid").string();
+
+  server_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+
+  server_config.max_connections = -1;
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.max_connections = 1;
+  server_config.idle_timeout_ms = -1;
+  EXPECT_FALSE(server_config.is_valid());
+
+  UdsServerConfig low_server;
+  low_server.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  low_server.max_connections = -1;
+  low_server.idle_timeout_ms = -1;
+  low_server.validate_and_clamp();
+  EXPECT_EQ(low_server.backpressure_threshold, base::constants::MIN_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(low_server.max_connections, 0);
+  EXPECT_EQ(low_server.idle_timeout_ms, 0);
+
+  UdsServerConfig high_server;
+  high_server.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  high_server.max_connections = static_cast<int>(base::constants::MAX_MAX_CONNECTIONS) + 1;
+  high_server.validate_and_clamp();
+  EXPECT_EQ(high_server.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(high_server.max_connections, static_cast<int>(base::constants::MAX_MAX_CONNECTIONS));
 }
 
 // ============================================================================
@@ -713,6 +862,113 @@ TEST_F(ConfigTest, TypeMismatch) {
   auto result = config_manager_->set("strict_int", std::string("invalid"));
   EXPECT_FALSE(result.is_valid);
   EXPECT_EQ(std::any_cast<int>(config_manager_->get("strict_int")), 0);
+}
+
+TEST_F(ConfigTest, AccessorsAndRemovalCoverMissingKeys) {
+  EXPECT_THROW(config_manager_->get("missing.key"), std::runtime_error);
+  EXPECT_EQ(std::any_cast<int>(config_manager_->get("missing.key", 42)), 42);
+  EXPECT_FALSE(config_manager_->remove("missing.key"));
+  EXPECT_FALSE(config_manager_->has("missing.key"));
+
+  config_manager_->register_item(ConfigItem("required.key", std::string("value"), ConfigType::String, true, "desc"));
+  EXPECT_TRUE(config_manager_->has("required.key"));
+  EXPECT_EQ(config_manager_->get_type("required.key"), ConfigType::String);
+  EXPECT_EQ(config_manager_->get_description("required.key"), "desc");
+  EXPECT_TRUE(config_manager_->is_required("required.key"));
+  EXPECT_EQ(config_manager_->get_description("missing.key"), "");
+  EXPECT_FALSE(config_manager_->is_required("missing.key"));
+  EXPECT_THROW(config_manager_->get_type("missing.key"), std::runtime_error);
+
+  EXPECT_TRUE(config_manager_->remove("required.key"));
+  EXPECT_FALSE(config_manager_->has("required.key"));
+
+  config_manager_->set("clear.one", std::string("one"));
+  config_manager_->set("clear.two", std::string("two"));
+  config_manager_->clear();
+  EXPECT_TRUE(config_manager_->get_keys().empty());
+}
+
+TEST_F(ConfigTest, RegisteredTypesAndValidatorsAreEnforced) {
+  config_manager_->register_item(ConfigItem("typed.string", std::string("hello"), ConfigType::String, false));
+  config_manager_->register_item(ConfigItem("typed.int", 7, ConfigType::Integer, false));
+  config_manager_->register_item(ConfigItem("typed.bool", true, ConfigType::Boolean, false));
+  config_manager_->register_item(ConfigItem("typed.double", 1.5, ConfigType::Double, false));
+
+  EXPECT_TRUE(config_manager_->set("typed.string", std::string("world")).is_valid);
+  EXPECT_TRUE(config_manager_->set("typed.int", 9).is_valid);
+  EXPECT_TRUE(config_manager_->set("typed.bool", false).is_valid);
+  EXPECT_TRUE(config_manager_->set("typed.double", 3.25).is_valid);
+  EXPECT_FALSE(config_manager_->set("typed.bool", 1).is_valid);
+  EXPECT_FALSE(config_manager_->set("typed.double", std::string("3.25")).is_valid);
+
+  config_manager_->register_validator("typed.int", [](const std::any& value) {
+    const auto* int_value = std::any_cast<int>(&value);
+    if (!int_value || *int_value < 10) {
+      return ValidationResult::error("too small");
+    }
+    return ValidationResult::success();
+  });
+  config_manager_->register_validator(
+      "missing.validator", [](const std::any&) { return ValidationResult::error("should not be installed"); });
+
+  EXPECT_FALSE(config_manager_->set("typed.int", 9).is_valid);
+  EXPECT_TRUE(config_manager_->set("typed.int", 10).is_valid);
+}
+
+TEST_F(ConfigTest, ChangeCallbackExceptionsAndRemovalAreHandled) {
+  config_manager_->set("callback.key", std::string("initial"));
+  config_manager_->on_change("callback.key", [](const std::string&, const std::any&, const std::any&) {
+    throw std::runtime_error("callback failed");
+  });
+
+  EXPECT_NO_THROW(config_manager_->set("callback.key", std::string("updated")));
+  EXPECT_EQ(std::any_cast<std::string>(config_manager_->get("callback.key")), "updated");
+
+  std::atomic<int> callback_count{0};
+  config_manager_->on_change("callback.key",
+                             [&](const std::string&, const std::any&, const std::any&) { callback_count++; });
+  config_manager_->remove_change_callback("callback.key");
+  EXPECT_TRUE(config_manager_->set("callback.key", std::string("removed callback")).is_valid);
+  EXPECT_EQ(callback_count.load(), 0);
+}
+
+TEST_F(ConfigTest, SaveHandlesUnavailablePathAndUnknownValueTypes) {
+  config_manager_->register_item(ConfigItem("bad.cast", std::string("not-int"), ConfigType::Integer, false, "bad"));
+  config_manager_->register_item(ConfigItem("array.value", std::vector<int>{1, 2, 3}, ConfigType::Array, false, "arr"));
+
+  EXPECT_TRUE(config_manager_->save_to_file(test_file_path_.string()));
+
+  std::ifstream file(test_file_path_);
+  std::stringstream contents;
+  contents << file.rdbuf();
+  EXPECT_THAT(contents.str(), ::testing::HasSubstr("bad.cast=unknown"));
+  EXPECT_THAT(contents.str(), ::testing::HasSubstr("array.value=unknown"));
+
+  EXPECT_FALSE(config_manager_->save_to_file(TestUtils::getTempDirectory().string()));
+}
+
+TEST_F(ConfigTest, LoadParsesPrimitiveTypesAndSkipsInvalidExistingValue) {
+  config_manager_->register_item(ConfigItem("strict.int", 5, ConfigType::Integer, false));
+
+  std::ofstream file(test_file_path_);
+  file << "# comment\n";
+  file << " bool.key = true \n";
+  file << " int.key = -42 \n";
+  file << " double.key = -3.5 \n";
+  file << " string.key = hello world \n";
+  file << " strict.int = not-an-int \n";
+  file.close();
+
+  EXPECT_TRUE(config_manager_->load_from_file(test_file_path_.string()));
+  EXPECT_EQ(std::any_cast<bool>(config_manager_->get("bool.key")), true);
+  EXPECT_EQ(std::any_cast<int>(config_manager_->get("int.key")), -42);
+  EXPECT_DOUBLE_EQ(std::any_cast<double>(config_manager_->get("double.key")), -3.5);
+  EXPECT_EQ(std::any_cast<std::string>(config_manager_->get("string.key")), "hello world");
+  EXPECT_EQ(std::any_cast<int>(config_manager_->get("strict.int")), 5);
+}
+
+TEST_F(ConfigTest, LoadReportsMissingFile) {
+  EXPECT_FALSE(config_manager_->load_from_file((test_file_path_.string() + ".missing")));
 }
 
 int main(int argc, char** argv) {

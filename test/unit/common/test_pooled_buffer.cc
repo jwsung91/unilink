@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "unilink/memory/memory_pool.hpp"
@@ -90,4 +91,26 @@ TEST_F(PooledBufferTest, AtMethodOutOfBounds) {
 
   EXPECT_THROW(buffer.at(size), std::out_of_range);
   EXPECT_THROW(buffer.at(size + 1), std::out_of_range);
+}
+
+TEST_F(PooledBufferTest, MoveAssignmentTransfersOwnershipAndHandlesSelfMove) {
+  PooledBuffer source(MemoryPool::BufferSize::SMALL);
+  PooledBuffer target(MemoryPool::BufferSize::MEDIUM);
+  ASSERT_TRUE(source.valid());
+  ASSERT_TRUE(target.valid());
+
+  source[0] = 0x5A;
+  target = std::move(source);
+
+  EXPECT_TRUE(target.valid());
+  EXPECT_EQ(target.size(), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  EXPECT_EQ(target[0], 0x5A);
+  EXPECT_FALSE(source.valid());
+  EXPECT_EQ(source.size(), 0u);
+
+  auto* same_target = &target;
+  target = std::move(*same_target);
+  EXPECT_TRUE(target.valid());
+  EXPECT_EQ(target.size(), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  EXPECT_EQ(target[0], 0x5A);
 }

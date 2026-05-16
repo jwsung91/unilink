@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -122,6 +123,97 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
   EXPECT_FALSE(serial_->connected());
 }
 
+TEST_F(BuilderTest, TcpClientBuilderAdvancedOptions) {
+  auto client = tcp_client("127.0.0.1", test_port_)
+                    .independent_context(true)
+                    .auto_start(false)
+                    .retry_interval(25ms)
+                    .max_retries(2)
+                    .connection_timeout(50ms)
+                    .backpressure_strategy(base::constants::BackpressureStrategy::BestEffort)
+                    .backpressure_threshold(512)
+                    .on_backpressure([](size_t) {})
+                    .use_line_framer("\n", false, 64)
+                    .on_message([](const wrapper::MessageContext&) {})
+                    .on_message_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_data_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_connect([](const wrapper::ConnectionContext&) {})
+                    .on_disconnect([](const wrapper::ConnectionContext&) {})
+                    .on_error([](const wrapper::ErrorContext&) {})
+                    .build();
+
+  ASSERT_NE(client, nullptr);
+  EXPECT_FALSE(client->connected());
+}
+
+TEST_F(BuilderTest, TcpClientBuilderRejectsInvalidConfiguration) {
+  EXPECT_THROW(tcp_client("", test_port_), diagnostics::BuilderException);
+  EXPECT_THROW(tcp_client("127.0.0.1", 0), diagnostics::BuilderException);
+
+#if __cplusplus >= 202002L
+  EXPECT_THROW(builder::TcpClientBuilder<>("127.0.0.1", test_port_).build(), diagnostics::BuilderException);
+#endif
+}
+
+TEST_F(BuilderTest, SerialBuilderAdvancedOptions) {
+  auto serial = unilink::serial(nullDevice(), 115200)
+                    .independent_context(true)
+                    .auto_start(false)
+                    .char_size(7)
+                    .stop_bits(2)
+                    .parity(config::SerialConfig::Parity::Even)
+                    .flow_control(config::SerialConfig::Flow::Hardware)
+                    .reopen_on_error(false)
+                    .retry_interval(25ms)
+                    .backpressure_strategy(base::constants::BackpressureStrategy::BestEffort)
+                    .backpressure_threshold(512)
+                    .on_backpressure([](size_t) {})
+                    .use_packet_framer(std::vector<uint8_t>{0x02}, std::vector<uint8_t>{0x03}, 64)
+                    .on_message([](const wrapper::MessageContext&) {})
+                    .on_message_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_data_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_connect([](const wrapper::ConnectionContext&) {})
+                    .on_disconnect([](const wrapper::ConnectionContext&) {})
+                    .on_error([](const wrapper::ErrorContext&) {})
+                    .build();
+
+  ASSERT_NE(serial, nullptr);
+  EXPECT_FALSE(serial->connected());
+}
+
+TEST_F(BuilderTest, SerialBuilderStringParityAndFlowOptions) {
+  auto even_software = unilink::serial(nullDevice(), 9600)
+                           .parity("EVEN")
+                           .flow_control("SOFTWARE")
+                           .on_data([](auto&&) {})
+                           .on_error([](auto&&) {})
+                           .build();
+  auto odd_hardware = unilink::serial(nullDevice(), 9600)
+                          .parity("odd")
+                          .flow_control("hardware")
+                          .on_data([](auto&&) {})
+                          .on_error([](auto&&) {})
+                          .build();
+  auto defaulted = unilink::serial(nullDevice(), 9600)
+                       .parity("unknown")
+                       .flow_control("unknown")
+                       .on_data([](auto&&) {})
+                       .on_error([](auto&&) {})
+                       .build();
+
+  EXPECT_NE(even_software, nullptr);
+  EXPECT_NE(odd_hardware, nullptr);
+  EXPECT_NE(defaulted, nullptr);
+}
+
+TEST_F(BuilderTest, SerialBuilderRejectsInvalidConfiguration) {
+  EXPECT_THROW(unilink::serial("", 9600), diagnostics::BuilderException);
+
+#if __cplusplus >= 202002L
+  EXPECT_THROW(builder::SerialBuilder<>(nullDevice(), 9600).build(), diagnostics::BuilderException);
+#endif
+}
+
 TEST_F(BuilderTest, UdpBuilderBasic) {
   udp_ = udp_client(test_port_).remote("127.0.0.1", 9000).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
@@ -162,6 +254,57 @@ TEST_F(BuilderTest, BuilderConfiguration) {
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->listening());
+}
+
+TEST_F(BuilderTest, TcpServerBuilderAdvancedOptions) {
+  auto server = tcp_server(test_port_)
+                    .bind_address("127.0.0.1")
+                    .independent_context(true)
+                    .enable_port_retry(true)
+                    .max_port_retries(3)
+                    .port_retry_interval(25ms)
+                    .idle_timeout(250ms)
+                    .max_clients(3)
+                    .backpressure_strategy(base::constants::BackpressureStrategy::BestEffort)
+                    .backpressure_threshold(1024)
+                    .on_backpressure([](size_t) {})
+                    .use_line_framer("\n", false, 64)
+                    .on_message([](const wrapper::MessageContext&) {})
+                    .on_message_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_data_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_connect([](const wrapper::ConnectionContext&) {})
+                    .on_disconnect([](const wrapper::ConnectionContext&) {})
+                    .on_error([](const wrapper::ErrorContext&) {})
+                    .build();
+
+  ASSERT_NE(server, nullptr);
+  EXPECT_FALSE(server->listening());
+}
+
+TEST_F(BuilderTest, TcpServerBuilderLegacyClientHelpers) {
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+  auto single_client_server =
+      tcp_server(test_port_).single_client().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  auto multi_client_server =
+      tcp_server(test_port_).multi_client(2).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  EXPECT_THROW(tcp_server(test_port_).multi_client(0), diagnostics::BuilderException);
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
+  EXPECT_NE(single_client_server, nullptr);
+  EXPECT_NE(multi_client_server, nullptr);
+}
+
+TEST_F(BuilderTest, TcpServerBuilderRejectsInvalidConfiguration) {
+  EXPECT_THROW(tcp_server(0), diagnostics::BuilderException);
+
+#if __cplusplus >= 202002L
+  EXPECT_THROW(builder::TcpServerBuilder<>(test_port_).build(), diagnostics::BuilderException);
+#endif
 }
 
 TEST_F(BuilderTest, CallbackRegistration) {

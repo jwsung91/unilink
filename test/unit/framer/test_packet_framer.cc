@@ -175,6 +175,69 @@ TEST_F(PacketFramerTest, BufferPathStartPatternNotFoundPartialKeep) {
   EXPECT_EQ(count, 1);
 }
 
+TEST_F(PacketFramerTest, BufferPathDiscardsGarbageBeforeStart) {
+  PacketFramer framer({0x01, 0x02}, {0x03}, 1024);
+  std::vector<std::vector<uint8_t>> messages;
+  framer.on_message([&](memory::ConstByteSpan data) { messages.emplace_back(data.begin(), data.end()); });
+
+  std::vector<uint8_t> input1 = {0x00, 0x01};
+  framer.push_bytes(memory::ConstByteSpan(input1.data(), input1.size()));
+
+  std::vector<uint8_t> input2 = {0x00, 0x01, 0x02, 0x7F, 0x03};
+  framer.push_bytes(memory::ConstByteSpan(input2.data(), input2.size()));
+
+  ASSERT_EQ(messages.size(), 1);
+  EXPECT_EQ(messages[0], (std::vector<uint8_t>{0x01, 0x02, 0x7F, 0x03}));
+}
+
+TEST_F(PacketFramerTest, BufferPathEmptyEndPatternCompletesPartialStart) {
+  PacketFramer framer({0x01, 0x02}, {}, 1024);
+  std::vector<std::vector<uint8_t>> messages;
+  framer.on_message([&](memory::ConstByteSpan data) { messages.emplace_back(data.begin(), data.end()); });
+
+  std::vector<uint8_t> input1 = {0x01};
+  framer.push_bytes(memory::ConstByteSpan(input1.data(), input1.size()));
+
+  std::vector<uint8_t> input2 = {0x02, 0x99};
+  framer.push_bytes(memory::ConstByteSpan(input2.data(), input2.size()));
+
+  ASSERT_EQ(messages.size(), 1);
+  EXPECT_EQ(messages[0], (std::vector<uint8_t>{0x01, 0x02}));
+}
+
+TEST_F(PacketFramerTest, BufferPathDiscardsPacketThatExceedsMaxLengthWhenEndArrives) {
+  PacketFramer framer({'S'}, {'E'}, 4);
+  std::vector<std::vector<uint8_t>> messages;
+  framer.on_message([&](memory::ConstByteSpan data) { messages.emplace_back(data.begin(), data.end()); });
+
+  std::vector<uint8_t> input1 = {'S', 'a', 'b'};
+  framer.push_bytes(memory::ConstByteSpan(input1.data(), input1.size()));
+
+  std::vector<uint8_t> input2 = {'c', 'E', 'S', 'E'};
+  framer.push_bytes(memory::ConstByteSpan(input2.data(), input2.size()));
+
+  ASSERT_EQ(messages.size(), 1);
+  EXPECT_EQ(messages[0], (std::vector<uint8_t>{'S', 'E'}));
+}
+
+TEST_F(PacketFramerTest, BufferPathClearsCollectedPacketWhenMaxLengthExceededWithoutEnd) {
+  PacketFramer framer({'S'}, {'E'}, 3);
+  std::vector<std::vector<uint8_t>> messages;
+  framer.on_message([&](memory::ConstByteSpan data) { messages.emplace_back(data.begin(), data.end()); });
+
+  std::vector<uint8_t> input1 = {'S', 'a', 'b', 'c'};
+  framer.push_bytes(memory::ConstByteSpan(input1.data(), input1.size()));
+
+  std::vector<uint8_t> input2 = {'d'};
+  framer.push_bytes(memory::ConstByteSpan(input2.data(), input2.size()));
+
+  std::vector<uint8_t> valid = {'S', 'E'};
+  framer.push_bytes(memory::ConstByteSpan(valid.data(), valid.size()));
+
+  ASSERT_EQ(messages.size(), 1);
+  EXPECT_EQ(messages[0], valid);
+}
+
 TEST_F(PacketFramerTest, ResetClearsState) {
   framer_->push_bytes(memory::ConstByteSpan(std::vector<uint8_t>{0x01, 0x00}.data(), 2));
   framer_->reset();

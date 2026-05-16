@@ -22,10 +22,13 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <string>
 #include <thread>
 #include <vector>
 
 #include "test_utils.hpp"
+#include "unilink/framer/line_framer.hpp"
+#include "unilink/interface/channel.hpp"
 #include "unilink/unilink.hpp"
 #include "wrapper_contract_test_utils.hpp"
 
@@ -33,6 +36,86 @@ namespace {
 
 using namespace unilink;
 using namespace unilink::test;
+
+class ControlledChannel : public interface::Channel {
+ public:
+  void start() override { connected_ = true; }
+
+  void stop() override { connected_ = false; }
+
+  bool is_connected() const override { return connected_; }
+
+  bool is_backpressure_active() const override { return backpressure_active_; }
+
+  boost::asio::any_io_executor get_executor() override { return ioc_.get_executor(); }
+
+  bool async_write_copy(memory::ConstByteSpan data) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++write_count_;
+    last_write_.assign(reinterpret_cast<const char*>(data.data()), data.size());
+    return write_result_;
+  }
+
+  bool async_write_move(std::vector<uint8_t>&& data) override {
+    return async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
+  }
+
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override {
+    if (!data) return false;
+    return async_write_copy(memory::ConstByteSpan(data->data(), data->size()));
+  }
+
+  void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
+
+  void on_state(OnState cb) override { on_state_ = std::move(cb); }
+
+  void on_backpressure(OnBackpressure cb) override { on_backpressure_ = std::move(cb); }
+
+  void emit_bytes(std::string_view text) {
+    if (!on_bytes_) return;
+    on_bytes_(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(text.data()), text.size()));
+  }
+
+  void emit_state(base::LinkState state) {
+    if (state == base::LinkState::Connected) {
+      connected_ = true;
+    } else if (state == base::LinkState::Closed || state == base::LinkState::Error || state == base::LinkState::Idle) {
+      connected_ = false;
+    }
+
+    if (on_state_) on_state_(state);
+  }
+
+  void emit_backpressure(size_t queued) {
+    if (on_backpressure_) on_backpressure_(queued);
+  }
+
+  void set_backpressure_active(bool active) { backpressure_active_ = active; }
+
+  void set_write_result(bool result) { write_result_ = result; }
+
+  int write_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return write_count_;
+  }
+
+  std::string last_write() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return last_write_;
+  }
+
+ private:
+  boost::asio::io_context ioc_;
+  bool connected_{false};
+  bool backpressure_active_{false};
+  bool write_result_{true};
+  mutable std::mutex mutex_;
+  int write_count_{0};
+  std::string last_write_;
+  OnBytes on_bytes_;
+  OnState on_state_;
+  OnBackpressure on_backpressure_;
+};
 
 class TcpClientWrapperLifecycleTest : public ::testing::Test {
  protected:
@@ -201,6 +284,119 @@ TEST(TcpClientWrapperContractTest, BestEffortDisconnectedSendReturnsFalse) {
 
   fake_channel->emit_state(base::LinkState::Connected);
   EXPECT_EQ(fake_channel->write_count(), 0);
+}
+
+TEST(TcpClientWrapperContractTest, InjectedChannelCoversHandlersAndSendVariants) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::TcpClient client(std::static_pointer_cast<interface::Channel>(channel));
+
+  std::atomic<int> connected{0};
+  std::atomic<int> disconnected{0};
+  std::atomic<int> errors{0};
+  std::atomic<int> data{0};
+  std::atomic<size_t> queued_bytes{0};
+  std::string received;
+
+  client.on_connect([&](const wrapper::ConnectionContext&) { connected++; });
+  client.on_disconnect([&](const wrapper::ConnectionContext&) { disconnected++; });
+  client.on_error([&](const wrapper::ErrorContext&) { errors++; });
+  client.on_data([&](const wrapper::MessageContext& ctx) {
+    data++;
+    received = ctx.data_as_string();
+  });
+  client.on_backpressure([&](size_t queued) { queued_bytes = queued; });
+
+  auto started = client.start();
+  channel->emit_state(base::LinkState::Connected);
+  ASSERT_EQ(started.wait_for(std::chrono::milliseconds(100)), std::future_status::ready);
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(client.connected());
+  EXPECT_EQ(connected.load(), 1);
+
+  EXPECT_TRUE(client.send("abc"));
+  EXPECT_TRUE(client.send_line("line"));
+  EXPECT_TRUE(client.try_send("try"));
+  EXPECT_TRUE(client.try_send_line("tryline"));
+  EXPECT_EQ(channel->write_count(), 4);
+  EXPECT_EQ(channel->last_write(), "tryline\n");
+
+  channel->emit_bytes("payload");
+  EXPECT_EQ(data.load(), 1);
+  EXPECT_EQ(received, "payload");
+
+  channel->emit_backpressure(2048);
+  EXPECT_EQ(queued_bytes.load(), 2048U);
+
+  channel->emit_state(base::LinkState::Closed);
+  EXPECT_EQ(disconnected.load(), 1);
+
+  channel->emit_state(base::LinkState::Error);
+  EXPECT_EQ(errors.load(), 1);
+
+  client.stop();
+}
+
+TEST(TcpClientWrapperContractTest, InjectedChannelBatchesRawDataAndFramedMessages) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::TcpClient client(std::static_pointer_cast<interface::Channel>(channel));
+
+  std::atomic<int> data_batches{0};
+  std::atomic<int> message_batches{0};
+  std::vector<std::string> raw_payloads;
+  std::vector<std::string> framed_payloads;
+
+  client.batch_size(2).batch_latency(std::chrono::seconds(1));
+  client.on_data_batch([&](const std::vector<wrapper::MessageContext>& batch) {
+    data_batches++;
+    for (const auto& ctx : batch) raw_payloads.push_back(ctx.data_as_string());
+  });
+
+  auto started = client.start();
+  channel->emit_state(base::LinkState::Connected);
+  ASSERT_TRUE(started.get());
+
+  channel->emit_bytes("raw1");
+  EXPECT_EQ(data_batches.load(), 0);
+  channel->emit_bytes("raw2");
+  EXPECT_EQ(data_batches.load(), 1);
+  ASSERT_EQ(raw_payloads.size(), 2U);
+  EXPECT_EQ(raw_payloads[0], "raw1");
+  EXPECT_EQ(raw_payloads[1], "raw2");
+
+  client.framer(std::make_unique<framer::LineFramer>());
+  client.on_message_batch([&](const std::vector<wrapper::MessageContext>& batch) {
+    message_batches++;
+    for (const auto& ctx : batch) framed_payloads.push_back(ctx.data_as_string());
+  });
+
+  channel->emit_bytes("msg1\nmsg2\n");
+  EXPECT_EQ(message_batches.load(), 1);
+  ASSERT_EQ(framed_payloads.size(), 2U);
+  EXPECT_EQ(framed_payloads[0], "msg1");
+  EXPECT_EQ(framed_payloads[1], "msg2");
+
+  client.stop();
+}
+
+TEST(TcpClientWrapperContractTest, StartWhileConnectedAndBestEffortWriteFailure) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::TcpClient client(std::static_pointer_cast<interface::Channel>(channel));
+
+  auto started = client.start();
+  channel->emit_state(base::LinkState::Connected);
+  ASSERT_TRUE(started.get());
+
+  auto second_start = client.start();
+  ASSERT_EQ(second_start.wait_for(std::chrono::milliseconds(100)), std::future_status::ready);
+  EXPECT_TRUE(second_start.get());
+
+  client.backpressure_strategy(base::constants::BackpressureStrategy::BestEffort);
+  channel->set_write_result(false);
+  EXPECT_FALSE(client.send("drop"));
+  EXPECT_FALSE(client.send_line("drop-line"));
+  EXPECT_EQ(channel->write_count(), 2);
+
+  client.stop();
 }
 
 }  // namespace

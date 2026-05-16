@@ -20,6 +20,7 @@
 #include <atomic>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 #include <thread>
 #include <vector>
 
@@ -390,6 +391,105 @@ TEST_F(ErrorHandlerTest, ErrorHandlerEnableDisable) {
 
   // Re-enable for cleanup
   error_handler.set_enabled(true);
+}
+
+TEST_F(ErrorHandlerTest, DefaultHandlerAliasesSingleton) {
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+  auto& default_handler = diagnostics::ErrorHandler::default_handler();
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
+  EXPECT_EQ(&default_handler, &diagnostics::ErrorHandler::instance());
+}
+
+TEST_F(ErrorHandlerTest, MinimumLevelAndEnabledAccessorsReflectState) {
+  auto& error_handler = diagnostics::ErrorHandler::instance();
+
+  error_handler.set_enabled(false);
+  EXPECT_FALSE(error_handler.enabled());
+  diagnostics::error_reporting::report_memory_error("disabled_component", "allocate", "should be ignored");
+  EXPECT_EQ(error_handler.error_stats().total_errors, 0);
+
+  error_handler.set_enabled(true);
+  error_handler.set_min_error_level(diagnostics::ErrorLevel::ERROR);
+  EXPECT_TRUE(error_handler.enabled());
+  EXPECT_EQ(error_handler.min_error_level(), diagnostics::ErrorLevel::ERROR);
+
+  diagnostics::error_reporting::report_warning("filtered_component", "warn", "warning is below threshold");
+  diagnostics::error_reporting::report_info("filtered_component", "info", "info is below threshold");
+  EXPECT_EQ(error_handler.error_stats().total_errors, 0);
+
+  diagnostics::error_reporting::report_configuration_error("filtered_component", "load", "configuration failed");
+  auto stats = error_handler.error_stats();
+  EXPECT_EQ(stats.total_errors, 1);
+  EXPECT_EQ(stats.errors_by_level[static_cast<int>(diagnostics::ErrorLevel::ERROR)], 1);
+}
+
+TEST_F(ErrorHandlerTest, QueryHelpersReturnComponentHistoryAndCounts) {
+  auto& error_handler = diagnostics::ErrorHandler::instance();
+  const std::string component = "query_helpers_component";
+
+  diagnostics::error_reporting::report_warning(component, "prepare", "warning message");
+  diagnostics::error_reporting::report_info(component, "inspect", "info message");
+  diagnostics::error_reporting::report_configuration_error(component, "load", "configuration error");
+  diagnostics::error_reporting::report_memory_error("query_helpers_other_component", "allocate", "critical error");
+
+  auto component_errors = error_handler.errors_by_component(component);
+  ASSERT_EQ(component_errors.size(), 3);
+  EXPECT_EQ(component_errors[0].level, diagnostics::ErrorLevel::WARNING);
+  EXPECT_EQ(component_errors[1].level, diagnostics::ErrorLevel::INFO);
+  EXPECT_EQ(component_errors[2].level, diagnostics::ErrorLevel::ERROR);
+
+  EXPECT_TRUE(error_handler.has_errors(component));
+  EXPECT_FALSE(error_handler.has_errors("query_helpers_missing_component"));
+  EXPECT_TRUE(error_handler.errors_by_component("query_helpers_missing_component").empty());
+  EXPECT_EQ(error_handler.error_count(component, diagnostics::ErrorLevel::WARNING), 1);
+  EXPECT_EQ(error_handler.error_count(component, diagnostics::ErrorLevel::INFO), 1);
+  EXPECT_EQ(error_handler.error_count(component, diagnostics::ErrorLevel::ERROR), 1);
+  EXPECT_EQ(error_handler.error_count(component, diagnostics::ErrorLevel::CRITICAL), 0);
+  EXPECT_EQ(error_handler.error_count("query_helpers_missing_component", diagnostics::ErrorLevel::ERROR), 0);
+
+  auto last_error = error_handler.recent_errors(1);
+  ASSERT_EQ(last_error.size(), 1);
+  EXPECT_EQ(last_error.front().component, "query_helpers_other_component");
+  EXPECT_EQ(last_error.front().level, diagnostics::ErrorLevel::CRITICAL);
+}
+
+TEST_F(ErrorHandlerTest, ErrorHistoriesTrimOldEntries) {
+  auto& error_handler = diagnostics::ErrorHandler::instance();
+  const std::string component = "trim_history_component";
+
+  for (int index = 0; index < 1005; ++index) {
+    diagnostics::error_reporting::report_info(component, "trim", "trim-" + std::to_string(index));
+  }
+
+  auto component_errors = error_handler.errors_by_component(component);
+  ASSERT_EQ(component_errors.size(), 100);
+  EXPECT_EQ(component_errors.front().message, "trim-905");
+  EXPECT_EQ(component_errors.back().message, "trim-1004");
+
+  auto recent_errors = error_handler.recent_errors(2000);
+  EXPECT_LE(recent_errors.size(), 1000);
+  ASSERT_FALSE(recent_errors.empty());
+  EXPECT_EQ(recent_errors.back().component, component);
+  EXPECT_EQ(recent_errors.back().message, "trim-1004");
+}
+
+TEST_F(ErrorHandlerTest, CallbackExceptionsAreSwallowedAndOtherCallbacksRun) {
+  auto& error_handler = diagnostics::ErrorHandler::instance();
+  std::atomic<int> callback_count{0};
+
+  error_handler.register_callback([](const diagnostics::ErrorInfo&) { throw std::runtime_error("callback failed"); });
+  error_handler.register_callback([](const diagnostics::ErrorInfo&) { throw 7; });
+  error_handler.register_callback([&callback_count](const diagnostics::ErrorInfo&) { callback_count++; });
+
+  EXPECT_NO_THROW(diagnostics::error_reporting::report_configuration_error("callback_exception_component", "load",
+                                                                           "configuration error"));
+  EXPECT_EQ(callback_count.load(), 1);
 }
 
 // ============================================================================

@@ -16,17 +16,23 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
 #include <cstdint>
+#include <memory>
+#include <stdexcept>
+#include <string>
 #include <thread>
 #include <vector>
 
 #include "test/utils/test_utils.hpp"
+#include "unilink/base/constants.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/memory/safe_span.hpp"
+#include "unilink/transport/base/reconnect_policy.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
@@ -540,4 +546,204 @@ TEST_F(TransportTcpClientTest, OwnedIoContextRestartAfterStopStart) {
   EXPECT_TRUE(TestUtils::waitForCondition([&] { return connecting_count.load() >= 2; }, 200));
 
   client_->stop();
+}
+
+TEST_F(TransportTcpClientTest, WriteRejectsInvalidPayloads) {
+  net::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  client_ = TcpClient::create(cfg, ioc);
+
+  std::vector<uint8_t> empty;
+  EXPECT_FALSE(client_->async_write_copy(memory::ConstByteSpan(empty.data(), empty.size())));
+  EXPECT_FALSE(client_->async_write_move({}));
+  EXPECT_FALSE(client_->async_write_shared(nullptr));
+  EXPECT_FALSE(client_->async_write_shared(std::make_shared<const std::vector<uint8_t>>()));
+
+  std::vector<uint8_t> too_large(base::constants::MAX_BUFFER_SIZE + 1, 0x01);
+  EXPECT_FALSE(client_->async_write_copy(memory::ConstByteSpan(too_large.data(), too_large.size())));
+  EXPECT_FALSE(client_->async_write_move(std::move(too_large)));
+
+  auto too_large_shared = std::make_shared<const std::vector<uint8_t>>(base::constants::MAX_BUFFER_SIZE + 1, 0x02);
+  EXPECT_FALSE(client_->async_write_shared(too_large_shared));
+
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, WritesAfterStopReturnFalse) {
+  net::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  client_ = TcpClient::create(cfg, ioc);
+  client_->stop();
+
+  std::vector<uint8_t> payload = {0x01, 0x02};
+  EXPECT_FALSE(client_->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+  EXPECT_FALSE(client_->async_write_move(std::vector<uint8_t>{0x03}));
+  EXPECT_FALSE(client_->async_write_shared(std::make_shared<const std::vector<uint8_t>>(payload)));
+
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, SettersAndClearedReconnectPolicyAffectRetry) {
+  net::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  client_ = TcpClient::create(cfg, ioc);
+  client_->set_reconnect_policy(FixedInterval(5ms));
+  client_->set_reconnect_policy(nullptr);
+  client_->set_retry_interval(20);
+  client_->set_connection_timeout(20);
+  client_->set_max_retries(0);
+
+  std::atomic<bool> error_state{false};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_state = true;
+    }
+  });
+
+  client_->start();
+  ioc.run_for(300ms);
+
+  EXPECT_TRUE(error_state.load());
+
+  client_->on_state(nullptr);
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, CallbackExceptionsAreSwallowed) {
+  net::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort();
+  cfg.backpressure_threshold = 1024;
+
+  client_ = TcpClient::create(cfg, ioc);
+  client_->on_state([](base::LinkState) { throw std::runtime_error("state"); });
+  client_->on_backpressure([](size_t) { throw std::runtime_error("backpressure"); });
+
+  std::vector<uint8_t> payload(cfg.backpressure_threshold * 2, 0xAA);
+  EXPECT_TRUE(client_->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+
+  EXPECT_NO_THROW({
+    client_->start();
+    ioc.run_for(100ms);
+  });
+
+  client_->on_state(nullptr);
+  client_->on_backpressure(nullptr);
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, SharedWriteSendsPayloadWhenConnected) {
+  net::io_context ioc;
+  tcp::acceptor acceptor(ioc, tcp::endpoint(tcp::v4(), 0));
+
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = acceptor.local_endpoint().port();
+  cfg.connection_timeout_ms = 200;
+
+  client_ = TcpClient::create(cfg, ioc);
+
+  auto server_socket = std::make_shared<tcp::socket>(ioc);
+  auto buffer = std::make_shared<std::array<uint8_t, 64>>();
+  std::string received;
+  std::atomic<bool> connected{false};
+  std::atomic<bool> received_done{false};
+
+  acceptor.async_accept(*server_socket, [&, server_socket, buffer](const boost::system::error_code& ec) {
+    if (ec) {
+      return;
+    }
+    server_socket->async_read_some(net::buffer(*buffer),
+                                   [&, buffer](const boost::system::error_code& read_ec, std::size_t n) {
+                                     if (!read_ec) {
+                                       received.assign(reinterpret_cast<const char*>(buffer->data()), n);
+                                       received_done = true;
+                                     }
+                                   });
+  });
+
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connected) {
+      connected = true;
+    }
+  });
+
+  client_->start();
+  ASSERT_TRUE(TestUtils::waitForCondition(
+      [&] {
+        ioc.poll();
+        ioc.restart();
+        return connected.load();
+      },
+      1000));
+
+  auto payload = std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{'s', 'h', 'a', 'r', 'e', 'd'});
+  EXPECT_TRUE(client_->async_write_shared(payload));
+
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&] {
+        ioc.poll();
+        ioc.restart();
+        return received_done.load();
+      },
+      1000));
+  EXPECT_EQ(received, "shared");
+
+  client_->on_state(nullptr);
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, UnknownOnBytesExceptionTriggersReconnect) {
+  net::io_context ioc;
+  tcp::acceptor acceptor(ioc, tcp::endpoint(tcp::v4(), 0));
+
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = acceptor.local_endpoint().port();
+  cfg.retry_interval_ms = 20;
+  cfg.connection_timeout_ms = 100;
+
+  client_ = TcpClient::create(cfg, ioc);
+
+  auto server_socket = std::make_shared<tcp::socket>(ioc);
+  acceptor.async_accept(*server_socket, [server_socket](const boost::system::error_code& ec) {
+    if (ec) {
+      return;
+    }
+    auto data = std::make_shared<std::string>("ping");
+    net::async_write(*server_socket, net::buffer(*data),
+                     [server_socket, data](const boost::system::error_code&, auto) {});
+  });
+
+  std::atomic<int> connecting_events{0};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) {
+      connecting_events.fetch_add(1);
+    }
+  });
+  client_->on_bytes([](memory::ConstByteSpan) { throw 7; });
+
+  client_->start();
+  ioc.run_for(200ms);
+
+  EXPECT_GE(connecting_events.load(), 2);
+
+  client_->on_state(nullptr);
+  client_->on_bytes(nullptr);
+  client_->stop();
+  client_.reset();
 }

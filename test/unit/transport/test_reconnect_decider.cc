@@ -1,10 +1,15 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <deque>
+#include <memory>
 #include <optional>
+#include <variant>
+#include <vector>
 
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/error_types.hpp"
+#include "unilink/transport/base/bp_utils.hpp"
 #include "unilink/transport/base/reconnect_policy.hpp"
 #include "unilink/transport/tcp_client/detail/reconnect_decider.hpp"
 
@@ -133,4 +138,114 @@ TEST(ReconnectDeciderTest, PolicyCanStopReconnect) {
   auto decision = decide_reconnect(cfg, info, 0, policy);
   EXPECT_FALSE(decision.should_retry);
   EXPECT_FALSE(decision.delay.has_value());
+}
+
+TEST(ReconnectPolicyTest, FixedIntervalRespectsRetryableFlag) {
+  auto retryable = MakeErrorInfo(true);
+  auto non_retryable = MakeErrorInfo(false);
+  auto policy = FixedInterval(42ms);
+
+  auto retry = policy(retryable, 3);
+  EXPECT_TRUE(retry.retry);
+  EXPECT_EQ(retry.delay, 42ms);
+
+  auto stop = policy(non_retryable, 3);
+  EXPECT_FALSE(stop.retry);
+  EXPECT_EQ(stop.delay, 0ms);
+}
+
+TEST(ReconnectPolicyTest, ExponentialBackoffWithoutJitterCapsDelay) {
+  auto retryable = MakeErrorInfo(true);
+  auto non_retryable = MakeErrorInfo(false);
+  auto policy = ExponentialBackoff(10ms, 100ms, 3.0, false);
+
+  auto first = policy(retryable, 0);
+  EXPECT_TRUE(first.retry);
+  EXPECT_EQ(first.delay, 10ms);
+
+  auto third = policy(retryable, 2);
+  EXPECT_TRUE(third.retry);
+  EXPECT_EQ(third.delay, 90ms);
+
+  auto capped = policy(retryable, 3);
+  EXPECT_TRUE(capped.retry);
+  EXPECT_EQ(capped.delay, 100ms);
+
+  auto stop = policy(non_retryable, 3);
+  EXPECT_FALSE(stop.retry);
+  EXPECT_EQ(stop.delay, 0ms);
+}
+
+TEST(ReconnectPolicyTest, ExponentialBackoffWithJitterStaysWithinCurrentCap) {
+  auto retryable = MakeErrorInfo(true);
+  auto policy = ExponentialBackoff(20ms, 100ms, 2.0, true);
+
+  auto decision = policy(retryable, 2);
+  EXPECT_TRUE(decision.retry);
+  EXPECT_GE(decision.delay, 0ms);
+  EXPECT_LE(decision.delay, 80ms);
+}
+
+TEST(BackpressureQueueUtilTest, VariantBufferSizeHandlesVectorAndSharedPointer) {
+  using unilink::transport::queue_util::variant_buffer_size;
+
+  std::vector<uint8_t> vector_buffer{1, 2, 3};
+  auto shared_buffer = std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{1, 2, 3, 4});
+  std::shared_ptr<const std::vector<uint8_t>> null_buffer;
+
+  EXPECT_EQ(variant_buffer_size(vector_buffer), 3);
+  EXPECT_EQ(variant_buffer_size(shared_buffer), 4);
+  EXPECT_EQ(variant_buffer_size(null_buffer), 0);
+}
+
+TEST(BackpressureQueueUtilTest, ReliableStrategyDoesNotTrimQueue) {
+  using Buffer = std::variant<std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
+  using unilink::transport::queue_util::maybe_flush_for_keep_latest;
+
+  std::deque<Buffer> tx;
+  tx.emplace_back(std::vector<uint8_t>{1, 2, 3});
+  tx.emplace_back(std::vector<uint8_t>{4, 5, 6, 7});
+  std::atomic<size_t> queue_bytes{7};
+  std::atomic<bool> backpressure_active{true};
+
+  maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::Reliable, 10, 5, tx, queue_bytes,
+                              backpressure_active);
+
+  EXPECT_EQ(tx.size(), 2);
+  EXPECT_EQ(queue_bytes.load(), 7);
+}
+
+TEST(BackpressureQueueUtilTest, BestEffortDropsQueueWhenAddedBufferExceedsHighWatermark) {
+  using Buffer = std::variant<std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
+  using unilink::transport::queue_util::maybe_flush_for_keep_latest;
+
+  std::deque<Buffer> tx;
+  tx.emplace_back(std::vector<uint8_t>{1, 2, 3, 4});
+  tx.emplace_back(std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{5, 6, 7, 8, 9}));
+  std::atomic<size_t> queue_bytes{3};
+  std::atomic<bool> backpressure_active{false};
+
+  maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::BestEffort, 10, 10, tx, queue_bytes,
+                              backpressure_active);
+
+  EXPECT_TRUE(tx.empty());
+  EXPECT_EQ(queue_bytes.load(), 0);
+}
+
+TEST(BackpressureQueueUtilTest, BestEffortTrimsOldestBuffersUntilAddedBufferFits) {
+  using Buffer = std::variant<std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
+  using unilink::transport::queue_util::maybe_flush_for_keep_latest;
+
+  std::deque<Buffer> tx;
+  tx.emplace_back(std::vector<uint8_t>{1, 2, 3, 4});
+  tx.emplace_back(std::vector<uint8_t>{5, 6, 7, 8});
+  tx.emplace_back(std::vector<uint8_t>{9, 10, 11, 12});
+  std::atomic<size_t> queue_bytes{12};
+  std::atomic<bool> backpressure_active{false};
+
+  maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::BestEffort, 3, 10, tx, queue_bytes,
+                              backpressure_active);
+
+  ASSERT_EQ(tx.size(), 1);
+  EXPECT_EQ(queue_bytes.load(), 4);
 }

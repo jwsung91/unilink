@@ -21,11 +21,15 @@
 #include <boost/system/error_code.hpp>
 #include <chrono>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/config/serial_config.hpp"
+#include "unilink/framer/line_framer.hpp"
+#include "unilink/interface/channel.hpp"
 #include "unilink/interface/iserial_port.hpp"
 #include "unilink/transport/serial/serial.hpp"
 #include "unilink/unilink.hpp"
@@ -91,6 +95,86 @@ class FakeSerialPort : public interface::SerialPortInterface {
   boost::system::error_code open_ec_;
   bool open_{false};
   std::function<void(const boost::system::error_code&, std::size_t)> read_handler_;
+};
+
+class ControlledChannel : public interface::Channel {
+ public:
+  void start() override { emit_state(base::LinkState::Connected); }
+
+  void stop() override { connected_ = false; }
+
+  bool is_connected() const override { return connected_; }
+
+  bool is_backpressure_active() const override { return backpressure_active_; }
+
+  boost::asio::any_io_executor get_executor() override { return ioc_.get_executor(); }
+
+  bool async_write_copy(memory::ConstByteSpan data) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++write_count_;
+    last_write_.assign(reinterpret_cast<const char*>(data.data()), data.size());
+    return write_result_;
+  }
+
+  bool async_write_move(std::vector<uint8_t>&& data) override {
+    return async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
+  }
+
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override {
+    if (!data) return false;
+    return async_write_copy(memory::ConstByteSpan(data->data(), data->size()));
+  }
+
+  void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
+
+  void on_state(OnState cb) override { on_state_ = std::move(cb); }
+
+  void on_backpressure(OnBackpressure cb) override { on_backpressure_ = std::move(cb); }
+
+  void emit_bytes(std::string_view text) {
+    if (!on_bytes_) return;
+    on_bytes_(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(text.data()), text.size()));
+  }
+
+  void emit_state(base::LinkState state) {
+    if (state == base::LinkState::Connected) {
+      connected_ = true;
+    } else if (state == base::LinkState::Closed || state == base::LinkState::Error || state == base::LinkState::Idle) {
+      connected_ = false;
+    }
+
+    if (on_state_) on_state_(state);
+  }
+
+  void emit_backpressure(size_t queued) {
+    if (on_backpressure_) on_backpressure_(queued);
+  }
+
+  void set_backpressure_active(bool active) { backpressure_active_ = active; }
+
+  void set_write_result(bool result) { write_result_ = result; }
+
+  int write_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return write_count_;
+  }
+
+  std::string last_write() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return last_write_;
+  }
+
+ private:
+  boost::asio::io_context ioc_;
+  bool connected_{false};
+  bool backpressure_active_{false};
+  bool write_result_{true};
+  mutable std::mutex mutex_;
+  int write_count_{0};
+  std::string last_write_;
+  OnBytes on_bytes_;
+  OnState on_state_;
+  OnBackpressure on_backpressure_;
 };
 
 }  // namespace
@@ -182,4 +266,121 @@ TEST_F(SerialWrapperLifecycleTest, StartFutureReflectsTransportFailure) {
   serial.stop();
   ioc.restart();
   ioc.run_for(50ms);
+}
+
+TEST_F(SerialWrapperLifecycleTest, InjectedChannelCoversHandlersAndSendVariants) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::Serial serial(std::static_pointer_cast<interface::Channel>(channel));
+
+  std::atomic<int> connected{0};
+  std::atomic<int> disconnected{0};
+  std::atomic<int> errors{0};
+  std::atomic<int> data{0};
+  std::atomic<size_t> queued_bytes{0};
+  std::string received;
+
+  serial.on_connect([&](const wrapper::ConnectionContext&) { connected++; });
+  serial.on_disconnect([&](const wrapper::ConnectionContext&) { disconnected++; });
+  serial.on_error([&](const wrapper::ErrorContext&) { errors++; });
+  serial.on_data([&](const wrapper::MessageContext& ctx) {
+    data++;
+    received = ctx.data_as_string();
+  });
+  serial.on_backpressure([&](size_t queued) { queued_bytes = queued; });
+
+  auto started = serial.start();
+  ASSERT_EQ(started.wait_for(100ms), std::future_status::ready);
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(serial.connected());
+  EXPECT_EQ(connected.load(), 1);
+
+  EXPECT_TRUE(serial.send("abc"));
+  EXPECT_TRUE(serial.send_line("line"));
+  EXPECT_TRUE(serial.try_send("try"));
+  EXPECT_TRUE(serial.try_send_line("tryline"));
+  EXPECT_EQ(channel->write_count(), 4);
+  EXPECT_EQ(channel->last_write(), "tryline\n");
+
+  channel->emit_bytes("payload");
+  EXPECT_EQ(data.load(), 1);
+  EXPECT_EQ(received, "payload");
+
+  channel->emit_backpressure(1234);
+  EXPECT_EQ(queued_bytes.load(), 1234U);
+
+  channel->emit_state(base::LinkState::Closed);
+  EXPECT_EQ(disconnected.load(), 1);
+
+  channel->emit_state(base::LinkState::Error);
+  EXPECT_EQ(errors.load(), 1);
+
+  serial.stop();
+}
+
+TEST_F(SerialWrapperLifecycleTest, InjectedChannelBatchesRawDataAndFramedMessages) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::Serial serial(std::static_pointer_cast<interface::Channel>(channel));
+
+  std::atomic<int> data_batches{0};
+  std::atomic<int> message_batches{0};
+  std::vector<std::string> raw_payloads;
+  std::vector<std::string> framed_payloads;
+
+  serial.batch_size(2).batch_latency(1s);
+  serial.on_data_batch([&](const std::vector<wrapper::MessageContext>& batch) {
+    data_batches++;
+    for (const auto& ctx : batch) raw_payloads.push_back(ctx.data_as_string());
+  });
+
+  ASSERT_TRUE(serial.start().get());
+
+  channel->emit_bytes("raw1");
+  EXPECT_EQ(data_batches.load(), 0);
+  channel->emit_bytes("raw2");
+  EXPECT_EQ(data_batches.load(), 1);
+  ASSERT_EQ(raw_payloads.size(), 2U);
+  EXPECT_EQ(raw_payloads[0], "raw1");
+  EXPECT_EQ(raw_payloads[1], "raw2");
+
+  serial.framer(std::make_unique<framer::LineFramer>());
+  serial.on_message_batch([&](const std::vector<wrapper::MessageContext>& batch) {
+    message_batches++;
+    for (const auto& ctx : batch) framed_payloads.push_back(ctx.data_as_string());
+  });
+
+  channel->emit_bytes("msg1\nmsg2\n");
+  EXPECT_EQ(message_batches.load(), 1);
+  ASSERT_EQ(framed_payloads.size(), 2U);
+  EXPECT_EQ(framed_payloads[0], "msg1");
+  EXPECT_EQ(framed_payloads[1], "msg2");
+
+  serial.stop();
+}
+
+TEST_F(SerialWrapperLifecycleTest, StartWhileAlreadyConnectedReturnsReadyFuture) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::Serial serial(std::static_pointer_cast<interface::Channel>(channel));
+
+  ASSERT_TRUE(serial.start().get());
+
+  auto second_start = serial.start();
+  ASSERT_EQ(second_start.wait_for(100ms), std::future_status::ready);
+  EXPECT_TRUE(second_start.get());
+
+  serial.stop();
+}
+
+TEST_F(SerialWrapperLifecycleTest, BestEffortSendUsesTryPathAndPropagatesWriteFailure) {
+  auto channel = std::make_shared<ControlledChannel>();
+  wrapper::Serial serial(std::static_pointer_cast<interface::Channel>(channel));
+  serial.backpressure_strategy(base::constants::BackpressureStrategy::BestEffort);
+
+  ASSERT_TRUE(serial.start().get());
+
+  channel->set_write_result(false);
+  EXPECT_FALSE(serial.send("drop"));
+  EXPECT_FALSE(serial.send_line("drop-line"));
+  EXPECT_EQ(channel->write_count(), 2);
+
+  serial.stop();
 }
