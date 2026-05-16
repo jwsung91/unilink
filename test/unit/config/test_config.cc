@@ -34,6 +34,7 @@
 #include "unilink/config/config_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/config/uds_config.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
 using namespace unilink;
@@ -330,6 +331,87 @@ TEST_F(ConfigTest, SerialConfigDirectValidationAndClamping) {
   EXPECT_EQ(high_values.retry_interval_ms, base::constants::MAX_RETRY_INTERVAL_MS);
   EXPECT_EQ(high_values.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
   EXPECT_EQ(high_values.max_retries, -1);
+}
+
+TEST_F(ConfigTest, UdsConfigDirectValidationAndClamping) {
+  UdsClientConfig client_config;
+  client_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-client").string();
+  EXPECT_TRUE(client_config.is_valid());
+
+  client_config.socket_path.clear();
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-client-valid").string();
+
+  client_config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS;
+
+  client_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+
+  client_config.max_retries = -2;
+  EXPECT_FALSE(client_config.is_valid());
+  client_config.max_retries = -1;
+  EXPECT_TRUE(client_config.is_valid());
+
+  UdsClientConfig low_client;
+  low_client.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  low_client.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  low_client.max_retries = base::constants::MAX_RETRIES_LIMIT + 1;
+  low_client.validate_and_clamp();
+  EXPECT_EQ(low_client.retry_interval_ms, base::constants::MIN_RETRY_INTERVAL_MS);
+  EXPECT_EQ(low_client.backpressure_threshold, base::constants::MIN_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(low_client.max_retries, base::constants::MAX_RETRIES_LIMIT);
+
+  UdsClientConfig high_client;
+  high_client.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  high_client.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  high_client.max_retries = -1;
+  high_client.validate_and_clamp();
+  EXPECT_EQ(high_client.retry_interval_ms, base::constants::MAX_RETRY_INTERVAL_MS);
+  EXPECT_EQ(high_client.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(high_client.max_retries, -1);
+
+  UdsServerConfig server_config;
+  server_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-server").string();
+  EXPECT_TRUE(server_config.is_valid());
+
+  server_config.socket_path.clear();
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.socket_path = TestUtils::makeUniqueUdsSocketPath("cfg-server-valid").string();
+
+  server_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+
+  server_config.max_connections = -1;
+  EXPECT_FALSE(server_config.is_valid());
+  server_config.max_connections = 1;
+  server_config.idle_timeout_ms = -1;
+  EXPECT_FALSE(server_config.is_valid());
+
+  UdsServerConfig low_server;
+  low_server.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  low_server.max_connections = -1;
+  low_server.idle_timeout_ms = -1;
+  low_server.validate_and_clamp();
+  EXPECT_EQ(low_server.backpressure_threshold, base::constants::MIN_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(low_server.max_connections, 0);
+  EXPECT_EQ(low_server.idle_timeout_ms, 0);
+
+  UdsServerConfig high_server;
+  high_server.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  high_server.max_connections = static_cast<int>(base::constants::MAX_MAX_CONNECTIONS) + 1;
+  high_server.validate_and_clamp();
+  EXPECT_EQ(high_server.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(high_server.max_connections, static_cast<int>(base::constants::MAX_MAX_CONNECTIONS));
 }
 
 // ============================================================================
