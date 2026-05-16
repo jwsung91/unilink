@@ -232,7 +232,6 @@ Configure And Build</h1>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
 <div class="line">  -DUNILINK_BUILD_DOCS=OFF \</div>
 <div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
-<div class="line">  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \</div>
 <div class="line">  -DBUILD_PYTHON_BINDINGS=ON \</div>
 <div class="line">  -DPython3_EXECUTABLE=&quot;$(python3 -c &#39;import sys; print(sys.executable)&#39;)&quot; \</div>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot; \</div>
@@ -243,7 +242,6 @@ Configure And Build</h1>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
 <div class="line">  -DUNILINK_BUILD_DOCS=OFF \</div>
 <div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
-<div class="line">  -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \</div>
 <div class="line">  -DBUILD_PYTHON_BINDINGS=OFF \</div>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot; \</div>
 <div class="line">  -DVCPKG_TARGET_TRIPLET=arm64-linux</div>
@@ -266,11 +264,11 @@ Run C++ Tests</h1>
 <div class="line">  --output-on-failure \</div>
 <div class="line">  --parallel 2 \</div>
 <div class="line">  -L e2e</div>
-</div><!-- fragment --><p>Run everything except performance benchmarks:</p>
+</div><!-- fragment --><p>Run everything except documentation snippets:</p>
 <div class="fragment"><div class="line">ctest --test-dir build-orin \</div>
 <div class="line">  --output-on-failure \</div>
 <div class="line">  --parallel 2 \</div>
-<div class="line">  -LE &quot;performance|docs_snippets&quot;</div>
+<div class="line">  -LE &quot;docs_snippets&quot;</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md356"></a>
 Run Python Validation</h1>
@@ -382,7 +380,7 @@ Related Docs</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 15 2026 23:31:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 00:17:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

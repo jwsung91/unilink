@@ -161,9 +161,9 @@ $(document).ready(function(){initNavTree('user_requirements.html',''); initResiz
 <div class="contents">
 <div class="textblock"><p>This guide describes the system requirements and dependencies needed to build and use <code>unilink</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md684"></a>
+<h1><a class="anchor" id="autotoc_md674"></a>
 System Requirements</h1>
-<h2><a class="anchor" id="autotoc_md685"></a>
+<h2><a class="anchor" id="autotoc_md675"></a>
 Recommended Platform</h2>
 <ul>
 <li><b>Ubuntu 22.04 LTS or later</b></li>
@@ -171,7 +171,7 @@ Recommended Platform</h2>
 <li><b>CMake 3.12 or later</b> for plain builds; <b>CMake 3.21 or later</b> for the repository presets</li>
 <li><b>Boost 1.83.0 or later</b>, preferably supplied by vcpkg</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md686"></a>
+<h2><a class="anchor" id="autotoc_md676"></a>
 Supported Platforms</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -194,9 +194,9 @@ Supported Platforms</h2>
 <td class="markdownTableBodyNone">Windows   </td><td class="markdownTableBodyNone">✅ Fully Supported   </td><td class="markdownTableBodyNone">Tested in CI (Windows 2022, MSVC)   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md688"></a>
+<h1><a class="anchor" id="autotoc_md678"></a>
 Dependencies</h1>
-<h2><a class="anchor" id="autotoc_md689"></a>
+<h2><a class="anchor" id="autotoc_md679"></a>
 Core Library Dependencies</h2>
 <p>The following packages are required to build and use <code>unilink</code>:</p>
 <p>Use vcpkg to supply third-party C++ dependencies:</p>
@@ -204,7 +204,7 @@ Core Library Dependencies</h2>
 <div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 </div><!-- fragment --><p>If you use system packages instead of vcpkg, the selected Boost installation must be 1.83.0 or later. The default Ubuntu 22.04 and 24.04 apt Boost packages do not satisfy this baseline.</p>
-<h2><a class="anchor" id="autotoc_md690"></a>
+<h2><a class="anchor" id="autotoc_md680"></a>
 Dependency Details</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -219,9 +219,9 @@ Dependency Details</h2>
 <td class="markdownTableBodyNone"><b>Boost</b>   </td><td class="markdownTableBodyNone">1.83.0+   </td><td class="markdownTableBodyNone">BSL 1.0   </td><td class="markdownTableBodyNone">Asio for async I/O   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md692"></a>
+<h1><a class="anchor" id="autotoc_md682"></a>
 Compiler Requirements</h1>
-<h2><a class="anchor" id="autotoc_md693"></a>
+<h2><a class="anchor" id="autotoc_md683"></a>
 Minimum Compiler Versions</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -231,35 +231,35 @@ Minimum Compiler Versions</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Clang   </td><td class="markdownTableBodyNone">14.0   </td><td class="markdownTableBodyNone">Recent Clang/libc++   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md694"></a>
+<h2><a class="anchor" id="autotoc_md684"></a>
 C++ Standard</h2>
 <ul>
 <li><b>C++20</b> is required</li>
 <li>C++23 is supported but not required</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md696"></a>
+<h1><a class="anchor" id="autotoc_md686"></a>
 Runtime Requirements</h1>
-<h2><a class="anchor" id="autotoc_md697"></a>
+<h2><a class="anchor" id="autotoc_md687"></a>
 For Applications Using unilink</h2>
 <p>Applications must be able to resolve the same Boost 1.83.0+ dependency set used to build <code>unilink</code>. vcpkg consumers get this through the vcpkg toolchain; source/package consumers should provide a compatible Boost installation through their package environment.</p>
-<h2><a class="anchor" id="autotoc_md698"></a>
+<h2><a class="anchor" id="autotoc_md688"></a>
 Thread Support</h2>
 <ul>
 <li>POSIX threads (pthread) support required</li>
 <li>Typically included in standard Linux distributions</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md700"></a>
+<h1><a class="anchor" id="autotoc_md690"></a>
 Platform-Specific Notes</h1>
-<h2><a class="anchor" id="autotoc_md701"></a>
+<h2><a class="anchor" id="autotoc_md691"></a>
 Ubuntu 22.04 LTS</h2>
 <ul>
 <li>Default GCC/Boost packages do <b>not</b> meet all requirements</li>
 <li>Install GCC 10+ and use vcpkg or a custom Boost 1.83.0+ installation</li>
 <li>Supported as a build target when those dependencies are supplied explicitly</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md702"></a>
+<h2><a class="anchor" id="autotoc_md692"></a>
 Ubuntu ARM64 / Jetson Orin Nano</h2>
 <ul>
 <li>Source builds use the same Linux/POSIX code path as x86_64</li>
@@ -271,7 +271,7 @@ Ubuntu ARM64 / Jetson Orin Nano</h2>
 <li>One test remains intentionally disabled in that run: <code>UdsErrorTest.ServerStopWithActiveSessions</code></li>
 <li>Serial integration tests require <code>socat</code> or physical loopback hardware</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md703"></a>
+<h2><a class="anchor" id="autotoc_md693"></a>
 Ubuntu 20.04 LTS</h2>
 <ul>
 <li>Default GCC 9.4 does <b>not</b> meet requirements</li>
@@ -279,7 +279,7 @@ Ubuntu 20.04 LTS</h2>
 <li>See <a href="../contributor/build_guide.md#ubuntu-2004-build">Ubuntu 20.04 Build Guide</a></li>
 <li><b>Note</b>: Ubuntu 20.04 reached end-of-life in April 2025; local builds still work</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md704"></a>
+<h2><a class="anchor" id="autotoc_md694"></a>
 Other Linux Distributions</h2>
 <ul>
 <li>Debian/Fedora/RHEL/Arch builds should work when GCC 10+ and Boost 1.83.0+ are supplied</li>
@@ -287,9 +287,9 @@ Other Linux Distributions</h2>
 <li>Arch Linux: Fully supported with latest packages</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md706"></a>
+<h1><a class="anchor" id="autotoc_md696"></a>
 Verifying Your Environment</h1>
-<h2><a class="anchor" id="autotoc_md707"></a>
+<h2><a class="anchor" id="autotoc_md697"></a>
 Check Compiler Version</h2>
 <div class="fragment"><div class="line"># GCC</div>
 <div class="line">g++ --version</div>
@@ -298,15 +298,15 @@ Check Compiler Version</h2>
 <div class="line"># Clang (if using)</div>
 <div class="line">clang++ --version</div>
 <div class="line"># Should show version 14.0 or higher</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md708"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md698"></a>
 Check CMake Version</h2>
 <div class="fragment"><div class="line">cmake --version</div>
 <div class="line"># Should show 3.12 or higher for plain builds, or 3.21 or higher for repository presets</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md709"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md699"></a>
 Check Boost Version</h2>
 <div class="fragment"><div class="line">grep BOOST_LIB_VERSION /path/to/boost/include/boost/version.hpp</div>
 <div class="line"># Should show 1_83 or higher</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md710"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md700"></a>
 Quick Environment Test</h2>
 <div class="fragment"><div class="line"># Test compilation with C++20</div>
 <div class="line">echo &#39;#include &lt;string&gt;</div>
@@ -315,22 +315,22 @@ Quick Environment Test</h2>
 <div class="line">./test &amp;&amp; echo &quot;C++20 support: OK&quot;</div>
 <div class="line">rm test test.cpp</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md712"></a>
+<h1><a class="anchor" id="autotoc_md702"></a>
 Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md713"></a>
+<h2><a class="anchor" id="autotoc_md703"></a>
 Problem: Compiler Too Old</h2>
 <div class="fragment"><div class="line"># Ubuntu 20.04: Install newer GCC</div>
 <div class="line">sudo apt install -y gcc-10 g++-10</div>
 <div class="line">export CC=gcc-10</div>
 <div class="line">export CXX=g++-10</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md714"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md704"></a>
 Problem: Boost Not Found</h2>
 <div class="fragment"><div class="line"># Recommended: install dependencies with vcpkg</div>
 <div class="line">vcpkg install boost-asio boost-system spdlog</div>
 <div class="line"> </div>
 <div class="line"># Or specify Boost location to CMake</div>
 <div class="line">cmake -DBOOST_ROOT=/path/to/boost ...</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md715"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md705"></a>
 Problem: CMake Too Old</h2>
 <div class="fragment"><div class="line"># Install latest CMake from official repository</div>
 <div class="line">wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2&gt;/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg &gt;/dev/null</div>
@@ -338,7 +338,7 @@ Problem: CMake Too Old</h2>
 <div class="line">sudo apt update</div>
 <div class="line">sudo apt install cmake</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md717"></a>
+<h1><a class="anchor" id="autotoc_md707"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="quickstart_8md.html">Quick Start Guide</a> - Get started with unilink</li>
@@ -351,7 +351,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 15 2026 23:31:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 00:17:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

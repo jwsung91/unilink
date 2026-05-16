@@ -192,8 +192,7 @@ Build and Run All Tests</h2>
 <div class="line"># All tests should pass with detailed output</div>
 </div><!-- fragment --><p><b>Suite toggles</b></p><ul>
 <li>Master switch: <code>-DUNILINK_BUILD_TESTS=ON|OFF</code></li>
-<li>Performance-only toggle: <code>UNILINK_ENABLE_PERFORMANCE_TESTS</code></li>
-<li>Packaging tip: set <code>UNILINK_BUILD_TESTS=OFF</code> (and perf OFF) in vcpkg/air-gapped builds to skip fetching GoogleTest.</li>
+<li>Packaging tip: set <code>UNILINK_BUILD_TESTS=OFF</code> in vcpkg/air-gapped builds to skip fetching GoogleTest.</li>
 </ul>
 <hr  />
 <h2><a class="anchor" id="autotoc_md388"></a>
@@ -220,7 +219,7 @@ Windows Build &amp; Test Workflow</h2>
 </div><!-- fragment --><p><b>Windows-specific notes</b></p><ul>
 <li>Re-run CMake (or create a fresh <code>build-windows</code> directory) after updating the repository so that example binaries inherit the post-build step that copies <code>unilink.dll</code> beside each executable.</li>
 <li>Serial error recovery scenarios rely on Unix-style device paths and are automatically skipped when running on Windows.</li>
-<li>The async logging performance benchmark expects ≥50k messages/sec on Windows (versus 100k+ on Linux) because of OS timer granularity and scheduling differences.</li>
+<li>The async logging timing sanity check uses a lower Windows threshold because of OS timer granularity and scheduling differences.</li>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md390"></a>
@@ -251,9 +250,6 @@ Run Specific Test Categories</h2>
 <div class="line"> </div>
 <div class="line"># Thread safety and concurrency tests</div>
 <div class="line">./build/test/run_concurrency_safety_tests</div>
-<div class="line"> </div>
-<div class="line"># Performance benchmarks</div>
-<div class="line">./build/test/run_performance_tests</div>
 <div class="line"> </div>
 <div class="line"># Stress and stability tests</div>
 <div class="line">./build/test/run_stress_tests</div>
@@ -355,20 +351,9 @@ Concurrency Safety Tests</h2>
 </ul>
 <hr  />
 <h2><a class="anchor" id="autotoc_md410"></a>
-Performance Tests</h2>
-<p>Performance benchmarks and optimization validation.</p>
-<div class="fragment"><div class="line">./build/test/run_performance_tests</div>
-</div><!-- fragment --><p><b>Tests:</b></p><ul>
-<li>TCP throughput measurement</li>
-<li>Latency benchmarks</li>
-<li>Memory allocation overhead</li>
-<li>Connection establishment time</li>
-<li>Concurrent connection handling</li>
-</ul>
-<p><b>Example output:</b> </p><div class="fragment"><div class="line">TCP Throughput: 950 Mb/s</div>
-<div class="line">TCP Latency (avg): 120 μs</div>
-<div class="line">Memory Pool Hit Rate: 98.5%</div>
-</div><!-- fragment --><hr  />
+Benchmarking</h2>
+<p>Standalone performance benchmarks live in the <code>unilink-lab/unilink-benchmarks</code> repository. Keep timing-sensitive latency, throughput, and strategy sweeps out of the core test tree.</p>
+<hr  />
 <h2><a class="anchor" id="autotoc_md412"></a>
 Stress Tests</h2>
 <p>High-load and stability testing.</p>
@@ -524,7 +509,6 @@ View CI/CD Results</h2>
 <li>✅ No memory leaks detected</li>
 <li>✅ No sanitizer errors</li>
 <li>✅ Code coverage maintained</li>
-<li>✅ Performance benchmarks within limits</li>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md432"></a>
@@ -694,21 +678,11 @@ Memory Issues</h2>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md451"></a>
 Performance Regression Testing</h1>
-<h2><a class="anchor" id="autotoc_md452"></a>
-Benchmark Baseline</h2>
-<p>Establish performance baseline:</p>
-<div class="fragment"><div class="line">./build/test/run_performance_tests &gt; baseline.txt</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md453"></a>
-Compare Against Baseline</h2>
-<div class="fragment"><div class="line">./build/test/run_performance_tests &gt; current.txt</div>
-<div class="line">diff baseline.txt current.txt</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md454"></a>
-Automated Regression Detection</h2>
-<p>CI/CD automatically detects performance regressions &gt; 10%.</p>
+<p>Use the standalone <code>unilink-lab/unilink-benchmarks</code> repository for benchmark baselines, latency sweeps, strategy sweeps, and release benchmark artifacts.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md456"></a>
+<h1><a class="anchor" id="autotoc_md453"></a>
 Code Coverage</h1>
-<h2><a class="anchor" id="autotoc_md457"></a>
+<h2><a class="anchor" id="autotoc_md454"></a>
 Generate Coverage Report</h2>
 <div class="fragment"><div class="line"># Build with coverage flags</div>
 <div class="line">cmake -S . -B build \</div>
@@ -726,7 +700,7 @@ Generate Coverage Report</h2>
 <div class="line">lcov --capture --directory . --output-file coverage.info</div>
 <div class="line">lcov --remove coverage.info &#39;/usr/*&#39; --output-file coverage.info</div>
 <div class="line">lcov --list coverage.info</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md458"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md455"></a>
 View HTML Coverage Report</h2>
 <div class="fragment"><div class="line"># Generate HTML report</div>
 <div class="line">genhtml coverage.info --output-directory coverage_html</div>
@@ -734,7 +708,7 @@ View HTML Coverage Report</h2>
 <div class="line"># Open in browser</div>
 <div class="line">xdg-open coverage_html/index.html</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md460"></a>
+<h1><a class="anchor" id="autotoc_md457"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="performance_8md.html">Performance Optimization</a> - Optimize your tests</li>
@@ -747,7 +721,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 15 2026 23:31:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 00:17:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -166,7 +166,6 @@ Layout</h1>
 <div class="line">├── unit/          # Unit and transport-focused tests</div>
 <div class="line">├── integration/   # Cross-component and real I/O integration tests</div>
 <div class="line">├── e2e/           # End-to-end scenarios and stress tests</div>
-<div class="line">├── performance/   # Optional benchmarks and profiling tests</div>
 <div class="line">├── fixtures/      # Shared mocks and fixtures</div>
 <div class="line">├── mocks/         # Additional mock types used by tests</div>
 <div class="line">├── utils/         # Shared test helpers and constants</div>
@@ -177,14 +176,12 @@ What Each Area Covers</h1>
 <li><code>unit/</code>: isolated component behavior, transport edge cases, wrapper behavior, framing, config, and utility coverage</li>
 <li><code>integration/</code>: interaction between components and real I/O paths</li>
 <li><code>e2e/</code>: scenario-level behavior, recovery cases, and stress-oriented coverage</li>
-<li><code>performance/</code>: optional benchmarks that are only registered when explicitly enabled</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md374"></a>
 Build-Time Controls</h1>
 <p>The test tree is controlled by CMake options rather than hardcoded assumptions in this document.</p>
 <ul>
 <li><code>UNILINK_BUILD_TESTS</code>: enables test targets</li>
-<li><code>UNILINK_ENABLE_PERFORMANCE_TESTS</code>: registers optional performance tests</li>
 </ul>
 <p>Treat <code>test/CMakeLists.txt</code> and the active build directory as the source of truth for what is currently registered.</p>
 <h1><a class="anchor" id="autotoc_md375"></a>
@@ -198,8 +195,7 @@ Run By Broad Category</h2>
 <div class="fragment"><div class="line">ctest -L unit</div>
 <div class="line">ctest -L integration</div>
 <div class="line">ctest -L e2e</div>
-<div class="line">ctest -L performance</div>
-</div><!-- fragment --><p><code>performance</code> only returns results if the build was configured with <code>-DUNILINK_ENABLE_PERFORMANCE_TESTS=ON</code>.</p>
+</div><!-- fragment --><p>Standalone benchmarks are maintained in the <code>unilink-lab/unilink-benchmarks</code> repository.</p>
 <h2><a class="anchor" id="autotoc_md378"></a>
 Useful Focused Runs</h2>
 <div class="fragment"><div class="line"># TCP-heavy tests</div>
@@ -222,7 +218,6 @@ Inspect What Is Currently Registered</h2>
 Notes</h1>
 <ul>
 <li>Label sets are not necessarily exclusive.</li>
-<li>Performance sources may exist in the tree even when no performance tests are currently registered.</li>
 <li>When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md381"></a>
@@ -234,7 +229,7 @@ CI/CD Integration</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri May 15 2026 23:31:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 00:17:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
