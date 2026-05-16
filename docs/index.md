@@ -1,5 +1,9 @@
 # Unilink Documentation {#docs_index}
 
+**Unified async communication for modern C++.**
+
+Serial · TCP · UDP · UDS
+
 Choose the guide that matches your role.
 
 ---

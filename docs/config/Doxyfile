@@ -61,7 +61,7 @@ PROJECT_BRIEF          = "A simple C++ library for unified async communication"
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           =
+PROJECT_LOGO           = docs/assets/logo/light/unilink-logo-horizontal.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -1136,7 +1136,7 @@ FILTER_SOURCE_PATTERNS =
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the doxygen output.
 
-USE_MDFILE_AS_MAINPAGE = README.md
+USE_MDFILE_AS_MAINPAGE = docs/index.md
 
 # The Fortran standard specifies that for fixed formatted Fortran code all
 # characters from position 72 are to be considered as comment. A common
@@ -1385,7 +1385,7 @@ HTML_EXTRA_STYLESHEET  = docs/config/doxygen-awesome.css docs/config/custom-awes
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = docs/img/logo.png \
+HTML_EXTRA_FILES       = docs/assets/logo/light/unilink-logo-horizontal.png \
                          docs/config/doxygen-awesome-darkmode-toggle.js \
                          docs/config/doxygen-awesome-fragment-copy-button.js \
                          docs/config/doxygen-awesome-paragraph-link.js \
