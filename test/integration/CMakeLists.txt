@@ -19,6 +19,26 @@
 # last_error_ issues
 get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 
+function(unilink_add_integration_gtest target source_path labels timeout)
+  add_executable(${target} ${source_path})
+  target_link_libraries(
+    ${target} PRIVATE ${_unilink_test_lib} GTest::gtest GTest::gtest_main
+                      GTest::gmock
+  )
+  unilink_set_test_warning_options(${target})
+  target_include_directories(
+    ${target} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
+                      ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
+
+  set(_test_properties LABELS "${labels}" TIMEOUT ${timeout})
+  if(DEFINED ARGV4 AND NOT "${ARGV4}" STREQUAL "")
+    list(APPEND _test_properties RESOURCE_LOCK "${ARGV4}")
+  endif()
+
+  gtest_discover_tests(${target} PROPERTIES ${_test_properties})
+endfunction()
+
 foreach(
   test_file
   test_integration.cc
@@ -62,6 +82,82 @@ foreach(
     )
   endif()
 endforeach()
+
+# Wrapper loopback integration tests
+foreach(
+  test_file
+  test_tcp_server_wrapper_lifecycle.cc
+  test_tcp_client_wrapper_lifecycle.cc
+  test_udp_stop_lifecycle.cc
+  test_udp_options.cc
+  test_udp_failure.cc
+  test_udp_state.cc
+  test_tcp_client_error_mapping.cc
+  test_udp_server_wrapper_transport.cc
+  test_udp_server_wrapper_lifecycle.cc
+  test_udp_client_wrapper_lifecycle.cc
+)
+  get_filename_component(test_name ${test_file} NAME_WE)
+
+  set(test_label "integration_wrapper_medium")
+  if(test_name MATCHES "tcp")
+    set(test_label "integration_wrapper_tcp_medium")
+  elseif(test_name MATCHES "udp")
+    set(test_label "integration_wrapper_udp_medium")
+  endif()
+
+  unilink_add_integration_gtest(
+    run_integration_${test_name}
+    ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file} "${test_label}" 300
+    "tcp_port_allocation"
+  )
+endforeach()
+
+# Transport loopback integration tests
+foreach(
+  test_file
+  transport_tcp_client.cc
+  transport_tcp_server.cc
+  transport_udp.cc
+  transport_udp_extended.cc
+  transport_tcp_client_policy.cc
+  test_tcp_client_lifecycle.cc
+  test_backpressure_strategy.cc
+)
+  get_filename_component(test_name ${test_file} NAME_WE)
+
+  set(test_label "integration_transport_medium")
+  if(test_name MATCHES "backpressure")
+    set(test_label "integration_transport_backpressure_medium")
+  elseif(test_name MATCHES "tcp")
+    set(test_label "integration_transport_tcp_medium")
+  elseif(test_name MATCHES "udp")
+    set(test_label "integration_transport_udp_medium")
+  endif()
+
+  unilink_add_integration_gtest(
+    run_integration_${test_name}
+    ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file} "${test_label}" 300
+  )
+endforeach()
+
+unilink_add_integration_gtest(
+  run_integration_test_contract_compliance
+  ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc
+  "integration_transport_contract_medium" 300
+)
+
+unilink_add_integration_gtest(
+  run_integration_test_tcp_server_connectivity
+  ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_server_connectivity.cc
+  "integration_transport_tcp_medium" 300
+)
+
+unilink_add_integration_gtest(
+  run_integration_transport_tcp_server_security_test
+  ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server_security_test.cc
+  "integration_transport_tcp_security_medium" 300
+)
 
 # Serial integration tests NOTE: test_serial.cc temporarily disabled due to
 # complex variable naming issues

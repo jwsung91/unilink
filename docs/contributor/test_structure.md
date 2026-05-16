@@ -65,11 +65,8 @@ ctest -L security
 ctest -L contract
 
 # Structured scope/component filters
-ctest -L "unit.*transport.*tcp"
+ctest -L "integration.*transport.*tcp"
 ctest -L "integration.*serial"
-
-# Existing unit-scope tests that still exercise localhost sockets
-ctest -L loopback
 ```
 
 ### Inspect What Is Currently Registered
@@ -90,12 +87,12 @@ Use these commands instead of storing counts in documentation. The exact number 
   (`unit.*transport.*tcp`) both work.
 - Label names should follow
   `<scope>_<component>[_subcomponent]_<kind>[_io]`. Examples include
-  `unit_common_fast`, `unit_transport_tcp_fast`,
-  `unit_transport_tcp_fast_loopback`, `unit_wrapper_udp_loopback`,
+  `unit_common_fast`, `unit_transport_uds_fast`,
+  `integration_transport_tcp_medium`, `integration_wrapper_udp_medium`,
   `integration_tcp_medium`, `e2e_scenario_slow`, and `docs_snippets`.
-- Use `_loopback` for tests that remain under `unit/` but allocate ports or
-  open localhost sockets. This keeps filtering explicit while those tests are
-  either kept as focused unit fixtures or moved to `integration/`.
+- Tests that allocate ports or open localhost sockets belong under
+  `integration/`, even if they exercise a focused transport or wrapper
+  behavior.
 - When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.
 
 ## CI/CD Integration

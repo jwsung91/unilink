@@ -31,11 +31,11 @@ ctest --test-dir build -L security
 ctest --test-dir build -L contract
 ```
 
-Labels use structured tokens such as `unit_transport_tcp_fast`. For example,
-TCP transport unit tests can be selected with a regex such as:
+Labels use structured tokens such as `integration_transport_tcp_medium`. For
+example, TCP transport integration tests can be selected with a regex such as:
 
 ```bash
-ctest --test-dir build -L "unit.*transport.*tcp"
+ctest --test-dir build -L "integration.*transport.*tcp"
 ```
 
 Label names follow this shape:
@@ -48,18 +48,17 @@ Common examples:
 
 ```text
 unit_common_fast
-unit_transport_tcp_fast
-unit_transport_tcp_fast_loopback
-unit_wrapper_udp_loopback
+unit_transport_uds_fast
 integration_tcp_medium
+integration_transport_tcp_medium
+integration_wrapper_udp_medium
 e2e_scenario_slow
 docs_snippets
 ```
 
-Use `_loopback` when a nominal unit test still opens localhost sockets or
-allocates real ports. Prefer placing new real I/O coverage under
-`integration/`; the loopback suffix is for existing transitional tests or
-cases that must stay near a narrow unit fixture.
+Place tests that open localhost sockets or allocate real ports under
+`integration/`, even when they exercise a focused transport or wrapper
+behavior.
 
 ## Naming
 

@@ -115,18 +115,8 @@ endforeach()
 # Wrapper tests (separate executables across TCP/UDP/UDS/Serial)
 foreach(
   test_file
-  test_tcp_server_wrapper_lifecycle.cc
-  test_tcp_client_wrapper_lifecycle.cc
   test_serial_wrapper_lifecycle.cc
-  test_udp_stop_lifecycle.cc
-  test_udp_options.cc
-  test_udp_failure.cc
-  test_udp_state.cc
-  test_tcp_client_error_mapping.cc
   test_uds_wrapper_lifecycle.cc
-  test_udp_server_wrapper_transport.cc
-  test_udp_server_wrapper_lifecycle.cc
-  test_udp_client_wrapper_lifecycle.cc
   test_serial_wrapper_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
@@ -142,15 +132,9 @@ foreach(
     set(test_label "unit_wrapper_serial")
   endif()
 
-  set(resource_lock "")
-  if(test_name MATCHES "tcp|udp")
-    set(test_label "${test_label}_loopback")
-    set(resource_lock "tcp_port_allocation")
-  endif()
-
   unilink_add_unit_gtest(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file}
-    "${test_label}" 120 "${resource_lock}"
+    "${test_label}" 120
   )
 endforeach()
 
@@ -219,18 +203,11 @@ set_tests_properties(
 # list to include fuzz tests, server session tests, and timeout tests
 foreach(
   test_file
-  transport_tcp_client.cc
-  transport_tcp_server.cc
   transport_uds_client.cc
   transport_uds_server.cc
   transport_uds_error_test.cc
   transport_serial.cc
-  transport_udp.cc
-  transport_udp_extended.cc
-  transport_tcp_client_policy.cc
   transport_uds_session_lifecycle.cc
-  test_tcp_client_lifecycle.cc
-  test_backpressure_strategy.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
@@ -251,10 +228,6 @@ foreach(
     set(test_label "unit_transport_backpressure_fast")
   endif()
 
-  if(test_name MATCHES "tcp|udp|backpressure")
-    set(test_label "${test_label}_loopback")
-  endif()
-
   unilink_add_unit_gtest(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file}
     "${test_label}" 30
@@ -268,24 +241,11 @@ unilink_add_unit_gtest(
   "unit_transport_reconnect_stable" 30
 )
 
-# Contract Compliance Tests
-unilink_add_unit_gtest(
-  run_unit_test_contract_compliance
-  ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc
-  "unit_transport_contract_loopback" 30
-)
-
 # New error handling tests
 unilink_add_unit_gtest(
   run_unit_test_tcp_abort
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_abort.cc
   "unit_transport_tcp_error" 30
-)
-
-unilink_add_unit_gtest(
-  run_unit_test_tcp_server_connectivity
-  ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_server_connectivity.cc
-  "unit_transport_tcp_connectivity_loopback" 30
 )
 
 unilink_add_unit_gtest(
@@ -319,13 +279,6 @@ unilink_add_unit_gtest(
   run_unit_transport_tcp_timeout_test
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_timeout_test.cc
   "unit_transport_tcp_timeout" 30
-)
-
-# Transport TCP Server Security Test
-unilink_add_unit_gtest(
-  run_unit_transport_tcp_server_security_test
-  ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server_security_test.cc
-  "unit_transport_tcp_security_loopback" 30
 )
 
 # Transport UDS Server Security Test
