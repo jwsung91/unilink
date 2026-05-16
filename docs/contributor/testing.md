@@ -38,8 +38,7 @@ ctest --output-on-failure
 
 **Suite toggles**
 - Master switch: `-DUNILINK_BUILD_TESTS=ON|OFF`
-- Performance-only toggle: `UNILINK_ENABLE_PERFORMANCE_TESTS`
-- Packaging tip: set `UNILINK_BUILD_TESTS=OFF` (and perf OFF) in vcpkg/air-gapped builds to skip fetching GoogleTest.
+- Packaging tip: set `UNILINK_BUILD_TESTS=OFF` in vcpkg/air-gapped builds to skip fetching GoogleTest.
 
 ---
 
@@ -74,7 +73,7 @@ ctest --test-dir build-windows --output-on-failure
 **Windows-specific notes**
 - Re-run CMake (or create a fresh `build-windows` directory) after updating the repository so that example binaries inherit the post-build step that copies `unilink.dll` beside each executable.
 - Serial error recovery scenarios rely on Unix-style device paths and are automatically skipped when running on Windows.
-- The async logging performance benchmark expects ≥50k messages/sec on Windows (versus 100k+ on Linux) because of OS timer granularity and scheduling differences.
+- The async logging timing sanity check uses a lower Windows threshold because of OS timer granularity and scheduling differences.
 
 ---
 
@@ -116,9 +115,6 @@ Individual test executables are available:
 
 # Thread safety and concurrency tests
 ./build/test/run_concurrency_safety_tests
-
-# Performance benchmarks
-./build/test/run_performance_tests
 
 # Stress and stability tests
 ./build/test/run_stress_tests
@@ -259,27 +255,10 @@ Thread safety and concurrent access patterns.
 
 ---
 
-### Performance Tests
+### Benchmarking
 
-Performance benchmarks and optimization validation.
-
-```bash
-./build/test/run_performance_tests
-```
-
-**Tests:**
-- TCP throughput measurement
-- Latency benchmarks
-- Memory allocation overhead
-- Connection establishment time
-- Concurrent connection handling
-
-**Example output:**
-```
-TCP Throughput: 950 Mb/s
-TCP Latency (avg): 120 μs
-Memory Pool Hit Rate: 98.5%
-```
+Standalone performance benchmarks live in the `unilink-lab/unilink-benchmarks` repository. Keep timing-sensitive
+latency, throughput, and strategy sweeps out of the core test tree.
 
 ---
 
@@ -467,7 +446,6 @@ cd build && ctest --output-on-failure
 - ✅ No memory leaks detected
 - ✅ No sanitizer errors
 - ✅ Code coverage maintained
-- ✅ Performance benchmarks within limits
 
 ---
 
@@ -665,24 +643,8 @@ cmake --build build
 
 ## Performance Regression Testing
 
-### Benchmark Baseline
-
-Establish performance baseline:
-
-```bash
-./build/test/run_performance_tests > baseline.txt
-```
-
-### Compare Against Baseline
-
-```bash
-./build/test/run_performance_tests > current.txt
-diff baseline.txt current.txt
-```
-
-### Automated Regression Detection
-
-CI/CD automatically detects performance regressions > 10%.
+Use the standalone `unilink-lab/unilink-benchmarks` repository for benchmark baselines, latency sweeps, strategy sweeps,
+and release benchmark artifacts.
 
 ---
 

@@ -367,7 +367,6 @@ jobs:
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
             -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -429,7 +428,6 @@ jobs:
             -DUNILINK_ENABLE_CONFIG=ON \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
             -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -454,66 +452,6 @@ jobs:
         with:
           name: integration-test-results-ubuntu-24.04-arm-gcc
           path: build-integration-arm64/Testing/
-          retention-days: 7
-          overwrite: true
-
-  # ── PERFORMANCE TESTS ─────────────────────────────────────────────────────────
-  performance-tests:
-    name: Performance Tests (ubuntu-24.04, gcc)
-    runs-on: ubuntu-24.04
-    needs: [compile]
-    timeout-minutes: 60
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Cache ccache
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/ccache
-          key: ccache-${{ runner.os }}-performance-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: ccache-${{ runner.os }}-performance-
-
-      - name: Install dependencies
-        uses: ./.github/actions/apt-install
-        with:
-          packages: "build-essential cmake ccache"
-
-      - name: Install dependencies with vcpkg
-        uses: ./.github/actions/setup-vcpkg
-        with:
-          triplet: x64-linux
-
-      - name: Configure CMake
-        run: |
-          cmake -S . -B build-perf \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
-            -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_DOCS=OFF \
-            -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
-            -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
-            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-      - name: Build performance tests
-        run: cmake --build build-perf -j $(nproc)
-
-      - name: Run performance tests
-        run: |
-          cd build-perf
-          ctest --output-on-failure --parallel 2 \
-            --label-regex "performance|benchmark|stress"
-
-      - name: Upload results
-        uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: performance-test-results
-          path: build-perf/Testing/
           retention-days: 7
           overwrite: true
 
@@ -622,7 +560,7 @@ jobs:
   summary:
     name: CI Summary
     runs-on: ubuntu-24.04
-    needs: [compile, unit-tests, windows, docs-snippets, integration-tests, integration-tests-arm64, performance-tests, memory-safety-tests, e2e-tests]
+    needs: [compile, unit-tests, windows, docs-snippets, integration-tests, integration-tests-arm64, memory-safety-tests, e2e-tests]
     if: always()
 
     steps:
@@ -637,6 +575,5 @@ jobs:
           echo "| Docs Snippets | ${{ needs.docs-snippets.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Integration Tests ARM64 | ${{ needs.integration-tests-arm64.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Performance Tests | ${{ needs.performance-tests.result == 'success' && '✅' || needs.performance-tests.result == 'skipped' && '⏭️' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Memory Safety Tests | ${{ needs.memory-safety-tests.result == 'success' && '✅' || needs.memory-safety-tests.result == 'skipped' && '⏭️' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| E2E Tests | ${{ needs.e2e-tests.result == 'success' && '✅' || needs.e2e-tests.result == 'skipped' && '⏭️' || '❌' }} |" >> $GITHUB_STEP_SUMMARY

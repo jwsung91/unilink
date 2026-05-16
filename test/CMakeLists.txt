@@ -84,17 +84,6 @@ add_subdirectory(integration)
 message(STATUS "Building E2E Tests")
 add_subdirectory(e2e)
 
-# Performance tests are optional (slower)
-if(UNILINK_ENABLE_PERFORMANCE_TESTS)
-  message(STATUS "Building Performance Tests (enabled)")
-  add_subdirectory(performance)
-else()
-  message(
-    STATUS
-      "Performance Tests disabled (use -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON to enable)"
-  )
-endif()
-
 # ============================================================================
 # LEGACY TESTS - To be migrated or removed
 # ============================================================================
@@ -169,19 +158,11 @@ message(STATUS "==== Test Structure ====")
 message(STATUS "  - unit/       : Fast unit tests (~5s with -j)")
 message(STATUS "  - integration/: Medium integration tests (~5s with -j)")
 message(STATUS "  - e2e/        : End-to-end scenarios (~3s with -j)")
-message(
-  STATUS
-    "  - performance/: Optional benchmarks (~30s with -j, disabled by default)"
-)
 message(STATUS "")
 message(STATUS "Run specific test groups with:")
 message(STATUS "  ctest -j$(nproc) -L unit         # Fast feedback")
 message(STATUS "  ctest -j$(nproc) -L integration  # Integration tests")
-message(
-  STATUS "  ctest -j$(nproc) -LE performance # All except performance (default)"
-)
+message(STATUS "  ctest -j$(nproc) -L e2e          # End-to-end tests")
 message(STATUS "  ctest -j$(nproc)                 # All tests")
 message(STATUS "")
-message(STATUS "Enable performance tests:")
-message(STATUS "  cmake -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON ..")
 message(STATUS "========================")
