@@ -47,7 +47,10 @@ function(unilink_add_unit_gtest target source_path labels timeout)
   gtest_discover_tests(${target} PROPERTIES ${_test_properties})
 
   list(APPEND _unilink_unit_test_targets ${target})
-  set(_unilink_unit_test_targets "${_unilink_unit_test_targets}" PARENT_SCOPE)
+  set(_unilink_unit_test_targets
+      "${_unilink_unit_test_targets}"
+      PARENT_SCOPE
+  )
 endfunction()
 
 foreach(
@@ -113,10 +116,8 @@ foreach(test_file test_pool_limits.cc)
 endforeach()
 
 # Wrapper tests (separate executables across TCP/UDP/UDS/Serial)
-foreach(
-  test_file
-  test_serial_wrapper_lifecycle.cc
-  test_serial_wrapper_options.cc
+foreach(test_file test_serial_wrapper_lifecycle.cc
+                  test_serial_wrapper_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
@@ -200,12 +201,8 @@ set_tests_properties(
 
 # Transport tests (fast, unit-level without real network dependencies) Updated
 # list to include fuzz tests, server session tests, and timeout tests
-foreach(
-  test_file
-  transport_uds_client.cc
-  transport_uds_server.cc
-  transport_serial.cc
-  transport_uds_session_lifecycle.cc
+foreach(test_file transport_uds_client.cc transport_uds_server.cc
+                  transport_serial.cc transport_uds_session_lifecycle.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 

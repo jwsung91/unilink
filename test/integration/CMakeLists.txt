@@ -174,8 +174,8 @@ foreach(test_file test_serial_builder_validation.cc test_serial_loopback.cc
   get_filename_component(test_name ${test_file} NAME_WE)
   unilink_add_integration_gtest(
     run_integration_${test_name}
-    ${CMAKE_CURRENT_SOURCE_DIR}/serial/${test_file}
-    "integration_serial_medium" 300 "tcp_port_allocation"
+    ${CMAKE_CURRENT_SOURCE_DIR}/serial/${test_file} "integration_serial_medium"
+    300 "tcp_port_allocation"
   )
 endforeach()
 
