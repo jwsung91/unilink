@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 11:17:05</td>
+            <td class="headerValue">2026-05-16 13:18:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">92.4&nbsp;%</td>
@@ -357,7 +357,7 @@
 <span id="L264"><span class="lineNum">     264</span>         [<span class="tlaGBC" title="Branch 0 was taken 110 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         110 :   impl_-&gt;join_ioc_thread(false);</span></span>
 <span id="L265"><span class="lineNum">     265</span>         [<span class="tlaGBC" title="Branch 0 was taken 110 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         110 : }</span></span>
 <span id="L266"><span class="lineNum">     266</span>                 :             : </span>
-<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">        1183 : bool TcpClient::is_connected() const { return get_impl()-&gt;connected_.load(); }</span></span>
+<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">        1184 : bool TcpClient::is_connected() const { return get_impl()-&gt;connected_.load(); }</span></span>
 <span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaGNC">        1129 : bool TcpClient::is_backpressure_active() const { return get_impl()-&gt;backpressure_active_.load(); }</span></span>
 <span id="L269"><span class="lineNum">     269</span>                 :             : </span>
 <span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">          52 : boost::asio::any_io_executor TcpClient::get_executor() { return impl_-&gt;socket_.get_executor(); }</span></span>
