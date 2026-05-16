@@ -32,12 +32,12 @@ using namespace std::chrono_literals;
 namespace unilink {
 namespace test {
 
-class UdsServerSessionCoverageTest : public Test {
+class UdsServerSessionLifecycleTest : public Test {
  protected:
   boost::asio::io_context ioc;
 };
 
-TEST_F(UdsServerSessionCoverageTest, RedundantStop) {
+TEST_F(UdsServerSessionLifecycleTest, RedundantStop) {
   auto mock_socket = std::make_unique<unilink::test::mocks::MockUdsSocket>();
   EXPECT_CALL(*mock_socket, close(_)).Times(1);
 
@@ -49,7 +49,7 @@ TEST_F(UdsServerSessionCoverageTest, RedundantStop) {
   ioc.run();
 }
 
-TEST_F(UdsServerSessionCoverageTest, BackpressureLimitEnforced) {
+TEST_F(UdsServerSessionLifecycleTest, BackpressureLimitEnforced) {
   auto mock_socket = std::make_unique<unilink::test::mocks::MockUdsSocket>();
   auto session = std::make_shared<UdsServerSession>(ioc, std::move(mock_socket), 100, 0);
 
@@ -62,7 +62,7 @@ TEST_F(UdsServerSessionCoverageTest, BackpressureLimitEnforced) {
   ioc.run();
 }
 
-TEST_F(UdsServerSessionCoverageTest, IdleTimeoutExpiration) {
+TEST_F(UdsServerSessionLifecycleTest, IdleTimeoutExpiration) {
   auto mock_socket = std::make_unique<unilink::test::mocks::MockUdsSocket>();
   EXPECT_CALL(*mock_socket, async_read_some(_, _)).Times(AtLeast(1));
   EXPECT_CALL(*mock_socket, close(_)).Times(1);

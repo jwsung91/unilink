@@ -28,7 +28,7 @@ using namespace unilink;
 namespace unilink {
 namespace test {
 
-TEST(UdpClientCoverageTest, StartMultipleTimes) {
+TEST(UdpClientWrapperLifecycleTest, StartMultipleTimes) {
   config::UdpConfig cfg;
   cfg.local_port = 0;
   wrapper::UdpClient client(cfg);
@@ -37,7 +37,7 @@ TEST(UdpClientCoverageTest, StartMultipleTimes) {
   (void)client.start();
 }
 
-TEST(UdpClientCoverageTest, ExternalIoContextManagement) {
+TEST(UdpClientWrapperLifecycleTest, ExternalIoContextManagement) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   config::UdpConfig cfg;
   cfg.local_port = 0;
@@ -52,21 +52,21 @@ TEST(UdpClientCoverageTest, ExternalIoContextManagement) {
   EXPECT_TRUE(ioc->stopped());
 }
 
-TEST(UdpClientCoverageTest, SendWithoutConnection) {
+TEST(UdpClientWrapperLifecycleTest, SendWithoutConnection) {
   config::UdpConfig cfg;
   wrapper::UdpClient client(cfg);
   EXPECT_FALSE(client.send("data"));
   EXPECT_FALSE(client.send_line("line"));
 }
 
-TEST(UdpClientCoverageTest, FramerIntegration) {
+TEST(UdpClientWrapperLifecycleTest, FramerIntegration) {
   config::UdpConfig cfg;
   wrapper::UdpClient client(cfg);
   client.framer(std::make_unique<framer::LineFramer>());
   client.on_message([](const wrapper::MessageContext&) {});
 }
 
-TEST(UdpClientCoverageTest, MessageBatchHandlerAttachesAfterFramer) {
+TEST(UdpClientWrapperLifecycleTest, MessageBatchHandlerAttachesAfterFramer) {
   auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
   wrapper::UdpClient client(fake_channel);
   std::atomic<int> batches{0};
@@ -84,7 +84,7 @@ TEST(UdpClientCoverageTest, MessageBatchHandlerAttachesAfterFramer) {
   EXPECT_EQ(batches.load(), 100);
 }
 
-TEST(UdpClientCoverageTest, StopWithoutStart) {
+TEST(UdpClientWrapperLifecycleTest, StopWithoutStart) {
   config::UdpConfig cfg;
   wrapper::UdpClient client(cfg);
   client.stop();

@@ -16,42 +16,43 @@
 
 #include <gtest/gtest.h>
 
-#include "unilink/builder/udp_builder.hpp"
+#include <chrono>
+
+#include "unilink/builder/uds_builder.hpp"
 #include "unilink/framer/line_framer.hpp"
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 namespace unilink {
 namespace test {
 
-TEST(UdpBuilderCoverageTest, UdpClientBuilderSetters) {
-  auto udp = builder::UdpClientBuilder(0)
-                 .auto_start(false)  // Disable auto-start for stability in builder tests
-                 .local_port(0)
-                 .remote("127.0.0.1", 5678)
-                 .independent_context(true)
-                 .broadcast(true)
-                 .reuse_address(true)
-                 .on_data([](const wrapper::MessageContext&) {})
-                 .on_connect([](const wrapper::ConnectionContext&) {})
-                 .on_disconnect([](const wrapper::ConnectionContext&) {})
-                 .on_error([](const wrapper::ErrorContext&) {})
-                 .framer([]() { return std::make_unique<framer::LineFramer>(); })
-                 .on_message([](const wrapper::MessageContext&) {})
-                 .on_data([](auto&&) {})
-                 .on_error([](auto&&) {})
-                 .build();
+TEST(UdsBuilderOptionsTest, UdsClientBuilderSetters) {
+  auto client = builder::UdsClientBuilder("/tmp/test_uds_client_builder.sock")
+                    .auto_start(false)
+                    .independent_context(true)
+                    .retry_interval(100ms)
+                    .max_retries(5)
+                    .connection_timeout(1000ms)
+                    .on_data([](const wrapper::MessageContext&) {})
+                    .on_connect([](const wrapper::ConnectionContext&) {})
+                    .on_disconnect([](const wrapper::ConnectionContext&) {})
+                    .on_error([](const wrapper::ErrorContext&) {})
+                    .framer([]() { return std::make_unique<framer::LineFramer>(); })
+                    .on_message([](const wrapper::MessageContext&) {})
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
 
-  ASSERT_NE(udp, nullptr);
+  ASSERT_NE(client, nullptr);
 }
 
-TEST(UdpBuilderCoverageTest, UdpServerBuilderSetters) {
-  auto server = builder::UdpServerBuilder(0)
+TEST(UdsBuilderOptionsTest, UdsServerBuilderSetters) {
+  auto server = builder::UdsServerBuilder("/tmp/test_uds_server_builder.sock")
                     .auto_start(false)
-                    .local_port(0)
                     .independent_context(true)
-                    .broadcast(true)
-                    .reuse_address(true)
+                    .idle_timeout(5000ms)
+                    .max_clients(50)
                     .on_data([](const wrapper::MessageContext&) {})
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_disconnect([](const wrapper::ConnectionContext&) {})

@@ -34,7 +34,7 @@ namespace {
 using namespace unilink;
 using namespace unilink::test;
 
-class AdvancedTcpClientCoverageTest : public ::testing::Test {
+class TcpClientWrapperLifecycleTest : public ::testing::Test {
  protected:
   void SetUp() override {
     test_port_ = TestUtils::getAvailableTestPort();
@@ -52,7 +52,7 @@ class AdvancedTcpClientCoverageTest : public ::testing::Test {
   std::shared_ptr<wrapper::TcpClient> client_;
 };
 
-TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
+TEST_F(TcpClientWrapperLifecycleTest, ClientStartStopMultipleTimes) {
   client_ = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   for (int i = 0; i < 3; ++i) {
     auto f = client_->start();
@@ -63,7 +63,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
   }
 }
 
-TEST_F(AdvancedTcpClientCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
+TEST_F(TcpClientWrapperLifecycleTest, ExternalContextNotStoppedWhenNotManaged) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   auto work = boost::asio::make_work_guard(*ioc);
 
@@ -82,7 +82,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
   if (t.joinable()) t.join();
 }
 
-TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
+TEST_F(TcpClientWrapperLifecycleTest, ExternalContextManagedRunsAndStops) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   client_ = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, ioc);
   client_->manage_external_context(true);
@@ -95,7 +95,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return ioc->stopped() || ioc->poll() == 0; }, 1000));
 }
 
-TEST_F(AdvancedTcpClientCoverageTest, ManagedExternalContextRestartsStoppedIoContext) {
+TEST_F(TcpClientWrapperLifecycleTest, ManagedExternalContextRestartsStoppedIoContext) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   ioc->stop();
 
@@ -110,7 +110,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ManagedExternalContextRestartsStoppedIoCon
   EXPECT_TRUE(ioc->stopped());
 }
 
-TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
+TEST_F(TcpClientWrapperLifecycleTest, AutoManageStartsClientAndInvokesCallback) {
   std::atomic<bool> connected{false};
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(true)
@@ -122,7 +122,7 @@ TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 10000));
 }
 
-TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
+TEST_F(TcpClientWrapperLifecycleTest, SendMultipleMessages) {
   std::atomic<int> received{0};
   // Ensure handler is registered BEFORE anything starts
   server_->on_data([&](const wrapper::MessageContext&) { received++; });

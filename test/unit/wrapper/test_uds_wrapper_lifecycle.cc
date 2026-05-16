@@ -40,7 +40,7 @@ using namespace std::chrono_literals;
 namespace unilink::wrapper {
 namespace {
 
-TEST(UdsClientWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
+TEST(UdsClientWrapperLifecycleTest, AutoManageStartsInjectedTransport) {
   boost::asio::io_context ioc;
   config::UdsClientConfig cfg;
   cfg.socket_path = test::TestUtils::makeUniqueUdsSocketPath("uwc").string();
@@ -67,7 +67,7 @@ TEST(UdsClientWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.run_for(50ms);
 }
 
-TEST(UdsClientWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
+TEST(UdsClientWrapperLifecycleTest, StartFutureReflectsTransportFailure) {
   boost::asio::io_context ioc;
   config::UdsClientConfig cfg;
   cfg.socket_path = test::TestUtils::makeUniqueUdsSocketPath("uwc-fail").string();
@@ -94,7 +94,7 @@ TEST(UdsClientWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
   ioc.run_for(50ms);
 }
 
-TEST(UdsClientWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
+TEST(UdsClientWrapperLifecycleTest, ManagedExternalContextStopsOnShutdown) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   auto socket_path = test::TestUtils::makeUniqueUdsSocketPath("uwc-managed").string();
   test::TestUtils::removeFileIfExists(socket_path);
@@ -121,7 +121,7 @@ TEST(UdsClientWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   test::TestUtils::removeFileIfExists(socket_path);
 }
 
-TEST(UdsServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
+TEST(UdsServerWrapperLifecycleTest, AutoManageStartsInjectedTransport) {
   boost::asio::io_context ioc;
   config::UdsServerConfig cfg;
   cfg.socket_path = test::TestUtils::makeUniqueUdsSocketPath("uws").string();
@@ -149,7 +149,7 @@ TEST(UdsServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.run_for(50ms);
 }
 
-TEST(UdsServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
+TEST(UdsServerWrapperLifecycleTest, StartFutureReflectsBindFailure) {
   boost::asio::io_context ioc;
   config::UdsServerConfig cfg;
   cfg.socket_path = test::TestUtils::makeUniqueUdsSocketPath("uws-fail").string();
@@ -179,7 +179,7 @@ TEST(UdsServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
   ioc.run_for(50ms);
 }
 
-TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
+TEST(UdsServerWrapperLifecycleTest, ManagedExternalContextStopsOnShutdown) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   auto socket_path = test::TestUtils::makeUniqueUdsSocketPath("uws-managed").string();
   test::TestUtils::removeFileIfExists(socket_path);
@@ -199,7 +199,7 @@ TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   test::TestUtils::removeFileIfExists(socket_path);
 }
 
-TEST(UdsServerWrapperAdvancedTest, FramedMessageDoesNotDeadlock) {
+TEST(UdsServerWrapperLifecycleTest, FramedMessageDoesNotDeadlock) {
   test::wrapper_support::UdsServerLoopbackHarness harness("uws-framer");
   auto server = harness.start_server();
   std::atomic<int> messages{0};

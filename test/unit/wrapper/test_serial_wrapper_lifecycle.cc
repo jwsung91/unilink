@@ -95,7 +95,7 @@ class FakeSerialPort : public interface::SerialPortInterface {
 
 }  // namespace
 
-class SerialWrapperAdvancedTest : public ::testing::Test {
+class SerialWrapperLifecycleTest : public ::testing::Test {
  protected:
   void SetUp() override {
 #ifdef _WIN32
@@ -108,7 +108,7 @@ class SerialWrapperAdvancedTest : public ::testing::Test {
   std::string device_;
 };
 
-TEST_F(SerialWrapperAdvancedTest, AutoManageStartsAndStopsChannel) {
+TEST_F(SerialWrapperLifecycleTest, AutoManageStartsAndStopsChannel) {
   auto serial = unilink::serial(device_, 9600).auto_start(true).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   std::atomic<bool> connected{false};
@@ -124,7 +124,7 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsAndStopsChannel) {
   EXPECT_TRUE(disconnected.load() || !serial->connected());
 }
 
-TEST_F(SerialWrapperAdvancedTest, ConfigurationSetters) {
+TEST_F(SerialWrapperLifecycleTest, ConfigurationSetters) {
   auto serial = std::make_shared<wrapper::Serial>(device_, 9600);
 
   serial->baud_rate(115200);
@@ -139,7 +139,7 @@ TEST_F(SerialWrapperAdvancedTest, ConfigurationSetters) {
   serial->stop();
 }
 
-TEST_F(SerialWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
+TEST_F(SerialWrapperLifecycleTest, AutoManageStartsInjectedTransport) {
   boost::asio::io_context ioc;
 
   config::SerialConfig cfg;
@@ -160,7 +160,7 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.run_for(50ms);
 }
 
-TEST_F(SerialWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
+TEST_F(SerialWrapperLifecycleTest, StartFutureReflectsTransportFailure) {
   boost::asio::io_context ioc;
 
   config::SerialConfig cfg;

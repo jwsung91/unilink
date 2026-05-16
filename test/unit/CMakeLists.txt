@@ -34,15 +34,15 @@ foreach(
   test_error_handler.cc
   test_input_validator.cc
   test_input_validator_edge.cc
-  test_logger_advanced.cc
-  test_memory_advanced.cc
+  test_logger_behaviors.cc
+  test_memory_tracker_and_buffer.cc
   test_pool_stress.cc
-  test_io_context_manager_coverage.cc
+  test_io_context_manager_lifecycle.cc
   test_error_mapping.cc
   test_error_mapping_exhaustive.cc
-  test_error_codes_coverage.cc
-  test_error_mapping_branches.cc
-  test_memory_pool_branches.cc
+  test_error_codes_to_string.cc
+  test_error_mapping_edge_cases.cc
+  test_memory_pool_edge_cases.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -75,8 +75,8 @@ foreach(
 endforeach()
 
 # Builder tests (separate executables)
-foreach(test_file test_builder.cc test_udp_builder_coverage.cc
-                  test_uds_builder_coverage.cc
+foreach(test_file test_builder.cc test_udp_builder_options.cc
+                  test_uds_builder_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -150,19 +150,19 @@ endforeach()
 # Wrapper tests (separate executables across TCP/UDP/UDS/Serial)
 foreach(
   test_file
-  test_tcp_server_advanced.cc
-  test_tcp_client_advanced.cc
-  test_serial_advanced.cc
+  test_tcp_server_wrapper_lifecycle.cc
+  test_tcp_client_wrapper_lifecycle.cc
+  test_serial_wrapper_lifecycle.cc
   test_udp_stop_lifecycle.cc
   test_udp_options.cc
   test_udp_failure.cc
   test_udp_state.cc
   test_tcp_client_error_mapping.cc
-  test_uds_advanced.cc
-  test_udp_server_advanced.cc
-  test_udp_server_coverage.cc
-  test_udp_client_coverage.cc
-  test_serial_coverage.cc
+  test_uds_wrapper_lifecycle.cc
+  test_udp_server_wrapper_transport.cc
+  test_udp_server_wrapper_lifecycle.cc
+  test_udp_client_wrapper_lifecycle.cc
+  test_serial_wrapper_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -284,7 +284,7 @@ foreach(
   transport_udp.cc
   transport_udp_extended.cc
   transport_tcp_client_policy.cc
-  transport_uds_session_coverage.cc
+  transport_uds_session_lifecycle.cc
   test_tcp_client_lifecycle.cc
   test_backpressure_strategy.cc
 )
@@ -581,35 +581,35 @@ add_dependencies(
   run_unit_test_error_handler
   run_unit_test_input_validator
   run_unit_test_input_validator_edge
-  run_unit_test_logger_advanced
-  run_unit_test_memory_advanced
+  run_unit_test_logger_behaviors
+  run_unit_test_memory_tracker_and_buffer
   run_unit_test_pool_stress
-  run_unit_test_io_context_manager_coverage
+  run_unit_test_io_context_manager_lifecycle
   run_unit_test_error_mapping
   run_unit_test_error_mapping_exhaustive
-  run_unit_test_error_codes_coverage
-  run_unit_test_error_mapping_branches
-  run_unit_test_memory_pool_branches
+  run_unit_test_error_codes_to_string
+  run_unit_test_error_mapping_edge_cases
+  run_unit_test_memory_pool_edge_cases
   run_unit_test_builder
-  run_unit_test_udp_builder_coverage
-  run_unit_test_uds_builder_coverage
+  run_unit_test_udp_builder_options
+  run_unit_test_uds_builder_options
   run_unit_test_config
   run_unit_test_config_security
   run_unit_test_config_failure
   run_unit_test_pool_limits
-  run_unit_test_tcp_server_advanced
-  run_unit_test_tcp_client_advanced
-  run_unit_test_serial_advanced
+  run_unit_test_tcp_server_wrapper_lifecycle
+  run_unit_test_tcp_client_wrapper_lifecycle
+  run_unit_test_serial_wrapper_lifecycle
   run_unit_test_udp_stop_lifecycle
   run_unit_test_udp_options
   run_unit_test_udp_failure
   run_unit_test_udp_state
   run_unit_test_tcp_client_error_mapping
-  run_unit_test_uds_advanced
-  run_unit_test_udp_server_advanced
-  run_unit_test_udp_server_coverage
-  run_unit_test_udp_client_coverage
-  run_unit_test_serial_coverage
+  run_unit_test_uds_wrapper_lifecycle
+  run_unit_test_udp_server_wrapper_transport
+  run_unit_test_udp_server_wrapper_lifecycle
+  run_unit_test_udp_client_wrapper_lifecycle
+  run_unit_test_serial_wrapper_options
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
@@ -620,7 +620,7 @@ add_dependencies(
   run_unit_transport_udp
   run_unit_transport_udp_extended
   run_unit_transport_tcp_client_policy
-  run_unit_transport_uds_session_coverage
+  run_unit_transport_uds_session_lifecycle
   run_unit_test_tcp_client_lifecycle
   run_unit_test_backpressure_strategy
   run_unit_test_reconnect_decider

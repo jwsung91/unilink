@@ -26,7 +26,7 @@ using namespace unilink::diagnostics;
 namespace unilink {
 namespace test {
 
-TEST(ErrorMappingBranchTest, ToUnilinkErrorCodeBranches) {
+TEST(ErrorMappingEdgeCaseTest, ToUnilinkErrorCodeBranches) {
   // Success case
   EXPECT_EQ(to_unilink_error_code(boost::system::error_code()), ErrorCode::Success);
 
@@ -45,7 +45,7 @@ TEST(ErrorMappingBranchTest, ToUnilinkErrorCodeBranches) {
   EXPECT_EQ(to_unilink_error_code(boost::asio::error::not_found), ErrorCode::IoError);
 }
 
-TEST(ErrorMappingBranchTest, IsRetryableTcpConnectErrorBranches) {
+TEST(ErrorMappingEdgeCaseTest, IsRetryableTcpConnectErrorBranches) {
   EXPECT_FALSE(is_retryable_tcp_connect_error(boost::system::error_code()));
   EXPECT_TRUE(is_retryable_tcp_connect_error(boost::asio::error::connection_refused));
   EXPECT_TRUE(is_retryable_tcp_connect_error(boost::asio::error::timed_out));
@@ -59,7 +59,7 @@ TEST(ErrorMappingBranchTest, IsRetryableTcpConnectErrorBranches) {
   EXPECT_TRUE(is_retryable_tcp_connect_error(boost::asio::error::access_denied));
 }
 
-TEST(ErrorMappingBranchTest, IsRetryableUdsConnectErrorBranches) {
+TEST(ErrorMappingEdgeCaseTest, IsRetryableUdsConnectErrorBranches) {
   EXPECT_FALSE(is_retryable_uds_connect_error(boost::system::error_code()));
   EXPECT_TRUE(is_retryable_uds_connect_error(boost::asio::error::connection_refused));
   EXPECT_TRUE(is_retryable_uds_connect_error(make_error_code(boost::system::errc::no_such_file_or_directory)));
@@ -71,7 +71,7 @@ TEST(ErrorMappingBranchTest, IsRetryableUdsConnectErrorBranches) {
   EXPECT_TRUE(is_retryable_uds_connect_error(boost::asio::error::access_denied));
 }
 
-TEST(ErrorMappingBranchTest, ToErrorContextBranches) {
+TEST(ErrorMappingEdgeCaseTest, ToErrorContextBranches) {
   // Branch with boost_error
   ErrorInfo info_with_boost(ErrorLevel::ERROR, ErrorCategory::COMMUNICATION, "comp", "op", "msg",
                             boost::asio::error::connection_refused);

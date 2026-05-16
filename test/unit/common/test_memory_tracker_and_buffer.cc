@@ -10,7 +10,7 @@
 
 using namespace unilink::memory;
 
-class MemoryAdvancedTest : public ::testing::Test {
+class MemoryTrackerAndBufferTest : public ::testing::Test {
  protected:
   void SetUp() override {
     MemoryTracker::instance().clear_tracking_data();
@@ -20,7 +20,7 @@ class MemoryAdvancedTest : public ::testing::Test {
   void TearDown() override { MemoryTracker::instance().clear_tracking_data(); }
 };
 
-TEST_F(MemoryAdvancedTest, MemoryTrackerDetailedStats) {
+TEST_F(MemoryTrackerAndBufferTest, MemoryTrackerDetailedStats) {
   auto& tracker = MemoryTracker::instance();
   void* ptr1 = (void*)0x1234;
   void* ptr2 = (void*)0x5678;
@@ -39,7 +39,7 @@ TEST_F(MemoryAdvancedTest, MemoryTrackerDetailedStats) {
   EXPECT_EQ(stats.current_bytes_allocated, 200);
 }
 
-TEST_F(MemoryAdvancedTest, MemoryTrackerControl) {
+TEST_F(MemoryTrackerAndBufferTest, MemoryTrackerControl) {
   auto& tracker = MemoryTracker::instance();
   tracker.disable_tracking();
   EXPECT_FALSE(tracker.tracking_enabled());
@@ -53,7 +53,7 @@ TEST_F(MemoryAdvancedTest, MemoryTrackerControl) {
   EXPECT_EQ(tracker.stats().total_allocations, 1);
 }
 
-TEST_F(MemoryAdvancedTest, ScopedTracker) {
+TEST_F(MemoryTrackerAndBufferTest, ScopedTracker) {
   auto& tracker = MemoryTracker::instance();
   void* ptr = (void*)0xAAAA;
 
@@ -66,7 +66,7 @@ TEST_F(MemoryAdvancedTest, ScopedTracker) {
   }
 }
 
-TEST_F(MemoryAdvancedTest, ReportingMethods) {
+TEST_F(MemoryTrackerAndBufferTest, ReportingMethods) {
   auto& tracker = MemoryTracker::instance();
   tracker.track_allocation((void*)0x1, 10, nullptr, 0, nullptr);
 
@@ -77,7 +77,7 @@ TEST_F(MemoryAdvancedTest, ReportingMethods) {
   EXPECT_NO_THROW(tracker.log_leak_report());
 }
 
-TEST_F(MemoryAdvancedTest, SafeDataBufferComprehensive) {
+TEST_F(MemoryTrackerAndBufferTest, SafeDataBufferComprehensive) {
   std::string original = "Unilink Safe Buffer Test";
   SafeDataBuffer buffer(original);
 
@@ -108,7 +108,7 @@ TEST_F(MemoryAdvancedTest, SafeDataBufferComprehensive) {
   EXPECT_EQ(buffer.size(), 10);
 }
 
-TEST_F(MemoryAdvancedTest, SafeDataBufferErrorCases) {
+TEST_F(MemoryTrackerAndBufferTest, SafeDataBufferErrorCases) {
   // Null pointer with size > 0
   EXPECT_THROW(SafeDataBuffer(static_cast<const uint8_t*>(nullptr), 10), std::invalid_argument);
   EXPECT_THROW(SafeDataBuffer(static_cast<const char*>(nullptr), 10), std::invalid_argument);
@@ -124,7 +124,7 @@ TEST_F(MemoryAdvancedTest, SafeDataBufferErrorCases) {
   EXPECT_TRUE(buffer.valid());
 }
 
-TEST_F(MemoryAdvancedTest, SafeDataBufferFactory) {
+TEST_F(MemoryTrackerAndBufferTest, SafeDataBufferFactory) {
   using namespace safe_buffer_factory;
 
   EXPECT_EQ(from_string("test").as_string(), "test");
@@ -137,7 +137,7 @@ TEST_F(MemoryAdvancedTest, SafeDataBufferFactory) {
   EXPECT_EQ(from_span(ConstByteSpan(vec.data(), 3)).size(), 3);
 }
 
-TEST_F(MemoryAdvancedTest, MemoryTrackerLeakDetection) {
+TEST_F(MemoryTrackerAndBufferTest, MemoryTrackerLeakDetection) {
   auto& tracker = MemoryTracker::instance();
   tracker.track_allocation((void*)0xBBBB, 50, __FILE__, __LINE__, __FUNCTION__);
 

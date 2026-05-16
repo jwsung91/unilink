@@ -27,13 +27,13 @@ using namespace std::chrono_literals;
 namespace unilink {
 namespace test {
 
-TEST(SerialCoverageTest, StartMultipleTimes) {
+TEST(SerialWrapperOptionsTest, StartMultipleTimes) {
   wrapper::Serial s("/dev/null", 9600);
   (void)s.start();
   (void)s.start();
 }
 
-TEST(SerialCoverageTest, ExternalIoContextManagement) {
+TEST(SerialWrapperOptionsTest, ExternalIoContextManagement) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   wrapper::Serial s("/dev/null", 9600, ioc);
   s.manage_external_context(true);
@@ -43,7 +43,7 @@ TEST(SerialCoverageTest, ExternalIoContextManagement) {
   EXPECT_TRUE(ioc->stopped());
 }
 
-TEST(SerialCoverageTest, ConfigurationParsing) {
+TEST(SerialWrapperOptionsTest, ConfigurationParsing) {
   wrapper::Serial s("/dev/null", 115200);
   s.parity("even").flow_control("hardware").data_bits(7).stop_bits(2).retry_interval(100ms);
 
@@ -53,19 +53,19 @@ TEST(SerialCoverageTest, ConfigurationParsing) {
   s.parity("odd").flow_control("software").parity("none").flow_control("none");
 }
 
-TEST(SerialCoverageTest, FramerIntegration) {
+TEST(SerialWrapperOptionsTest, FramerIntegration) {
   wrapper::Serial s("/dev/null", 9600);
   s.framer(std::make_unique<framer::LineFramer>());
   s.on_message([](const wrapper::MessageContext&) {});
 }
 
-TEST(SerialCoverageTest, SendWithoutConnection) {
+TEST(SerialWrapperOptionsTest, SendWithoutConnection) {
   wrapper::Serial s("/dev/null", 9600);
   EXPECT_FALSE(s.send("data"));
   EXPECT_FALSE(s.send_line("line"));
 }
 
-TEST(SerialCoverageTest, StopWithoutStart) {
+TEST(SerialWrapperOptionsTest, StopWithoutStart) {
   wrapper::Serial s("/dev/null", 9600);
   s.stop();
 }

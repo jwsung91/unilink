@@ -23,7 +23,7 @@ using namespace unilink::memory;
 namespace unilink {
 namespace test {
 
-TEST(MemoryPoolBranchTest, LargeAllocationBypass) {
+TEST(MemoryPoolEdgeCaseTest, LargeAllocationBypass) {
   MemoryPool pool;
   // XLARGE is 64KB. Request 128KB.
   size_t large_size = 128 * 1024;
@@ -38,7 +38,7 @@ TEST(MemoryPoolBranchTest, LargeAllocationBypass) {
   pool.release(std::move(buf), large_size);
 }
 
-TEST(MemoryPoolBranchTest, PoolCapacityLimit) {
+TEST(MemoryPoolEdgeCaseTest, PoolCapacityLimit) {
   // Initial pool size is dummy, max_pool_size is 4096.
   // buckets_.size() is 4. Each bucket capacity = 4096 / 4 = 1024 bytes.
   // For SMALL bucket (1024 bytes), capacity = 1024 / 1024 = 1 buffer.
@@ -59,13 +59,13 @@ TEST(MemoryPoolBranchTest, PoolCapacityLimit) {
   EXPECT_GE(s.pool_hits, 1);
 }
 
-TEST(MemoryPoolBranchTest, InvalidBufferSize) {
+TEST(MemoryPoolEdgeCaseTest, InvalidBufferSize) {
   MemoryPool pool;
   EXPECT_THROW(pool.acquire(0), std::invalid_argument);
   EXPECT_THROW(pool.acquire(100 * 1024 * 1024), std::invalid_argument);
 }
 
-TEST(MemoryPoolBranchTest, PooledBufferBounds) {
+TEST(MemoryPoolEdgeCaseTest, PooledBufferBounds) {
   PooledBuffer buf(10);
   EXPECT_THROW(buf.at(10), std::out_of_range);
 
@@ -73,7 +73,7 @@ TEST(MemoryPoolBranchTest, PooledBufferBounds) {
   EXPECT_THROW(const_buf.at(10), std::out_of_range);
 }
 
-TEST(MemoryPoolBranchTest, StatsAndMetrics) {
+TEST(MemoryPoolEdgeCaseTest, StatsAndMetrics) {
   MemoryPool pool;
   EXPECT_EQ(pool.hit_rate(), 0.0);
 
