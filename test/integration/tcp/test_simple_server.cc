@@ -156,7 +156,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
  */
 TEST_F(SimpleServerTest, ClientLimitSingleClient) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).single_client().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  server_ = unilink::tcp_server(test_port).max_clients(1).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
@@ -168,7 +168,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
  */
 TEST_F(SimpleServerTest, ClientLimitMultiClient) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port).multi_client(3).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  server_ = unilink::tcp_server(test_port).max_clients(3).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
@@ -186,15 +186,14 @@ TEST_F(SimpleServerTest, ClientLimitDefaultAllowsServerCreation) {
 }
 
 /**
- * @brief Client Limit Feature Test - Builder Validation
+ * @brief Client Limit Feature Test - Explicit Unlimited Limit
  */
-TEST_F(SimpleServerTest, ClientLimitBuilderValidation) {
+TEST_F(SimpleServerTest, MaxClientsZeroAllowsServerCreation) {
   uint16_t test_port = getTestPort();
-  EXPECT_THROW(
-      {
-        server_ = unilink::tcp_server(test_port).multi_client(0).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
-      },
-      unilink::diagnostics::BuilderException);
+  server_ = unilink::tcp_server(test_port).max_clients(0).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+
+  ASSERT_NE(server_, nullptr);
+  EXPECT_TRUE(server_->start().get());
 }
 
 int main(int argc, char** argv) {

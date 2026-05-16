@@ -72,7 +72,7 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   server_ = unilink::tcp_server(test_port)
                 .on_data([](const MessageContext&) {})
                 .on_error([](const ErrorContext&) {})
-                .single_client()
+                .max_clients(1)
                 .port_retry(true, 3, 1000)
                 .build();
   ASSERT_NE(server_, nullptr) << "Server creation failed";

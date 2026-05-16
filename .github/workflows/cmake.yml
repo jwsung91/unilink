@@ -325,7 +325,7 @@ jobs:
           # Full C++ coverage already runs in the pure C++ matrix.
           # Python-enabled jobs keep only a fast C++ smoke subset, then verify
           # install/import/pytest on top of that.
-          ctest -C "${env:BUILD_TYPE}" --output-on-failure -L "unit_(common_fast|builder_fast|config_fast|transport_fast)|stable"
+          ctest -C "${env:BUILD_TYPE}" --output-on-failure -L "unit_(common_fast|builder_fast|config_fast|memory_fast|transport_.*_fast|transport_reconnect_stable)"
 
       - name: Test (Linux/macOS, Python C++ Smoke)
         if: runner.os != 'Windows' && matrix.build_python == 'ON'
@@ -334,7 +334,7 @@ jobs:
           # Full C++ coverage already runs in the pure C++ matrix.
           # Python-enabled jobs keep only a fast C++ smoke subset, then verify
           # install/import/pytest on top of that.
-          ctest --output-on-failure --parallel 2 -L 'unit_(common_fast|builder_fast|config_fast|transport_fast)|stable'
+          ctest --output-on-failure --parallel 2 -L 'unit_(common_fast|builder_fast|config_fast|memory_fast|transport_.*_fast|transport_reconnect_stable)'
 
       - name: Stage Python Package (Windows)
         if: matrix.build_python == 'ON' && runner.os == 'Windows'

@@ -284,7 +284,6 @@ foreach(
   transport_udp.cc
   transport_udp_extended.cc
   transport_tcp_client_policy.cc
-  reconnect_logic_test.cc
   transport_uds_session_coverage.cc
   test_tcp_client_lifecycle.cc
   test_backpressure_strategy.cc
@@ -621,7 +620,6 @@ add_dependencies(
   run_unit_transport_udp
   run_unit_transport_udp_extended
   run_unit_transport_tcp_client_policy
-  run_unit_reconnect_logic_test
   run_unit_transport_uds_session_coverage
   run_unit_test_tcp_client_lifecycle
   run_unit_test_backpressure_strategy

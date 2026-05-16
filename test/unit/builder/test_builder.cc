@@ -82,7 +82,7 @@ class BuilderTest : public ::testing::Test {
 
 TEST_F(BuilderTest, TcpServerBuilderBasic) {
   server_ = tcp_server(test_port_)
-                .single_client()
+                .max_clients(1)
                 .on_data([](const wrapper::MessageContext& ctx) {
                   // 데이터 처리
                 })
