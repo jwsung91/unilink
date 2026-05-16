@@ -21,8 +21,9 @@ test/
 - `e2e/`: scenario-level behavior, recovery cases, and stress-oriented coverage
 
 Prefer adding new tests to the smallest scope that matches their behavior. If a
-test opens localhost sockets, binds ports, or relies on real OS I/O, place it in
-`integration/` unless it is intentionally tied to a narrow unit fixture.
+test opens localhost sockets, binds ports, creates UDS socket paths, or relies
+on real OS I/O, place it in `integration/` unless it is intentionally tied to a
+narrow unit fixture.
 
 ## Build-Time Controls
 
@@ -82,17 +83,18 @@ Use these commands instead of storing counts in documentation. The exact number 
 
 ## Notes
 
-- Labels use structured tokens such as `unit_transport_tcp_fast` so broad
+- Labels use structured tokens such as `integration_transport_tcp_medium` so broad
   filters (`unit`, `tcp`) and composed regex filters
-  (`unit.*transport.*tcp`) both work.
+  (`integration.*transport.*tcp`) both work.
 - Label names should follow
   `<scope>_<component>[_subcomponent]_<kind>[_io]`. Examples include
   `unit_common_fast`, `unit_transport_uds_fast`,
-  `integration_transport_tcp_medium`, `integration_wrapper_udp_medium`,
-  `integration_tcp_medium`, `e2e_scenario_slow`, and `docs_snippets`.
-- Tests that allocate ports or open localhost sockets belong under
-  `integration/`, even if they exercise a focused transport or wrapper
-  behavior.
+  `integration_transport_tcp_medium`, `integration_transport_uds_medium`,
+  `integration_wrapper_udp_medium`, `integration_tcp_medium`,
+  `e2e_scenario_slow`, and `docs_snippets`.
+- Tests that allocate ports, open localhost sockets, or create UDS socket paths
+  belong under `integration/`, even if they exercise a focused transport or
+  wrapper behavior.
 - When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.
 
 ## CI/CD Integration

@@ -55,35 +55,19 @@ foreach(
   test_tcp_cancel.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
-    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/tcp/${test_file}
-  )
-  target_link_libraries(
-    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                         GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_integration_${test_name})
-  target_include_directories(
-    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                         ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-  # Mark test_integration to use resource lock to avoid port conflicts
+
+  set(timeout 300)
   if(test_name STREQUAL "test_integration")
-    gtest_discover_tests(
-      run_integration_${test_name}
-      PROPERTIES LABELS "integration_tcp_medium"
-      TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
-    )
-  else()
-    gtest_discover_tests(
-      run_integration_${test_name}
-      PROPERTIES LABELS "integration_tcp_medium"
-      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
-    )
+    set(timeout 600)
   endif()
+
+  unilink_add_integration_gtest(
+    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/tcp/${test_file}
+    "integration_tcp_medium" ${timeout} "tcp_port_allocation"
+  )
 endforeach()
 
-# Wrapper loopback integration tests
+# Wrapper real-I/O integration tests
 foreach(
   test_file
   test_tcp_server_wrapper_lifecycle.cc
@@ -96,6 +80,7 @@ foreach(
   test_udp_server_wrapper_transport.cc
   test_udp_server_wrapper_lifecycle.cc
   test_udp_client_wrapper_lifecycle.cc
+  test_uds_wrapper_lifecycle.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
@@ -104,16 +89,23 @@ foreach(
     set(test_label "integration_wrapper_tcp_medium")
   elseif(test_name MATCHES "udp")
     set(test_label "integration_wrapper_udp_medium")
+  elseif(test_name MATCHES "uds")
+    set(test_label "integration_wrapper_uds_medium")
+  endif()
+
+  set(resource_lock "tcp_port_allocation")
+  if(test_name MATCHES "uds")
+    set(resource_lock "uds_socket_path_allocation")
   endif()
 
   unilink_add_integration_gtest(
     run_integration_${test_name}
     ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file} "${test_label}" 300
-    "tcp_port_allocation"
+    "${resource_lock}"
   )
 endforeach()
 
-# Transport loopback integration tests
+# Transport real-I/O integration tests
 foreach(
   test_file
   transport_tcp_client.cc
@@ -121,6 +113,7 @@ foreach(
   transport_udp.cc
   transport_udp_extended.cc
   transport_tcp_client_policy.cc
+  transport_uds_error_test.cc
   test_tcp_client_lifecycle.cc
   test_backpressure_strategy.cc
 )
@@ -133,11 +126,19 @@ foreach(
     set(test_label "integration_transport_tcp_medium")
   elseif(test_name MATCHES "udp")
     set(test_label "integration_transport_udp_medium")
+  elseif(test_name MATCHES "uds")
+    set(test_label "integration_transport_uds_medium")
+  endif()
+
+  set(resource_lock "")
+  if(test_name MATCHES "uds")
+    set(resource_lock "uds_socket_path_allocation")
   endif()
 
   unilink_add_integration_gtest(
     run_integration_${test_name}
     ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file} "${test_label}" 300
+    "${resource_lock}"
   )
 endforeach()
 
@@ -159,75 +160,41 @@ unilink_add_integration_gtest(
   "integration_transport_tcp_security_medium" 300
 )
 
+unilink_add_integration_gtest(
+  run_integration_transport_uds_server_security_test
+  ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_uds_server_security_test.cc
+  "integration_transport_uds_security_medium" 300 "uds_socket_path_allocation"
+)
+
 # Serial integration tests NOTE: test_serial.cc temporarily disabled due to
 # complex variable naming issues
 foreach(test_file test_serial_builder_validation.cc test_serial_loopback.cc
                   test_serial_timeout.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_integration_gtest(
     run_integration_${test_name}
     ${CMAKE_CURRENT_SOURCE_DIR}/serial/${test_file}
-  )
-  target_link_libraries(
-    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                         GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_integration_${test_name})
-  target_include_directories(
-    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                         ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-  gtest_discover_tests(
-    run_integration_${test_name}
-    PROPERTIES LABELS "integration_serial_medium"
-    TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
+    "integration_serial_medium" 300 "tcp_port_allocation"
   )
 endforeach()
 
 # Builder integration tests
 foreach(test_file test_builder_integration.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_integration_gtest(
     run_integration_${test_name}
     ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file}
-  )
-  target_link_libraries(
-    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                         GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_integration_${test_name})
-  target_include_directories(
-    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                         ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-  # Mark test_builder_integration to use resource lock
-  gtest_discover_tests(
-    run_integration_${test_name}
-    PROPERTIES LABELS "integration_builder_medium"
-    TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
+    "integration_builder_medium" 300 "tcp_port_allocation"
   )
 endforeach()
 
 # UDS integration tests
 foreach(test_file test_uds_integration.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_integration_gtest(
     run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/uds/${test_file}
-  )
-  target_link_libraries(
-    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                         GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_integration_${test_name})
-  target_include_directories(
-    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                         ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-  gtest_discover_tests(
-    run_integration_${test_name}
-    PROPERTIES LABELS "integration_uds_medium"
-    TIMEOUT 300 RESOURCE_LOCK "uds_socket_path_allocation"
+    "integration_uds_medium" 300 "uds_socket_path_allocation"
   )
 endforeach()
 
@@ -236,31 +203,8 @@ foreach(test_file test_stable_integration.cc test_core_integrated.cc
                   test_safety_integrated.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_integration_gtest(
     run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/core/${test_file}
+    "integration_core_medium" 600 "tcp_port_allocation"
   )
-  target_link_libraries(
-    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                         GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_integration_${test_name})
-  target_include_directories(
-    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                         ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-  # Mark test_stable_integration to use resource lock Increased timeout to 600s
-  # to accommodate code coverage overhead
-  if(test_name STREQUAL "test_stable_integration")
-    gtest_discover_tests(
-      run_integration_${test_name}
-      PROPERTIES LABELS "integration_core_medium"
-      TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
-    )
-  else()
-    gtest_discover_tests(
-      run_integration_${test_name}
-      PROPERTIES LABELS "integration_core_medium"
-      TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
-    )
-  endif()
 endforeach()

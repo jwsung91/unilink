@@ -116,7 +116,6 @@ endforeach()
 foreach(
   test_file
   test_serial_wrapper_lifecycle.cc
-  test_uds_wrapper_lifecycle.cc
   test_serial_wrapper_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
@@ -205,7 +204,6 @@ foreach(
   test_file
   transport_uds_client.cc
   transport_uds_server.cc
-  transport_uds_error_test.cc
   transport_serial.cc
   transport_uds_session_lifecycle.cc
 )
@@ -279,13 +277,6 @@ unilink_add_unit_gtest(
   run_unit_transport_tcp_timeout_test
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_timeout_test.cc
   "unit_transport_tcp_timeout" 30
-)
-
-# Transport UDS Server Security Test
-unilink_add_unit_gtest(
-  run_unit_transport_uds_server_security_test
-  ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_uds_server_security_test.cc
-  "unit_transport_uds_security" 30
 )
 
 # Framer tests (separate executables)

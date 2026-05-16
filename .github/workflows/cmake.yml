@@ -317,23 +317,23 @@ jobs:
         working-directory: build
         run: ctest --output-on-failure --parallel 2 -LE docs_snippets
 
-      - name: Test (Windows, Python C++ Smoke)
+      - name: Test (Windows, Python C++ and transport smoke)
         if: runner.os == 'Windows' && matrix.build_python == 'ON'
         working-directory: build
         shell: pwsh
         run: |
           # Full C++ coverage already runs in the pure C++ matrix.
-          # Python-enabled jobs keep only a fast C++ smoke subset, then verify
-          # install/import/pytest on top of that.
+          # Python-enabled jobs keep fast unit coverage plus focused transport
+          # integration smoke, then verify install/import/pytest on top.
           ctest -C "${env:BUILD_TYPE}" --output-on-failure -L "(unit_(common_fast|builder_fast|config_fast|memory_fast|transport_.*_fast|transport_reconnect_stable)|integration_transport_(tcp|udp|backpressure)_medium)"
 
-      - name: Test (Linux/macOS, Python C++ Smoke)
+      - name: Test (Linux/macOS, Python C++ and transport smoke)
         if: runner.os != 'Windows' && matrix.build_python == 'ON'
         working-directory: build
         run: |
           # Full C++ coverage already runs in the pure C++ matrix.
-          # Python-enabled jobs keep only a fast C++ smoke subset, then verify
-          # install/import/pytest on top of that.
+          # Python-enabled jobs keep fast unit coverage plus focused transport
+          # integration smoke, then verify install/import/pytest on top.
           ctest --output-on-failure --parallel 2 -L '(unit_(common_fast|builder_fast|config_fast|memory_fast|transport_.*_fast|transport_reconnect_stable)|integration_transport_(tcp|udp|backpressure)_medium)'
 
       - name: Stage Python Package (Windows)

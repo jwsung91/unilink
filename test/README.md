@@ -5,7 +5,7 @@ The test tree is organized by test scope first, then by component.
 ```text
 test/
 ├── unit/          # Isolated component, wrapper, transport, config, and framer tests
-├── integration/   # Cross-component tests and real loopback I/O paths
+├── integration/   # Cross-component tests and real socket/port I/O paths
 ├── e2e/           # Scenario and stress tests
 ├── mocks/         # Mock socket, acceptor, and helper types
 └── utils/         # Shared test helpers and constants
@@ -51,14 +51,14 @@ unit_common_fast
 unit_transport_uds_fast
 integration_tcp_medium
 integration_transport_tcp_medium
+integration_transport_uds_medium
 integration_wrapper_udp_medium
 e2e_scenario_slow
 docs_snippets
 ```
 
-Place tests that open localhost sockets or allocate real ports under
-`integration/`, even when they exercise a focused transport or wrapper
-behavior.
+Place tests that open localhost sockets, UDS socket paths, or real ports under
+`integration/`, even when they exercise a focused transport or wrapper behavior.
 
 ## Naming
 
