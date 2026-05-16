@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -140,7 +140,7 @@
 <span id="L62"><span class="lineNum">      62</span>                 :             :   };</span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : </span>
 <span id="L64"><span class="lineNum">      64</span>                 :             :   explicit MemoryPool(size_t initial_pool_size = 400, size_t max_pool_size = 2000);</span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC tlaBgGNC">          12 :   ~MemoryPool() = default;</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC tlaBgGNC">          14 :   ~MemoryPool() = default;</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : </span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :   // Non-copyable, non-movable</span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :   MemoryPool(const MemoryPool&amp;) = delete;</span>
@@ -167,7 +167,7 @@
 <span id="L89"><span class="lineNum">      89</span>                 :             :     size_t size_;</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :     size_t capacity_;</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             : </span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">         268 :     PoolBucket() : size_{0}, capacity_{0} {}</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">         316 :     PoolBucket() : size_{0}, capacity_{0} {}</span></span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :     PoolBucket(PoolBucket&amp;&amp; other) noexcept;</span>
 <span id="L94"><span class="lineNum">      94</span>                 :             :     PoolBucket&amp; operator=(PoolBucket&amp;&amp; other) noexcept;</span>
 <span id="L95"><span class="lineNum">      95</span>                 :             :     PoolBucket(const PoolBucket&amp;) = delete;</span>

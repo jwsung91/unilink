@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -118,10 +118,10 @@
 <span id="L40"><span class="lineNum">      40</span>                 :             :   bool is_valid;</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :   std::string error_message;</span>
 <span id="L42"><span class="lineNum">      42</span>                 :             : </span>
-<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">        2524 :   explicit ValidationResult(bool valid = true, const std::string&amp; error = &quot;&quot;) : is_valid(valid), error_message(error) {}</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">        2548 :   explicit ValidationResult(bool valid = true, const std::string&amp; error = &quot;&quot;) : is_valid(valid), error_message(error) {}</span></span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : </span>
-<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 2518 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2518 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        7554 :   static ValidationResult success() { return ValidationResult(true); }</span></span>
-<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">           6 :   static ValidationResult error(const std::string&amp; msg) { return ValidationResult(false, msg); }</span></span>
+<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 2538 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2538 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        7614 :   static ValidationResult success() { return ValidationResult(true); }</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">          10 :   static ValidationResult error(const std::string&amp; msg) { return ValidationResult(false, msg); }</span></span>
 <span id="L47"><span class="lineNum">      47</span>                 :             : };</span>
 <span id="L48"><span class="lineNum">      48</span>                 :             : </span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : /**</span>
@@ -136,10 +136,10 @@
 <span id="L58"><span class="lineNum">      58</span>                 :             :   std::function&lt;ValidationResult(const std::any&amp;)&gt; validator;</span>
 <span id="L59"><span class="lineNum">      59</span>                 :             : </span>
 <span id="L60"><span class="lineNum">      60</span>                 :             :   // Default constructor</span>
-<span id="L61"><span class="lineNum">      61</span>   [<span class="tlaGBC" title="Branch 0 was taken 1270 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1270 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        6350 :   ConfigItem() : key(&quot;&quot;), value(std::any()), type(ConfigType::String), required(false), description(&quot;&quot;) {}</span></span>
+<span id="L61"><span class="lineNum">      61</span>   [<span class="tlaGBC" title="Branch 0 was taken 1285 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1285 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        6425 :   ConfigItem() : key(&quot;&quot;), value(std::any()), type(ConfigType::String), required(false), description(&quot;&quot;) {}</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :             : </span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">        1270 :   ConfigItem(const std::string&amp; k, const std::any&amp; v, ConfigType t, bool req = false, const std::string&amp; desc = &quot;&quot;)</span></span>
-<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 1270 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1270 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        1270 :       : key(k), value(v), type(t), required(req), description(desc) {}</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">        1285 :   ConfigItem(const std::string&amp; k, const std::any&amp; v, ConfigType t, bool req = false, const std::string&amp; desc = &quot;&quot;)</span></span>
+<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 1285 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1285 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        1285 :       : key(k), value(v), type(t), required(req), description(desc) {}</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             : };</span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : </span>
 <span id="L67"><span class="lineNum">      67</span>                 :             : /**</span>
@@ -153,7 +153,7 @@
 <span id="L75"><span class="lineNum">      75</span>                 :             :  */</span>
 <span id="L76"><span class="lineNum">      76</span>                 :             : class UNILINK_API ConfigManagerInterface {</span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :  public:</span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          30 :   virtual ~ConfigManagerInterface() = default;</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          38 :   virtual ~ConfigManagerInterface() = default;</span></span>
 <span id="L79"><span class="lineNum">      79</span>                 :             : </span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :   // Configuration access</span>
 <span id="L81"><span class="lineNum">      81</span>                 :             :   virtual std::any get(const std::string&amp; key) const = 0;</span>

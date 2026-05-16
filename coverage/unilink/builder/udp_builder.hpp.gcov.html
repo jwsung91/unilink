@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">38.9&nbsp;%</td>
-            <td class="headerCovTableEntry">18</td>
-            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">58.3&nbsp;%</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">14</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -127,29 +127,29 @@
 <span id="L49"><span class="lineNum">      49</span>                 :             : </span>
 <span id="L50"><span class="lineNum">      50</span>                 :             :   // Allow conversion between states</span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :   template &lt;uint32_t OtherState&gt;</span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC tlaBgGNC">          11 :   UdpClientBuilder(UdpClientBuilder&lt;OtherState&gt;&amp;&amp; other) noexcept</span></span>
-<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          11 :       : local_port_(other.local_port_),</span></span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">          11 :         bind_address_(std::move(other.bind_address_)),</span></span>
-<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          11 :         remote_host_(std::move(other.remote_host_)),</span></span>
-<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          11 :         remote_port_(other.remote_port_),</span></span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          11 :         auto_start_(other.auto_start_),</span></span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          11 :         independent_context_(other.independent_context_),</span></span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          11 :         enable_broadcast_(other.enable_broadcast_),</span></span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          11 :         reuse_address_(other.reuse_address_) {</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
-<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
-<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
-<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">          11 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">          11 :   }</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC tlaBgGNC">          17 :   UdpClientBuilder(UdpClientBuilder&lt;OtherState&gt;&amp;&amp; other) noexcept</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          17 :       : local_port_(other.local_port_),</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">          17 :         bind_address_(std::move(other.bind_address_)),</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          17 :         remote_host_(std::move(other.remote_host_)),</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          17 :         remote_port_(other.remote_port_),</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          17 :         auto_start_(other.auto_start_),</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          17 :         independent_context_(other.independent_context_),</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          17 :         enable_broadcast_(other.enable_broadcast_),</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          17 :         reuse_address_(other.reuse_address_) {</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">          17 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
+<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">          17 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">          17 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          17 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          17 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">          17 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">          17 :   }</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : </span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :   // Delete copy</span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :   UdpClientBuilder(const UdpClientBuilder&amp;) = delete;</span>
@@ -165,7 +165,7 @@
 <span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaUNC">           0 :     return bind_address(address);</span></span>
 <span id="L88"><span class="lineNum">      88</span>                 :             :   }</span>
 <span id="L89"><span class="lineNum">      89</span>                 :             :   UdpClientBuilder&lt;State&gt;&amp; remote_endpoint(const std::string&amp; host, uint16_t port);</span>
-<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC tlaBgGNC">           2 :   UdpClientBuilder&lt;State&gt;&amp; remote(const std::string&amp; host, uint16_t port) { return remote_endpoint(host, port); }</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC tlaBgGNC">           3 :   UdpClientBuilder&lt;State&gt;&amp; remote(const std::string&amp; host, uint16_t port) { return remote_endpoint(host, port); }</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :   UdpClientBuilder&lt;State&gt;&amp; broadcast(bool enable = true);</span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :   UdpClientBuilder&lt;State&gt;&amp; reuse_address(bool enable = true);</span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :   UdpClientBuilder&lt;State&gt;&amp; independent_context(bool use_independent = true);</span>
@@ -200,31 +200,31 @@
 <span id="L122"><span class="lineNum">     122</span>                 :             : </span>
 <span id="L123"><span class="lineNum">     123</span>                 :             :   // Allow conversion between states</span>
 <span id="L124"><span class="lineNum">     124</span>                 :             :   template &lt;uint32_t OtherState&gt;</span>
-<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">           5 :   UdpServerBuilder(UdpServerBuilder&lt;OtherState&gt;&amp;&amp; other) noexcept</span></span>
-<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           5 :       : local_port_(other.local_port_),</span></span>
-<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">           5 :         bind_address_(std::move(other.bind_address_)),</span></span>
-<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           5 :         auto_start_(other.auto_start_),</span></span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           5 :         independent_context_(other.independent_context_),</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           5 :         enable_broadcast_(other.enable_broadcast_),</span></span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">           5 :         reuse_address_(other.reuse_address_),</span></span>
-<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">           5 :         max_clients_(other.max_clients_),</span></span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">           5 :         client_limit_enabled_(other.client_limit_enabled_),</span></span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">           5 :         idle_timeout_(other.idle_timeout_),</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">           5 :         idle_timeout_set_(other.idle_timeout_set_) {</span></span>
-<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
-<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
-<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
-<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
-<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           5 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">           5 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
-<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">           5 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
-<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">           5 :   }</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">          11 :   UdpServerBuilder(UdpServerBuilder&lt;OtherState&gt;&amp;&amp; other) noexcept</span></span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">          11 :       : local_port_(other.local_port_),</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">          11 :         bind_address_(std::move(other.bind_address_)),</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">          11 :         auto_start_(other.auto_start_),</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          11 :         independent_context_(other.independent_context_),</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">          11 :         enable_broadcast_(other.enable_broadcast_),</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">          11 :         reuse_address_(other.reuse_address_),</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">          11 :         max_clients_(other.max_clients_),</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">          11 :         client_limit_enabled_(other.client_limit_enabled_),</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">          11 :         idle_timeout_(other.idle_timeout_),</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">          11 :         idle_timeout_set_(other.idle_timeout_set_) {</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">          11 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">          11 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          11 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">          11 :   }</span></span>
 <span id="L150"><span class="lineNum">     150</span>                 :             : </span>
 <span id="L151"><span class="lineNum">     151</span>                 :             :   // Delete copy</span>
 <span id="L152"><span class="lineNum">     152</span>                 :             :   UdpServerBuilder(const UdpServerBuilder&amp;) = delete;</span>
@@ -257,7 +257,7 @@
 <span id="L179"><span class="lineNum">     179</span>                 :             :   bool reuse_address_;</span>
 <span id="L180"><span class="lineNum">     180</span>                 :             :   uint32_t max_clients_ = 0;</span>
 <span id="L181"><span class="lineNum">     181</span>                 :             :   bool client_limit_enabled_ = false;</span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC tlaBgGNC">           2 :   std::chrono::milliseconds idle_timeout_{0};</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC tlaBgGNC">           5 :   std::chrono::milliseconds idle_timeout_{0};</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             :   bool idle_timeout_set_ = false;</span>
 <span id="L184"><span class="lineNum">     184</span>                 :             : };</span>
 <span id="L185"><span class="lineNum">     185</span>                 :             : </span>

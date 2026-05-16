@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -116,16 +116,16 @@
 <span id="L38"><span class="lineNum">      38</span>                 :             :    * This method is thread-safe and can be called multiple times safely.</span>
 <span id="L39"><span class="lineNum">      39</span>                 :             :    * If already running, it does nothing.</span>
 <span id="L40"><span class="lineNum">      40</span>                 :             :    */</span>
-<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC tlaBgGNC">         154 :   static void ensure_io_context_running() {</span></span>
-<span id="L42"><span class="lineNum">      42</span>         [<span class="tlaGBC" title="Branch 0 was taken 74 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 80 times"> + </span>]:<span class="tlaGNC">         154 :     if (!concurrency::IoContextManager::instance().is_running()) {</span></span>
-<span id="L43"><span class="lineNum">      43</span>   [<span class="tlaGBC" title="Branch 0 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          74 :       std::lock_guard&lt;std::mutex&gt; lock(init_mutex());</span></span>
+<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC tlaBgGNC">         184 :   static void ensure_io_context_running() {</span></span>
+<span id="L42"><span class="lineNum">      42</span>         [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 91 times"> + </span>]:<span class="tlaGNC">         184 :     if (!concurrency::IoContextManager::instance().is_running()) {</span></span>
+<span id="L43"><span class="lineNum">      43</span>   [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          93 :       std::lock_guard&lt;std::mutex&gt; lock(init_mutex());</span></span>
 <span id="L44"><span class="lineNum">      44</span>                 :             :       // Double-check locking</span>
-<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          74 :       if (!concurrency::IoContextManager::instance().is_running()) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L46"><span class="lineNum">      46</span>   [<span class="tlaGBC" title="Branch 0 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 74 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          74 :         concurrency::IoContextManager::instance().start();</span></span>
+<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          93 :       if (!concurrency::IoContextManager::instance().is_running()) {</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L46"><span class="lineNum">      46</span>   [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          93 :         concurrency::IoContextManager::instance().start();</span></span>
 <span id="L47"><span class="lineNum">      47</span>                 :             :       }</span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          74 :     }</span></span>
-<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">         154 :   }</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          93 :     }</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">         184 :   }</span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :             : </span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :   /**</span>
 <span id="L52"><span class="lineNum">      52</span>                 :             :    * @brief Check if IoContextManager is running</span>

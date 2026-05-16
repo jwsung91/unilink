@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">57.1&nbsp;%</td>
@@ -123,31 +123,31 @@
 <span id="L45"><span class="lineNum">      45</span>                 :             : </span>
 <span id="L46"><span class="lineNum">      46</span>                 :             :   // Allow conversion between states</span>
 <span id="L47"><span class="lineNum">      47</span>                 :             :   template &lt;uint32_t OtherState&gt;</span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC tlaBgGNC">          16 :   SerialBuilder(SerialBuilder&lt;OtherState&gt;&amp;&amp; other) noexcept</span></span>
-<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          16 :       : device_(std::move(other.device_)),</span></span>
-<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">          16 :         baud_rate_(other.baud_rate_),</span></span>
-<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">          16 :         auto_start_(other.auto_start_),</span></span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          16 :         independent_context_(other.independent_context_),</span></span>
-<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          16 :         retry_interval_ms_(other.retry_interval_ms_),</span></span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">          16 :         char_size_(other.char_size_),</span></span>
-<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          16 :         stop_bits_(other.stop_bits_),</span></span>
-<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          16 :         parity_(other.parity_),</span></span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          16 :         flow_(other.flow_),</span></span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          16 :         reopen_on_error_(other.reopen_on_error_) {</span></span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
-<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          16 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
-<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">          16 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">          16 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
-<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">          16 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">          16 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          16 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          16 :   }</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC tlaBgGNC">          26 :   SerialBuilder(SerialBuilder&lt;OtherState&gt;&amp;&amp; other) noexcept</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          26 :       : device_(std::move(other.device_)),</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">          26 :         baud_rate_(other.baud_rate_),</span></span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">          26 :         auto_start_(other.auto_start_),</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          26 :         independent_context_(other.independent_context_),</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          26 :         retry_interval_ms_(other.retry_interval_ms_),</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">          26 :         char_size_(other.char_size_),</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          26 :         stop_bits_(other.stop_bits_),</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          26 :         parity_(other.parity_),</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          26 :         flow_(other.flow_),</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          26 :         reopen_on_error_(other.reopen_on_error_) {</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_data_ = std::move(other.on_data_);</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_error_ = std::move(other.on_error_);</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_connect_ = std::move(other.on_connect_);</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_disconnect_ = std::move(other.on_disconnect_);</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_message_ = std::move(other.on_message_);</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_data_batch_ = std::move(other.on_data_batch_);</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_message_batch_ = std::move(other.on_message_batch_);</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          26 :     this-&gt;on_backpressure_ = std::move(other.on_backpressure_);</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">          26 :     this-&gt;framer_factory_ = std::move(other.framer_factory_);</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">          26 :     this-&gt;bp_strategy_ = other.bp_strategy_;</span></span>
+<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">          26 :     this-&gt;bp_threshold_ = other.bp_threshold_;</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">          26 :     this-&gt;bp_strategy_set_ = other.bp_strategy_set_;</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          26 :     this-&gt;bp_threshold_set_ = other.bp_threshold_set_;</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          26 :   }</span></span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : </span>
 <span id="L74"><span class="lineNum">      74</span>                 :             :   // Delete copy</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             :   SerialBuilder(const SerialBuilder&amp;) = delete;</span>

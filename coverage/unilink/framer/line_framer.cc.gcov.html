@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">86.2&nbsp;%</td>
+            <td class="headerCovTableEntryHi">91.2&nbsp;%</td>
             <td class="headerCovTableEntry">80</td>
-            <td class="headerCovTableEntry">69</td>
+            <td class="headerCovTableEntry">73</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">7</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">7</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -124,40 +124,40 @@
 <span id="L46"><span class="lineNum">      46</span>                 :             : </span>
 <span id="L47"><span class="lineNum">      47</span>                 :             : }  // namespace</span>
 <span id="L48"><span class="lineNum">      48</span>                 :             : </span>
-<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          37 : LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_t max_length)</span></span>
-<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaGBC" title="Branch 0 was taken 37 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         111 :     : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length) {</span></span>
-<span id="L51"><span class="lineNum">      51</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 37 times"> + </span>]:<span class="tlaGNC">          37 :   if (delimiter_.empty()) {</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          48 : LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_t max_length)</span></span>
+<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaGBC" title="Branch 0 was taken 48 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         144 :     : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length) {</span></span>
+<span id="L51"><span class="lineNum">      51</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 48 times"> + </span>]:<span class="tlaGNC">          48 :   if (delimiter_.empty()) {</span></span>
 <span id="L52"><span class="lineNum">      52</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     delimiter_ = &quot;\n&quot;;</span></span>
 <span id="L53"><span class="lineNum">      53</span>                 :             :   }</span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC tlaBgGNC">          37 : }</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC tlaBgGNC">          48 : }</span></span>
 <span id="L55"><span class="lineNum">      55</span>                 :             : </span>
-<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">        1013 : void LineFramer::push_bytes(memory::ConstByteSpan data) {</span></span>
-<span id="L57"><span class="lineNum">      57</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1013 times"> + </span>]:<span class="tlaGNC">        1013 :   if (data.empty()) return;</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">        1021 : void LineFramer::push_bytes(memory::ConstByteSpan data) {</span></span>
+<span id="L57"><span class="lineNum">      57</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1021 times"> + </span>]:<span class="tlaGNC">        1021 :   if (data.empty()) return;</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             : </span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :   // Process data in chunks to prevent large memory allocations (DoS protection)</span>
 <span id="L60"><span class="lineNum">      60</span>                 :             :   // We use max(max_length_, 4096) as a reasonable chunk size.</span>
 <span id="L61"><span class="lineNum">      61</span>                 :             :   // This ensures that even if the user sends a huge payload, we only</span>
 <span id="L62"><span class="lineNum">      62</span>                 :             :   // allocate memory incrementally and have a chance to clear the buffer</span>
 <span id="L63"><span class="lineNum">      63</span>                 :             :   // if limits are exceeded.</span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">        1013 :   const size_t chunk_limit = std::max(max_length_, size_t(4096));</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">        1021 :   const size_t chunk_limit = std::max(max_length_, size_t(4096));</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             : </span>
-<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">        1013 :   size_t offset = 0;</span></span>
-<span id="L67"><span class="lineNum">      67</span>         [<span class="tlaGBC" title="Branch 0 was taken 1013 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1013 times"> + </span>]:<span class="tlaGNC">        2026 :   while (offset &lt; data.size()) {</span></span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">        1013 :     size_t len = std::min(data.size() - offset, chunk_limit);</span></span>
-<span id="L69"><span class="lineNum">      69</span>         [<span class="tlaGBC" title="Branch 0 was taken 1013 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1013 :     push_bytes_internal(data.subspan(offset, len));</span></span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">        1013 :     offset += len;</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">        1021 :   size_t offset = 0;</span></span>
+<span id="L67"><span class="lineNum">      67</span>         [<span class="tlaGBC" title="Branch 0 was taken 1021 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1021 times"> + </span>]:<span class="tlaGNC">        2042 :   while (offset &lt; data.size()) {</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">        1021 :     size_t len = std::min(data.size() - offset, chunk_limit);</span></span>
+<span id="L69"><span class="lineNum">      69</span>         [<span class="tlaGBC" title="Branch 0 was taken 1021 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1021 :     push_bytes_internal(data.subspan(offset, len));</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">        1021 :     offset += len;</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :   }</span>
 <span id="L72"><span class="lineNum">      72</span>                 :             : }</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : </span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">        1013 : void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {</span></span>
-<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1013 times"> + </span>]:<span class="tlaGNC">        1013 :   if (data.empty()) return;</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">        1021 : void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {</span></span>
+<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1021 times"> + </span>]:<span class="tlaGNC">        1021 :   if (data.empty()) return;</span></span>
 <span id="L76"><span class="lineNum">      76</span>                 :             : </span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :   // Fast Path: If buffer is empty, process data directly (zero-copy)</span>
-<span id="L78"><span class="lineNum">      78</span>         [<span class="tlaGBC" title="Branch 0 was taken 1011 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">        1013 :   if (buffer_.empty()) {</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">        1011 :     size_t processed_count = scan_and_process(data, 0);</span></span>
+<span id="L78"><span class="lineNum">      78</span>         [<span class="tlaGBC" title="Branch 0 was taken 1019 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">        1021 :   if (buffer_.empty()) {</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">        1019 :     size_t processed_count = scan_and_process(data, 0);</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             : </span>
 <span id="L81"><span class="lineNum">      81</span>                 :             :     // If we haven't processed everything, append the remainder to the buffer</span>
-<span id="L82"><span class="lineNum">      82</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1008 times"> + </span>]:<span class="tlaGNC">        1011 :     if (processed_count &lt; data.size()) {</span></span>
+<span id="L82"><span class="lineNum">      82</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1016 times"> + </span>]:<span class="tlaGNC">        1019 :     if (processed_count &lt; data.size()) {</span></span>
 <span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">           3 :       append_bytes(buffer_, data, processed_count);</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">           3 :       scanned_idx_ = buffer_.size();  // We scanned all of it</span></span>
 <span id="L85"><span class="lineNum">      85</span>                 :             : </span>
@@ -168,9 +168,9 @@
 <span id="L90"><span class="lineNum">      90</span>                 :             :       }</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :     } else {</span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :       // All processed, buffer remains empty</span>
-<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">        1008 :       scanned_idx_ = 0;</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">        1016 :       scanned_idx_ = 0;</span></span>
 <span id="L94"><span class="lineNum">      94</span>                 :             :     }</span>
-<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">        1011 :     return;</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">        1019 :     return;</span></span>
 <span id="L96"><span class="lineNum">      96</span>                 :             :   }</span>
 <span id="L97"><span class="lineNum">      97</span>                 :             : </span>
 <span id="L98"><span class="lineNum">      98</span>                 :             :   // Slow Path: Append new data to buffer and process</span>
@@ -204,79 +204,79 @@
 <span id="L126"><span class="lineNum">     126</span>                 :             :   }</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             : }</span>
 <span id="L128"><span class="lineNum">     128</span>                 :             : </span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC tlaBgGNC">        1013 : size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_start_offset) {</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC tlaBgGNC">        1021 : size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_start_offset) {</span></span>
 <span id="L130"><span class="lineNum">     130</span>                 :             :   // Safety clamp</span>
-<span id="L131"><span class="lineNum">     131</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1013 times"> + </span>]:<span class="tlaGNC">        1013 :   if (search_start_offset &gt; data.size()) {</span></span>
+<span id="L131"><span class="lineNum">     131</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1021 times"> + </span>]:<span class="tlaGNC">        1021 :   if (search_start_offset &gt; data.size()) {</span></span>
 <span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     search_start_offset = data.size();</span></span>
 <span id="L133"><span class="lineNum">     133</span>                 :             :   }</span>
 <span id="L134"><span class="lineNum">     134</span>                 :             : </span>
 <span id="L135"><span class="lineNum">     135</span>                 :             :   // processed_count tracks the number of bytes from the start of the buffer</span>
 <span id="L136"><span class="lineNum">     136</span>                 :             :   // that have been either emitted as messages or skipped due to overflow.</span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC tlaBgGNC">        1013 :   size_t processed_count = 0;</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC tlaBgGNC">        1021 :   size_t processed_count = 0;</span></span>
 <span id="L138"><span class="lineNum">     138</span>                 :             : </span>
 <span id="L139"><span class="lineNum">     139</span>                 :             :   // Search cursor</span>
-<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">        1013 :   size_t search_cursor = search_start_offset;</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">        1021 :   size_t search_cursor = search_start_offset;</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             : </span>
 <span id="L142"><span class="lineNum">     142</span>                 :             :   // O(N) scan loop</span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :   while (true) {</span>
-<span id="L144"><span class="lineNum">     144</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2225 times"> + </span>]:<span class="tlaGNC">        2225 :     if (search_cursor &gt; data.size()) break;</span></span>
+<span id="L144"><span class="lineNum">     144</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2248 times"> + </span>]:<span class="tlaGNC">        2248 :     if (search_cursor &gt; data.size()) break;</span></span>
 <span id="L145"><span class="lineNum">     145</span>                 :             : </span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :     // Perform search using iterators derived from current buffer state</span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">        2225 :     auto search_begin = data.begin() + static_cast&lt;std::ptrdiff_t&gt;(search_cursor);</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">        2225 :     decltype(data.begin()) it;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">        2248 :     auto search_begin = data.begin() + static_cast&lt;std::ptrdiff_t&gt;(search_cursor);</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">        2248 :     decltype(data.begin()) it;</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             : </span>
-<span id="L150"><span class="lineNum">     150</span>         [<span class="tlaGBC" title="Branch 0 was taken 2221 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">        2225 :     if (delimiter_.size() == 1) {</span></span>
+<span id="L150"><span class="lineNum">     150</span>         [<span class="tlaGBC" title="Branch 0 was taken 2244 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">        2248 :     if (delimiter_.size() == 1) {</span></span>
 <span id="L151"><span class="lineNum">     151</span>                 :             :       // Optimization: Use std::memchr for single-byte delimiter</span>
-<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">        2221 :       const void* found = std::memchr(data.data() + search_cursor, static_cast&lt;uint8_t&gt;(delimiter_[0]),</span></span>
-<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaGBC" title="Branch 0 was taken 2221 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        4442 :                                       static_cast&lt;size_t&gt;(std::distance(search_begin, data.end())));</span></span>
-<span id="L154"><span class="lineNum">     154</span>         [<span class="tlaGBC" title="Branch 0 was taken 1210 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1011 times"> + </span>]:<span class="tlaGNC">        2221 :       if (found) {</span></span>
-<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">        2420 :         it = data.begin() + std::distance(static_cast&lt;const uint8_t*&gt;(data.data()), static_cast&lt;const uint8_t*&gt;(found));</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">        2244 :       const void* found = std::memchr(data.data() + search_cursor, static_cast&lt;uint8_t&gt;(delimiter_[0]),</span></span>
+<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaGBC" title="Branch 0 was taken 2244 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        4488 :                                       static_cast&lt;size_t&gt;(std::distance(search_begin, data.end())));</span></span>
+<span id="L154"><span class="lineNum">     154</span>         [<span class="tlaGBC" title="Branch 0 was taken 1225 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1019 times"> + </span>]:<span class="tlaGNC">        2244 :       if (found) {</span></span>
+<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">        2450 :         it = data.begin() + std::distance(static_cast&lt;const uint8_t*&gt;(data.data()), static_cast&lt;const uint8_t*&gt;(found));</span></span>
 <span id="L156"><span class="lineNum">     156</span>                 :             :       } else {</span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">        1011 :         it = data.end();</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">        1019 :         it = data.end();</span></span>
 <span id="L158"><span class="lineNum">     158</span>                 :             :       }</span>
 <span id="L159"><span class="lineNum">     159</span>                 :             :     } else {</span>
 <span id="L160"><span class="lineNum">     160</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :       it = std::search(search_begin, data.end(), delimiter_.begin(), delimiter_.end());</span></span>
 <span id="L161"><span class="lineNum">     161</span>                 :             :     }</span>
 <span id="L162"><span class="lineNum">     162</span>                 :             : </span>
-<span id="L163"><span class="lineNum">     163</span>         [<span class="tlaGBC" title="Branch 0 was taken 1013 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1212 times"> + </span>]:<span class="tlaGNC">        2225 :     if (it == data.end()) {</span></span>
-<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">        1013 :       break;</span></span>
+<span id="L163"><span class="lineNum">     163</span>         [<span class="tlaGBC" title="Branch 0 was taken 1021 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1227 times"> + </span>]:<span class="tlaGNC">        2248 :     if (it == data.end()) {</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">        1021 :       break;</span></span>
 <span id="L165"><span class="lineNum">     165</span>                 :             :     }</span>
 <span id="L166"><span class="lineNum">     166</span>                 :             : </span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :     // Found a delimiter</span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">        1212 :     size_t match_start_idx = static_cast&lt;size_t&gt;(std::distance(data.begin(), it));</span></span>
-<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">        1212 :     size_t match_end_idx = match_start_idx + delimiter_.length();</span></span>
+<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">        1227 :     size_t match_start_idx = static_cast&lt;size_t&gt;(std::distance(data.begin(), it));</span></span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">        1227 :     size_t match_end_idx = match_start_idx + delimiter_.length();</span></span>
 <span id="L170"><span class="lineNum">     170</span>                 :             : </span>
 <span id="L171"><span class="lineNum">     171</span>                 :             :     // Calculate message length (from end of previous processed data to end of current delimiter)</span>
-<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">        1212 :     size_t current_msg_total_len = match_end_idx - processed_count;</span></span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">        1212 :     size_t content_len = current_msg_total_len - delimiter_.length();</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">        1227 :     size_t current_msg_total_len = match_end_idx - processed_count;</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">        1227 :     size_t content_len = current_msg_total_len - delimiter_.length();</span></span>
 <span id="L174"><span class="lineNum">     174</span>                 :             : </span>
 <span id="L175"><span class="lineNum">     175</span>                 :             :     // Check max_length against content length (delimiter excluded)</span>
-<span id="L176"><span class="lineNum">     176</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        1212 :     if (content_len &gt; max_length_) {</span></span>
+<span id="L176"><span class="lineNum">     176</span>         [<span class="tlaGBC" title="Branch 0 was taken 1226 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">        1227 :     if (content_len &gt; max_length_) {</span></span>
 <span id="L177"><span class="lineNum">     177</span>                 :             :       // Message exceeds limit. Skip it.</span>
 <span id="L178"><span class="lineNum">     178</span>                 :             :     } else {</span>
 <span id="L179"><span class="lineNum">     179</span>                 :             :       // Valid message</span>
-<span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1211 :       if (on_message_) {</span></span>
-<span id="L181"><span class="lineNum">     181</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1210 times"> + </span>]:<span class="tlaGNC">        1211 :         size_t payload_len = include_delimiter_ ? current_msg_total_len : content_len;</span></span>
-<span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 1211 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1211 :         on_message_(memory::ConstByteSpan(data.data() + processed_count, payload_len));</span></span>
+<span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 1226 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1226 :       if (on_message_) {</span></span>
+<span id="L181"><span class="lineNum">     181</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1225 times"> + </span>]:<span class="tlaGNC">        1226 :         size_t payload_len = include_delimiter_ ? current_msg_total_len : content_len;</span></span>
+<span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 1226 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1226 :         on_message_(memory::ConstByteSpan(data.data() + processed_count, payload_len));</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             :       }</span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :     }</span>
 <span id="L185"><span class="lineNum">     185</span>                 :             : </span>
 <span id="L186"><span class="lineNum">     186</span>                 :             :     // Mark these bytes as processed</span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">        1212 :     processed_count = match_end_idx;</span></span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">        1227 :     processed_count = match_end_idx;</span></span>
 <span id="L188"><span class="lineNum">     188</span>                 :             : </span>
 <span id="L189"><span class="lineNum">     189</span>                 :             :     // Advance search cursor to start strictly after the current delimiter</span>
-<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">        1212 :     search_cursor = processed_count;</span></span>
-<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">        1212 :   }</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">        1227 :     search_cursor = processed_count;</span></span>
+<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">        1227 :   }</span></span>
 <span id="L192"><span class="lineNum">     192</span>                 :             : </span>
-<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">        1013 :   return processed_count;</span></span>
+<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">        1021 :   return processed_count;</span></span>
 <span id="L194"><span class="lineNum">     194</span>                 :             : }</span>
 <span id="L195"><span class="lineNum">     195</span>                 :             : </span>
-<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          37 : void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          47 : void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></span>
 <span id="L197"><span class="lineNum">     197</span>                 :             : </span>
-<span id="L198"><span class="lineNum">     198</span>                 :<span class="tlaUNC tlaBgUNC">           0 : void LineFramer::reset() {</span></span>
-<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaUNC">           0 :   buffer_.clear();</span></span>
-<span id="L200"><span class="lineNum">     200</span>                 :<span class="tlaUNC">           0 :   scanned_idx_ = 0;</span></span>
-<span id="L201"><span class="lineNum">     201</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L198"><span class="lineNum">     198</span>                 :<span class="tlaGNC">           4 : void LineFramer::reset() {</span></span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">           4 :   buffer_.clear();</span></span>
+<span id="L200"><span class="lineNum">     200</span>                 :<span class="tlaGNC">           4 :   scanned_idx_ = 0;</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L202"><span class="lineNum">     202</span>                 :             : </span>
 <span id="L203"><span class="lineNum">     203</span>                 :             : }  // namespace framer</span>
 <span id="L204"><span class="lineNum">     204</span>                 :             : }  // namespace unilink</span>

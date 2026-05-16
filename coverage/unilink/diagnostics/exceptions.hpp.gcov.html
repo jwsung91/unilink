@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -110,9 +110,9 @@
 <span id="L32"><span class="lineNum">      32</span>                 :             :  */</span>
 <span id="L33"><span class="lineNum">      33</span>                 :             : class UNILINK_API UnilinkException : public std::runtime_error {</span>
 <span id="L34"><span class="lineNum">      34</span>                 :             :  public:</span>
-<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC tlaBgGNC">         100 :   explicit UnilinkException(const std::string&amp; message, const std::string&amp; component = &quot;&quot;,</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC tlaBgGNC">         115 :   explicit UnilinkException(const std::string&amp; message, const std::string&amp; component = &quot;&quot;,</span></span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :                             const std::string&amp; operation = &quot;&quot;)</span>
-<span id="L37"><span class="lineNum">      37</span>   [<span class="tlaGBC" title="Branch 0 was taken 100 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 100 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         100 :       : std::runtime_error(message), component_(component), operation_(operation) {}</span></span>
+<span id="L37"><span class="lineNum">      37</span>   [<span class="tlaGBC" title="Branch 0 was taken 115 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 115 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         115 :       : std::runtime_error(message), component_(component), operation_(operation) {}</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : </span>
 <span id="L39"><span class="lineNum">      39</span>                 :             :   virtual ~UnilinkException() noexcept;</span>
 <span id="L40"><span class="lineNum">      40</span>                 :             : </span>
@@ -145,10 +145,10 @@
 <span id="L67"><span class="lineNum">      67</span>                 :             :  */</span>
 <span id="L68"><span class="lineNum">      68</span>                 :             : class UNILINK_API BuilderException : public UnilinkException {</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :  public:</span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">           3 :   explicit BuilderException(const std::string&amp; message, const std::string&amp; builder_type = &quot;&quot;,</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">          18 :   explicit BuilderException(const std::string&amp; message, const std::string&amp; builder_type = &quot;&quot;,</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :                             const std::string&amp; operation = &quot;&quot;)</span>
-<span id="L72"><span class="lineNum">      72</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           9 :       : UnilinkException(message, &quot;builder&quot;, operation), builder_type_(builder_type) {}</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L72"><span class="lineNum">      72</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          54 :       : UnilinkException(message, &quot;builder&quot;, operation), builder_type_(builder_type) {}</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L73"><span class="lineNum">      73</span>                 :             : </span>
 <span id="L74"><span class="lineNum">      74</span>                 :             :   ~BuilderException() noexcept override;</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : </span>

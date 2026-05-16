@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">97.5&nbsp;%</td>
-            <td class="headerCovTableEntry">40</td>
-            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntryHi">98.1&nbsp;%</td>
+            <td class="headerCovTableEntry">53</td>
+            <td class="headerCovTableEntry">52</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 02:44:04</td>
+            <td class="headerValue">2026-05-16 11:17:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">88.0&nbsp;%</td>
-            <td class="headerCovTableEntry">366</td>
-            <td class="headerCovTableEntry">322</td>
+            <td class="headerCovTableEntryHi">91.9&nbsp;%</td>
+            <td class="headerCovTableEntry">495</td>
+            <td class="headerCovTableEntry">455</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
-            <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryLo">40.9&nbsp;%</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">9</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -139,8 +139,8 @@
 <span id="L61"><span class="lineNum">      61</span>                 :             : template &lt;typename T, typename Derived, uint32_t State = BuilderState::None&gt;</span>
 <span id="L62"><span class="lineNum">      62</span>                 :             : class BuilderInterface {</span>
 <span id="L63"><span class="lineNum">      63</span>                 :             :  public:</span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC tlaBgGNC">         480 :   virtual ~BuilderInterface() = default;</span></span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">         480 :   BuilderInterface() = default;</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC tlaBgGNC">         572 :   virtual ~BuilderInterface() = default;</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">         572 :   BuilderInterface() = default;</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :   BuilderInterface(const BuilderInterface&amp;) = default;</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :   BuilderInterface(BuilderInterface&amp;&amp;) = default;</span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :   BuilderInterface&amp; operator=(const BuilderInterface&amp;) = default;</span>
@@ -160,18 +160,18 @@
 <span id="L82"><span class="lineNum">      82</span>                 :             :    * @brief Set data handler callback</span>
 <span id="L83"><span class="lineNum">      83</span>                 :             :    */</span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :   template &lt;DataHandler F&gt;</span>
-<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">         164 :   auto on_data(F&amp;&amp; handler) {</span></span>
-<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">         164 :     on_data_ = std::forward&lt;F&gt;(handler);</span></span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">         164 :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">         178 :   auto on_data(F&amp;&amp; handler) {</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">         178 :     on_data_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">         178 :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
 <span id="L88"><span class="lineNum">      88</span>                 :             :   }</span>
 <span id="L89"><span class="lineNum">      89</span>                 :             : </span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :   /**</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :    * @brief Set batched data handler callback</span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :    */</span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :   template &lt;BatchDataHandler F&gt;</span>
-<span id="L94"><span class="lineNum">      94</span>                 :             :   auto on_data_batch(F&amp;&amp; handler) {</span>
-<span id="L95"><span class="lineNum">      95</span>                 :             :     on_data_batch_ = std::forward&lt;F&gt;(handler);</span>
-<span id="L96"><span class="lineNum">      96</span>                 :             :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">           7 :   auto on_data_batch(F&amp;&amp; handler) {</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">           7 :     on_data_batch_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">           7 :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
 <span id="L97"><span class="lineNum">      97</span>                 :             :   }</span>
 <span id="L98"><span class="lineNum">      98</span>                 :             : </span>
 <span id="L99"><span class="lineNum">      99</span>                 :             :   /**</span>
@@ -186,9 +186,9 @@
 <span id="L108"><span class="lineNum">     108</span>                 :             :    * @brief Set connection handler callback</span>
 <span id="L109"><span class="lineNum">     109</span>                 :             :    */</span>
 <span id="L110"><span class="lineNum">     110</span>                 :             :   template &lt;ConnectionHandler F&gt;</span>
-<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">          23 :   Derived&amp; on_connect(F&amp;&amp; handler) {</span></span>
-<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">          23 :     on_connect_ = std::forward&lt;F&gt;(handler);</span></span>
-<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">          23 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">          34 :   Derived&amp; on_connect(F&amp;&amp; handler) {</span></span>
+<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">          34 :     on_connect_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">          34 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
 <span id="L114"><span class="lineNum">     114</span>                 :             :   }</span>
 <span id="L115"><span class="lineNum">     115</span>                 :             : </span>
 <span id="L116"><span class="lineNum">     116</span>                 :             :   /**</span>
@@ -203,9 +203,9 @@
 <span id="L125"><span class="lineNum">     125</span>                 :             :    * @brief Set disconnection handler callback</span>
 <span id="L126"><span class="lineNum">     126</span>                 :             :    */</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             :   template &lt;ConnectionHandler F&gt;</span>
-<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           5 :   Derived&amp; on_disconnect(F&amp;&amp; handler) {</span></span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           5 :     on_disconnect_ = std::forward&lt;F&gt;(handler);</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           5 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">          16 :   Derived&amp; on_disconnect(F&amp;&amp; handler) {</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          16 :     on_disconnect_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">          16 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :             :   }</span>
 <span id="L132"><span class="lineNum">     132</span>                 :             : </span>
 <span id="L133"><span class="lineNum">     133</span>                 :             :   /**</span>
@@ -220,9 +220,9 @@
 <span id="L142"><span class="lineNum">     142</span>                 :             :    * @brief Set error handler callback</span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :    */</span>
 <span id="L144"><span class="lineNum">     144</span>                 :             :   template &lt;ErrorHandler F&gt;</span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">         156 :   auto on_error(F&amp;&amp; handler) {</span></span>
-<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">         156 :     on_error_ = std::forward&lt;F&gt;(handler);</span></span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">         156 :     return typename Derived::template Rebind&lt;State | BuilderState::HasError&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">         177 :   auto on_error(F&amp;&amp; handler) {</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">         177 :     on_error_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">         177 :     return typename Derived::template Rebind&lt;State | BuilderState::HasError&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
 <span id="L148"><span class="lineNum">     148</span>                 :             :   }</span>
 <span id="L149"><span class="lineNum">     149</span>                 :             : </span>
 <span id="L150"><span class="lineNum">     150</span>                 :             :   /**</span>
@@ -246,51 +246,53 @@
 <span id="L168"><span class="lineNum">     168</span>                 :             :   /**</span>
 <span id="L169"><span class="lineNum">     169</span>                 :             :    * @brief Activate line-delimited framing</span>
 <span id="L170"><span class="lineNum">     170</span>                 :             :    */</span>
-<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC">           1 :   Derived&amp; use_line_framer(std::string_view delimiter = &quot;\n&quot;, bool include_delimiter = false,</span></span>
+<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC">           7 :   Derived&amp; use_line_framer(std::string_view delimiter = &quot;\n&quot;, bool include_delimiter = false,</span></span>
 <span id="L172"><span class="lineNum">     172</span>                 :             :                            size_t max_length = 65536) {</span>
-<span id="L173"><span class="lineNum">     173</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     std::string delim(delimiter);</span></span>
-<span id="L174"><span class="lineNum">     174</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           1 :     framer_factory_ = [delim, include_delimiter, max_length]() {</span></span>
+<span id="L173"><span class="lineNum">     173</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :     std::string delim(delimiter);</span></span>
+<span id="L174"><span class="lineNum">     174</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          10 :     framer_factory_ = [delim, include_delimiter, max_length]() {</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          20 :       return std::make_unique&lt;framer::LineFramer&gt;(delim, include_delimiter, max_length);</span></span>
+<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          23 :       return std::make_unique&lt;framer::LineFramer&gt;(delim, include_delimiter, max_length);</span></span>
 <span id="L176"><span class="lineNum">     176</span>                 :             :     };</span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">           1 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">           1 :   }</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">           7 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">           7 :   }</span></span>
 <span id="L179"><span class="lineNum">     179</span>                 :             : </span>
 <span id="L180"><span class="lineNum">     180</span>                 :             :   /**</span>
 <span id="L181"><span class="lineNum">     181</span>                 :             :    * @brief Activate binary packet framing</span>
 <span id="L182"><span class="lineNum">     182</span>                 :             :    */</span>
-<span id="L183"><span class="lineNum">     183</span>                 :             :   Derived&amp; use_packet_framer(const std::vector&lt;uint8_t&gt;&amp; start_pattern, const std::vector&lt;uint8_t&gt;&amp; end_pattern,</span>
+<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">           5 :   Derived&amp; use_packet_framer(const std::vector&lt;uint8_t&gt;&amp; start_pattern, const std::vector&lt;uint8_t&gt;&amp; end_pattern,</span></span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :                              size_t max_length) {</span>
-<span id="L185"><span class="lineNum">     185</span>                 :             :     framer_factory_ = [start_pattern, end_pattern, max_length]() {</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             :       return std::make_unique&lt;framer::PacketFramer&gt;(start_pattern, end_pattern, max_length);</span>
+<span id="L185"><span class="lineNum">     185</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           7 :     framer_factory_ = [start_pattern, end_pattern, max_length]() {</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
+<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not taken"> - </span>]
+<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">           3 :       return std::make_unique&lt;framer::PacketFramer&gt;(start_pattern, end_pattern, max_length);</span></span>
 <span id="L187"><span class="lineNum">     187</span>                 :             :     };</span>
-<span id="L188"><span class="lineNum">     188</span>                 :             :     return static_cast&lt;Derived&amp;&gt;(*this);</span>
+<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">           5 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
 <span id="L189"><span class="lineNum">     189</span>                 :             :   }</span>
 <span id="L190"><span class="lineNum">     190</span>                 :             : </span>
 <span id="L191"><span class="lineNum">     191</span>                 :             :   /**</span>
 <span id="L192"><span class="lineNum">     192</span>                 :             :    * @brief Set message handler callback</span>
 <span id="L193"><span class="lineNum">     193</span>                 :             :    */</span>
 <span id="L194"><span class="lineNum">     194</span>                 :             :   template &lt;DataHandler F&gt;</span>
-<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">           5 :   auto on_message(F&amp;&amp; handler) {</span></span>
-<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">           5 :     on_message_ = std::forward&lt;F&gt;(handler);</span></span>
-<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">           5 :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          12 :   auto on_message(F&amp;&amp; handler) {</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          12 :     on_message_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          12 :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
 <span id="L198"><span class="lineNum">     198</span>                 :             :   }</span>
 <span id="L199"><span class="lineNum">     199</span>                 :             : </span>
 <span id="L200"><span class="lineNum">     200</span>                 :             :   /**</span>
 <span id="L201"><span class="lineNum">     201</span>                 :             :    * @brief Set batched framed-message handler callback</span>
 <span id="L202"><span class="lineNum">     202</span>                 :             :    */</span>
 <span id="L203"><span class="lineNum">     203</span>                 :             :   template &lt;BatchDataHandler F&gt;</span>
-<span id="L204"><span class="lineNum">     204</span>                 :             :   auto on_message_batch(F&amp;&amp; handler) {</span>
-<span id="L205"><span class="lineNum">     205</span>                 :             :     on_message_batch_ = std::forward&lt;F&gt;(handler);</span>
-<span id="L206"><span class="lineNum">     206</span>                 :             :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">           7 :   auto on_message_batch(F&amp;&amp; handler) {</span></span>
+<span id="L205"><span class="lineNum">     205</span>                 :<span class="tlaGNC">           7 :     on_message_batch_ = std::forward&lt;F&gt;(handler);</span></span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">           7 :     return typename Derived::template Rebind&lt;State | BuilderState::HasData&gt;(std::move(static_cast&lt;Derived&amp;&gt;(*this)));</span></span>
 <span id="L207"><span class="lineNum">     207</span>                 :             :   }</span>
 <span id="L208"><span class="lineNum">     208</span>                 :             : </span>
 <span id="L209"><span class="lineNum">     209</span>                 :             :   /**</span>
 <span id="L210"><span class="lineNum">     210</span>                 :             :    * @brief Set backpressure notification callback</span>
 <span id="L211"><span class="lineNum">     211</span>                 :             :    */</span>
-<span id="L212"><span class="lineNum">     212</span>                 :             :   Derived&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) {</span>
-<span id="L213"><span class="lineNum">     213</span>                 :             :     on_backpressure_ = std::move(handler);</span>
-<span id="L214"><span class="lineNum">     214</span>                 :             :     return static_cast&lt;Derived&amp;&gt;(*this);</span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">          11 :   Derived&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) {</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">          11 :     on_backpressure_ = std::move(handler);</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">          11 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
 <span id="L215"><span class="lineNum">     215</span>                 :             :   }</span>
 <span id="L216"><span class="lineNum">     216</span>                 :             : </span>
 <span id="L217"><span class="lineNum">     217</span>                 :             :   /**</span>
@@ -304,30 +306,30 @@
 <span id="L225"><span class="lineNum">     225</span>                 :             :   /**</span>
 <span id="L226"><span class="lineNum">     226</span>                 :             :    * @brief Set the backpressure strategy</span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :    */</span>
-<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">           3 :   Derived&amp; backpressure_strategy(base::constants::BackpressureStrategy strategy) {</span></span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">           3 :     bp_strategy_ = strategy;</span></span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">           3 :     bp_strategy_set_ = true;</span></span>
-<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">           3 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">          14 :   Derived&amp; backpressure_strategy(base::constants::BackpressureStrategy strategy) {</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          14 :     bp_strategy_ = strategy;</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          14 :     bp_strategy_set_ = true;</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          14 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
 <span id="L232"><span class="lineNum">     232</span>                 :             :   }</span>
 <span id="L233"><span class="lineNum">     233</span>                 :             : </span>
 <span id="L234"><span class="lineNum">     234</span>                 :             :   /**</span>
 <span id="L235"><span class="lineNum">     235</span>                 :             :    * @brief Set the backpressure threshold in bytes</span>
 <span id="L236"><span class="lineNum">     236</span>                 :             :    */</span>
-<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">           3 :   Derived&amp; backpressure_threshold(size_t threshold) {</span></span>
-<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">           3 :     bp_threshold_ = threshold;</span></span>
-<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">           3 :     bp_threshold_set_ = true;</span></span>
-<span id="L240"><span class="lineNum">     240</span>                 :<span class="tlaGNC">           3 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">          14 :   Derived&amp; backpressure_threshold(size_t threshold) {</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">          14 :     bp_threshold_ = threshold;</span></span>
+<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">          14 :     bp_threshold_set_ = true;</span></span>
+<span id="L240"><span class="lineNum">     240</span>                 :<span class="tlaGNC">          14 :     return static_cast&lt;Derived&amp;&gt;(*this);</span></span>
 <span id="L241"><span class="lineNum">     241</span>                 :             :   }</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             : </span>
 <span id="L243"><span class="lineNum">     243</span>                 :             :  protected:</span>
-<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">         151 :   size_t get_effective_backpressure_threshold() const {</span></span>
-<span id="L245"><span class="lineNum">     245</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 148 times"> + </span>]:<span class="tlaGNC">         151 :     if (bp_threshold_set_) {</span></span>
-<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">           3 :       return bp_threshold_;</span></span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">         172 :   size_t get_effective_backpressure_threshold() const {</span></span>
+<span id="L245"><span class="lineNum">     245</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 158 times"> + </span>]:<span class="tlaGNC">         172 :     if (bp_threshold_set_) {</span></span>
+<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">          14 :       return bp_threshold_;</span></span>
 <span id="L247"><span class="lineNum">     247</span>                 :             :     }</span>
-<span id="L248"><span class="lineNum">     248</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 148 times"> + </span>]:<span class="tlaGNC">         148 :     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {</span></span>
+<span id="L248"><span class="lineNum">     248</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 158 times"> + </span>]:<span class="tlaGNC">         158 :     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {</span></span>
 <span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       return base::constants::DEFAULT_THRESHOLD_BEST_EFFORT;</span></span>
 <span id="L250"><span class="lineNum">     250</span>                 :             :     }</span>
-<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC tlaBgGNC">         148 :     return base::constants::DEFAULT_THRESHOLD_RELIABLE;</span></span>
+<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC tlaBgGNC">         158 :     return base::constants::DEFAULT_THRESHOLD_RELIABLE;</span></span>
 <span id="L252"><span class="lineNum">     252</span>                 :             :   }</span>
 <span id="L253"><span class="lineNum">     253</span>                 :             : </span>
 <span id="L254"><span class="lineNum">     254</span>                 :             :   std::function&lt;std::unique_ptr&lt;framer::IFramer&gt;()&gt; framer_factory_;</span>
