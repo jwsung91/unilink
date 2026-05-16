@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -162,6 +163,57 @@ TEST_F(BuilderTest, BuilderConfiguration) {
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->listening());
+}
+
+TEST_F(BuilderTest, TcpServerBuilderAdvancedOptions) {
+  auto server = tcp_server(test_port_)
+                    .bind_address("127.0.0.1")
+                    .independent_context(true)
+                    .enable_port_retry(true)
+                    .max_port_retries(3)
+                    .port_retry_interval(25ms)
+                    .idle_timeout(250ms)
+                    .max_clients(3)
+                    .backpressure_strategy(base::constants::BackpressureStrategy::BestEffort)
+                    .backpressure_threshold(1024)
+                    .on_backpressure([](size_t) {})
+                    .use_line_framer("\n", false, 64)
+                    .on_message([](const wrapper::MessageContext&) {})
+                    .on_message_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_data_batch([](const std::vector<wrapper::MessageContext>&) {})
+                    .on_connect([](const wrapper::ConnectionContext&) {})
+                    .on_disconnect([](const wrapper::ConnectionContext&) {})
+                    .on_error([](const wrapper::ErrorContext&) {})
+                    .build();
+
+  ASSERT_NE(server, nullptr);
+  EXPECT_FALSE(server->listening());
+}
+
+TEST_F(BuilderTest, TcpServerBuilderLegacyClientHelpers) {
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+  auto single_client_server =
+      tcp_server(test_port_).single_client().on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  auto multi_client_server =
+      tcp_server(test_port_).multi_client(2).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  EXPECT_THROW(tcp_server(test_port_).multi_client(0), diagnostics::BuilderException);
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
+  EXPECT_NE(single_client_server, nullptr);
+  EXPECT_NE(multi_client_server, nullptr);
+}
+
+TEST_F(BuilderTest, TcpServerBuilderRejectsInvalidConfiguration) {
+  EXPECT_THROW(tcp_server(0), diagnostics::BuilderException);
+
+#if __cplusplus >= 202002L
+  EXPECT_THROW(builder::TcpServerBuilder<>(test_port_).build(), diagnostics::BuilderException);
+#endif
 }
 
 TEST_F(BuilderTest, CallbackRegistration) {
