@@ -21,6 +21,7 @@
 #include <boost/system/error_code.hpp>
 #include <chrono>
 #include <memory>
+#include <optional>
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/iserial_port.hpp"
@@ -39,8 +40,8 @@ class FakeSerialPort : public interface::SerialPortInterface {
   explicit FakeSerialPort(boost::asio::io_context& ioc) : ioc_(ioc) {}
 
   void open(const std::string&, boost::system::error_code& ec) override {
-    open_ = true;
-    ec.clear();
+    ec = open_ec_;
+    open_ = !ec;
   }
   bool is_open() const override { return open_; }
   void close(boost::system::error_code& ec) override {
@@ -50,17 +51,19 @@ class FakeSerialPort : public interface::SerialPortInterface {
   }
 
   void set_option(const boost::asio::serial_port_base::baud_rate&, boost::system::error_code& ec) override {
-    ec.clear();
+    ec = baud_rate_ec_;
   }
   void set_option(const boost::asio::serial_port_base::character_size&, boost::system::error_code& ec) override {
-    ec.clear();
+    ec = character_size_ec_;
   }
   void set_option(const boost::asio::serial_port_base::stop_bits&, boost::system::error_code& ec) override {
-    ec.clear();
+    ec = stop_bits_ec_;
   }
-  void set_option(const boost::asio::serial_port_base::parity&, boost::system::error_code& ec) override { ec.clear(); }
+  void set_option(const boost::asio::serial_port_base::parity&, boost::system::error_code& ec) override {
+    ec = parity_ec_;
+  }
   void set_option(const boost::asio::serial_port_base::flow_control&, boost::system::error_code& ec) override {
-    ec.clear();
+    ec = flow_control_ec_;
   }
 
   void async_read_some(const boost::asio::mutable_buffer&,
@@ -70,9 +73,32 @@ class FakeSerialPort : public interface::SerialPortInterface {
 
   void async_write(const boost::asio::const_buffer& buffer,
                    std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    boost::system::error_code ok;
+    ++write_count_;
     auto size = buffer.size();
-    boost::asio::post(ioc_, [handler = std::move(handler), ok, size]() { handler(ok, size); });
+    if (!complete_writes_) {
+      pending_write_handler_ = std::move(handler);
+      pending_write_size_ = size;
+      return;
+    }
+    boost::asio::post(ioc_, [handler = std::move(handler), ec = write_ec_, size]() { handler(ec, size); });
+  }
+
+  void set_open_error(boost::system::error_code ec) { open_ec_ = ec; }
+  void set_baud_rate_error(boost::system::error_code ec) { baud_rate_ec_ = ec; }
+  void set_character_size_error(boost::system::error_code ec) { character_size_ec_ = ec; }
+  void set_stop_bits_error(boost::system::error_code ec) { stop_bits_ec_ = ec; }
+  void set_parity_error(boost::system::error_code ec) { parity_ec_ = ec; }
+  void set_flow_control_error(boost::system::error_code ec) { flow_control_ec_ = ec; }
+  void set_write_error(boost::system::error_code ec) { write_ec_ = ec; }
+  void set_complete_writes(bool complete) { complete_writes_ = complete; }
+  int write_count() const { return write_count_; }
+
+  void complete_pending_write(const boost::system::error_code& ec = {}) {
+    if (!pending_write_handler_) return;
+    auto handler = std::move(pending_write_handler_);
+    auto size = pending_write_size_.value_or(0);
+    pending_write_size_.reset();
+    boost::asio::post(ioc_, [handler = std::move(handler), ec, size]() { handler(ec, size); });
   }
 
   void emit_read(std::size_t n = 1, const boost::system::error_code& ec = {}) {
@@ -89,8 +115,19 @@ class FakeSerialPort : public interface::SerialPortInterface {
 
  private:
   boost::asio::io_context& ioc_;
+  boost::system::error_code open_ec_;
+  boost::system::error_code baud_rate_ec_;
+  boost::system::error_code character_size_ec_;
+  boost::system::error_code stop_bits_ec_;
+  boost::system::error_code parity_ec_;
+  boost::system::error_code flow_control_ec_;
+  boost::system::error_code write_ec_;
   bool open_{false};
+  bool complete_writes_{true};
+  int write_count_{0};
   std::function<void(const boost::system::error_code&, std::size_t)> read_handler_;
+  std::function<void(const boost::system::error_code&, std::size_t)> pending_write_handler_;
+  std::optional<std::size_t> pending_write_size_;
 };
 
 }  // namespace
@@ -170,6 +207,40 @@ TEST(TransportSerialTest, QueueLimitRejectsMessage) {
   EXPECT_FALSE(error_seen.load());
   serial->stop();
   ioc.run_for(10ms);
+}
+
+TEST(TransportSerialTest, OpenAndConfigureFailuresMoveToError) {
+  using Setter = void (FakeSerialPort::*)(boost::system::error_code);
+  std::vector<Setter> setters = {
+      &FakeSerialPort::set_open_error,           &FakeSerialPort::set_baud_rate_error,
+      &FakeSerialPort::set_character_size_error, &FakeSerialPort::set_stop_bits_error,
+      &FakeSerialPort::set_parity_error,         &FakeSerialPort::set_flow_control_error,
+  };
+
+  for (auto setter : setters) {
+    boost::asio::io_context ioc;
+    config::SerialConfig cfg;
+    cfg.reopen_on_error = false;
+    cfg.parity = config::SerialConfig::Parity::Odd;
+    cfg.flow = config::SerialConfig::Flow::Hardware;
+
+    auto port = std::make_unique<FakeSerialPort>(ioc);
+    ((*port).*setter)(make_error_code(boost::asio::error::access_denied));
+    auto serial = Serial::create(cfg, std::move(port), ioc);
+
+    std::atomic<bool> error_seen{false};
+    serial->on_state([&](base::LinkState state) {
+      if (state == base::LinkState::Error) error_seen = true;
+    });
+
+    serial->start();
+    ioc.run_for(30ms);
+
+    EXPECT_TRUE(error_seen.load());
+    serial->stop();
+    ioc.restart();
+    ioc.run_for(5ms);
+  }
 }
 
 TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
@@ -283,6 +354,93 @@ TEST(TransportSerialTest, CallbackExceptionRetriesWhenAllowed) {
 
   EXPECT_EQ(error_events.load(), 0);
   EXPECT_GE(connecting_events.load(), 2);  // initial start + retry attempt
+  serial->stop();
+  ioc.run_for(10ms);
+}
+
+TEST(TransportSerialTest, CallbackUnknownExceptionRetriesWhenAllowed) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.stop_on_callback_exception = false;
+  cfg.retry_interval_ms = 10;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto* port_raw = port.get();
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<int> connecting_events{0};
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) connecting_events.fetch_add(1);
+  });
+
+  serial->on_bytes([](memory::ConstByteSpan) { throw 7; });
+
+  serial->start();
+  ioc.run_for(5ms);
+  port_raw->emit_read(4);
+  ioc.run_for(40ms);
+
+  EXPECT_GE(connecting_events.load(), 2);
+  serial->stop();
+  ioc.run_for(10ms);
+}
+
+TEST(TransportSerialTest, WriteErrorMovesToErrorWhenRetryDisabled) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.reopen_on_error = false;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  port->set_write_error(make_error_code(boost::asio::error::broken_pipe));
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<bool> error_seen{false};
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
+  });
+
+  serial->start();
+  ioc.run_for(5ms);
+
+  std::vector<uint8_t> payload(32, 0x42);
+  EXPECT_TRUE(serial->async_write_move(std::move(payload)));
+  ioc.run_for(30ms);
+
+  EXPECT_TRUE(error_seen.load());
+  serial->stop();
+  ioc.run_for(10ms);
+}
+
+TEST(TransportSerialTest, BestEffortDropsOldestWhileWriteIsInFlight) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.backpressure_threshold = 1024;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto* port_raw = port.get();
+  port->set_complete_writes(false);
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+  serial->set_backpressure_strategy(base::constants::BackpressureStrategy::BestEffort);
+
+  std::vector<size_t> bp_events;
+  serial->on_backpressure([&](size_t queued) { bp_events.push_back(queued); });
+
+  serial->start();
+  ioc.run_for(5ms);
+
+  std::vector<uint8_t> payload(2048, 0x31);
+  EXPECT_TRUE(serial->async_write_move(std::vector<uint8_t>(payload)));
+  EXPECT_TRUE(serial->async_write_move(std::vector<uint8_t>(payload)));
+  EXPECT_TRUE(serial->async_write_shared(std::make_shared<const std::vector<uint8_t>>(payload)));
+  ioc.run_for(20ms);
+
+  EXPECT_GE(port_raw->write_count(), 1);
+  EXPECT_TRUE(serial->is_backpressure_active());
+
+  port_raw->complete_pending_write();
+  ioc.run_for(30ms);
+
+  EXPECT_FALSE(bp_events.empty());
   serial->stop();
   ioc.run_for(10ms);
 }

@@ -16,15 +16,18 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <atomic>
 #include <boost/asio.hpp>
 #include <memory>
+#include <string>
 #include <thread>
 #include <vector>
 
 #include "test_constants.hpp"
 #include "test_utils.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
@@ -33,6 +36,57 @@ using namespace unilink::transport;
 using namespace unilink::test;
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
+
+namespace {
+
+class FakeTcpAcceptor : public interface::TcpAcceptorInterface {
+ public:
+  enum class FailureMode { None, Open, Listen, Accept };
+
+  FakeTcpAcceptor(net::io_context& ioc, FailureMode mode) : ioc_(ioc), mode_(mode) {}
+
+  void open(const tcp&, boost::system::error_code& ec) override {
+    if (mode_ == FailureMode::Open) {
+      ec = net::error::fault;
+      return;
+    }
+    open_ = true;
+    ec.clear();
+  }
+
+  void bind(const tcp::endpoint&, boost::system::error_code& ec) override { ec.clear(); }
+
+  void listen(int, boost::system::error_code& ec) override {
+    if (mode_ == FailureMode::Listen) {
+      ec = net::error::fault;
+      return;
+    }
+    ec.clear();
+  }
+
+  bool is_open() const override { return open_; }
+
+  void close(boost::system::error_code& ec) override {
+    open_ = false;
+    ec.clear();
+  }
+
+  void async_accept(std::function<void(const boost::system::error_code&, tcp::socket)> handler) override {
+    net::post(ioc_, [this, handler = std::move(handler)]() mutable {
+      tcp::socket socket(ioc_);
+      if (mode_ == FailureMode::Accept) {
+        handler(net::error::connection_reset, std::move(socket));
+      }
+    });
+  }
+
+ private:
+  net::io_context& ioc_;
+  FailureMode mode_;
+  bool open_{false};
+};
+
+}  // namespace
 
 class TransportTcpServerTest : public ::testing::Test {
  protected:
@@ -339,4 +393,162 @@ TEST_F(TransportTcpServerTest, CallbackUpdatePropagation) {
 
   // To assert correct behavior (once fixed):
   EXPECT_TRUE(called_cb2) << "Client 1 should have picked up the new callback cb2";
+}
+
+TEST_F(TransportTcpServerTest, InjectedNullAcceptorThrows) {
+  net::io_context ioc;
+  config::TcpServerConfig cfg;
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  EXPECT_THROW((void)TcpServer::create(cfg, nullptr, ioc), std::runtime_error);
+}
+
+TEST_F(TransportTcpServerTest, InvalidBindAddressMovesToErrorAndSwallowsStateException) {
+  net::io_context ioc;
+  config::TcpServerConfig cfg;
+  cfg.bind_address = "not an address";
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  server_ = TcpServer::create(cfg, std::make_unique<FakeTcpAcceptor>(ioc, FakeTcpAcceptor::FailureMode::None), ioc);
+  server_->on_state([](base::LinkState) { throw std::runtime_error("state"); });
+
+  EXPECT_NO_THROW({
+    server_->start();
+    ioc.run_for(std::chrono::milliseconds(50));
+  });
+  EXPECT_EQ(server_->state(), base::LinkState::Error);
+
+  server_->on_state(nullptr);
+  server_->stop();
+  server_.reset();
+}
+
+TEST_F(TransportTcpServerTest, InjectedAcceptorOpenFailureMovesToError) {
+  net::io_context ioc;
+  config::TcpServerConfig cfg;
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  server_ = TcpServer::create(cfg, std::make_unique<FakeTcpAcceptor>(ioc, FakeTcpAcceptor::FailureMode::Open), ioc);
+  std::atomic<bool> error_seen{false};
+  server_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_seen = true;
+    }
+  });
+
+  server_->start();
+  ioc.run_for(std::chrono::milliseconds(50));
+
+  EXPECT_TRUE(error_seen.load());
+
+  server_->stop();
+  server_.reset();
+}
+
+TEST_F(TransportTcpServerTest, InjectedAcceptorListenFailureMovesToError) {
+  net::io_context ioc;
+  config::TcpServerConfig cfg;
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  server_ = TcpServer::create(cfg, std::make_unique<FakeTcpAcceptor>(ioc, FakeTcpAcceptor::FailureMode::Listen), ioc);
+  std::atomic<bool> error_seen{false};
+  server_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_seen = true;
+    }
+  });
+
+  server_->start();
+  ioc.run_for(std::chrono::milliseconds(50));
+
+  EXPECT_TRUE(error_seen.load());
+
+  server_->stop();
+  server_.reset();
+}
+
+TEST_F(TransportTcpServerTest, InjectedAcceptErrorMovesToError) {
+  net::io_context ioc;
+  config::TcpServerConfig cfg;
+  cfg.port = TestUtils::getAvailableTestPort();
+
+  server_ = TcpServer::create(cfg, std::make_unique<FakeTcpAcceptor>(ioc, FakeTcpAcceptor::FailureMode::Accept), ioc);
+  std::atomic<bool> error_seen{false};
+  server_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_seen = true;
+    }
+  });
+
+  server_->start();
+  ioc.run_for(std::chrono::milliseconds(50));
+
+  EXPECT_TRUE(error_seen.load());
+
+  server_->stop();
+  server_.reset();
+}
+
+TEST_F(TransportTcpServerTest, ConnectedClientWriteAndQueryApis) {
+  uint16_t port = TestUtils::getAvailableTestPort();
+  config::TcpServerConfig cfg;
+  cfg.port = port;
+
+  server_ = TcpServer::create(cfg);
+
+  std::atomic<bool> connected{false};
+  std::atomic<ClientId> client_id{0};
+  server_->on_multi_connect([&](ClientId id, const std::string& info) {
+    client_id = id;
+    connected = true;
+    EXPECT_FALSE(info.empty());
+  });
+
+  server_->start();
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->state() == base::LinkState::Listening; }, 1000));
+
+  net::io_context client_ioc;
+  tcp::socket client(client_ioc);
+  client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), port));
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&] { return connected.load(); }, 1000));
+  ASSERT_TRUE(server_->is_connected());
+  EXPECT_FALSE(server_->is_backpressure_active());
+  EXPECT_FALSE(server_->is_backpressure_active(client_id.load()));
+  EXPECT_EQ(server_->client_count(), 1U);
+  EXPECT_EQ(server_->connected_clients().size(), 1U);
+
+  std::vector<uint8_t> copy_payload = {'c', 'o', 'p', 'y'};
+  std::vector<uint8_t> span_payload = {'s', 'p', 'a', 'n'};
+  auto shared_payload =
+      std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{'s', 'h', 'a', 'r', 'e', 'd'});
+
+  EXPECT_TRUE(server_->async_write_copy(memory::ConstByteSpan(copy_payload.data(), copy_payload.size())));
+  EXPECT_TRUE(server_->async_write_move(std::vector<uint8_t>{'m', 'o', 'v', 'e'}));
+  EXPECT_TRUE(server_->async_write_shared(shared_payload));
+  EXPECT_TRUE(server_->broadcast("broadcast"));
+  EXPECT_TRUE(server_->broadcast(memory::ConstByteSpan(span_payload.data(), span_payload.size())));
+  EXPECT_TRUE(server_->send_to_client(client_id.load(), "direct"));
+  EXPECT_TRUE(
+      server_->send_to_client(client_id.load(), memory::ConstByteSpan(span_payload.data(), span_payload.size())));
+  EXPECT_FALSE(server_->send_to_client(client_id.load() + 1000, "missing"));
+
+  client.non_blocking(true);
+  std::string received;
+  std::array<char, 256> buffer{};
+  ASSERT_TRUE(TestUtils::waitForCondition(
+      [&] {
+        boost::system::error_code ec;
+        const auto n = client.receive(net::buffer(buffer), 0, ec);
+        if (!ec && n > 0) {
+          received.append(buffer.data(), n);
+        }
+        return received.find("copy") != std::string::npos && received.find("move") != std::string::npos &&
+               received.find("shared") != std::string::npos && received.find("broadcast") != std::string::npos &&
+               received.find("span") != std::string::npos && received.find("direct") != std::string::npos;
+      },
+      1000));
+
+  server_->stop();
+  server_.reset();
 }

@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "test_utils.hpp"
+#include "unilink/framer/line_framer.hpp"
 #include "unilink/unilink.hpp"
 #include "wrapper_contract_test_utils.hpp"
 
@@ -224,6 +225,137 @@ TEST_F(TcpServerWrapperLifecycleTest, DisconnectHandlerReplacementUsesLatestCall
 
   ASSERT_TRUE(TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000));
   EXPECT_EQ(count.load(), 2);
+}
+
+TEST(TcpServerWrapperContractTest, InjectedChannelStateAndFallbackOperations) {
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
+  wrapper::TcpServer server(std::static_pointer_cast<interface::Channel>(fake_channel));
+
+  std::atomic<int> errors{0};
+  server.on_error([&](const wrapper::ErrorContext&) { errors++; });
+
+  auto started = server.start();
+  fake_channel->emit_state(base::LinkState::Listening);
+
+  ASSERT_EQ(started.wait_for(std::chrono::milliseconds(100)), std::future_status::ready);
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(server.listening());
+
+  auto second_start = server.start();
+  ASSERT_EQ(second_start.wait_for(std::chrono::milliseconds(100)), std::future_status::ready);
+  EXPECT_TRUE(second_start.get());
+
+  EXPECT_EQ(server.client_count(), 0U);
+  EXPECT_TRUE(server.connected_clients().empty());
+  EXPECT_FALSE(server.broadcast("payload"));
+  EXPECT_FALSE(server.try_broadcast("payload"));
+  EXPECT_FALSE(server.send_to(1, "payload"));
+  EXPECT_FALSE(server.try_send_to(1, "payload"));
+  EXPECT_FALSE(server.send_to_blocking(1, "payload"));
+  EXPECT_FALSE(server.broadcast_line("line"));
+  EXPECT_FALSE(server.send_to_line(1, "line"));
+  EXPECT_FALSE(server.try_broadcast_line("line"));
+  EXPECT_FALSE(server.try_send_to_line(1, "line"));
+
+  fake_channel->emit_state(base::LinkState::Error);
+  EXPECT_FALSE(server.listening());
+  EXPECT_EQ(errors.load(), 1);
+
+  server.stop();
+  fake_channel->emit_state(base::LinkState::Listening);
+  EXPECT_FALSE(server.listening());
+}
+
+TEST_F(TcpServerWrapperLifecycleTest, RawDataBatchFlushesByLatency) {
+  std::atomic<int> batch_count{0};
+  std::vector<std::string> payloads;
+  std::mutex payloads_mutex;
+
+  server_ = std::make_shared<wrapper::TcpServer>(test_port_);
+  server_->batch_size(100).batch_latency(std::chrono::milliseconds(20));
+  server_->on_data_batch([&](const std::vector<wrapper::MessageContext>& batch) {
+    std::lock_guard<std::mutex> lock(payloads_mutex);
+    batch_count++;
+    for (const auto& ctx : batch) payloads.push_back(ctx.data_as_string());
+  });
+
+  ASSERT_TRUE(server_->start().get());
+
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  ASSERT_TRUE(client->start().get());
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() == 1; }, 5000));
+
+  ASSERT_TRUE(client->send("raw-batch"));
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return batch_count.load() == 1; }, 5000));
+  std::lock_guard<std::mutex> lock(payloads_mutex);
+  ASSERT_EQ(payloads.size(), 1U);
+  EXPECT_EQ(payloads[0], "raw-batch");
+}
+
+TEST_F(TcpServerWrapperLifecycleTest, FramedMessageBatchFlushesAtBatchSize) {
+  std::atomic<int> batch_count{0};
+  std::vector<std::string> messages;
+  std::mutex messages_mutex;
+
+  server_ = std::make_shared<wrapper::TcpServer>(test_port_);
+  server_->batch_size(2).batch_latency(std::chrono::seconds(1));
+  server_->framer([]() { return std::make_unique<framer::LineFramer>(); });
+  server_->on_message_batch([&](const std::vector<wrapper::MessageContext>& batch) {
+    std::lock_guard<std::mutex> lock(messages_mutex);
+    batch_count++;
+    for (const auto& ctx : batch) messages.push_back(ctx.data_as_string());
+  });
+
+  ASSERT_TRUE(server_->start().get());
+
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  ASSERT_TRUE(client->start().get());
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() == 1; }, 5000));
+
+  ASSERT_TRUE(client->send("first\nsecond\n"));
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return batch_count.load() == 1; }, 5000));
+  std::lock_guard<std::mutex> lock(messages_mutex);
+  ASSERT_EQ(messages.size(), 2U);
+  EXPECT_EQ(messages[0], "first");
+  EXPECT_EQ(messages[1], "second");
+}
+
+TEST_F(TcpServerWrapperLifecycleTest, LineSendingVariantsReachConnectedClients) {
+  server_ = std::make_shared<wrapper::TcpServer>(test_port_);
+  server_->backpressure_strategy(base::constants::BackpressureStrategy::BestEffort);
+  ASSERT_TRUE(server_->start().get());
+
+  std::atomic<int> received{0};
+  std::string received_data;
+  std::mutex received_mutex;
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
+                    .on_data([&](const wrapper::MessageContext& ctx) {
+                      std::lock_guard<std::mutex> lock(received_mutex);
+                      received++;
+                      received_data += ctx.data_as_string();
+                    })
+                    .on_error([](auto&&) {})
+                    .build();
+  ASSERT_TRUE(client->start().get());
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() == 1; }, 5000));
+
+  auto clients = server_->connected_clients();
+  ASSERT_EQ(clients.size(), 1U);
+  const auto client_id = clients.front();
+
+  EXPECT_TRUE(server_->broadcast_line("broadcast"));
+  EXPECT_TRUE(server_->try_broadcast_line("try-broadcast"));
+  EXPECT_TRUE(server_->send_to_line(client_id, "send-to"));
+  EXPECT_TRUE(server_->try_send_to_line(client_id, "try-send-to"));
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return received.load() >= 1; }, 5000));
+  std::lock_guard<std::mutex> lock(received_mutex);
+  EXPECT_NE(received_data.find("broadcast\n"), std::string::npos);
+  EXPECT_NE(received_data.find("try-broadcast\n"), std::string::npos);
+  EXPECT_NE(received_data.find("send-to\n"), std::string::npos);
+  EXPECT_NE(received_data.find("try-send-to\n"), std::string::npos);
 }
 
 }  // namespace

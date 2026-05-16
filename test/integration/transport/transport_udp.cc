@@ -16,10 +16,13 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <array>
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
@@ -302,4 +305,155 @@ TEST_F(TransportUdpTest, StopCancelsInFlightHandlers) {
   channel->start();
 
   channel->stop();
+}
+
+TEST_F(TransportUdpTest, WriteEdgeCasesReturnFalse) {
+  config::UdpConfig cfg;
+  cfg.local_port = 0;
+  auto channel = UdpChannel::create(cfg);
+
+  std::vector<uint8_t> empty;
+  EXPECT_FALSE(channel->async_write_copy(memory::ConstByteSpan(empty.data(), empty.size())));
+  EXPECT_FALSE(channel->async_write_move({}));
+  EXPECT_FALSE(channel->async_write_shared(nullptr));
+  EXPECT_FALSE(channel->async_write_shared(std::make_shared<const std::vector<uint8_t>>()));
+
+  std::vector<uint8_t> payload = {0x01};
+  EXPECT_FALSE(channel->async_write_shared(std::make_shared<const std::vector<uint8_t>>(payload)));
+  EXPECT_FALSE(channel->async_write_to(memory::ConstByteSpan(empty.data(), empty.size()),
+                                       udp::endpoint(net::ip::make_address("127.0.0.1"), 9)));
+
+  std::atomic<bool> ready{false};
+  channel->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Listening) ready = true;
+  });
+  channel->start();
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return ready.load(); }, 1000));
+  channel->stop();
+
+  EXPECT_FALSE(channel->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+  EXPECT_FALSE(channel->async_write_move(std::vector<uint8_t>{0x02}));
+  EXPECT_FALSE(channel->async_write_to(memory::ConstByteSpan(payload.data(), payload.size()),
+                                       udp::endpoint(net::ip::make_address("127.0.0.1"), 9)));
+}
+
+TEST_F(TransportUdpTest, ExplicitDestinationWriteWithoutRemote) {
+  net::io_context ioc;
+  udp::socket receiver(ioc, udp::endpoint(udp::v4(), 0));
+  receiver.non_blocking(true);
+
+  config::UdpConfig cfg;
+  cfg.local_port = 0;
+  auto channel = UdpChannel::create(cfg, ioc);
+
+  std::atomic<bool> ready{false};
+  channel->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Listening) ready = true;
+  });
+  channel->start();
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&] {
+        ioc.poll();
+        ioc.restart();
+        return ready.load();
+      },
+      1000));
+
+  std::string payload = "explicit";
+  EXPECT_TRUE(
+      channel->async_write_to(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(payload.data()), payload.size()),
+                              receiver.local_endpoint()));
+
+  std::array<char, 64> buffer{};
+  udp::endpoint sender;
+  bool received = TestUtils::waitForCondition(
+      [&] {
+        ioc.poll();
+        ioc.restart();
+        boost::system::error_code ec;
+        const auto bytes = receiver.receive_from(net::buffer(buffer), sender, 0, ec);
+        return !ec && std::string(buffer.data(), bytes) == payload;
+      },
+      1000);
+  EXPECT_TRUE(received);
+
+  channel->stop();
+}
+
+TEST_F(TransportUdpTest, MemoryPoolExplicitDestinationWriteWithoutRemote) {
+  net::io_context ioc;
+  udp::socket receiver(ioc, udp::endpoint(udp::v4(), 0));
+  receiver.non_blocking(true);
+
+  config::UdpConfig cfg;
+  cfg.local_port = 0;
+  cfg.enable_memory_pool = true;
+  auto channel = UdpChannel::create(cfg, ioc);
+
+  std::atomic<bool> ready{false};
+  channel->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Listening) ready = true;
+  });
+  channel->start();
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&] {
+        ioc.poll();
+        ioc.restart();
+        return ready.load();
+      },
+      1000));
+
+  std::vector<uint8_t> payload(32, 0x7A);
+  EXPECT_TRUE(
+      channel->async_write_to(memory::ConstByteSpan(payload.data(), payload.size()), receiver.local_endpoint()));
+
+  std::array<uint8_t, 64> buffer{};
+  udp::endpoint sender;
+  bool received = TestUtils::waitForCondition(
+      [&] {
+        ioc.poll();
+        ioc.restart();
+        boost::system::error_code ec;
+        const auto bytes = receiver.receive_from(net::buffer(buffer), sender, 0, ec);
+        return !ec && bytes == payload.size() && std::equal(payload.begin(), payload.end(), buffer.begin());
+      },
+      1000);
+  EXPECT_TRUE(received);
+
+  channel->stop();
+}
+
+TEST_F(TransportUdpTest, BytesFromExceptionStopsWhenConfigured) {
+  auto port = TestUtils::getAvailableTestPort();
+  config::UdpConfig cfg;
+  cfg.local_port = port;
+  cfg.stop_on_callback_exception = true;
+
+  auto channel = UdpChannel::create(cfg);
+  std::atomic<bool> ready{false};
+  std::atomic<bool> error_seen{false};
+  channel->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Listening) ready = true;
+    if (state == base::LinkState::Error) error_seen = true;
+  });
+  channel->on_bytes_from([](memory::ConstByteSpan, const udp::endpoint&) { throw std::runtime_error("boom"); });
+
+  channel->start();
+  ASSERT_TRUE(TestUtils::waitForCondition([&] { return ready.load(); }, 1000));
+
+  net::io_context ioc;
+  udp::socket sender(ioc, udp::endpoint(udp::v4(), 0));
+  sender.send_to(net::buffer("boom", 4), udp::endpoint(net::ip::make_address("127.0.0.1"), port));
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_seen.load(); }, 1000));
+  channel->stop();
+}
+
+TEST_F(TransportUdpTest, InvalidRemoteAddressThrows) {
+  config::UdpConfig cfg;
+  cfg.local_port = 0;
+  cfg.remote_address = "not a valid address";
+  cfg.remote_port = 12345;
+
+  EXPECT_THROW((void)UdpChannel::create(cfg), std::runtime_error);
 }

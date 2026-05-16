@@ -17,13 +17,21 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <boost/asio.hpp>
+#include <chrono>
+#include <cstring>
 #include <memory>
+#include <string>
 #include <thread>
+#include <vector>
 
 #include "test/mocks/mock_uds_socket.hpp"
 #include "test_constants.hpp"
 #include "test_utils.hpp"
+#include "unilink/base/constants.hpp"
+#include "unilink/memory/safe_span.hpp"
+#include "unilink/transport/base/reconnect_policy.hpp"
 #include "unilink/transport/uds/uds_client.hpp"
 
 using namespace unilink;
@@ -31,6 +39,7 @@ using namespace unilink::transport;
 using namespace unilink::test::mocks;
 using namespace unilink::test;
 using ::testing::_;
+using ::testing::AnyNumber;
 using ::testing::Invoke;
 using ::testing::Return;
 using ::testing::SaveArg;
@@ -46,6 +55,7 @@ class TransportUdsClientTest : public ::testing::Test {
     TestUtils::removeFileIfExists(temp_path);
 
     mock_socket = new MockUdsSocket();
+    EXPECT_CALL(*mock_socket, close(_)).Times(AnyNumber());
     auto socket_ptr = std::unique_ptr<interface::UdsSocketInterface>(mock_socket);
     // Use an external io_context from IoContextManager to match common project patterns
     client = UdsClient::create(cfg, std::move(socket_ptr), ioc);
@@ -193,4 +203,214 @@ TEST_F(TransportUdsClientTest, WriteData) {
 
   EXPECT_TRUE(write_called);
   std::cout << "WriteData: test finished" << std::endl;
+}
+
+TEST_F(TransportUdsClientTest, StartWhileConnectingIsIgnored) {
+  EXPECT_CALL(*mock_socket, async_connect(_, _))
+      .Times(1)
+      .WillOnce(Invoke(
+          [](const net::local::stream_protocol::endpoint&, std::function<void(const boost::system::error_code&)>) {
+            // Keep the client in Connecting.
+          }));
+
+  client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(20));
+
+  client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(20));
+}
+
+TEST_F(TransportUdsClientTest, InvalidConfigMovesToErrorAndRecordsLastError) {
+  cfg.socket_path.clear();
+  auto local_mock = new MockUdsSocket();
+  EXPECT_CALL(*local_mock, close(_)).Times(AnyNumber());
+  auto local_client = UdsClient::create(cfg, std::unique_ptr<interface::UdsSocketInterface>(local_mock), ioc);
+
+  std::atomic<bool> error_seen{false};
+  local_client->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_seen = true;
+    }
+  });
+
+  local_client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(50));
+
+  EXPECT_TRUE(error_seen.load());
+  ASSERT_TRUE(local_client->last_error_info().has_value());
+  EXPECT_EQ(local_client->last_error_info()->category, diagnostics::ErrorCategory::CONFIGURATION);
+
+  local_client->stop();
+}
+
+TEST_F(TransportUdsClientTest, ConnectionTimeoutRecordsLastError) {
+  cfg.connection_timeout_ms = 20;
+  cfg.max_retries = 0;
+
+  auto local_mock = new MockUdsSocket();
+  EXPECT_CALL(*local_mock, async_connect(_, _))
+      .WillOnce(Invoke(
+          [](const net::local::stream_protocol::endpoint&, std::function<void(const boost::system::error_code&)>) {
+            // Leave the operation pending so the timeout path fires.
+          }));
+  EXPECT_CALL(*local_mock, close(_)).Times(AnyNumber());
+  auto local_client = UdsClient::create(cfg, std::unique_ptr<interface::UdsSocketInterface>(local_mock), ioc);
+
+  std::atomic<bool> error_seen{false};
+  local_client->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_seen = true;
+    }
+  });
+
+  local_client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(100));
+
+  EXPECT_TRUE(error_seen.load());
+  ASSERT_TRUE(local_client->last_error_info().has_value());
+  EXPECT_EQ(local_client->last_error_info()->operation, "connect");
+
+  local_client->stop();
+}
+
+TEST_F(TransportUdsClientTest, ReadCallbackReceivesDataThenCloseSchedulesRetry) {
+  cfg.max_retries = 0;
+  const std::string payload = "uds-payload";
+
+  EXPECT_CALL(*mock_socket, async_connect(_, _))
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
+        net::post(ioc, [handler]() { handler(boost::system::error_code()); });
+      }));
+
+  EXPECT_CALL(*mock_socket, async_read_some(_, _))
+      .WillOnce(Invoke([this, &payload](const net::mutable_buffer& buffer,
+                                        std::function<void(const boost::system::error_code&, std::size_t)> handler) {
+        const auto bytes = std::min(buffer.size(), payload.size());
+        std::memcpy(buffer.data(), payload.data(), bytes);
+        net::post(ioc, [handler, bytes]() { handler(boost::system::error_code(), bytes); });
+      }))
+      .WillOnce(Invoke([this](const net::mutable_buffer&,
+                              std::function<void(const boost::system::error_code&, std::size_t)> handler) {
+        net::post(ioc, [handler]() { handler(make_error_code(boost::asio::error::eof), 0); });
+      }));
+  EXPECT_CALL(*mock_socket, close(_)).Times(AnyNumber());
+
+  std::string received;
+  std::atomic<bool> error_seen{false};
+  client->on_bytes(
+      [&](memory::ConstByteSpan data) { received.assign(reinterpret_cast<const char*>(data.data()), data.size()); });
+  client->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_seen = true;
+    }
+  });
+
+  client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(100));
+
+  EXPECT_EQ(received, payload);
+  EXPECT_TRUE(error_seen.load());
+}
+
+TEST_F(TransportUdsClientTest, MoveAndSharedWritesUseSocket) {
+  EXPECT_CALL(*mock_socket, async_connect(_, _))
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
+        net::post(ioc, [handler]() { handler(boost::system::error_code()); });
+      }));
+
+  EXPECT_CALL(*mock_socket, async_read_some(_, _))
+      .WillRepeatedly(Invoke(
+          [](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {}));
+
+  client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(50));
+  ASSERT_TRUE(client->is_connected());
+
+  std::atomic<int> writes{0};
+  EXPECT_CALL(*mock_socket, async_write(_, _))
+      .Times(2)
+      .WillRepeatedly(Invoke([&](const net::const_buffer& buffer,
+                                 std::function<void(const boost::system::error_code&, std::size_t)> handler) {
+        writes.fetch_add(1);
+        net::post(ioc, [handler, size = buffer.size()]() { handler(boost::system::error_code(), size); });
+      }));
+
+  EXPECT_TRUE(client->async_write_move(std::vector<uint8_t>{1, 2, 3}));
+  EXPECT_TRUE(client->async_write_shared(std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{4, 5, 6})));
+
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(100));
+
+  EXPECT_EQ(writes.load(), 2);
+}
+
+TEST_F(TransportUdsClientTest, WriteRejectsDisconnectedAndOversizedPayloads) {
+  std::vector<uint8_t> small = {1, 2, 3};
+  EXPECT_FALSE(client->async_write_copy(memory::ConstByteSpan(small.data(), small.size())));
+  EXPECT_FALSE(client->async_write_move(std::vector<uint8_t>{1}));
+  EXPECT_FALSE(client->async_write_shared(nullptr));
+  EXPECT_FALSE(client->async_write_shared(std::make_shared<const std::vector<uint8_t>>(small)));
+
+  EXPECT_CALL(*mock_socket, async_connect(_, _))
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
+        net::post(ioc, [handler]() { handler(boost::system::error_code()); });
+      }));
+  EXPECT_CALL(*mock_socket, async_read_some(_, _))
+      .WillRepeatedly(Invoke(
+          [](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {}));
+
+  client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(50));
+  ASSERT_TRUE(client->is_connected());
+
+  std::vector<uint8_t> too_large(base::constants::MAX_BUFFER_SIZE + 1, 0x01);
+  EXPECT_FALSE(client->async_write_move(std::move(too_large)));
+}
+
+TEST_F(TransportUdsClientTest, BackpressureCallbackExceptionsAreSwallowed) {
+  cfg.backpressure_threshold = 1024;
+  auto local_mock = new MockUdsSocket();
+  EXPECT_CALL(*local_mock, async_connect(_, _))
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
+        net::post(ioc, [handler]() { handler(boost::system::error_code()); });
+      }));
+  EXPECT_CALL(*local_mock, async_read_some(_, _))
+      .WillRepeatedly(Invoke(
+          [](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {}));
+  EXPECT_CALL(*local_mock, async_write(_, _))
+      .WillOnce(
+          Invoke([this](const net::const_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {
+            // Leave write pending so the queue remains above the high watermark.
+          }));
+  EXPECT_CALL(*local_mock, close(_)).Times(AnyNumber());
+
+  auto local_client = UdsClient::create(cfg, std::unique_ptr<interface::UdsSocketInterface>(local_mock), ioc);
+  local_client->on_backpressure([](size_t) { throw std::runtime_error("backpressure"); });
+
+  local_client->start();
+  ioc.restart();
+  ioc.run_for(std::chrono::milliseconds(50));
+  ASSERT_TRUE(local_client->is_connected());
+
+  std::vector<uint8_t> payload(cfg.backpressure_threshold * 2, 0xAB);
+  EXPECT_TRUE(local_client->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+
+  EXPECT_NO_THROW({
+    ioc.restart();
+    ioc.run_for(std::chrono::milliseconds(50));
+  });
+  EXPECT_TRUE(local_client->is_backpressure_active());
+
+  local_client->stop();
 }
