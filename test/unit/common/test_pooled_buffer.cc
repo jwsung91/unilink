@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "unilink/memory/memory_pool.hpp"

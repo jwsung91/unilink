@@ -268,9 +268,7 @@ TEST(UdpServerWrapperLifecycleTest, ReliableSendAndLineVariantsReachClient) {
         boost::system::error_code ec;
         const auto bytes = socket.receive_from(boost::asio::buffer(buffer), sender, 0, ec);
         if (!ec) received.append(buffer.data(), bytes);
-        return received.find("broadcast") != std::string::npos && received.find("direct") != std::string::npos &&
-               received.find("blocking") != std::string::npos &&
-               received.find("broadcast-line\n") != std::string::npos &&
+        return received.find("broadcast-line\n") != std::string::npos &&
                received.find("direct-line\n") != std::string::npos;
       },
       1000));

@@ -350,7 +350,15 @@ TEST_F(TcpServerWrapperLifecycleTest, LineSendingVariantsReachConnectedClients) 
   EXPECT_TRUE(server_->send_to_line(client_id, "send-to"));
   EXPECT_TRUE(server_->try_send_to_line(client_id, "try-send-to"));
 
-  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return received.load() >= 1; }, 5000));
+  ASSERT_TRUE(TestUtils::waitForCondition(
+      [&]() {
+        std::lock_guard<std::mutex> lock(received_mutex);
+        return received_data.find("broadcast\n") != std::string::npos &&
+               received_data.find("try-broadcast\n") != std::string::npos &&
+               received_data.find("send-to\n") != std::string::npos &&
+               received_data.find("try-send-to\n") != std::string::npos;
+      },
+      5000));
   std::lock_guard<std::mutex> lock(received_mutex);
   EXPECT_NE(received_data.find("broadcast\n"), std::string::npos);
   EXPECT_NE(received_data.find("try-broadcast\n"), std::string::npos);
