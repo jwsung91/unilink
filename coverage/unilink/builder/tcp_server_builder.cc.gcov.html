@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">80.5&nbsp;%</td>
+            <td class="headerCovTableEntryLo">69.0&nbsp;%</td>
             <td class="headerCovTableEntry">87</td>
-            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntry">60</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-16 00:23:52</td>
+            <td class="headerValue">2026-05-16 02:44:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">21.2&nbsp;%</td>
+            <td class="headerCovTableEntryLo">17.3&nbsp;%</td>
             <td class="headerCovTableEntry">52</td>
-            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">9</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">43.9&nbsp;%</td>
+            <td class="headerCovTableEntryLo">38.6&nbsp;%</td>
             <td class="headerCovTableEntry">114</td>
-            <td class="headerCovTableEntry">50</td>
+            <td class="headerCovTableEntry">44</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -124,7 +124,7 @@
 <span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">          73 : }</span></span>
 <span id="L45"><span class="lineNum">      45</span>                 :             : </span>
 <span id="L46"><span class="lineNum">      46</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          70 : std::unique_ptr&lt;wrapper::TcpServer&gt; TcpServerBuilder&lt;State&gt;::build() {</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          72 : std::unique_ptr&lt;wrapper::TcpServer&gt; TcpServerBuilder&lt;State&gt;::build() {</span></span>
 <span id="L48"><span class="lineNum">      48</span>                 :             : #if __cplusplus &gt;= 202002L</span>
 <span id="L49"><span class="lineNum">      49</span>                 :             :   if constexpr (!((State &amp; BuilderState::Ready) == BuilderState::Ready)) {</span>
 <span id="L50"><span class="lineNum">      50</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC tlaBgUNC">           0 :     throw diagnostics::BuilderException(&quot;TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.&quot;);</span></span>
@@ -132,54 +132,54 @@
 <span id="L51"><span class="lineNum">      51</span>                 :             :   }</span>
 <span id="L52"><span class="lineNum">      52</span>                 :             : #endif</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC tlaBgGNC">          70 :   std::unique_ptr&lt;wrapper::TcpServer&gt; server;</span></span>
-<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span>]:<span class="tlaGNC">          70 :   if (independent_context_) {</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC tlaBgGNC">          72 :   std::unique_ptr&lt;wrapper::TcpServer&gt; server;</span></span>
+<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 72 times"> + </span>]:<span class="tlaGNC">          72 :   if (independent_context_) {</span></span>
 <span id="L56"><span class="lineNum">      56</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server = std::make_unique&lt;wrapper::TcpServer&gt;(port_, std::make_shared&lt;boost::asio::io_context&gt;());</span></span>
 <span id="L57"><span class="lineNum">      57</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :     server-&gt;manage_external_context(true);</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :   } else {</span>
-<span id="L59"><span class="lineNum">      59</span>         [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          70 :     server = std::make_unique&lt;wrapper::TcpServer&gt;(port_);</span></span>
+<span id="L59"><span class="lineNum">      59</span>         [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          72 :     server = std::make_unique&lt;wrapper::TcpServer&gt;(port_);</span></span>
 <span id="L60"><span class="lineNum">      60</span>                 :             :   }</span>
 <span id="L61"><span class="lineNum">      61</span>                 :             : </span>
-<span id="L62"><span class="lineNum">      62</span>   [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          70 :   if (this-&gt;on_data_) server-&gt;on_data(this-&gt;on_data_);</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L63"><span class="lineNum">      63</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          70 :   if (this-&gt;on_data_batch_) server-&gt;on_data_batch(this-&gt;on_data_batch_);</span></span>
+<span id="L62"><span class="lineNum">      62</span>   [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          72 :   if (this-&gt;on_data_) server-&gt;on_data(this-&gt;on_data_);</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L63"><span class="lineNum">      63</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          72 :   if (this-&gt;on_data_batch_) server-&gt;on_data_batch(this-&gt;on_data_batch_);</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 62 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          70 :   if (this-&gt;on_connect_) server-&gt;on_connect(this-&gt;on_connect_);</span></span>
+<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 64 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          72 :   if (this-&gt;on_connect_) server-&gt;on_connect(this-&gt;on_connect_);</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L65"><span class="lineNum">      65</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          70 :   if (this-&gt;on_disconnect_) server-&gt;on_disconnect(this-&gt;on_disconnect_);</span></span>
+<span id="L65"><span class="lineNum">      65</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          72 :   if (this-&gt;on_disconnect_) server-&gt;on_disconnect(this-&gt;on_disconnect_);</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L66"><span class="lineNum">      66</span>   [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          70 :   if (this-&gt;on_error_) server-&gt;on_error(this-&gt;on_error_);</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L67"><span class="lineNum">      67</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          70 :   if (this-&gt;on_backpressure_) server-&gt;on_backpressure(this-&gt;on_backpressure_);</span></span>
+<span id="L66"><span class="lineNum">      66</span>   [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          72 :   if (this-&gt;on_error_) server-&gt;on_error(this-&gt;on_error_);</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L67"><span class="lineNum">      67</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          72 :   if (this-&gt;on_backpressure_) server-&gt;on_backpressure(this-&gt;on_backpressure_);</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L68"><span class="lineNum">      68</span>                 :             : </span>
-<span id="L69"><span class="lineNum">      69</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 62 times"> + </span>]:<span class="tlaGNC">          70 :   if (client_limit_enabled_) {</span></span>
-<span id="L70"><span class="lineNum">      70</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :     server-&gt;max_clients(max_clients_);</span></span>
+<span id="L69"><span class="lineNum">      69</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 62 times"> + </span>]:<span class="tlaGNC">          72 :   if (client_limit_enabled_) {</span></span>
+<span id="L70"><span class="lineNum">      70</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :     server-&gt;max_clients(max_clients_);</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :   }</span>
 <span id="L72"><span class="lineNum">      72</span>                 :             : </span>
-<span id="L73"><span class="lineNum">      73</span>         [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          70 :   server-&gt;bind_address(bind_address_);</span></span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">          70 :   server-&gt;port_retry(port_retry_enabled_, static_cast&lt;int&gt;(max_port_retries_),</span></span>
-<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          70 :                      static_cast&lt;int&gt;(port_retry_interval_ms_));</span></span>
-<span id="L76"><span class="lineNum">      76</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 69 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          70 :   if (idle_timeout_set_) server-&gt;idle_timeout(idle_timeout_);</span></span>
+<span id="L73"><span class="lineNum">      73</span>         [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          72 :   server-&gt;bind_address(bind_address_);</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">          72 :   server-&gt;port_retry(port_retry_enabled_, static_cast&lt;int&gt;(max_port_retries_),</span></span>
+<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          72 :                      static_cast&lt;int&gt;(port_retry_interval_ms_));</span></span>
+<span id="L76"><span class="lineNum">      76</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 71 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          72 :   if (idle_timeout_set_) server-&gt;idle_timeout(idle_timeout_);</span></span>
 <span id="L77"><span class="lineNum">      77</span>                 :             : </span>
-<span id="L78"><span class="lineNum">      78</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          70 :   if (this-&gt;bp_strategy_set_) server-&gt;backpressure_strategy(this-&gt;bp_strategy_);</span></span>
-<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          70 :   server-&gt;backpressure_threshold(this-&gt;get_effective_backpressure_threshold());</span></span>
+<span id="L78"><span class="lineNum">      78</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          72 :   if (this-&gt;bp_strategy_set_) server-&gt;backpressure_strategy(this-&gt;bp_strategy_);</span></span>
+<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          72 :   server-&gt;backpressure_threshold(this-&gt;get_effective_backpressure_threshold());</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             : </span>
-<span id="L81"><span class="lineNum">      81</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 69 times"> + </span>]:<span class="tlaGNC">          70 :   if (this-&gt;framer_factory_) {</span></span>
+<span id="L81"><span class="lineNum">      81</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 71 times"> + </span>]:<span class="tlaGNC">          72 :   if (this-&gt;framer_factory_) {</span></span>
 <span id="L82"><span class="lineNum">      82</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;framer(this-&gt;framer_factory_);</span></span>
 <span id="L83"><span class="lineNum">      83</span>                 :             :   }</span>
-<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 69 times"> + </span>]:<span class="tlaGNC">          70 :   if (this-&gt;on_message_) {</span></span>
+<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 71 times"> + </span>]:<span class="tlaGNC">          72 :   if (this-&gt;on_message_) {</span></span>
 <span id="L85"><span class="lineNum">      85</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;on_message(std::move(this-&gt;on_message_));</span></span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :   }</span>
-<span id="L87"><span class="lineNum">      87</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span>]:<span class="tlaGNC">          70 :   if (this-&gt;on_message_batch_) {</span></span>
+<span id="L87"><span class="lineNum">      87</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 72 times"> + </span>]:<span class="tlaGNC">          72 :   if (this-&gt;on_message_batch_) {</span></span>
 <span id="L88"><span class="lineNum">      88</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :     server-&gt;on_message_batch(std::move(this-&gt;on_message_batch_));</span></span>
 <span id="L89"><span class="lineNum">      89</span>                 :             :   }</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             : </span>
-<span id="L91"><span class="lineNum">      91</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 69 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          70 :   if (auto_start_) {</span></span>
+<span id="L91"><span class="lineNum">      91</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 71 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          72 :   if (auto_start_) {</span></span>
 <span id="L92"><span class="lineNum">      92</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     server-&gt;auto_start(true);</span></span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :   }</span>
 <span id="L94"><span class="lineNum">      94</span>                 :             : </span>
-<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">          70 :   return server;</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">          72 :   return server;</span></span>
 <span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaUNC tlaBgUNC">           0 : }</span></span>
 <span id="L97"><span class="lineNum">      97</span>                 :             : </span>
 <span id="L98"><span class="lineNum">      98</span>                 :             : template &lt;uint32_t State&gt;</span>
@@ -201,10 +201,10 @@
 <span id="L114"><span class="lineNum">     114</span>                 :             : }</span>
 <span id="L115"><span class="lineNum">     115</span>                 :             : </span>
 <span id="L116"><span class="lineNum">     116</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">           1 : TcpServerBuilder&lt;State&gt;&amp; TcpServerBuilder&lt;State&gt;::max_clients(uint32_t max_clients) {</span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">           1 :   max_clients_ = max_clients;</span></span>
-<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">           1 :   client_limit_enabled_ = true;</span></span>
-<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">          10 : TcpServerBuilder&lt;State&gt;&amp; TcpServerBuilder&lt;State&gt;::max_clients(uint32_t max_clients) {</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">          10 :   max_clients_ = max_clients;</span></span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          10 :   client_limit_enabled_ = true;</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">          10 :   return *this;</span></span>
 <span id="L121"><span class="lineNum">     121</span>                 :             : }</span>
 <span id="L122"><span class="lineNum">     122</span>                 :             : </span>
 <span id="L123"><span class="lineNum">     123</span>                 :             : template &lt;uint32_t State&gt;</span>
@@ -242,21 +242,21 @@
 <span id="L155"><span class="lineNum">     155</span>                 :             : }</span>
 <span id="L156"><span class="lineNum">     156</span>                 :             : </span>
 <span id="L157"><span class="lineNum">     157</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaGNC">           4 : TcpServerBuilder&lt;State&gt;&amp; TcpServerBuilder&lt;State&gt;::single_client() {</span></span>
-<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">           4 :   max_clients_ = 1;</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">           4 :   client_limit_enabled_ = true;</span></span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">           4 :   return *this;</span></span>
+<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaUNC tlaBgUNC">           0 : TcpServerBuilder&lt;State&gt;&amp; TcpServerBuilder&lt;State&gt;::single_client() {</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaUNC">           0 :   max_clients_ = 1;</span></span>
+<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaUNC">           0 :   client_limit_enabled_ = true;</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             : }</span>
 <span id="L163"><span class="lineNum">     163</span>                 :             : </span>
 <span id="L164"><span class="lineNum">     164</span>                 :             : template &lt;uint32_t State&gt;</span>
-<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">           5 : TcpServerBuilder&lt;State&gt;&amp; TcpServerBuilder&lt;State&gt;::multi_client(size_t max) {</span></span>
-<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           5 :   if (max == 0) {</span></span>
-<span id="L167"><span class="lineNum">     167</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          14 :     throw diagnostics::BuilderException(&quot;multi_client max must be greater than 0&quot;);</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaUNC">           0 : TcpServerBuilder&lt;State&gt;&amp; TcpServerBuilder&lt;State&gt;::multi_client(size_t max) {</span></span>
+<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   if (max == 0) {</span></span>
+<span id="L167"><span class="lineNum">     167</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span> :<span class="tlaUNC">           0 :     throw diagnostics::BuilderException(&quot;multi_client max must be greater than 0&quot;);</span></span>
+<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not executed"> # </span><span class="tlaUNC" title="Branch 5 was not executed"> # </span><span class="tlaUNC" title="Branch 6 was not executed"> # </span><span class="tlaUNC" title="Branch 7 was not executed"> # </span>]
 <span id="L168"><span class="lineNum">     168</span>                 :             :   }</span>
-<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">           3 :   max_clients_ = static_cast&lt;uint32_t&gt;(max);</span></span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">           3 :   client_limit_enabled_ = true;</span></span>
-<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC">           3 :   return *this;</span></span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaUNC">           0 :   max_clients_ = static_cast&lt;uint32_t&gt;(max);</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaUNC">           0 :   client_limit_enabled_ = true;</span></span>
+<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
 <span id="L172"><span class="lineNum">     172</span>                 :             : }</span>
 <span id="L173"><span class="lineNum">     173</span>                 :             : </span>
 <span id="L174"><span class="lineNum">     174</span>                 :             : // Explicit template instantiations</span>
