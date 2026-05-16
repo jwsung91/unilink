@@ -16,6 +16,8 @@
 
 #include <gtest/gtest.h>
 
+#include <chrono>
+
 #include "unilink/memory/memory_pool.hpp"
 
 using namespace unilink::memory;
@@ -85,6 +87,45 @@ TEST(MemoryPoolEdgeCaseTest, StatsAndMetrics) {
 
   auto health = pool.health_metrics();
   EXPECT_EQ(health.hit_rate, 0.0);
+}
+
+TEST(MemoryPoolEdgeCaseTest, MaintenanceNoopsAndNullReleaseAreSafe) {
+  MemoryPool pool;
+
+  std::unique_ptr<uint8_t[]> empty;
+  EXPECT_NO_THROW(pool.release(std::move(empty), static_cast<size_t>(MemoryPool::BufferSize::SMALL)));
+  EXPECT_NO_THROW(pool.cleanup_old_buffers(std::chrono::milliseconds(1)));
+  EXPECT_NO_THROW(pool.resize_pool(128));
+  EXPECT_NO_THROW(pool.auto_tune());
+
+  auto before = pool.memory_usage();
+  auto health = pool.health_metrics();
+  EXPECT_EQ(before.first, before.second);
+  EXPECT_EQ(health.hit_rate, pool.hit_rate());
+}
+
+TEST(MemoryPoolEdgeCaseTest, StandardBucketsReuseAcrossSizes) {
+  MemoryPool pool(4, 16);
+
+  auto medium = pool.acquire(MemoryPool::BufferSize::MEDIUM);
+  auto large = pool.acquire(MemoryPool::BufferSize::LARGE);
+  auto xlarge = pool.acquire(MemoryPool::BufferSize::XLARGE);
+  auto* medium_addr = medium.get();
+  auto* large_addr = large.get();
+  auto* xlarge_addr = xlarge.get();
+
+  pool.release(std::move(medium), static_cast<size_t>(MemoryPool::BufferSize::MEDIUM));
+  pool.release(std::move(large), static_cast<size_t>(MemoryPool::BufferSize::LARGE));
+  pool.release(std::move(xlarge), static_cast<size_t>(MemoryPool::BufferSize::XLARGE));
+
+  auto medium_again = pool.acquire(MemoryPool::BufferSize::MEDIUM);
+  auto large_again = pool.acquire(MemoryPool::BufferSize::LARGE);
+  auto xlarge_again = pool.acquire(MemoryPool::BufferSize::XLARGE);
+
+  EXPECT_EQ(medium_again.get(), medium_addr);
+  EXPECT_EQ(large_again.get(), large_addr);
+  EXPECT_EQ(xlarge_again.get(), xlarge_addr);
+  EXPECT_GE(pool.stats().pool_hits, 3u);
 }
 
 }  // namespace test
