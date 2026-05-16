@@ -32,6 +32,7 @@
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/config/config_factory.hpp"
 #include "unilink/config/config_manager.hpp"
+#include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
@@ -263,6 +264,72 @@ TEST_F(ConfigTest, TcpClientConfigDirectValidation) {
   // Restore valid host
   config.host = "localhost";
   EXPECT_TRUE(config.is_valid());
+}
+
+TEST_F(ConfigTest, SerialConfigDirectValidationAndClamping) {
+  SerialConfig config;
+
+  EXPECT_TRUE(config.is_valid());
+  EXPECT_FALSE(config.device.empty());
+
+  config.device.clear();
+  EXPECT_FALSE(config.is_valid());
+  config.device = "loopback";
+
+  config.baud_rate = 0;
+  EXPECT_FALSE(config.is_valid());
+  config.baud_rate = 9600;
+
+  config.char_size = 4;
+  EXPECT_FALSE(config.is_valid());
+  config.char_size = 8;
+
+  config.stop_bits = 3;
+  EXPECT_FALSE(config.is_valid());
+  config.stop_bits = 2;
+
+  config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  EXPECT_FALSE(config.is_valid());
+  config.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  EXPECT_FALSE(config.is_valid());
+  config.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS;
+
+  config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  EXPECT_FALSE(config.is_valid());
+  config.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  EXPECT_FALSE(config.is_valid());
+  config.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+
+  config.max_retries = -2;
+  EXPECT_FALSE(config.is_valid());
+  config.max_retries = base::constants::MAX_RETRIES_LIMIT + 1;
+  EXPECT_FALSE(config.is_valid());
+  config.max_retries = -1;
+  EXPECT_TRUE(config.is_valid());
+
+  SerialConfig low_values;
+  low_values.char_size = 4;
+  low_values.stop_bits = 0;
+  low_values.retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS - 1;
+  low_values.backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD - 1;
+  low_values.max_retries = base::constants::MAX_RETRIES_LIMIT + 1;
+  low_values.validate_and_clamp();
+  EXPECT_EQ(low_values.char_size, 5u);
+  EXPECT_EQ(low_values.stop_bits, 1u);
+  EXPECT_EQ(low_values.retry_interval_ms, base::constants::MIN_RETRY_INTERVAL_MS);
+  EXPECT_EQ(low_values.backpressure_threshold, base::constants::MIN_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(low_values.max_retries, base::constants::MAX_RETRIES_LIMIT);
+
+  SerialConfig high_values;
+  high_values.char_size = 9;
+  high_values.retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS + 1;
+  high_values.backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD + 1;
+  high_values.max_retries = -1;
+  high_values.validate_and_clamp();
+  EXPECT_EQ(high_values.char_size, 8u);
+  EXPECT_EQ(high_values.retry_interval_ms, base::constants::MAX_RETRY_INTERVAL_MS);
+  EXPECT_EQ(high_values.backpressure_threshold, base::constants::MAX_BACKPRESSURE_THRESHOLD);
+  EXPECT_EQ(high_values.max_retries, -1);
 }
 
 // ============================================================================
