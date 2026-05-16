@@ -25,6 +25,7 @@
 #include <random>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include "test_utils.hpp"
 #include "unilink/diagnostics/logger.hpp"
@@ -62,6 +63,23 @@ class LoggerBehaviorTest : public ::testing::Test {
     Logger::instance().set_file_output("");
     Logger::instance().set_callback(nullptr);
     Logger::instance().set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
+    clearLogLevelEnv();
+  }
+
+  void setLogLevelEnv(const std::string& value) {
+#ifdef _WIN32
+    _putenv_s("UNILINK_LOG_LEVEL", value.c_str());
+#else
+    setenv("UNILINK_LOG_LEVEL", value.c_str(), 1);
+#endif
+  }
+
+  void clearLogLevelEnv() {
+#ifdef _WIN32
+    _putenv_s("UNILINK_LOG_LEVEL", "");
+#else
+    unsetenv("UNILINK_LOG_LEVEL");
+#endif
   }
 
   std::filesystem::path test_log_file_;
@@ -431,30 +449,47 @@ TEST_F(LoggerBehaviorTest, OutputsDisabledSkipsMessageEvaluation) {
 }
 
 TEST_F(LoggerBehaviorTest, ReloadsLogLevelFromEnvironment) {
-#ifdef _WIN32
-  _putenv_s("UNILINK_LOG_LEVEL", "WARNING");
-#else
-  setenv("UNILINK_LOG_LEVEL", "WARNING", 1);
-#endif
+  setLogLevelEnv("WARNING");
 
   Logger::instance().reload_from_environment();
   EXPECT_TRUE(Logger::instance().enabled());
   EXPECT_EQ(Logger::instance().level(), LogLevel::WARNING);
 
-#ifdef _WIN32
-  _putenv_s("UNILINK_LOG_LEVEL", "OFF");
-#else
-  setenv("UNILINK_LOG_LEVEL", "OFF", 1);
-#endif
+  setLogLevelEnv("OFF");
 
   Logger::instance().reload_from_environment();
   EXPECT_FALSE(Logger::instance().enabled());
 
-#ifdef _WIN32
-  _putenv_s("UNILINK_LOG_LEVEL", "");
-#else
-  unsetenv("UNILINK_LOG_LEVEL");
-#endif
+  clearLogLevelEnv();
+}
+
+TEST_F(LoggerBehaviorTest, ReloadsLogLevelAliasesAndReportsInvalidEnvironment) {
+  auto expect_level = [this](const std::string& value, LogLevel expected) {
+    Logger::instance().set_enabled(true);
+    setLogLevelEnv(value);
+    Logger::instance().reload_from_environment();
+    EXPECT_TRUE(Logger::instance().enabled());
+    EXPECT_EQ(Logger::instance().level(), expected);
+    EXPECT_TRUE(Logger::instance().last_error().empty());
+  };
+
+  expect_level(" trace ", LogLevel::DEBUG);
+  expect_level("INFO", LogLevel::INFO);
+  expect_level("warn", LogLevel::WARNING);
+  expect_level("ERR", LogLevel::ERROR);
+  expect_level("fatal", LogLevel::CRITICAL);
+
+  setLogLevelEnv("none");
+  Logger::instance().reload_from_environment();
+  EXPECT_FALSE(Logger::instance().enabled());
+  EXPECT_TRUE(Logger::instance().last_error().empty());
+
+  Logger::instance().set_enabled(true);
+  setLogLevelEnv("verbose");
+  Logger::instance().reload_from_environment();
+  EXPECT_FALSE(Logger::instance().last_error().empty());
+
+  clearLogLevelEnv();
 }
 
 TEST_F(LoggerBehaviorTest, CallbackReenabledAfterOutputsDisabled) {
@@ -532,4 +567,74 @@ TEST_F(LoggerBehaviorTest, ConsoleErrorStreamSelection) {
 
   // Clean up
   Logger::instance().set_console_output(false);
+}
+
+TEST_F(LoggerBehaviorTest, OutputBitmaskRestoresFileAndCallbackSinks) {
+  std::vector<std::string> captured_logs;
+
+  Logger::instance().set_file_output(test_log_file_.string());
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
+  Logger::instance().set_outputs(0);
+  EXPECT_FALSE(Logger::instance().has_outputs());
+
+  Logger::instance().set_outputs(static_cast<int>(LogOutput::FILE) | static_cast<int>(LogOutput::CALLBACK));
+  Logger::instance().set_level(LogLevel::INFO);
+  UNILINK_LOG_INFO("test", "outputs", "restored outputs");
+  Logger::instance().flush();
+
+  ASSERT_FALSE(captured_logs.empty());
+  EXPECT_NE(captured_logs.back().find("restored outputs"), std::string::npos);
+
+  std::ifstream file(test_log_file_);
+  ASSERT_TRUE(file.is_open());
+  std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+  EXPECT_NE(content.find("restored outputs"), std::string::npos);
+}
+
+TEST_F(LoggerBehaviorTest, UnsupportedRotationPatternReportsFailure) {
+  LogRotationConfig config;
+  config.file_pattern = "{name}-{index}.txt";
+
+  EXPECT_FALSE(Logger::instance().try_set_file_output_with_rotation(test_log_file_.string(), config));
+  EXPECT_FALSE(Logger::instance().last_error().empty());
+}
+
+TEST_F(LoggerBehaviorTest, DirectLevelMethodsAndDefaultLoggerAlias) {
+  std::vector<std::string> captured_logs;
+  Logger::instance().set_callback(
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
+  Logger::instance().set_level(LogLevel::DEBUG);
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+  auto& logger = Logger::default_logger();
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+  logger.debug("direct", "debug", "debug direct");
+  logger.info("direct", "info", "info direct");
+  logger.warning("direct", "warning", "warning direct");
+  logger.error("direct", "error", "error direct");
+  logger.critical("direct", "critical", "critical direct");
+  logger.flush();
+
+  ASSERT_GE(captured_logs.size(), 5u);
+}
+
+TEST_F(LoggerBehaviorTest, ReenablingAsyncLoggingTearsDownExistingAsyncLogger) {
+  AsyncLogConfig config;
+  config.flush_interval = std::chrono::milliseconds(0);
+  config.shutdown_timeout = std::chrono::milliseconds(1000);
+
+  Logger::instance().set_async_logging(true, config);
+  EXPECT_TRUE(Logger::instance().async_logging_enabled());
+
+  Logger::instance().set_async_logging(true, config);
+  EXPECT_TRUE(Logger::instance().async_logging_enabled());
+
+  Logger::instance().set_async_logging(false, config);
+  EXPECT_FALSE(Logger::instance().async_logging_enabled());
 }
