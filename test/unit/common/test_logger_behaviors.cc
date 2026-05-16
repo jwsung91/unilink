@@ -35,10 +35,10 @@ using namespace std::chrono_literals;
 using unilink::test::TestUtils;
 
 /**
- * @brief Advanced Logger Coverage Test
+ * @brief Logger behavior tests
  * Tests uncovered functions in logger.cc
  */
-class AdvancedLoggerCoverageTest : public ::testing::Test {
+class LoggerBehaviorTest : public ::testing::Test {
  protected:
   void SetUp() override {
     // Create unique log file for each test
@@ -48,7 +48,7 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
     auto now = std::chrono::system_clock::now().time_since_epoch().count();
     static std::atomic<uint64_t> seq{0};
     std::string file_name =
-        "unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(seq++);
+        "unilink_logger_behavior_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(seq++);
     test_log_file_ = TestUtils::makeTempFilePath(file_name);
     TestUtils::removeFileIfExists(test_log_file_);
   }
@@ -71,7 +71,7 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
 // FLUSH FUNCTIONALITY TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, FlushWithFileOutput) {
+TEST_F(LoggerBehaviorTest, FlushWithFileOutput) {
   Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_level(LogLevel::DEBUG);
 
@@ -91,7 +91,7 @@ TEST_F(AdvancedLoggerCoverageTest, FlushWithFileOutput) {
   EXPECT_TRUE(content.find("Info message") != std::string::npos);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, FlushWithoutFileOutput) {
+TEST_F(LoggerBehaviorTest, FlushWithoutFileOutput) {
   // Flush should work even without file output
   Logger::instance().flush();
   // Should not crash
@@ -101,7 +101,7 @@ TEST_F(AdvancedLoggerCoverageTest, FlushWithoutFileOutput) {
 // WRITE TO CONSOLE TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, WriteToConsoleErrorLevel) {
+TEST_F(LoggerBehaviorTest, WriteToConsoleErrorLevel) {
   Logger::instance().set_console_output(true);
   Logger::instance().set_level(LogLevel::ERROR);
 
@@ -111,7 +111,7 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToConsoleErrorLevel) {
   // Should not crash
 }
 
-TEST_F(AdvancedLoggerCoverageTest, WriteToConsoleCriticalLevel) {
+TEST_F(LoggerBehaviorTest, WriteToConsoleCriticalLevel) {
   Logger::instance().set_console_output(true);
   Logger::instance().set_level(LogLevel::CRITICAL);
 
@@ -121,7 +121,7 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToConsoleCriticalLevel) {
   // Should not crash
 }
 
-TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltersOutLowerMessages) {
+TEST_F(LoggerBehaviorTest, LogLevelFiltersOutLowerMessages) {
   Logger::instance().set_level(LogLevel::ERROR);
   // These should be filtered
   UNILINK_LOG_DEBUG("test", "operation", "debug");
@@ -136,7 +136,7 @@ TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltersOutLowerMessages) {
 // WRITE TO FILE TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithRotation) {
+TEST_F(LoggerBehaviorTest, WriteToFileWithRotation) {
   LogRotationConfig config;
   config.max_file_size_bytes = 1000;  // Small size for testing
   config.max_files = 3;
@@ -157,7 +157,7 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithRotation) {
   EXPECT_TRUE(std::filesystem::exists(test_log_file_));
 }
 
-TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithoutOpenFile) {
+TEST_F(LoggerBehaviorTest, WriteToFileWithoutOpenFile) {
   Logger::instance().set_file_output("");  // Clear file output
   Logger::instance().set_level(LogLevel::DEBUG);
 
@@ -170,7 +170,7 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithoutOpenFile) {
 // LOG ROTATION TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, CheckAndRotateLog) {
+TEST_F(LoggerBehaviorTest, CheckAndRotateLog) {
   LogRotationConfig config;
   config.max_file_size_bytes = 500;  // Very small for testing
   config.max_files = 2;
@@ -192,7 +192,7 @@ TEST_F(AdvancedLoggerCoverageTest, CheckAndRotateLog) {
 // ASYNC LOGGING TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingEnabled) {
+TEST_F(LoggerBehaviorTest, AsyncLoggingEnabled) {
   AsyncLogConfig config;
   config.flush_interval = std::chrono::milliseconds(100);
   config.max_queue_size = 1000;
@@ -213,7 +213,7 @@ TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingEnabled) {
   EXPECT_FALSE(Logger::instance().async_logging_enabled());
 }
 
-TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingDisabled) {
+TEST_F(LoggerBehaviorTest, AsyncLoggingDisabled) {
   AsyncLogConfig config;
   config.flush_interval = std::chrono::milliseconds(100);
   config.max_queue_size = 1000;
@@ -231,7 +231,7 @@ TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingDisabled) {
 // CALLBACK FUNCTIONALITY TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, LogCallback) {
+TEST_F(LoggerBehaviorTest, LogCallback) {
   std::vector<std::string> captured_logs;
 
   // Set up callback
@@ -265,32 +265,32 @@ TEST_F(AdvancedLoggerCoverageTest, LogCallback) {
 // EDGE CASES AND ERROR CONDITIONS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, LogWithEmptyComponent) {
+TEST_F(LoggerBehaviorTest, LogWithEmptyComponent) {
   Logger::instance().set_level(LogLevel::DEBUG);
   UNILINK_LOG_DEBUG("", "operation", "Message with empty component");
   // Should not crash
 }
 
-TEST_F(AdvancedLoggerCoverageTest, LogWithEmptyOperation) {
+TEST_F(LoggerBehaviorTest, LogWithEmptyOperation) {
   Logger::instance().set_level(LogLevel::DEBUG);
   UNILINK_LOG_DEBUG("component", "", "Message with empty operation");
   // Should not crash
 }
 
-TEST_F(AdvancedLoggerCoverageTest, LogWithEmptyMessage) {
+TEST_F(LoggerBehaviorTest, LogWithEmptyMessage) {
   Logger::instance().set_level(LogLevel::DEBUG);
   UNILINK_LOG_DEBUG("component", "operation", "");
   // Should not crash
 }
 
-TEST_F(AdvancedLoggerCoverageTest, LogWhenDisabled) {
+TEST_F(LoggerBehaviorTest, LogWhenDisabled) {
   Logger::instance().set_enabled(false);
   Logger::instance().set_level(LogLevel::DEBUG);
   UNILINK_LOG_DEBUG("test", "operation", "Message when disabled");
   // Should not crash
 }
 
-TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltering) {
+TEST_F(LoggerBehaviorTest, LogLevelFiltering) {
   Logger::instance().set_level(LogLevel::WARNING);
   UNILINK_LOG_DEBUG("test", "operation", "Debug message");
   UNILINK_LOG_INFO("test", "operation", "Info message");
@@ -303,7 +303,7 @@ TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltering) {
 // CONCURRENT LOGGING TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
+TEST_F(LoggerBehaviorTest, ConcurrentLogging) {
   Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_level(LogLevel::DEBUG);
 
@@ -332,7 +332,7 @@ TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
 // ADDITIONAL COVERAGE TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, CallbackExceptionSafety) {
+TEST_F(LoggerBehaviorTest, CallbackExceptionSafety) {
   // spdlog has its own error handler, so this might not behave exactly as before
   // but we ensure it doesn't crash the main thread.
   Logger::instance().set_callback([](LogLevel, const std::string&) { throw std::runtime_error("Callback exception"); });
@@ -345,7 +345,7 @@ TEST_F(AdvancedLoggerCoverageTest, CallbackExceptionSafety) {
   Logger::instance().set_callback(nullptr);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, CustomFormatHandling) {
+TEST_F(LoggerBehaviorTest, CustomFormatHandling) {
   std::vector<std::string> captured_logs;
   Logger::instance().set_callback(
       [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
@@ -362,7 +362,7 @@ TEST_F(AdvancedLoggerCoverageTest, CustomFormatHandling) {
   Logger::instance().set_callback(nullptr);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, DisabledLoggerSkipsMacroMessageEvaluation) {
+TEST_F(LoggerBehaviorTest, DisabledLoggerSkipsMacroMessageEvaluation) {
   Logger::instance().set_enabled(false);
   Logger::instance().set_level(LogLevel::DEBUG);
 
@@ -377,7 +377,7 @@ TEST_F(AdvancedLoggerCoverageTest, DisabledLoggerSkipsMacroMessageEvaluation) {
   EXPECT_EQ(evaluations, 0);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroUsesRuntimeLevel) {
+TEST_F(LoggerBehaviorTest, ParameterizedLogMacroUsesRuntimeLevel) {
   std::vector<std::string> captured_logs;
   Logger::instance().set_callback(
       [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
@@ -398,7 +398,7 @@ TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroUsesRuntimeLevel) {
   Logger::instance().set_callback(nullptr);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroSkipsFilteredMessageEvaluation) {
+TEST_F(LoggerBehaviorTest, ParameterizedLogMacroSkipsFilteredMessageEvaluation) {
   Logger::instance().set_level(LogLevel::ERROR);
 
   int evaluations = 0;
@@ -413,7 +413,7 @@ TEST_F(AdvancedLoggerCoverageTest, ParameterizedLogMacroSkipsFilteredMessageEval
   EXPECT_EQ(evaluations, 0);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, OutputsDisabledSkipsMessageEvaluation) {
+TEST_F(LoggerBehaviorTest, OutputsDisabledSkipsMessageEvaluation) {
   Logger::instance().set_enabled(true);
   Logger::instance().set_level(LogLevel::DEBUG);
   Logger::instance().set_outputs(0);
@@ -430,7 +430,7 @@ TEST_F(AdvancedLoggerCoverageTest, OutputsDisabledSkipsMessageEvaluation) {
   EXPECT_EQ(evaluations, 0);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, ReloadsLogLevelFromEnvironment) {
+TEST_F(LoggerBehaviorTest, ReloadsLogLevelFromEnvironment) {
 #ifdef _WIN32
   _putenv_s("UNILINK_LOG_LEVEL", "WARNING");
 #else
@@ -457,7 +457,7 @@ TEST_F(AdvancedLoggerCoverageTest, ReloadsLogLevelFromEnvironment) {
 #endif
 }
 
-TEST_F(AdvancedLoggerCoverageTest, CallbackReenabledAfterOutputsDisabled) {
+TEST_F(LoggerBehaviorTest, CallbackReenabledAfterOutputsDisabled) {
   std::vector<std::string> captured_logs;
 
   Logger::instance().set_callback([](LogLevel, const std::string&) {});
@@ -473,7 +473,7 @@ TEST_F(AdvancedLoggerCoverageTest, CallbackReenabledAfterOutputsDisabled) {
   EXPECT_NE(captured_logs.back().find("callback restored"), std::string::npos);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, OutputDisabling) {
+TEST_F(LoggerBehaviorTest, OutputDisabling) {
   // Test set_file_output with empty string
   Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_file_output("");  // Disable
@@ -491,7 +491,7 @@ TEST_F(AdvancedLoggerCoverageTest, OutputDisabling) {
   Logger::instance().set_console_output(true);
 }
 
-TEST_F(AdvancedLoggerCoverageTest, FileOpenFailure) {
+TEST_F(LoggerBehaviorTest, FileOpenFailure) {
   // Test set_file_output with invalid path
   // Assuming /invalid/path/test.log is not writable.
   // On Windows this might need a different invalid path like "Z:/..." or invalid chars.
@@ -507,7 +507,7 @@ TEST_F(AdvancedLoggerCoverageTest, FileOpenFailure) {
   EXPECT_FALSE(Logger::instance().last_error().empty());
 }
 
-TEST_F(AdvancedLoggerCoverageTest, UnsupportedRotationOptionsReportFailure) {
+TEST_F(LoggerBehaviorTest, UnsupportedRotationOptionsReportFailure) {
   LogRotationConfig config;
   config.enable_compression = true;
 
@@ -515,7 +515,7 @@ TEST_F(AdvancedLoggerCoverageTest, UnsupportedRotationOptionsReportFailure) {
   EXPECT_FALSE(Logger::instance().last_error().empty());
 }
 
-TEST_F(AdvancedLoggerCoverageTest, ConsoleErrorStreamSelection) {
+TEST_F(LoggerBehaviorTest, ConsoleErrorStreamSelection) {
   // We can't easily capture stderr/stdout directly in a portable way with GTest,
   // but we can ensure the code paths are exercised and no crash occurs.
   Logger::instance().set_console_output(true);

@@ -156,7 +156,7 @@ Run everything except documentation snippets:
 ctest --test-dir build-orin \
   --output-on-failure \
   --parallel 2 \
-  -LE "docs_snippets"
+  -LE docs
 ```
 
 ---

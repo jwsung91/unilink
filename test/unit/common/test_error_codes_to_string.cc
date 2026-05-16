@@ -21,7 +21,7 @@
 namespace unilink {
 namespace test {
 
-TEST(ErrorCodesCoverageTest, ToStringAllCodes) {
+TEST(ErrorCodesToStringTest, ToStringAllCodes) {
   EXPECT_EQ(to_string(ErrorCode::Success), "Success");
   EXPECT_EQ(to_string(ErrorCode::Unknown), "Unknown Error");
   EXPECT_EQ(to_string(ErrorCode::InvalidConfiguration), "Invalid Configuration");

@@ -31,7 +31,7 @@ foreach(test_file test_architecture.cc test_error_recovery.cc)
   )
   gtest_discover_tests(
     run_e2e_${test_name}
-    PROPERTIES LABELS "e2e;scenario;slow"
+    PROPERTIES LABELS "e2e_scenario_slow"
     TIMEOUT 90 RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
@@ -49,6 +49,6 @@ target_include_directories(
 )
 gtest_discover_tests(
   run_e2e_test_stress
-  PROPERTIES LABELS "e2e;stress;slow"
+  PROPERTIES LABELS "e2e_stress_slow"
   TIMEOUT 120 RESOURCE_LOCK "tcp_port_allocation"
 )

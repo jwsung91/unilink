@@ -26,7 +26,7 @@ using namespace unilink::concurrency;
 namespace unilink {
 namespace test {
 
-TEST(IoContextManagerCoverageTest, ExternalContextReference) {
+TEST(IoContextManagerLifecycleTest, ExternalContextReference) {
   boost::asio::io_context external_ioc;
   {
     IoContextManager manager(external_ioc);
@@ -36,7 +36,7 @@ TEST(IoContextManagerCoverageTest, ExternalContextReference) {
   }
 }
 
-TEST(IoContextManagerCoverageTest, StopFromWithinThread) {
+TEST(IoContextManagerLifecycleTest, StopFromWithinThread) {
   IoContextManager manager;
   manager.start();
 
@@ -56,7 +56,7 @@ TEST(IoContextManagerCoverageTest, StopFromWithinThread) {
   manager.stop();  // Proper stop from outside
 }
 
-TEST(IoContextManagerCoverageTest, StartFromWithinThread) {
+TEST(IoContextManagerLifecycleTest, StartFromWithinThread) {
   IoContextManager manager;
   manager.start();
 
@@ -75,7 +75,7 @@ TEST(IoContextManagerCoverageTest, StartFromWithinThread) {
   manager.stop();
 }
 
-TEST(IoContextManagerCoverageTest, RestartStoppedContext) {
+TEST(IoContextManagerLifecycleTest, RestartStoppedContext) {
   IoContextManager manager;
   manager.get_context().stop();
   EXPECT_TRUE(manager.get_context().stopped());
@@ -85,7 +85,7 @@ TEST(IoContextManagerCoverageTest, RestartStoppedContext) {
   manager.stop();
 }
 
-TEST(IoContextManagerCoverageTest, IndependentContext) {
+TEST(IoContextManagerLifecycleTest, IndependentContext) {
   auto ioc = IoContextManager::instance().create_independent_context();
   EXPECT_NE(ioc, nullptr);
 }

@@ -124,10 +124,10 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 4: Unit tests
+# Step 4: Full test suite
 # ---------------------------------------------------------------------------
-section "Step 4: Running unit tests"
-ctest --test-dir "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" -L unit --output-on-failure
+section "Step 4: Running full test suite"
+ctest --test-dir "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --output-on-failure
 
 echo ""
 echo "===== [SUCCESS] All checks passed! ====="

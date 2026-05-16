@@ -2,7 +2,6 @@
 
 #include <boost/asio.hpp>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <thread>
 
@@ -14,21 +13,17 @@
 using namespace unilink;
 using namespace std::chrono_literals;
 
-TEST(UdpWrapperTest, StopPerformance) {
+TEST(UdpWrapperTest, StopCompletesAfterStart) {
   config::UdpConfig cfg;
   cfg.local_port = 0;
   cfg.remote_address = "127.0.0.1";
   cfg.remote_port = 19001;
 
   wrapper::UdpClient udp(cfg);
-  auto f = udp.start();
+  auto start_result = udp.start();
+  ASSERT_TRUE(start_result.get());
 
-  auto start = std::chrono::high_resolution_clock::now();
-  udp.stop();
-  auto end = std::chrono::high_resolution_clock::now();
-
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  std::cout << "[PERF] Stop duration: " << duration.count() << "ms" << std::endl;
+  EXPECT_NO_THROW(udp.stop());
 }
 
 TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {

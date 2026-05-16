@@ -28,7 +28,7 @@
 using namespace unilink;
 using namespace std::chrono_literals;
 
-TEST(UdpServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
+TEST(UdpServerWrapperTransportTest, AutoManageStartsInjectedTransport) {
   config::UdpConfig cfg;
   cfg.bind_address = "127.0.0.1";
   cfg.local_port = 0;
@@ -45,7 +45,7 @@ TEST(UdpServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   server.stop();
 }
 
-TEST(UdpServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
+TEST(UdpServerWrapperTransportTest, StartFutureReflectsBindFailure) {
   boost::asio::io_context guard_ioc;
   boost::asio::ip::udp::socket occupied_socket(guard_ioc);
   occupied_socket.open(boost::asio::ip::udp::v4());

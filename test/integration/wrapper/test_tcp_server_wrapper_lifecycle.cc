@@ -34,7 +34,7 @@ namespace {
 using namespace unilink;
 using namespace unilink::test;
 
-class AdvancedTcpServerCoverageTest : public ::testing::Test {
+class TcpServerWrapperLifecycleTest : public ::testing::Test {
  protected:
   void SetUp() override {
     test_port_ = TestUtils::getAvailableTestPort();
@@ -52,7 +52,7 @@ class AdvancedTcpServerCoverageTest : public ::testing::Test {
   std::shared_ptr<wrapper::TcpServer> server_;
 };
 
-TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
+TEST_F(TcpServerWrapperLifecycleTest, ServerStartStopMultipleTimes) {
   server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   for (int i = 0; i < 3; ++i) {
     auto f = server_->start();
@@ -63,7 +63,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
   }
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
+TEST_F(TcpServerWrapperLifecycleTest, ExternalContextNotStoppedWhenNotManaged) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   // Critical: Keep ioc running even when server stops
   auto work = boost::asio::make_work_guard(*ioc);
@@ -84,7 +84,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
   if (t.joinable()) t.join();
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
+TEST_F(TcpServerWrapperLifecycleTest, ExternalContextManagedRunsAndStops) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
   server_->manage_external_context(true);
@@ -97,7 +97,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
   EXPECT_TRUE(ioc->stopped());
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoContext) {
+TEST_F(TcpServerWrapperLifecycleTest, ManagedExternalContextRestartsStoppedIoContext) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   ioc->stop();
 
@@ -112,7 +112,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoCon
   EXPECT_TRUE(ioc->stopped());
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnStatus) {
+TEST_F(TcpServerWrapperLifecycleTest, SendAndCountReflectLiveClientsAndReturnStatus) {
   std::vector<size_t> ids;
   std::mutex ids_mutex;
 
@@ -172,7 +172,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   server_->stop();
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
+TEST_F(TcpServerWrapperLifecycleTest, PortRetryConfiguration) {
   server_ =
       unilink::tcp_server(test_port_).port_retry(true, 5, 100).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   auto f = server_->start();
@@ -180,7 +180,7 @@ TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
   EXPECT_TRUE(server_->listening());
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
+TEST_F(TcpServerWrapperLifecycleTest, ConcurrentStartStop) {
   server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   std::vector<std::thread> threads;
   for (int i = 0; i < 2; ++i) {  // Reduced count for stability
@@ -196,7 +196,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
   SUCCEED();
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
+TEST_F(TcpServerWrapperLifecycleTest, HandlerReplacement) {
   std::atomic<int> count{0};
   server_ = unilink::tcp_server(test_port_).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   server_->on_connect([&](const wrapper::ConnectionContext&) { count = 1; });
@@ -210,7 +210,7 @@ TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   EXPECT_EQ(count.load(), 2);
 }
 
-TEST_F(AdvancedTcpServerCoverageTest, DisconnectHandlerReplacementUsesLatestCallback) {
+TEST_F(TcpServerWrapperLifecycleTest, DisconnectHandlerReplacementUsesLatestCallback) {
   std::atomic<int> count{0};
   wrapper_support::TcpServerLoopbackHarness harness;
   server_ = harness.start_server();

@@ -31,7 +31,7 @@ using namespace std::chrono_literals;
 namespace unilink {
 namespace test {
 
-TEST(UdpServerCoverageTest, ExternalIoContextManagement) {
+TEST(UdpServerWrapperLifecycleTest, ExternalIoContextManagement) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   config::UdpConfig cfg;
   cfg.bind_address = "127.0.0.1";
@@ -51,7 +51,7 @@ TEST(UdpServerCoverageTest, ExternalIoContextManagement) {
   }
 }
 
-TEST(UdpServerCoverageTest, SessionReaping) {
+TEST(UdpServerWrapperLifecycleTest, SessionReaping) {
   config::UdpConfig cfg;
   cfg.bind_address = "127.0.0.1";
   cfg.local_port = 0;
@@ -74,7 +74,7 @@ TEST(UdpServerCoverageTest, SessionReaping) {
   // but to cover the session removal logic we need a real session.
 }
 
-TEST(UdpServerCoverageTest, IPv6EndpointHashCoverage) {
+TEST(UdpServerWrapperLifecycleTest, IPv6EndpointHashCoverage) {
   // This is to cover UdpEndpointHash with IPv6
   boost::asio::ip::udp::endpoint ep(boost::asio::ip::make_address("::1"), 1234);
   config::UdpConfig cfg;
@@ -92,12 +92,12 @@ TEST(UdpServerCoverageTest, IPv6EndpointHashCoverage) {
   }
 }
 
-TEST(UdpServerCoverageTest, SendToInvalidClient) {
+TEST(UdpServerWrapperLifecycleTest, SendToInvalidClient) {
   wrapper::UdpServer server(0);
   EXPECT_FALSE(server.send_to(999, "data"));
 }
 
-TEST(UdpServerCoverageTest, BroadcastWithoutChannel) {
+TEST(UdpServerWrapperLifecycleTest, BroadcastWithoutChannel) {
   // Construct via default which doesn't create channel until start
   wrapper::UdpServer server(0);
   EXPECT_FALSE(server.broadcast("data"));

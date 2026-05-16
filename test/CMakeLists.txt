@@ -108,7 +108,7 @@ if(REMAINING_TESTS)
       run_architecture_tests PRIVATE ${_unilink_test_lib} GTest::gtest_main
                                      GTest::gmock
     )
-    gtest_discover_tests(run_architecture_tests PROPERTIES LABELS "legacy;e2e")
+    gtest_discover_tests(run_architecture_tests PROPERTIES LABELS "legacy_e2e")
     unilink_copy_runtime_dependency(run_architecture_tests)
   endif()
 
@@ -119,7 +119,7 @@ if(REMAINING_TESTS)
       run_builder_tests PRIVATE ${_unilink_test_lib} GTest::gtest_main
                                 GTest::gmock
     )
-    gtest_discover_tests(run_builder_tests PROPERTIES LABELS "legacy;unit")
+    gtest_discover_tests(run_builder_tests PROPERTIES LABELS "legacy_unit")
     unilink_copy_runtime_dependency(run_builder_tests)
   endif()
 
@@ -130,7 +130,7 @@ if(REMAINING_TESTS)
       run_common_tests PRIVATE ${_unilink_test_lib} GTest::gtest_main
                                GTest::gmock
     )
-    gtest_discover_tests(run_common_tests PROPERTIES LABELS "legacy;unit")
+    gtest_discover_tests(run_common_tests PROPERTIES LABELS "legacy_unit")
     unilink_copy_runtime_dependency(run_common_tests)
   endif()
 
@@ -142,7 +142,7 @@ if(REMAINING_TESTS)
                                       GTest::gmock
     )
     gtest_discover_tests(
-      run_communication_tests PROPERTIES LABELS "legacy;integration"
+      run_communication_tests PROPERTIES LABELS "legacy_integration"
     )
     unilink_copy_runtime_dependency(run_communication_tests)
   endif()
@@ -155,14 +155,14 @@ endif()
 
 message(STATUS "")
 message(STATUS "==== Test Structure ====")
-message(STATUS "  - unit/       : Fast unit tests (~5s with -j)")
-message(STATUS "  - integration/: Medium integration tests (~5s with -j)")
-message(STATUS "  - e2e/        : End-to-end scenarios (~3s with -j)")
+message(STATUS "  - unit/       : Unit and focused component tests")
+message(STATUS "  - integration/: Cross-component and real I/O tests")
+message(STATUS "  - e2e/        : End-to-end scenarios and stress tests")
 message(STATUS "")
 message(STATUS "Run specific test groups with:")
-message(STATUS "  ctest -j$(nproc) -L unit         # Fast feedback")
-message(STATUS "  ctest -j$(nproc) -L integration  # Integration tests")
-message(STATUS "  ctest -j$(nproc) -L e2e          # End-to-end tests")
-message(STATUS "  ctest -j$(nproc)                 # All tests")
+message(STATUS "  ctest -L unit         # Unit tests")
+message(STATUS "  ctest -L integration  # Integration tests")
+message(STATUS "  ctest -L e2e          # End-to-end tests")
+message(STATUS "  ctest                 # All tests")
 message(STATUS "")
 message(STATUS "========================")

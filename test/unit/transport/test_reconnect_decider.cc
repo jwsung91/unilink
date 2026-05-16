@@ -53,6 +53,16 @@ TEST(ReconnectDeciderTest, MaxRetriesBoundaryStopsAtAttemptCountEqualToLimit) {
   EXPECT_FALSE(decision.should_retry);
 }
 
+TEST(ReconnectDeciderTest, MaxRetriesAllowsAttemptsBelowLimit) {
+  auto cfg = MakeBaseConfig();
+  cfg.max_retries = 3;
+  auto info = MakeErrorInfo(true);
+
+  EXPECT_TRUE(decide_reconnect(cfg, info, 0, std::nullopt).should_retry);
+  EXPECT_TRUE(decide_reconnect(cfg, info, 1, std::nullopt).should_retry);
+  EXPECT_TRUE(decide_reconnect(cfg, info, 2, std::nullopt).should_retry);
+}
+
 TEST(ReconnectDeciderTest, NonRetryableErrorStopsEvenIfPolicyWouldRetry) {
   auto cfg = MakeBaseConfig();
   auto info = MakeErrorInfo(false);
@@ -66,6 +76,17 @@ TEST(ReconnectDeciderTest, NonRetryableErrorStopsEvenIfPolicyWouldRetry) {
   auto decision = decide_reconnect(cfg, info, 0, policy);
   EXPECT_FALSE(decision.should_retry);
   EXPECT_FALSE(policy_called);
+}
+
+TEST(ReconnectDeciderTest, PolicyRetryDelayIsUsed) {
+  auto cfg = MakeBaseConfig();
+  auto info = MakeErrorInfo(true);
+  ReconnectPolicy policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, 100ms}; };
+
+  auto decision = decide_reconnect(cfg, info, 0, policy);
+  ASSERT_TRUE(decision.should_retry);
+  ASSERT_TRUE(decision.delay.has_value());
+  EXPECT_EQ(*decision.delay, 100ms);
 }
 
 TEST(ReconnectDeciderTest, PolicyNegativeDelayClampsToZero) {

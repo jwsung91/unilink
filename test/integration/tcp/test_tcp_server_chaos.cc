@@ -129,7 +129,7 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
 }
 
 TEST_F(TcpServerChaosTest, MaxConnections) {
-  auto server = tcp_server(test_port_).multi_client(2).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
+  auto server = tcp_server(test_port_).max_clients(2).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_TRUE(server->start().get());
 
   auto connect_one = [&]() {

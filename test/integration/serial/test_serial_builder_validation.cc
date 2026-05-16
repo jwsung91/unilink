@@ -29,7 +29,7 @@ using namespace unilink;
 using namespace unilink::test;
 using namespace std::chrono_literals;
 
-class SerialBuilderIntegrationTest : public ::testing::Test {
+class SerialBuilderValidationTest : public ::testing::Test {
  protected:
   void SetUp() override {
 #ifdef _WIN32
@@ -41,7 +41,7 @@ class SerialBuilderIntegrationTest : public ::testing::Test {
   std::string device_;
 };
 
-TEST_F(SerialBuilderIntegrationTest, BuilderWithInputValidation) {
+TEST_F(SerialBuilderValidationTest, AcceptsValidatedSerialOptions) {
   auto serial_ptr = serial(device_, 115200)
                         .data_bits(8)
                         .stop_bits(1)
@@ -54,12 +54,12 @@ TEST_F(SerialBuilderIntegrationTest, BuilderWithInputValidation) {
   ASSERT_NE(serial_ptr, nullptr);
 }
 
-TEST_F(SerialBuilderIntegrationTest, BuilderRetryIntervalValidation) {
+TEST_F(SerialBuilderValidationTest, AcceptsRetryIntervalOption) {
   auto serial_ptr = serial(device_, 9600).retry_interval(500ms).on_data([](auto&&) {}).on_error([](auto&&) {}).build();
   ASSERT_NE(serial_ptr, nullptr);
 }
 
-TEST_F(SerialBuilderIntegrationTest, BuildFailureOnInvalidParams) {
+TEST_F(SerialBuilderValidationTest, InvalidParityFallsBackDuringBuild) {
   EXPECT_NO_THROW({
     auto serial_ptr = serial(device_, 9600).parity("invalid").on_data([](auto&&) {}).on_error([](auto&&) {}).build();
     ASSERT_NE(serial_ptr, nullptr);
