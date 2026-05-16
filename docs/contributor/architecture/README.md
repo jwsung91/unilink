@@ -8,14 +8,14 @@ Comprehensive overview of unilink's architecture and design principles.
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Layered Architecture](#layered-architecture)
-3. [Core Components](#core-components)
-4. [Design Patterns](#design-patterns)
-5. [Threading Model](#threading-model)
-6. [Memory Management](#memory-management)
-7. [Error Handling](#error-handling)
-8. [Development & Tooling](#development--tooling)
+1. Overview
+2. Layered Architecture
+3. Core Components
+4. Design Patterns
+5. Threading Model
+6. Memory Management
+7. Error Handling
+8. Development & Tooling
 
 ---
 

@@ -27,7 +27,8 @@ docs/
 │   ├── test_structure.md
 │   └── architecture/  # Internal design and transport contracts
 ├── config/            # Doxygen configuration
-├── img/               # Images referenced by docs
+├── assets/            # Images and brand assets referenced by docs
+│   └── logo/          # Light/dark logo variants and brand guide
 └── scripts/           # Helper scripts for docs generation/serving
 ```
 
@@ -38,6 +39,7 @@ Generated HTML is written to `docs/html/` when Doxygen runs. That output is a ge
 - Reader entry point: `docs/index.md`
 - Current implementation snapshot: `docs/contributor/implementation_status.md`
 - Doxygen configuration: `docs/config/Doxyfile`
+- Logo asset notes: `docs/assets/logo/README.md`
 - Helper scripts: `docs/scripts/generate_docs.sh`, `serve_docs.sh`, `clean_docs.sh`
 
 ## Generating Documentation

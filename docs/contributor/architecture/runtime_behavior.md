@@ -6,10 +6,10 @@ Understanding how `unilink` operates internally helps you write more efficient a
 
 ## Table of Contents
 
-1. [Threading Model & Callback Execution](#threading-model--callback-execution)
-2. [Reconnection Policy & State Machine](#reconnection-policy--state-machine)
-3. [Backpressure Handling](#backpressure-handling)
-4. [Best Practices](#best-practices)
+1. Threading Model & Callback Execution
+2. Reconnection Policy & State Machine
+3. Backpressure Handling
+4. Best Practices
 
 ---
 

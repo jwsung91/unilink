@@ -1,12 +1,15 @@
 # unilink
 
-<p align="center">
-  <img src="docs/img/logo.png" width="300">
-</p>
+![unilink logo](docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only)
+![unilink logo](docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only)
+
+**Unified async communication for modern C++.**
+
+Serial · TCP · UDP · UDS
 
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-informational)
 ![vcpkg](https://img.shields.io/badge/vcpkg-jwsung91--unilink-0078D6)
-[![Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json)](https://github.com/jwsung91/unilink)
+[![Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json)](https://jwsung91.github.io/unilink/coverage/)
 
 ## Description
 

@@ -241,7 +241,7 @@ jobs:
           color="red"
           grade="poor"
           if awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=80)}'; then
-            color="brightgreen"
+            color="blue"
             grade="excellent"
           elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=60)}'; then
             color="green"
@@ -323,7 +323,7 @@ jobs:
               <div class="coverage">Coverage: ${COVERAGE}</div>
               <div class="grade">Grade: ${GRADE}</div>
               <div class="badge">
-                <img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json" alt="Coverage Badge">
+                <img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json" alt="Coverage Badge">
               </div>
               <div class="links">
                 <a href="index-original.html" class="link">📊 Detailed Report</a>
