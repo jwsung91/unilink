@@ -47,6 +47,7 @@ class FakeSerialPort : public interface::SerialPortInterface {
   void close(boost::system::error_code& ec) override {
     open_ = false;
     ec.clear();
+    complete_pending_write(make_error_code(boost::asio::error::operation_aborted));
     emit_operation_aborted();
   }
 
