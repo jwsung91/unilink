@@ -38,6 +38,29 @@ TCP transport unit tests can be selected with a regex such as:
 ctest --test-dir build -L "unit.*transport.*tcp"
 ```
 
+Label names follow this shape:
+
+```text
+<scope>_<component>[_subcomponent]_<kind>[_io]
+```
+
+Common examples:
+
+```text
+unit_common_fast
+unit_transport_tcp_fast
+unit_transport_tcp_fast_loopback
+unit_wrapper_udp_loopback
+integration_tcp_medium
+e2e_scenario_slow
+docs_snippets
+```
+
+Use `_loopback` when a nominal unit test still opens localhost sockets or
+allocates real ports. Prefer placing new real I/O coverage under
+`integration/`; the loopback suffix is for existing transitional tests or
+cases that must stay near a narrow unit fixture.
+
 ## Naming
 
 Prefer file names that describe the component and behavior under test:

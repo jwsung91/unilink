@@ -20,6 +20,10 @@ test/
 - `integration/`: interaction between components and real I/O paths
 - `e2e/`: scenario-level behavior, recovery cases, and stress-oriented coverage
 
+Prefer adding new tests to the smallest scope that matches their behavior. If a
+test opens localhost sockets, binds ports, or relies on real OS I/O, place it in
+`integration/` unless it is intentionally tied to a narrow unit fixture.
+
 ## Build-Time Controls
 
 The test tree is controlled by CMake options rather than hardcoded assumptions in this document.
@@ -63,6 +67,9 @@ ctest -L contract
 # Structured scope/component filters
 ctest -L "unit.*transport.*tcp"
 ctest -L "integration.*serial"
+
+# Existing unit-scope tests that still exercise localhost sockets
+ctest -L loopback
 ```
 
 ### Inspect What Is Currently Registered
@@ -81,6 +88,14 @@ Use these commands instead of storing counts in documentation. The exact number 
 - Labels use structured tokens such as `unit_transport_tcp_fast` so broad
   filters (`unit`, `tcp`) and composed regex filters
   (`unit.*transport.*tcp`) both work.
+- Label names should follow
+  `<scope>_<component>[_subcomponent]_<kind>[_io]`. Examples include
+  `unit_common_fast`, `unit_transport_tcp_fast`,
+  `unit_transport_tcp_fast_loopback`, `unit_wrapper_udp_loopback`,
+  `integration_tcp_medium`, `e2e_scenario_slow`, and `docs_snippets`.
+- Use `_loopback` for tests that remain under `unit/` but allocate ports or
+  open localhost sockets. This keeps filtering explicit while those tests are
+  either kept as focused unit fixtures or moved to `integration/`.
 - When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.
 
 ## CI/CD Integration

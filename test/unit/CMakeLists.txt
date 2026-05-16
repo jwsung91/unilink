@@ -25,6 +25,31 @@ find_package(
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
 
+set(_unilink_unit_test_targets)
+
+function(unilink_add_unit_gtest target source_path labels timeout)
+  add_executable(${target} ${source_path})
+  target_link_libraries(
+    ${target} PRIVATE ${_unilink_test_lib} GTest::gtest GTest::gtest_main
+                      GTest::gmock
+  )
+  unilink_set_test_warning_options(${target})
+  target_include_directories(
+    ${target} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
+                      ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
+
+  set(_test_properties LABELS "${labels}" TIMEOUT ${timeout})
+  if(DEFINED ARGV4 AND NOT "${ARGV4}" STREQUAL "")
+    list(APPEND _test_properties RESOURCE_LOCK "${ARGV4}")
+  endif()
+
+  gtest_discover_tests(${target} PROPERTIES ${_test_properties})
+
+  list(APPEND _unilink_unit_test_targets ${target})
+  set(_unilink_unit_test_targets "${_unilink_unit_test_targets}" PARENT_SCOPE)
+endfunction()
+
 foreach(
   test_file
   test_core.cc
@@ -45,33 +70,15 @@ foreach(
   test_memory_pool_edge_cases.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
-    run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
 
-  # Mark test_core tests to use resource lock to avoid file I/O conflicts
+  set(resource_lock "")
   if(test_name STREQUAL "test_core")
-    gtest_discover_tests(
-      run_unit_${test_name}
-      PROPERTIES LABELS "unit_common_fast"
-      TIMEOUT 30 RESOURCE_LOCK "log_file_io"
-    )
-  else()
-    gtest_discover_tests(
-      run_unit_${test_name}
-      PROPERTIES LABELS "unit_common_fast"
-      TIMEOUT 30
-    )
+    set(resource_lock "log_file_io")
   endif()
+  unilink_add_unit_gtest(
+    run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file}
+    "unit_common_fast" 30 "${resource_lock}"
+  )
 endforeach()
 
 # Builder tests (separate executables)
@@ -79,23 +86,9 @@ foreach(test_file test_builder.cc test_udp_builder_options.cc
                   test_uds_builder_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_unit_gtest(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-
-  gtest_discover_tests(
-    run_unit_${test_name}
-    PROPERTIES LABELS "unit_builder_fast"
-    TIMEOUT 30
+    "unit_builder_fast" 30
   )
 endforeach()
 
@@ -104,46 +97,18 @@ foreach(test_file test_config.cc test_config_security.cc
                   test_config_failure.cpp
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_unit_gtest(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/config/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-
-  gtest_discover_tests(
-    run_unit_${test_name}
-    PROPERTIES LABELS "unit_config_fast"
-    TIMEOUT 30
+    "unit_config_fast" 30
   )
 endforeach()
 
 # Memory tests (separate executables)
 foreach(test_file test_pool_limits.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_unit_gtest(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/memory/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-
-  gtest_discover_tests(
-    run_unit_${test_name}
-    PROPERTIES LABELS "unit_memory_fast"
-    TIMEOUT 30
+    "unit_memory_fast" 30
   )
 endforeach()
 
@@ -165,18 +130,6 @@ foreach(
   test_serial_wrapper_options.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
-    run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
 
   set(test_label "unit_wrapper")
   if(test_name MATCHES "tcp")
@@ -189,32 +142,23 @@ foreach(
     set(test_label "unit_wrapper_serial")
   endif()
 
-  gtest_discover_tests(
-    run_unit_${test_name}
-    PROPERTIES LABELS "${test_label}"
-    TIMEOUT 120 RESOURCE_LOCK "tcp_port_allocation"
+  set(resource_lock "")
+  if(test_name MATCHES "tcp|udp")
+    set(test_label "${test_label}_loopback")
+    set(resource_lock "tcp_port_allocation")
+  endif()
+
+  unilink_add_unit_gtest(
+    run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file}
+    "${test_label}" 120 "${resource_lock}"
   )
 endforeach()
 
 # Wrapper serial config mapping
-add_executable(
+unilink_add_unit_gtest(
   run_unit_wrapper_serial_config_mapping
   ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_serial_config_mapping.cc
-)
-target_link_libraries(
-  run_unit_wrapper_serial_config_mapping
-  PRIVATE ${_unilink_test_lib} GTest::gtest GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_wrapper_serial_config_mapping)
-target_include_directories(
-  run_unit_wrapper_serial_config_mapping
-  PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(
-  run_unit_wrapper_serial_config_mapping
-  PROPERTIES LABELS "unit_wrapper_serial"
-  TIMEOUT 30
+  "unit_wrapper_serial" 30
 )
 
 # Documentation snippet compile smoke tests
@@ -289,18 +233,6 @@ foreach(
   test_backpressure_strategy.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
-    run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
 
   set(test_label "unit_transport_fast")
   if(test_name MATCHES "tcp")
@@ -319,321 +251,98 @@ foreach(
     set(test_label "unit_transport_backpressure_fast")
   endif()
 
-  gtest_discover_tests(
-    run_unit_${test_name}
-    PROPERTIES LABELS "${test_label}"
-    TIMEOUT 30
+  if(test_name MATCHES "tcp|udp|backpressure")
+    set(test_label "${test_label}_loopback")
+  endif()
+
+  unilink_add_unit_gtest(
+    run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file}
+    "${test_label}" 30
   )
 endforeach()
 
 # Deterministic reconnect decision tests (policy/max-retries/clamp logic)
-add_executable(
+unilink_add_unit_gtest(
   run_unit_test_reconnect_decider
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_reconnect_decider.cc
-)
-target_link_libraries(
-  run_unit_test_reconnect_decider PRIVATE ${_unilink_test_lib} GTest::gtest
-                                          GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_test_reconnect_decider)
-target_include_directories(
-  run_unit_test_reconnect_decider PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                          ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_test_reconnect_decider
-  PROPERTIES LABELS "unit_transport_reconnect_stable"
-  TIMEOUT 30
+  "unit_transport_reconnect_stable" 30
 )
 
 # Contract Compliance Tests
-add_executable(
+unilink_add_unit_gtest(
   run_unit_test_contract_compliance
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc
-)
-target_link_libraries(
-  run_unit_test_contract_compliance PRIVATE ${_unilink_test_lib} GTest::gtest
-                                            GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_test_contract_compliance)
-target_include_directories(
-  run_unit_test_contract_compliance PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                            ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(
-  run_unit_test_contract_compliance
-  PROPERTIES LABELS "unit_transport_contract"
-  TIMEOUT 30
+  "unit_transport_contract_loopback" 30
 )
 
 # New error handling tests
-add_executable(
+unilink_add_unit_gtest(
   run_unit_test_tcp_abort
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_abort.cc
-)
-target_link_libraries(
-  run_unit_test_tcp_abort PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_test_tcp_abort)
-target_include_directories(
-  run_unit_test_tcp_abort PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_test_tcp_abort
-  PROPERTIES LABELS "unit_transport_tcp_error"
-  TIMEOUT 30
+  "unit_transport_tcp_error" 30
 )
 
-add_executable(
+unilink_add_unit_gtest(
   run_unit_test_tcp_server_connectivity
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_server_connectivity.cc
-)
-target_link_libraries(
-  run_unit_test_tcp_server_connectivity PRIVATE ${_unilink_test_lib}
-                                                GTest::gtest
-                                                GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_test_tcp_server_connectivity)
-target_include_directories(
-  run_unit_test_tcp_server_connectivity
-  PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_test_tcp_server_connectivity
-  PROPERTIES LABELS "unit_transport_tcp_connectivity"
-  TIMEOUT 30
+  "unit_transport_tcp_connectivity_loopback" 30
 )
 
-add_executable(
+unilink_add_unit_gtest(
   run_unit_test_udp_error
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_udp_error.cc
-)
-target_link_libraries(
-  run_unit_test_udp_error PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_test_udp_error)
-target_include_directories(
-  run_unit_test_udp_error PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_test_udp_error
-  PROPERTIES LABELS "unit_transport_udp_error"
-  TIMEOUT 30
+  "unit_transport_udp_error" 30
 )
 
-add_executable(
+unilink_add_unit_gtest(
   run_unit_test_serial_fail
   ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_serial_fail.cc
-)
-target_link_libraries(
-  run_unit_test_serial_fail PRIVATE ${_unilink_test_lib} GTest::gtest
-                                    GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_test_serial_fail)
-target_include_directories(
-  run_unit_test_serial_fail PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_test_serial_fail
-  PROPERTIES LABELS "unit_wrapper_serial_error"
-  TIMEOUT 30
+  "unit_wrapper_serial_error" 30
 )
 
 # Transport TCP Server Session Test
-add_executable(
+unilink_add_unit_gtest(
   run_unit_transport_tcp_server_session
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server_session.cc
-)
-target_link_libraries(
-  run_unit_transport_tcp_server_session
-  PRIVATE ${_unilink_test_lib} GTest::gtest GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_server_session)
-target_include_directories(
-  run_unit_transport_tcp_server_session
-  PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_transport_tcp_server_session
-  PROPERTIES LABELS "unit_transport_tcp_session"
-  TIMEOUT 30
+  "unit_transport_tcp_session" 30
 )
 
 # Transport TCP Fuzz Test
-add_executable(
+unilink_add_unit_gtest(
   run_unit_transport_tcp_fuzz_test
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_fuzz_test.cc
-)
-target_link_libraries(
-  run_unit_transport_tcp_fuzz_test PRIVATE ${_unilink_test_lib} GTest::gtest
-                                           GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_fuzz_test)
-target_include_directories(
-  run_unit_transport_tcp_fuzz_test PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                           ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_transport_tcp_fuzz_test
-  PROPERTIES LABELS "unit_transport_tcp_fuzz"
-  TIMEOUT 30
+  "unit_transport_tcp_fuzz" 30
 )
 
 # Transport TCP Timeout Test
-add_executable(
+unilink_add_unit_gtest(
   run_unit_transport_tcp_timeout_test
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_timeout_test.cc
-)
-target_link_libraries(
-  run_unit_transport_tcp_timeout_test PRIVATE ${_unilink_test_lib} GTest::gtest
-                                              GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_timeout_test)
-target_include_directories(
-  run_unit_transport_tcp_timeout_test PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                              ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_transport_tcp_timeout_test
-  PROPERTIES LABELS "unit_transport_tcp_timeout"
-  TIMEOUT 30
+  "unit_transport_tcp_timeout" 30
 )
 
 # Transport TCP Server Security Test
-add_executable(
+unilink_add_unit_gtest(
   run_unit_transport_tcp_server_security_test
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server_security_test.cc
-)
-target_link_libraries(
-  run_unit_transport_tcp_server_security_test
-  PRIVATE ${_unilink_test_lib} GTest::gtest GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_server_security_test)
-target_include_directories(
-  run_unit_transport_tcp_server_security_test
-  PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_transport_tcp_server_security_test
-  PROPERTIES LABELS "unit_transport_tcp_security"
-  TIMEOUT 30
+  "unit_transport_tcp_security_loopback" 30
 )
 
 # Transport UDS Server Security Test
-add_executable(
+unilink_add_unit_gtest(
   run_unit_transport_uds_server_security_test
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_uds_server_security_test.cc
-)
-target_link_libraries(
-  run_unit_transport_uds_server_security_test
-  PRIVATE ${_unilink_test_lib} GTest::gtest GTest::gtest_main GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_uds_server_security_test)
-target_include_directories(
-  run_unit_transport_uds_server_security_test
-  PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(
-  run_unit_transport_uds_server_security_test
-  PROPERTIES LABELS "unit_transport_uds_security"
-  TIMEOUT 30
+  "unit_transport_uds_security" 30
 )
 
 # Framer tests (separate executables)
 foreach(test_file test_line_framer.cc test_packet_framer.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(
+  unilink_add_unit_gtest(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/framer/${test_file}
-  )
-  target_link_libraries(
-    run_unit_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
-                                  GTest::gtest_main GTest::gmock
-  )
-  unilink_set_test_warning_options(run_unit_${test_name})
-  target_include_directories(
-    run_unit_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
-                                  ${CMAKE_SOURCE_DIR}/test/fixtures
-  )
-
-  gtest_discover_tests(
-    run_unit_${test_name}
-    PROPERTIES LABELS "unit_framer"
-    TIMEOUT 30
+    "unit_framer" 30
   )
 endforeach()
 
-# Framer tests (separate executables)
 add_custom_target(unilink_unit_tests)
-
-# Add dependencies to the custom target
-add_dependencies(
-  unilink_unit_tests
-  run_unit_test_core
-  run_unit_test_memory
-  run_unit_test_pooled_buffer
-  run_unit_test_boundary
-  run_unit_test_error_handler
-  run_unit_test_input_validator
-  run_unit_test_input_validator_edge
-  run_unit_test_logger_behaviors
-  run_unit_test_memory_tracker_and_buffer
-  run_unit_test_pool_stress
-  run_unit_test_io_context_manager_lifecycle
-  run_unit_test_error_mapping
-  run_unit_test_error_mapping_exhaustive
-  run_unit_test_error_codes_to_string
-  run_unit_test_error_mapping_edge_cases
-  run_unit_test_memory_pool_edge_cases
-  run_unit_test_builder
-  run_unit_test_udp_builder_options
-  run_unit_test_uds_builder_options
-  run_unit_test_config
-  run_unit_test_config_security
-  run_unit_test_config_failure
-  run_unit_test_pool_limits
-  run_unit_test_tcp_server_wrapper_lifecycle
-  run_unit_test_tcp_client_wrapper_lifecycle
-  run_unit_test_serial_wrapper_lifecycle
-  run_unit_test_udp_stop_lifecycle
-  run_unit_test_udp_options
-  run_unit_test_udp_failure
-  run_unit_test_udp_state
-  run_unit_test_tcp_client_error_mapping
-  run_unit_test_uds_wrapper_lifecycle
-  run_unit_test_udp_server_wrapper_transport
-  run_unit_test_udp_server_wrapper_lifecycle
-  run_unit_test_udp_client_wrapper_lifecycle
-  run_unit_test_serial_wrapper_options
-  run_unit_wrapper_serial_config_mapping
-  run_unit_transport_tcp_client
-  run_unit_transport_tcp_server
-  run_unit_transport_uds_client
-  run_unit_transport_uds_server
-  run_unit_transport_uds_error_test
-  run_unit_transport_serial
-  run_unit_transport_udp
-  run_unit_transport_udp_extended
-  run_unit_transport_tcp_client_policy
-  run_unit_transport_uds_session_lifecycle
-  run_unit_test_tcp_client_lifecycle
-  run_unit_test_backpressure_strategy
-  run_unit_test_reconnect_decider
-  run_unit_test_contract_compliance
-  run_unit_test_tcp_abort
-  run_unit_test_tcp_server_connectivity
-  run_unit_test_udp_error
-  run_unit_test_serial_fail
-  run_unit_transport_tcp_server_session
-  run_unit_transport_tcp_fuzz_test
-  run_unit_transport_tcp_timeout_test
-  run_unit_transport_tcp_server_security_test
-  run_unit_transport_uds_server_security_test
-  run_unit_test_line_framer
-  run_unit_test_packet_framer
-)
+add_dependencies(unilink_unit_tests ${_unilink_unit_test_targets})
