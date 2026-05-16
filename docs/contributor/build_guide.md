@@ -8,12 +8,12 @@ Complete guide for building `unilink` with different configurations and platform
 
 ## Table of Contents
 
-1. [Quick Build](#quick-build)
-2. [Build Configurations](#build-configurations)
-3. [Build Options Reference](#build-options-reference)
-4. [Platform-Specific Builds](#platform-specific-builds)
-5. [Advanced Build Examples](#advanced-build-examples)
-6. [CMake Package Integration](#cmake-package-integration)
+1. Quick Build
+2. Build Configurations
+3. Build Options Reference
+4. Platform-Specific Builds
+5. Advanced Build Examples
+6. CMake Package Integration
 
 ---
 

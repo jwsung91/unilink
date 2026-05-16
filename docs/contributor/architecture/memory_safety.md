@@ -6,12 +6,12 @@
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Safe Data Handling](#safe-data-handling)
-3. [Thread-Safe State Management](#thread-safe-state-management)
-4. [Memory Tracking](#memory-tracking)
-5. [AddressSanitizer Support](#addresssanitizer-support)
-6. [Best Practices](#best-practices)
+1. Overview
+2. Safe Data Handling
+3. Thread-Safe State Management
+4. Memory Tracking
+5. AddressSanitizer Support
+6. Best Practices
 
 ---
 

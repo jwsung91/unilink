@@ -6,13 +6,13 @@ Common issues and solutions when using unilink.
 
 ## Table of Contents
 
-1. [Connection Issues](#connection-issues)
-2. [Compilation Errors](#compilation-errors)
-3. [Runtime Errors](#runtime-errors)
-4. [Performance Issues](#performance-issues)
-5. [Memory Issues](#memory-issues)
-6. [Thread Safety Issues](#thread-safety-issues)
-7. [Debugging Tips](#debugging-tips)
+1. Connection Issues
+2. Compilation Errors
+3. Runtime Errors
+4. Performance Issues
+5. Memory Issues
+6. Thread Safety Issues
+7. Debugging Tips
 
 ---
 

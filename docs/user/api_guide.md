@@ -6,17 +6,17 @@ Comprehensive API reference for the unilink library.
 
 ## Table of Contents
 
-1. [Builder API](#builder-api)
-2. [TCP Client](#tcp-client)
-3. [TCP Server](#tcp-server)
-4. [Serial Communication](#serial-communication)
-5. [UDP Communication](#udp-communication)
-6. [UDS Communication](#uds-communication)
-7. [Error Handling](#error-handling)
-8. [Logging System](#logging-system)
-9. [Configuration Management](#configuration-management)
-10. [Backpressure Strategy](#backpressure-strategy)
-11. [Security](#security)
+1. Builder API
+2. TCP Client
+3. TCP Server
+4. Serial Communication
+5. UDP Communication
+6. UDS Communication
+7. Error Handling
+8. Logging System
+9. Configuration Management
+10. Backpressure Strategy
+11. Security
 
 ---
 

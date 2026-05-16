@@ -82,6 +82,20 @@ $extrastylesheet
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -100,7 +114,7 @@ $extrastylesheet
  <tbody>
  <tr id="projectrow">
   <!--BEGIN PROJECT_LOGO-->
-  <td id="projectlogo"><img alt="Logo" src="$relpath^$projectlogo"/></td>
+  <td id="projectlogo"><img alt="Logo" src="$relpath^$projectlogo" data-light-src="$relpath^$projectlogo" data-dark-src="$relpath^unilink-logo-horizontal-readme-dark.png"/></td>
   <!--END PROJECT_LOGO-->
   <!--BEGIN PROJECT_NAME-->
   <td id="projectalign">

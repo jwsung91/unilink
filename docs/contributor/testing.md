@@ -6,12 +6,12 @@ Complete guide for testing `unilink`, including running tests, CI/CD integration
 
 ## Table of Contents
 
-1. [Quick Start](#quick-start)
-2. [Running Tests](#running-tests)
-3. [Test Categories](#test-categories)
-4. [Memory Safety Validation](#memory-safety-validation)
-5. [Continuous Integration](#continuous-integration)
-6. [Writing Custom Tests](#writing-custom-tests)
+1. Quick Start
+2. Running Tests
+3. Test Categories
+4. Memory Safety Validation
+5. Continuous Integration
+6. Writing Custom Tests
 
 ---
 

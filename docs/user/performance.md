@@ -6,9 +6,9 @@ This guide covers performance optimization strategies for `unilink`.
 
 ## Table of Contents
 
-1. [Runtime Optimization](#runtime-optimization)
-2. [Memory Optimization](#memory-optimization)
-3. [Network Optimization](#network-optimization)
+1. Runtime Optimization
+2. Memory Optimization
+3. Network Optimization
 
 ---
 
@@ -167,5 +167,3 @@ client->on_backpressure([&paused](size_t queued) {
 // In your sender loop
 if (!paused) client->send(critical_data);
 ```
-
-
