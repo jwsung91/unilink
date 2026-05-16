@@ -360,9 +360,9 @@ TEST_F(TransportUdpTest, ExplicitDestinationWriteWithoutRemote) {
       1000));
 
   std::string payload = "explicit";
-  EXPECT_TRUE(
-      channel->async_write_to(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(payload.data()), payload.size()),
-                              receiver.local_endpoint()));
+  const udp::endpoint destination(net::ip::make_address("127.0.0.1"), receiver.local_endpoint().port());
+  EXPECT_TRUE(channel->async_write_to(
+      memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(payload.data()), payload.size()), destination));
 
   std::array<char, 64> buffer{};
   udp::endpoint sender;
@@ -404,8 +404,8 @@ TEST_F(TransportUdpTest, MemoryPoolExplicitDestinationWriteWithoutRemote) {
       1000));
 
   std::vector<uint8_t> payload(32, 0x7A);
-  EXPECT_TRUE(
-      channel->async_write_to(memory::ConstByteSpan(payload.data(), payload.size()), receiver.local_endpoint()));
+  const udp::endpoint destination(net::ip::make_address("127.0.0.1"), receiver.local_endpoint().port());
+  EXPECT_TRUE(channel->async_write_to(memory::ConstByteSpan(payload.data(), payload.size()), destination));
 
   std::array<uint8_t, 64> buffer{};
   udp::endpoint sender;
