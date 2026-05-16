@@ -166,7 +166,6 @@ Layout</h1>
 <div class="line">├── unit/          # Unit and transport-focused tests</div>
 <div class="line">├── integration/   # Cross-component and real I/O integration tests</div>
 <div class="line">├── e2e/           # End-to-end scenarios and stress tests</div>
-<div class="line">├── fixtures/      # Shared mocks and fixtures</div>
 <div class="line">├── mocks/         # Additional mock types used by tests</div>
 <div class="line">├── utils/         # Shared test helpers and constants</div>
 <div class="line">└── CMakeLists.txt # Main test registration</div>
@@ -177,6 +176,7 @@ What Each Area Covers</h1>
 <li><code>integration/</code>: interaction between components and real I/O paths</li>
 <li><code>e2e/</code>: scenario-level behavior, recovery cases, and stress-oriented coverage</li>
 </ul>
+<p>Prefer adding new tests to the smallest scope that matches their behavior. If a test opens localhost sockets, binds ports, creates UDS socket paths, or relies on real OS I/O, place it in <code>integration/</code> unless it is intentionally tied to a narrow unit fixture.</p>
 <h1><a class="anchor" id="autotoc_md374"></a>
 Build-Time Controls</h1>
 <p>The test tree is controlled by CMake options rather than hardcoded assumptions in this document.</p>
@@ -207,6 +207,10 @@ Useful Focused Runs</h2>
 <div class="line"># Security and contract checks</div>
 <div class="line">ctest -L security</div>
 <div class="line">ctest -L contract</div>
+<div class="line"> </div>
+<div class="line"># Structured scope/component filters</div>
+<div class="line">ctest -L &quot;integration.*transport.*tcp&quot;</div>
+<div class="line">ctest -L &quot;integration.*serial&quot;</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md379"></a>
 Inspect What Is Currently Registered</h2>
 <div class="fragment"><div class="line">ctest -N</div>
@@ -217,7 +221,9 @@ Inspect What Is Currently Registered</h2>
 <h1><a class="anchor" id="autotoc_md380"></a>
 Notes</h1>
 <ul>
-<li>Label sets are not necessarily exclusive.</li>
+<li>Labels use structured tokens such as <code>integration_transport_tcp_medium</code> so broad filters (<code>unit</code>, <code>tcp</code>) and composed regex filters (<code>integration.*transport.*tcp</code>) both work.</li>
+<li>Label names should follow <code>&lt;scope&gt;_&lt;component&gt;[_subcomponent]_&lt;kind&gt;[_io]</code>. Examples include <code>unit_common_fast</code>, <code>unit_transport_uds_fast</code>, <code>integration_transport_tcp_medium</code>, <code>integration_transport_uds_medium</code>, <code>integration_wrapper_udp_medium</code>, <code>integration_tcp_medium</code>, <code>e2e_scenario_slow</code>, and <code>docs_snippets</code>.</li>
+<li>Tests that allocate ports, open localhost sockets, or create UDS socket paths belong under <code>integration/</code>, even if they exercise a focused transport or wrapper behavior.</li>
 <li>When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md381"></a>
@@ -229,7 +235,7 @@ CI/CD Integration</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 00:17:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 16 2026 02:37:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
