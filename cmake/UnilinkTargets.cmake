@@ -58,7 +58,7 @@ function(unilink_add_library_targets)
                 unilink_dependencies
     )
 
-    list(APPEND _unilink_library_targets unilink unilink_shared unilink_static)
+    list(APPEND _unilink_library_targets unilink_shared unilink_static)
     set(_unilink_export_header_target unilink_shared)
     set(_unilink_shared_library_target unilink_shared)
 
