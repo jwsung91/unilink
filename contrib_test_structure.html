@@ -206,9 +206,12 @@ Run All Registered Tests</h2>
 <div class="line">ctest --output-on-failure</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md377"></a>
 Run By Broad Category</h2>
-<div class="fragment"><div class="line">ctest -L unit</div>
-<div class="line">ctest -L integration</div>
-<div class="line">ctest -L e2e</div>
+<div class="fragment"><div class="line"># Run all unit tests (matches unit_* labels)</div>
+<div class="line">ctest -L &quot;unit_.*&quot;</div>
+<div class="line"># Run legacy integration tests</div>
+<div class="line">ctest -L &quot;legacy_integration&quot;</div>
+<div class="line"># Run all e2e tests (matches e2e_* labels)</div>
+<div class="line">ctest -L &quot;e2e_.*&quot;</div>
 </div><!-- fragment --><p>Standalone benchmarks are maintained in the <code>unilink-lab/unilink-benchmarks</code> repository.</p>
 <h2><a class="anchor" id="autotoc_md378"></a>
 Useful Focused Runs</h2>
@@ -228,9 +231,9 @@ Useful Focused Runs</h2>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md379"></a>
 Inspect What Is Currently Registered</h2>
 <div class="fragment"><div class="line">ctest -N</div>
-<div class="line">ctest -N -L unit</div>
-<div class="line">ctest -N -L integration</div>
-<div class="line">ctest -N -L e2e</div>
+<div class="line">ctest -N -L &quot;unit_.*&quot;</div>
+<div class="line">ctest -N -L &quot;legacy_integration&quot;</div>
+<div class="line">ctest -N -L &quot;e2e_.*&quot;</div>
 </div><!-- fragment --><p>Use these commands instead of storing counts in documentation. The exact number of tests changes as coverage grows.</p>
 <h1><a class="anchor" id="autotoc_md380"></a>
 Notes</h1>
@@ -249,7 +252,7 @@ CI/CD Integration</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

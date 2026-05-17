@@ -204,7 +204,7 @@ Basic Build (Recommended)</h2>
 <div class="line"> </div>
 <div class="line"># 4. (Optional) Install to custom prefix</div>
 <div class="line">cmake --install build/dev-linux-x64 --prefix /opt/unilink</div>
-</div><!-- fragment --><p>The repository intentionally does not use a root <code>vcpkg.json</code> manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through <code>UNILINK_MIN_BOOST_VERSION</code>. The preset-based contributor workflow requires CMake 3.21+ because <code>CMakePresets.json</code> uses schema version 3. Plain source builds without presets remain supported on CMake 3.12+.</p>
+</div><!-- fragment --><p>The repository intentionally does not use a root <code>vcpkg.json</code> manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through <code>UNILINK_MIN_BOOST_VERSION</code>. For contributor builds, <code>./scripts/setup_dev_env.sh</code> uses an untracked repository-local <code>vcpkg/</code> checkout by default. It is disposable and can be deleted when you need to reclaim space; rerun the script to recreate it. Set <code>VCPKG_ROOT</code> before running the script to reuse an external vcpkg checkout. The preset-based contributor workflow requires CMake 3.21+ because <code>CMakePresets.json</code> uses schema version 3. Plain source builds without presets remain supported on CMake 3.12+.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md265"></a>
 Important Build Notes</h1>
@@ -276,12 +276,10 @@ Core Options</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>UNILINK_BUILD_STATIC</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build static library    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_BUILD_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Deprecated no-op; examples moved to <code>unilink-examples</code>    </td></tr>
-<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>UNILINK_BUILD_TESTS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build tests    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_BUILD_DOCS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable documentation targets    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>UNILINK_BUILD_DOCS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable documentation targets    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>UNILINK_ENABLE_CONFIG</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable configuration management API   </td></tr>
 </table>
 <h2><a class="anchor" id="autotoc_md274"></a>
@@ -565,15 +563,12 @@ Run Unit Tests</h2>
 <div class="fragment"><div class="line">cd build</div>
 <div class="line">ctest --output-on-failure</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md321"></a>
-Run Examples</h2>
-<div class="fragment"><div class="line"># TCP Echo Server (sync)</div>
-<div class="line">./build/bin/sync_tcp_echo_server</div>
-<div class="line"> </div>
-<div class="line"># TCP Echo Client (in another terminal)</div>
-<div class="line">./build/bin/sync_tcp_echo_client</div>
+Run Focused Tests</h2>
+<div class="fragment"><div class="line"># Run common unit tests</div>
+<div class="line">ctest --test-dir build --output-on-failure -L unit_common_fast</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md322"></a>
 Check Library Symbols</h2>
-<div class="fragment"><div class="line">nm -D build/libunilink.so | grep unilink</div>
+<div class="fragment"><div class="line">nm -D build/lib/libunilink.so | grep unilink</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md324"></a>
 Troubleshooting</h1>
@@ -664,7 +659,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

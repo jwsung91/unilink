@@ -173,8 +173,8 @@ $(document).ready(function(){initNavTree('md_docs_2README.html',''); initResizab
   <div class="headertitle"><div class="title">unilink Documentation</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md464"></a> This directory contains the hand-written documentation for <code>unilink</code> plus the configuration and helper scripts used to generate Doxygen output.</p>
-<h1><a class="anchor" id="autotoc_md465"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md462"></a> This directory contains the hand-written documentation for <code>unilink</code> plus the configuration and helper scripts used to generate Doxygen output.</p>
+<h1><a class="anchor" id="autotoc_md463"></a>
 Directory Structure</h1>
 <div class="fragment"><div class="line">docs/</div>
 <div class="line">├── README.md          # This file — documentation maintenance guide</div>
@@ -202,7 +202,7 @@ Directory Structure</h1>
 <div class="line">│   └── logo/          # Light/dark logo variants and brand guide</div>
 <div class="line">└── scripts/           # Helper scripts for docs generation/serving</div>
 </div><!-- fragment --><p>Generated HTML is written to <code>docs/html/</code> when Doxygen runs. That output is a generated artefact, not the source of truth.</p>
-<h1><a class="anchor" id="autotoc_md466"></a>
+<h1><a class="anchor" id="autotoc_md464"></a>
 Where To Start</h1>
 <ul>
 <li>Reader entry point: <code><a class="el" href="index_8md.html">docs/index.md</a></code></li>
@@ -211,12 +211,12 @@ Where To Start</h1>
 <li>Logo asset notes: <code><a class="el" href="docs_2assets_2logo_2README_8md.html">docs/assets/logo/README.md</a></code></li>
 <li>Helper scripts: <code>docs/scripts/generate_docs.sh</code>, <code>serve_docs.sh</code>, <code>clean_docs.sh</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md467"></a>
+<h1><a class="anchor" id="autotoc_md465"></a>
 Generating Documentation</h1>
-<h2><a class="anchor" id="autotoc_md468"></a>
+<h2><a class="anchor" id="autotoc_md466"></a>
 Prerequisites</h2>
 <div class="fragment"><div class="line">sudo apt install doxygen graphviz</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md469"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md467"></a>
 Supported Methods</h2>
 <p>Using the helper script:</p>
 <div class="fragment"><div class="line">./docs/scripts/generate_docs.sh</div>
@@ -228,13 +228,13 @@ Supported Methods</h2>
 </div><!-- fragment --><p>Running Doxygen directly:</p>
 <div class="fragment"><div class="line">doxygen docs/config/Doxyfile</div>
 </div><!-- fragment --><p>If you invoke Doxygen directly, set <code>PROJECT_NUMBER</code> yourself if you want the generated version banner to match <code>project(VERSION ...)</code> from <code>CMakeLists.txt</code>.</p>
-<h1><a class="anchor" id="autotoc_md470"></a>
+<h1><a class="anchor" id="autotoc_md468"></a>
 Viewing Generated HTML</h1>
 <div class="fragment"><div class="line">./docs/scripts/serve_docs.sh</div>
 </div><!-- fragment --><p>Or:</p>
 <div class="fragment"><div class="line">cd docs/html</div>
 <div class="line">python3 -m http.server 8000</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md471"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md469"></a>
 Maintenance Notes</h1>
 <ul>
 <li>Keep links aligned with real file names and directory layout.</li>
@@ -260,7 +260,7 @@ Maintenance Notes</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

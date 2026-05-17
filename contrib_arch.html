@@ -754,31 +754,13 @@ Extension Points</h1>
 <h1><a class="anchor" id="autotoc_md160"></a>
 Development &amp; Tooling</h1>
 <h2><a class="anchor" id="autotoc_md161"></a>
-1. Docker-based Environment</h2>
-<p>Unilink provides a Docker Compose-based environment to maintain a consistent development environment across various platforms.</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Service   </th><th class="markdownTableHeadNone">Purpose   </th><th class="markdownTableHeadNone">Key Features    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>dev</code>   </td><td class="markdownTableBodyNone">Development   </td><td class="markdownTableBodyNone">Debug build, interactive shell provided    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>test</code>   </td><td class="markdownTableBodyNone">Testing   </td><td class="markdownTableBodyNone">Sanitizers (ASan/UBSan) and memory tracking enabled    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>docs</code>   </td><td class="markdownTableBodyNone">Documentation   </td><td class="markdownTableBodyNone">Doxygen documentation generation and HTTP server (port 8000)    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>prod</code>   </td><td class="markdownTableBodyNone">Production   </td><td class="markdownTableBodyNone">Optimized production image build   </td></tr>
-</table>
-<p><b>Usage Examples:</b></p>
-<div class="fragment"><div class="line">docker-compose up test  # Run all tests and sanitizers</div>
-<div class="line">docker-compose up docs  # Generate API docs and start server</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md162"></a>
+1. Container-based Development Environments</h2>
+<p>The core repository does not maintain Dockerfiles or Docker Compose services. Container images for downstream C++ development are maintained separately in <a href="https://github.com/unilink-lab/unilink-containers"><code>unilink-lab/unilink-containers</code></a>.</p>
+<h2><a class="anchor" id="autotoc_md162"></a>
 2. Documentation Generation</h2>
 <p>You can generate API documentation directly from the source code using Doxygen.</p>
 <div class="fragment"><div class="line"># Direct generation via CMake</div>
-<div class="line">make docs</div>
-<div class="line"> </div>
-<div class="line"># Generation via Docker</div>
-<div class="line">docker-compose up docs</div>
+<div class="line">cmake --build build --target docs</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md164"></a>
 Testing Architecture</h1>
@@ -829,7 +811,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

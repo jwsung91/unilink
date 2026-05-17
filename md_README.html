@@ -173,16 +173,16 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
   <div class="headertitle"><div class="title">unilink</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md858"></a> <img src="docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only" alt="unilink logo" class="inline"/> <img src="docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only" alt="unilink logo" class="inline"/></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md857"></a> <img src="docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only" alt="unilink logo" class="inline"/> <img src="docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only" alt="unilink logo" class="inline"/></p>
 <p><b>Unified async communication for modern C++.</b></p>
 <p>Serial · TCP · UDP · UDS</p>
 <p><img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-informational" alt="Platform" class="inline"/> <img src="https://img.shields.io/badge/vcpkg-jwsung91--unilink-0078D6" alt="vcpkg" class="inline"/> <a href="https://jwsung91.github.io/unilink/coverage/"><img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json" alt="Coverage" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md859"></a>
+<h1><a class="anchor" id="autotoc_md858"></a>
 Description</h1>
 <p>Simple async C++ communication library for Serial, TCP, UDP, and Unix Domain Sockets</p>
 <p><code>unilink</code> provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families.</p>
 <p>The project prioritizes <b>API clarity, predictable runtime behavior, and stability</b> over rapid feature expansion.</p>
-<h1><a class="anchor" id="autotoc_md860"></a>
+<h1><a class="anchor" id="autotoc_md859"></a>
 Feature Highlights</h1>
 <ul>
 <li><b>Unified transport surface</b>: Consistent builders and wrappers for TCP client/server, UDP, Serial, and UDS.</li>
@@ -190,25 +190,34 @@ Feature Highlights</h1>
 <li><b>Fluent API with CRTP Builders</b>: Type-safe configuration with improved method chaining.</li>
 <li><b>Tested runtime behavior</b>: Unit, integration, and end-to-end test suites are part of the repository and documented in <code>test/</code>.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md861"></a>
+<h1><a class="anchor" id="autotoc_md860"></a>
 Requirements</h1>
 <ul>
 <li><b>C++20 compiler and standard library</b>: GCC 10+, recent Clang/libc++, or MSVC 2022 (required)</li>
 <li>CMake 3.12 or later for plain builds; CMake 3.21 or later for the repository presets</li>
 <li>Boost 1.83.0 or later. vcpkg is the recommended dependency supplier; OS package manager Boost versions are supported only when they meet this minimum.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md862"></a>
+<h1><a class="anchor" id="autotoc_md861"></a>
 📦 Installation</h1>
-<h2><a class="anchor" id="autotoc_md863"></a>
+<h2><a class="anchor" id="autotoc_md862"></a>
 vcpkg (recommended)</h2>
 <div class="fragment"><div class="line">vcpkg install jwsung91-unilink</div>
 </div><!-- fragment --><p>For CMake usage, source builds, and other installation options, see the <a class="el" href="installation_8md.html">Installation Guide</a>.</p>
+<h2><a class="anchor" id="autotoc_md863"></a>
+Container Image</h2>
+<p>For isolated downstream C++ development, use the prebuilt core image from <a href="https://github.com/unilink-lab/unilink-containers"><code>unilink-lab/unilink-containers</code></a>:</p>
+<div class="fragment"><div class="line">docker run --rm -it \</div>
+<div class="line">  -v &quot;$PWD:/workspace/app&quot; \</div>
+<div class="line">  -w /workspace/app \</div>
+<div class="line">  ghcr.io/unilink-lab/unilink-core:latest \</div>
+<div class="line">  bash</div>
+</div><!-- fragment --><p>The image installs <code>unilink</code> under <code>/opt/unilink</code>; configure consumers with <code>-DCMAKE_PREFIX_PATH=/opt/unilink</code>.</p>
 <h2><a class="anchor" id="autotoc_md864"></a>
 Contributor Development Setup</h2>
 <div class="fragment"><div class="line">./scripts/setup_dev_env.sh</div>
 <div class="line">cmake --preset dev-linux-x64</div>
 <div class="line">cmake --build --preset dev-linux-x64</div>
-</div><!-- fragment --><p>The setup script installs Boost and spdlog through a local <code>vcpkg/</code> checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0. The preset-based contributor workflow uses <code>CMakePresets.json</code> schema version 3, so those <code>cmake --preset ...</code> commands require CMake 3.21+.</p>
+</div><!-- fragment --><p>The setup script installs Boost and spdlog through an untracked, repository-local <code>vcpkg/</code> checkout by default. Delete that directory any time to reclaim space; rerun the setup script to recreate it. Set <code>VCPKG_ROOT</code> before running the script if you want to reuse an external vcpkg checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0. The preset-based contributor workflow uses <code>CMakePresets.json</code> schema version 3, so those <code>cmake --preset ...</code> commands require CMake 3.21+.</p>
 <h1><a class="anchor" id="autotoc_md865"></a>
 Python Bindings</h1>
 <p>Python bindings have moved to a separate repository:</p>
@@ -260,7 +269,7 @@ Python Bindings</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

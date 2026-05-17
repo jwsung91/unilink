@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md758',1,'']]],
-  ['generate_20coverage_20report_1',['Generate Coverage Report',['../contrib_testing.html#autotoc_md454',1,'']]],
+  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md757',1,'']]],
+  ['generate_20coverage_20report_1',['Generate Coverage Report',['../contrib_testing.html#autotoc_md452',1,'']]],
   ['generate_5fpattern_2',['generate_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ae260c99bd3684af69d879e6562f42712',1,'unilink::memory::MemoryPatternGenerator']]],
   ['generate_5frandom_5fpattern_3',['generate_random_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ad2f76b498219fc9678158f8b0f46ec34',1,'unilink::memory::MemoryPatternGenerator']]],
-  ['generated_20html_4',['Viewing Generated HTML',['../md_docs_2README.html#autotoc_md470',1,'']]],
-  ['generating_20documentation_5',['Generating Documentation',['../md_docs_2README.html#autotoc_md467',1,'']]],
+  ['generated_20html_4',['Viewing Generated HTML',['../md_docs_2README.html#autotoc_md468',1,'']]],
+  ['generating_20documentation_5',['Generating Documentation',['../md_docs_2README.html#autotoc_md465',1,'']]],
   ['generation_6',['2. Documentation Generation',['../contrib_arch.html#autotoc_md162',1,'']]],
   ['generic_20fallback_20errors_20are_20normalized_7',['8. Generic fallback errors are normalized',['../contrib_arch_wrapper.html#autotoc_md256',1,'']]],
   ['get_8',['get',['../classunilink_1_1config_1_1ConfigManagerInterface.html#a713ae56f22e17e355df318fe516ae6d8',1,'unilink::config::ConfigManagerInterface::get(const std::string &amp;key) const =0'],['../classunilink_1_1config_1_1ConfigManagerInterface.html#acced6c6069b04de9dfa2fad64990894c',1,'unilink::config::ConfigManagerInterface::get(const std::string &amp;key, const std::any &amp;default_value) const =0'],['../classunilink_1_1memory_1_1PooledBuffer.html#a0ccea8cdb16603073f8c98b888806e64',1,'unilink::memory::PooledBuffer::get()'],['../classunilink_1_1concurrency_1_1AtomicState.html#a1af545550edb497968fe3f3f21990bef',1,'unilink::concurrency::AtomicState::get()'],['../classunilink_1_1concurrency_1_1ThreadSafeCounter.html#a928cf6efd25a6bfea9cd2d3725c74543',1,'unilink::concurrency::ThreadSafeCounter::get()'],['../classunilink_1_1concurrency_1_1ThreadSafeFlag.html#aaca01debb23a2c14f468cb9049670bab',1,'unilink::concurrency::ThreadSafeFlag::get()'],['../classunilink_1_1config_1_1ConfigManager.html#a5121a76fcdde495e2f88fde0621aadd3',1,'unilink::config::ConfigManager::get(const std::string &amp;key) const override'],['../classunilink_1_1config_1_1ConfigManager.html#a908fe65c768e1a1f571857806a768218',1,'unilink::config::ConfigManager::get(const std::string &amp;key, const std::any &amp;default_value) const override']]],
@@ -20,16 +20,16 @@ var searchData=
   ['get_5fsingleton_17',['get_singleton',['../classunilink_1_1config_1_1ConfigFactory.html#a58b060e083bed8f130f954828efc7905',1,'unilink::config::ConfigFactory']]],
   ['get_5fsupport_5fwarning_18',['get_support_warning',['../classunilink_1_1base_1_1PlatformInfo.html#af93848c1e0cea7695b4f53a12b38d563',1,'unilink::base::PlatformInfo']]],
   ['get_5ftype_19',['get_type',['../classunilink_1_1config_1_1ConfigManagerInterface.html#aaf440e21d6f0c46dc2b65b533e4d633c',1,'unilink::config::ConfigManagerInterface::get_type()'],['../classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496',1,'unilink::config::ConfigManager::get_type()']]],
-  ['getting_20help_20',['Getting Help',['../user_troubleshooting.html#autotoc_md762',1,'']]],
-  ['getting_20started_21',['Getting Started',['../user_index.html#autotoc_md579',1,'']]],
+  ['getting_20help_20',['Getting Help',['../user_troubleshooting.html#autotoc_md761',1,'']]],
+  ['getting_20started_21',['Getting Started',['../user_index.html#autotoc_md577',1,'']]],
   ['getting_20started_20with_20unilink_22',['Getting Started with Unilink',['../tutorial_01.html',1,'user_tutorials']]],
-  ['git_20submodule_20integration_23',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md599',1,'']]],
-  ['github_20actions_20integration_24',['GitHub Actions Integration',['../contrib_testing.html#autotoc_md424',1,'']]],
+  ['git_20submodule_20integration_23',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md597',1,'']]],
+  ['github_20actions_20integration_24',['GitHub Actions Integration',['../contrib_testing.html#autotoc_md422',1,'']]],
   ['globalmemorypool_25',['globalmemorypool',['../classunilink_1_1memory_1_1GlobalMemoryPool.html',1,'unilink::memory::GlobalMemoryPool'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#a0068d4d81382e7001f2a0cd530840b44',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool()=delete'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#af805a5c371db16d7dd56923e3c74b41e',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool(const GlobalMemoryPool &amp;)=delete']]],
   ['goals_26',['Design Goals',['../contrib_arch.html#autotoc_md101',1,'']]],
-  ['gps_20module_27',['GPS Module',['../user_api_guide.html#autotoc_md513',1,'']]],
+  ['gps_20module_27',['GPS Module',['../user_api_guide.html#autotoc_md511',1,'']]],
   ['graceful_20shutdown_28',['3. Graceful Shutdown',['../contrib_arch_runtime.html#autotoc_md208',1,'']]],
   ['guarantees_29',['guarantees',['../contrib_arch_memory.html#autotoc_md13',1,'Memory Safety Guarantees'],['../contrib_arch.html#autotoc_md126',1,'Thread Safety Guarantees']]],
   ['guide_30',['guide',['../contrib_build.html',1,'Build Guide'],['../contrib_index.html',1,'Contributor Guide'],['../user_installation.html',1,'Installation Guide'],['../user_performance.html',1,'Performance Guide'],['../contrib_testing.html',1,'Testing Guide'],['../user_troubleshooting.html',1,'Troubleshooting Guide'],['../user_api_guide.html',1,'Unilink API Guide'],['../user_quickstart.html',1,'Unilink Quick Start Guide'],['../user_index.html',1,'User Guide']]],
-  ['guides_31',['Guides',['../user_index.html#autotoc_md585',1,'']]]
+  ['guides_31',['Guides',['../user_index.html#autotoc_md583',1,'']]]
 ];

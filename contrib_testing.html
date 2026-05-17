@@ -252,29 +252,26 @@ Run All Tests</h2>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md393"></a>
 Run Specific Test Categories</h2>
-<p>Individual test executables are available:</p>
-<div class="fragment"><div class="line"># Core functionality tests</div>
-<div class="line">./build/test/run_core_tests</div>
+<p>Use CTest labels for focused runs:</p>
+<div class="fragment"><div class="line"># Unit and focused component tests</div>
+<div class="line">ctest --test-dir build --output-on-failure -L unit_common_fast</div>
 <div class="line"> </div>
-<div class="line"># Integration tests (end-to-end)</div>
-<div class="line">./build/test/run_integration_tests</div>
+<div class="line"># Memory-focused tests</div>
+<div class="line">ctest --test-dir build --output-on-failure -L unit_memory_fast</div>
 <div class="line"> </div>
-<div class="line"># Memory safety tests</div>
-<div class="line">./build/test/run_memory_safety_tests</div>
-<div class="line"> </div>
-<div class="line"># Thread safety and concurrency tests</div>
-<div class="line">./build/test/run_concurrency_safety_tests</div>
+<div class="line"># End-to-end scenarios</div>
+<div class="line">ctest --test-dir build --output-on-failure -L e2e_scenario_slow</div>
 <div class="line"> </div>
 <div class="line"># Stress and stability tests</div>
-<div class="line">./build/test/run_stress_tests</div>
+<div class="line">ctest --test-dir build --output-on-failure -L e2e_stress_slow</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md395"></a>
 Run Tests with Verbose Output</h2>
 <div class="fragment"><div class="line"># CTest verbose mode</div>
 <div class="line">ctest --output-on-failure --verbose</div>
 <div class="line"> </div>
-<div class="line"># Run specific test with GTest output</div>
-<div class="line">./build/test/run_core_tests --gtest_filter=TcpClientTest.*</div>
+<div class="line"># Run specific tests by CTest name pattern</div>
+<div class="line">ctest --test-dir build --output-on-failure -R TcpClient</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md397"></a>
 Run Tests in Parallel</h2>
@@ -297,7 +294,7 @@ Test Categories</h1>
 <h2><a class="anchor" id="autotoc_md401"></a>
 Core Tests</h2>
 <p>Basic functionality and API tests.</p>
-<div class="fragment"><div class="line">./build/test/run_core_tests</div>
+<div class="fragment"><div class="line">ctest --test-dir build --output-on-failure -L unit_common_fast</div>
 </div><!-- fragment --><p><b>Tests:</b></p><ul>
 <li>Builder API functionality</li>
 <li>TCP client/server basic operations</li>
@@ -305,25 +302,13 @@ Core Tests</h2>
 <li>Error handling</li>
 <li>State management</li>
 </ul>
+<p><b>Note:</b> Most unit tests now use granular labels like <code>unit_common_fast</code>, <code>unit_builder_fast</code>, <code>unit_config_fast</code>, <code>unit_memory_fast</code>, <code>unit_transport_fast</code>, etc. Use <code>-L unit</code> to run all unit tests, or specific labels for focused testing.</p>
 <p><b>Coverage:</b> Fundamental library features</p>
 <hr  />
 <h2><a class="anchor" id="autotoc_md403"></a>
-Integration Tests</h2>
-<p>End-to-end communication tests with real networking.</p>
-<div class="fragment"><div class="line">./build/test/run_integration_tests</div>
-</div><!-- fragment --><p><b>Tests:</b></p><ul>
-<li>TCP client-server communication</li>
-<li>Serial loopback tests</li>
-<li>Multi-client scenarios</li>
-<li>Connection lifecycle</li>
-<li>Data transfer validation</li>
-</ul>
-<p><b>Coverage:</b> Real-world usage scenarios</p>
-<hr  />
-<h2><a class="anchor" id="autotoc_md405"></a>
 Memory Safety Tests</h2>
 <p>Memory tracking, leak detection, and bounds checking.</p>
-<div class="fragment"><div class="line">./build/test/run_memory_safety_tests</div>
+<div class="fragment"><div class="line">ctest --test-dir build --output-on-failure -L unit_memory_fast</div>
 </div><!-- fragment --><p><b>Tests:</b></p><ul>
 <li>Memory leak detection</li>
 <li>Buffer bounds checking</li>
@@ -341,10 +326,10 @@ Memory Safety Tests</h2>
 <div class="line">[----------] 10 tests from MemorySafetyTest (1 ms total)</div>
 <div class="line">[  PASSED  ] 10 tests.</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md407"></a>
+<h2><a class="anchor" id="autotoc_md405"></a>
 Concurrency Safety Tests</h2>
 <p>Thread safety and concurrent access patterns.</p>
-<div class="fragment"><div class="line">./build/test/run_concurrency_safety_tests</div>
+<div class="fragment"><div class="line">ctest --test-dir build --output-on-failure -R IoContext</div>
 </div><!-- fragment --><p><b>Tests:</b></p><ul>
 <li>Concurrent send operations</li>
 <li>Thread-safe state management</li>
@@ -357,21 +342,21 @@ Concurrency Safety Tests</h2>
 <p><b>TCP server regressions (stable IDs &amp; safe stop)</b></p>
 <ul>
 <li>Verifies that TCP server client IDs never get reused and that <code>stop()</code> is safe when called from callbacks.</li>
-<li>Run the focused checks: <div class="fragment"><div class="line">./build/bin/run_unit_test_tcp_server_advanced \</div>
-<div class="line">  --gtest_filter=AdvancedTcpServerCoverageTest.StableClientIdsAreMonotonicAndNotReused:AdvancedTcpServerCoverageTest.StopFromCallbackDoesNotDeadlock</div>
+<li>Run the focused checks: <div class="fragment"><div class="line">ctest --test-dir build --output-on-failure \</div>
+<div class="line">  -R &quot;StableClientIdsAreMonotonicAndNotReused|StopFromCallbackDoesNotDeadlock&quot;</div>
 </div><!-- fragment --></li>
 <li>Requires permission to bind local TCP ports; allow local sockets if your environment sandboxes networking.</li>
 <li>TCP server multi-client send APIs return a bool (true on success, false if no target). Enable <code>send_failure_notify(true)</code> to trigger <code>on_error</code> when the target is missing or disconnected.</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md410"></a>
+<h2><a class="anchor" id="autotoc_md408"></a>
 Benchmarking</h2>
 <p>Standalone performance benchmarks live in the <code>unilink-lab/unilink-benchmarks</code> repository. Keep timing-sensitive latency, throughput, and strategy sweeps out of the core test tree.</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md412"></a>
+<h2><a class="anchor" id="autotoc_md410"></a>
 Stress Tests</h2>
 <p>High-load and stability testing.</p>
-<div class="fragment"><div class="line">./build/test/run_stress_tests</div>
+<div class="fragment"><div class="line">ctest --test-dir build --output-on-failure -L e2e_stress_slow</div>
 </div><!-- fragment --><p><b>Tests:</b></p><ul>
 <li>Long-running connections (24+ hours)</li>
 <li>High connection rate</li>
@@ -381,9 +366,9 @@ Stress Tests</h2>
 </ul>
 <p><b>Coverage:</b> Stability and reliability</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md414"></a>
+<h1><a class="anchor" id="autotoc_md412"></a>
 Memory Safety Validation</h1>
-<h2><a class="anchor" id="autotoc_md415"></a>
+<h2><a class="anchor" id="autotoc_md413"></a>
 Built-in Memory Tracking</h2>
 <p>Enable memory tracking for development:</p>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
@@ -400,7 +385,7 @@ Built-in Memory Tracking</h2>
 <li>Zero overhead in Release builds</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md417"></a>
+<h2><a class="anchor" id="autotoc_md415"></a>
 AddressSanitizer (ASan)</h2>
 <p>Detect memory errors at runtime:</p>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
@@ -419,7 +404,7 @@ AddressSanitizer (ASan)</h2>
 </ul>
 <p><b>Note:</b> Tests run slower (~2-3x) with sanitizers enabled.</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md419"></a>
+<h2><a class="anchor" id="autotoc_md417"></a>
 ThreadSanitizer (TSan)</h2>
 <p>Detect thread race conditions:</p>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
@@ -435,7 +420,7 @@ ThreadSanitizer (TSan)</h2>
 <li>Thread leaks</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md421"></a>
+<h2><a class="anchor" id="autotoc_md419"></a>
 Valgrind</h2>
 <p>Advanced memory debugging:</p>
 <div class="fragment"><div class="line"># Build with debug symbols</div>
@@ -448,17 +433,17 @@ Valgrind</h2>
 <div class="line"> </div>
 <div class="line"># Or run specific test</div>
 <div class="line">valgrind --leak-check=full --show-leak-kinds=all \</div>
-<div class="line">  ./test/run_memory_safety_tests</div>
+<div class="line">  ./bin/run_unit_test_pool_limits</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md423"></a>
+<h1><a class="anchor" id="autotoc_md421"></a>
 Continuous Integration</h1>
-<h2><a class="anchor" id="autotoc_md424"></a>
+<h2><a class="anchor" id="autotoc_md422"></a>
 GitHub Actions Integration</h2>
 <p>All tests are automatically run on every commit and pull request through GitHub Actions.</p>
 <p><b>CI/CD Badges:</b></p>
 <p><a href="https://github.com/jwsung91/unilink/actions/workflows/ci.yml"><img src="https://github.com/jwsung91/unilink/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/jwsung91/unilink/actions/workflows/coverage.yml"><img src="https://github.com/jwsung91/unilink/actions/workflows/coverage.yml/badge.svg" alt="Code Coverage" style="pointer-events: none;" class="inline"/></a></p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md426"></a>
+<h2><a class="anchor" id="autotoc_md424"></a>
 CI/CD Build Matrix</h2>
 <p>Tests run across multiple configurations:</p>
 <table class="markdownTable">
@@ -489,7 +474,7 @@ CI/CD Build Matrix</h2>
 <li>Performance regression tests</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md428"></a>
+<h2><a class="anchor" id="autotoc_md426"></a>
 Ubuntu 20.04 Support</h2>
 <p><b>Local Development Only:</b></p><ul>
 <li>Ubuntu 20.04 is <b>not</b> supported in CI/CD due to runner availability issues</li>
@@ -512,7 +497,7 @@ Ubuntu 20.04 Support</h2>
 <li>Ubuntu 22.04 is the recommended platform for production use</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md430"></a>
+<h2><a class="anchor" id="autotoc_md428"></a>
 View CI/CD Results</h2>
 <p><b>CI/CD Dashboard:</b></p><ul>
 <li><a href="https://github.com/jwsung91/unilink/actions">GitHub Actions Workflows</a></li>
@@ -525,9 +510,9 @@ View CI/CD Results</h2>
 <li>✅ Code coverage maintained</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md432"></a>
+<h1><a class="anchor" id="autotoc_md430"></a>
 Writing Custom Tests</h1>
-<h2><a class="anchor" id="autotoc_md433"></a>
+<h2><a class="anchor" id="autotoc_md431"></a>
 Test Structure</h2>
 <p>Tests use Google Test framework:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;gtest/gtest.h&gt;</span></div>
@@ -557,7 +542,7 @@ Test Structure</h2>
 <div class="ttc" id="anamespaceunilink_html_a3a4bdb4df1849be592d03452cb48278c"><div class="ttname"><a href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilderDefault tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md435"></a>
+<h2><a class="anchor" id="autotoc_md433"></a>
 Example: Custom Integration Test</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;gtest/gtest.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
@@ -612,7 +597,7 @@ Example: Custom Integration Test</h2>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a49d3f7b0aeac37cb41885b5fc2fa6423"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">unilink::wrapper::MessageContext::data</a></div><div class="ttdeci">std::string_view data() const</div><div class="ttdoc">Get the received data as a view.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00049">context.hpp:49</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_ae61c6950fc658c4e8cfd9004da6e79eb"><div class="ttname"><a href="namespaceunilink.html#ae61c6950fc658c4e8cfd9004da6e79eb">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilderDefault tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00085">unilink.hpp:85</a></div></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md437"></a>
+<h2><a class="anchor" id="autotoc_md435"></a>
 Running Custom Tests</h2>
 <div class="fragment"><div class="line"># Add your test file to test/CMakeLists.txt</div>
 <div class="line"> </div>
@@ -620,11 +605,11 @@ Running Custom Tests</h2>
 <div class="line">cmake --build build</div>
 <div class="line"> </div>
 <div class="line"># Run</div>
-<div class="line">./build/test/my_custom_test</div>
+<div class="line">./build/bin/my_custom_test</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md439"></a>
+<h1><a class="anchor" id="autotoc_md437"></a>
 Test Configuration</h1>
-<h2><a class="anchor" id="autotoc_md440"></a>
+<h2><a class="anchor" id="autotoc_md438"></a>
 CTest Configuration</h2>
 <p>Edit <code>CTestTestfile.cmake</code> or use command-line options:</p>
 <div class="fragment"><div class="line"># Timeout for long-running tests</div>
@@ -639,7 +624,7 @@ CTest Configuration</h2>
 <div class="line"># Exclude tests matching pattern</div>
 <div class="line">ctest -E &quot;Stress.*&quot;</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md442"></a>
+<h2><a class="anchor" id="autotoc_md440"></a>
 Environment Variables</h2>
 <p>Control test behavior:</p>
 <div class="fragment"><div class="line"># Increase log verbosity</div>
@@ -654,15 +639,15 @@ Environment Variables</h2>
 <div class="line"># Run tests</div>
 <div class="line">ctest</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md444"></a>
+<h1><a class="anchor" id="autotoc_md442"></a>
 Troubleshooting Tests</h1>
-<h2><a class="anchor" id="autotoc_md445"></a>
+<h2><a class="anchor" id="autotoc_md443"></a>
 Test Failures</h2>
 <p>If tests fail:</p>
 <ol type="1">
 <li><b>Check test output:</b> <div class="fragment"><div class="line">ctest --output-on-failure --verbose</div>
 </div><!-- fragment --></li>
-<li><b>Run specific failing test:</b> <div class="fragment"><div class="line">./build/test/run_core_tests --gtest_filter=FailingTest</div>
+<li><b>Run specific failing test:</b> <div class="fragment"><div class="line">ctest --test-dir build --output-on-failure -R FailingTest</div>
 </div><!-- fragment --></li>
 <li><b>Check for resource issues:</b><ul>
 <li>Port conflicts (another service using test ports)</li>
@@ -672,7 +657,7 @@ Test Failures</h2>
 </li>
 </ol>
 <hr  />
-<h2><a class="anchor" id="autotoc_md447"></a>
+<h2><a class="anchor" id="autotoc_md445"></a>
 Port Conflicts</h2>
 <div class="fragment"><div class="line"># Check if port is in use</div>
 <div class="line">sudo lsof -i :8080</div>
@@ -680,23 +665,23 @@ Port Conflicts</h2>
 <div class="line"># Kill process using port</div>
 <div class="line">sudo kill -9 &lt;PID&gt;</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md449"></a>
+<h2><a class="anchor" id="autotoc_md447"></a>
 Memory Issues</h2>
 <div class="fragment"><div class="line"># Run with Valgrind for detailed analysis</div>
-<div class="line">valgrind --leak-check=full ./build/test/run_memory_safety_tests</div>
+<div class="line">valgrind --leak-check=full ./build/bin/run_unit_test_pool_limits</div>
 <div class="line"> </div>
 <div class="line"># Or use AddressSanitizer</div>
 <div class="line">cmake -S . -B build -DUNILINK_ENABLE_SANITIZERS=ON</div>
 <div class="line">cmake --build build</div>
-<div class="line">./build/test/run_memory_safety_tests</div>
+<div class="line">ctest --test-dir build --output-on-failure -L unit_memory_fast</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md451"></a>
+<h1><a class="anchor" id="autotoc_md449"></a>
 Performance Regression Testing</h1>
 <p>Use the standalone <code>unilink-lab/unilink-benchmarks</code> repository for benchmark baselines, latency sweeps, strategy sweeps, and release benchmark artifacts.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md453"></a>
+<h1><a class="anchor" id="autotoc_md451"></a>
 Code Coverage</h1>
-<h2><a class="anchor" id="autotoc_md454"></a>
+<h2><a class="anchor" id="autotoc_md452"></a>
 Generate Coverage Report</h2>
 <div class="fragment"><div class="line"># Build with coverage flags</div>
 <div class="line">cmake -S . -B build \</div>
@@ -714,7 +699,7 @@ Generate Coverage Report</h2>
 <div class="line">lcov --capture --directory . --output-file coverage.info</div>
 <div class="line">lcov --remove coverage.info &#39;/usr/*&#39; --output-file coverage.info</div>
 <div class="line">lcov --list coverage.info</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md455"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md453"></a>
 View HTML Coverage Report</h2>
 <div class="fragment"><div class="line"># Generate HTML report</div>
 <div class="line">genhtml coverage.info --output-directory coverage_html</div>
@@ -722,7 +707,7 @@ View HTML Coverage Report</h2>
 <div class="line"># Open in browser</div>
 <div class="line">xdg-open coverage_html/index.html</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md457"></a>
+<h1><a class="anchor" id="autotoc_md455"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="performance_8md.html">Performance Optimization</a> - Optimize your tests</li>
@@ -735,7 +720,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
