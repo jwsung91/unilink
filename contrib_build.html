@@ -104,7 +104,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
-   <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
+   <div id="projectname">unilink<span id="projectnumber">&#160;0.7.3</span>
    </div>
    <div id="projectbrief">A simple C++ library for unified async communication</div>
   </td>
@@ -176,7 +176,7 @@ $(document).ready(function(){initNavTree('contrib_build.html',''); initResizable
 <div class="textblock"><p>Complete guide for building <code>unilink</code> with different configurations and platforms.</p>
 <p><b>Note:</b> For installation instructions, see <a class="el" href="installation_8md.html">Installation Guide</a>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md260"></a>
+<h1><a class="anchor" id="autotoc_md259"></a>
 Table of Contents</h1>
 <ol type="1">
 <li>Quick Build</li>
@@ -187,9 +187,9 @@ Table of Contents</h1>
 <li>CMake Package Integration</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md262"></a>
+<h1><a class="anchor" id="autotoc_md261"></a>
 Quick Build</h1>
-<h2><a class="anchor" id="autotoc_md263"></a>
+<h2><a class="anchor" id="autotoc_md262"></a>
 Basic Build (Recommended)</h2>
 <div class="fragment"><div class="line"># 1. Install build tools</div>
 <div class="line">sudo apt update &amp;&amp; sudo apt install -y build-essential cmake ninja-build gcc-10 g++-10</div>
@@ -206,15 +206,15 @@ Basic Build (Recommended)</h2>
 <div class="line">cmake --install build/dev-linux-x64 --prefix /opt/unilink</div>
 </div><!-- fragment --><p>The repository intentionally does not use a root <code>vcpkg.json</code> manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through <code>UNILINK_MIN_BOOST_VERSION</code>. For contributor builds, <code>./scripts/setup_dev_env.sh</code> uses an untracked repository-local <code>vcpkg/</code> checkout by default. It is disposable and can be deleted when you need to reclaim space; rerun the script to recreate it. Set <code>VCPKG_ROOT</code> before running the script to reuse an external vcpkg checkout. The preset-based contributor workflow requires CMake 3.21+ because <code>CMakePresets.json</code> uses schema version 3. Plain source builds without presets remain supported on CMake 3.12+.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md265"></a>
+<h1><a class="anchor" id="autotoc_md264"></a>
 Important Build Notes</h1>
 <p>To enhance build stability and reliability, <code>unilink</code>'s <code>CMakeLists.txt</code> no longer uses automatic file discovery (globbing). Source and header files are now explicitly listed.</p>
 <p><b>Action Required for New Files:</b> When adding or removing <code>.cc</code> or <code>.hpp</code> files in the <code>unilink/</code> directory, you <b>must manually update</b> the <code>UNILINK_SOURCES</code> or <code>UNILINK_HEADERS</code> variables in the project's root <code>CMakeLists.txt</code> file. Failure to do so will result in build errors (e.g., missing symbols).</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md267"></a>
+<h1><a class="anchor" id="autotoc_md266"></a>
 Build Configurations</h1>
 <p>You can build the library with different configurations to optimize for your use case.</p>
-<h2><a class="anchor" id="autotoc_md268"></a>
+<h2><a class="anchor" id="autotoc_md267"></a>
 Minimal Build (without Configuration Management API)</h2>
 <p><b>Recommended for most users</b> - includes the core Builder and Wrapper APIs with a smaller footprint by excluding the optional Configuration Management API.</p>
 <div class="fragment"><div class="line"># Configure for minimal footprint (excludes Configuration Management API)</div>
@@ -238,7 +238,7 @@ Minimal Build (without Configuration Management API)</h2>
 <li>Production deployments where static configuration via Builder API is sufficient</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md270"></a>
+<h2><a class="anchor" id="autotoc_md269"></a>
 Full Build (includes Configuration Management API)</h2>
 <p>Includes advanced configuration management features for dynamic or file-based configuration.</p>
 <div class="fragment"><div class="line"># Configure with all features (includes Configuration Management API)</div>
@@ -262,9 +262,9 @@ Full Build (includes Configuration Management API)</h2>
 <li>Applications requiring runtime configuration</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md272"></a>
+<h1><a class="anchor" id="autotoc_md271"></a>
 Build Options Reference</h1>
-<h2><a class="anchor" id="autotoc_md273"></a>
+<h2><a class="anchor" id="autotoc_md272"></a>
 Core Options</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -282,7 +282,7 @@ Core Options</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>UNILINK_ENABLE_CONFIG</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable configuration management API   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md274"></a>
+<h2><a class="anchor" id="autotoc_md273"></a>
 Development Options</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -294,7 +294,7 @@ Development Options</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>CMAKE_EXPORT_COMPILE_COMMANDS</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Generate <code>compile_commands.json</code> for IDEs   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md275"></a>
+<h2><a class="anchor" id="autotoc_md274"></a>
 Installation Options</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -307,9 +307,9 @@ Installation Options</h2>
 <td class="markdownTableBodyNone"><code>UNILINK_ENABLE_PKGCONFIG</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Install <code>unilink.pc</code>   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md277"></a>
+<h1><a class="anchor" id="autotoc_md276"></a>
 Build Types Comparison</h1>
-<h2><a class="anchor" id="autotoc_md278"></a>
+<h2><a class="anchor" id="autotoc_md277"></a>
 Release Build (Default)</h2>
 <div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
 </div><!-- fragment --><ul>
@@ -321,7 +321,7 @@ Release Build (Default)</h2>
 </ul>
 <p><b>Use for:</b> Production deployments</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md280"></a>
+<h2><a class="anchor" id="autotoc_md279"></a>
 Debug Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug</div>
 </div><!-- fragment --><ul>
@@ -333,7 +333,7 @@ Debug Build</h2>
 </ul>
 <p><b>Use for:</b> Development and debugging</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md282"></a>
+<h2><a class="anchor" id="autotoc_md281"></a>
 RelWithDebInfo Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo</div>
 </div><!-- fragment --><ul>
@@ -344,9 +344,9 @@ RelWithDebInfo Build</h2>
 </ul>
 <p><b>Use for:</b> Performance profiling and production debugging</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md284"></a>
+<h1><a class="anchor" id="autotoc_md283"></a>
 Advanced Build Examples</h1>
-<h2><a class="anchor" id="autotoc_md285"></a>
+<h2><a class="anchor" id="autotoc_md284"></a>
 Example 1: Minimal Production Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
@@ -356,7 +356,7 @@ Example 1: Minimal Production Build</h2>
 <div class="line">cmake --build build -j</div>
 <div class="line">sudo cmake --install build</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md287"></a>
+<h2><a class="anchor" id="autotoc_md286"></a>
 Example 2: Development Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
@@ -366,7 +366,7 @@ Example 2: Development Build</h2>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md289"></a>
+<h2><a class="anchor" id="autotoc_md288"></a>
 Example 3: Testing with Sanitizers</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
@@ -386,7 +386,7 @@ Example 3: Testing with Sanitizers</h2>
 <li>Thread race conditions</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md291"></a>
+<h2><a class="anchor" id="autotoc_md290"></a>
 Example 4: Build with Custom Boost Location</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
@@ -395,7 +395,7 @@ Example 4: Build with Custom Boost Location</h2>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md293"></a>
+<h2><a class="anchor" id="autotoc_md292"></a>
 Example 5: Build with Specific Compiler</h2>
 <div class="fragment"><div class="line"># Using Clang</div>
 <div class="line">export CC=clang-14</div>
@@ -411,9 +411,9 @@ Example 5: Build with Specific Compiler</h2>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md295"></a>
+<h1><a class="anchor" id="autotoc_md294"></a>
 Platform-Specific Builds</h1>
-<h2><a class="anchor" id="autotoc_md296"></a>
+<h2><a class="anchor" id="autotoc_md295"></a>
 Ubuntu 22.04 (Recommended)</h2>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo apt update &amp;&amp; apt install -y \</div>
@@ -426,10 +426,10 @@ Ubuntu 22.04 (Recommended)</h2>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md298"></a>
+<h2><a class="anchor" id="autotoc_md297"></a>
 Ubuntu 20.04 Build</h2>
 <p>Ubuntu 20.04's default GCC 9.4 does not meet the C++20 requirements. You must install a newer compiler and Boost 1.83.0+ through vcpkg or a custom dependency prefix.</p>
-<h3><a class="anchor" id="autotoc_md299"></a>
+<h3><a class="anchor" id="autotoc_md298"></a>
 Prerequisites</h3>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo apt update &amp;&amp; sudo apt install -y \</div>
@@ -439,7 +439,7 @@ Prerequisites</h3>
 <div class="line"># Install newer compiler</div>
 <div class="line">sudo apt install -y gcc-10 g++-10</div>
 <div class="line">vcpkg install boost-asio boost-system spdlog</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md300"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md299"></a>
 Build Steps</h3>
 <div class="fragment"><div class="line"># 1. Set compiler environment</div>
 <div class="line">export CC=gcc-10</div>
@@ -458,7 +458,7 @@ Build Steps</h3>
 <div class="line"> </div>
 <div class="line"># 4. Run tests (optional)</div>
 <div class="line">cd build &amp;&amp; ctest --output-on-failure</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md301"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md300"></a>
 Notes</h3>
 <ul>
 <li>Ubuntu 20.04 LTS reaches end-of-life in April 2025</li>
@@ -467,7 +467,7 @@ Notes</h3>
 <li>You can still build and test locally on Ubuntu 20.04 for development</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md303"></a>
+<h2><a class="anchor" id="autotoc_md302"></a>
 Debian 11+</h2>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo apt update &amp;&amp; apt install -y \</div>
@@ -480,7 +480,7 @@ Debian 11+</h2>
 <div class="line">  -DCMAKE_TOOLCHAIN_FILE=&quot;$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake&quot;</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md305"></a>
+<h2><a class="anchor" id="autotoc_md304"></a>
 Fedora 35+</h2>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo dnf install -y \</div>
@@ -490,7 +490,7 @@ Fedora 35+</h2>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md307"></a>
+<h2><a class="anchor" id="autotoc_md306"></a>
 Arch Linux</h2>
 <div class="fragment"><div class="line"># Install dependencies</div>
 <div class="line">sudo pacman -S base-devel cmake boost</div>
@@ -499,9 +499,9 @@ Arch Linux</h2>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md309"></a>
+<h1><a class="anchor" id="autotoc_md308"></a>
 Build Performance Tips</h1>
-<h2><a class="anchor" id="autotoc_md310"></a>
+<h2><a class="anchor" id="autotoc_md309"></a>
 Parallel Builds</h2>
 <p>Use <code>-j</code> flag for parallel compilation:</p>
 <div class="fragment"><div class="line"># Use all CPU cores</div>
@@ -509,7 +509,7 @@ Parallel Builds</h2>
 <div class="line"> </div>
 <div class="line"># Use specific number of cores</div>
 <div class="line">cmake --build build -j 4</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md311"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md310"></a>
 Ccache for Faster Rebuilds</h2>
 <div class="fragment"><div class="line"># Install ccache</div>
 <div class="line">sudo apt install -y ccache</div>
@@ -520,7 +520,7 @@ Ccache for Faster Rebuilds</h2>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md312"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md311"></a>
 Ninja Build System (Faster than Make)</h2>
 <div class="fragment"><div class="line"># Install ninja</div>
 <div class="line">sudo apt install -y ninja-build</div>
@@ -531,9 +531,9 @@ Ninja Build System (Faster than Make)</h2>
 <div class="line"># Build with Ninja</div>
 <div class="line">cmake --build build</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md314"></a>
+<h1><a class="anchor" id="autotoc_md313"></a>
 Installation</h1>
-<h2><a class="anchor" id="autotoc_md315"></a>
+<h2><a class="anchor" id="autotoc_md314"></a>
 System-Wide Installation</h2>
 <div class="fragment"><div class="line"># Build first</div>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
@@ -544,7 +544,7 @@ System-Wide Installation</h2>
 <div class="line"> </div>
 <div class="line"># Library installed to: /usr/local/lib/libunilink.so</div>
 <div class="line"># Headers installed to: /usr/local/include/unilink/</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md316"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md315"></a>
 Custom Installation Directory</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
@@ -552,47 +552,47 @@ Custom Installation Directory</h2>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
 <div class="line">cmake --install build</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md317"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md316"></a>
 Uninstall</h2>
 <div class="fragment"><div class="line">sudo xargs rm &lt; build/install_manifest.txt</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md319"></a>
+<h1><a class="anchor" id="autotoc_md318"></a>
 Verifying the Build</h1>
-<h2><a class="anchor" id="autotoc_md320"></a>
+<h2><a class="anchor" id="autotoc_md319"></a>
 Run Unit Tests</h2>
 <div class="fragment"><div class="line">cd build</div>
 <div class="line">ctest --output-on-failure</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md321"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md320"></a>
 Run Focused Tests</h2>
 <div class="fragment"><div class="line"># Run common unit tests</div>
 <div class="line">ctest --test-dir build --output-on-failure -L unit_common_fast</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md322"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md321"></a>
 Check Library Symbols</h2>
 <div class="fragment"><div class="line">nm -D build/lib/libunilink.so | grep unilink</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md324"></a>
+<h1><a class="anchor" id="autotoc_md323"></a>
 Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md325"></a>
+<h2><a class="anchor" id="autotoc_md324"></a>
 Problem: CMake Can't Find Boost</h2>
 <div class="fragment"><div class="line"># Specify Boost location</div>
 <div class="line">cmake -S . -B build -DBOOST_ROOT=/usr/local/boost-1.83</div>
 <div class="line"> </div>
 <div class="line"># Or use vcpkg</div>
 <div class="line">vcpkg install boost-asio boost-system spdlog</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md326"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md325"></a>
 Problem: Compiler Not Found</h2>
 <div class="fragment"><div class="line"># Specify compiler explicitly</div>
 <div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_C_COMPILER=gcc-10 \</div>
 <div class="line">  -DCMAKE_CXX_COMPILER=g++-10</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md327"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md326"></a>
 Problem: Out of Memory During Build</h2>
 <div class="fragment"><div class="line"># Reduce parallel jobs</div>
 <div class="line">cmake --build build -j2</div>
 <div class="line"> </div>
 <div class="line"># Or build sequentially</div>
 <div class="line">cmake --build build</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md328"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md327"></a>
 Problem: Permission Denied During Install</h2>
 <div class="fragment"><div class="line"># Use sudo for system-wide install</div>
 <div class="line">sudo cmake --install build</div>
@@ -602,10 +602,10 @@ Problem: Permission Denied During Install</h2>
 <div class="line">cmake --build build -j</div>
 <div class="line">cmake --install build</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md330"></a>
+<h1><a class="anchor" id="autotoc_md329"></a>
 CMake Package Integration</h1>
 <p>After building and installing unilink, you can use it in your projects through CMake's package system.</p>
-<h2><a class="anchor" id="autotoc_md331"></a>
+<h2><a class="anchor" id="autotoc_md330"></a>
 Using the Installed Package</h2>
 <div class="fragment"><div class="line"># CMakeLists.txt</div>
 <div class="line">cmake_minimum_required(VERSION 3.12)</div>
@@ -619,7 +619,7 @@ Using the Installed Package</h2>
 <div class="line"> </div>
 <div class="line"># Link against unilink</div>
 <div class="line">target_link_libraries(my_app PRIVATE unilink::unilink)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md332"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md331"></a>
 Custom Installation Prefix</h2>
 <p>If you installed to a custom prefix:</p>
 <div class="fragment"><div class="line"># Set the prefix path</div>
@@ -627,7 +627,7 @@ Custom Installation Prefix</h2>
 <div class="line"> </div>
 <div class="line"># Or use find_package with PATHS</div>
 <div class="line">find_package(unilink CONFIG REQUIRED PATHS &quot;/opt/unilink&quot;)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md333"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md332"></a>
 Package Components</h2>
 <p>The unilink package provides:</p>
 <ul>
@@ -635,7 +635,7 @@ Package Components</h2>
 <li><b>Headers</b>: Automatically included via target</li>
 <li><b>Dependencies</b>: Boost::system and Threads::Threads</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md334"></a>
+<h2><a class="anchor" id="autotoc_md333"></a>
 Verification</h2>
 <p>Verify the package is properly installed:</p>
 <div class="fragment"><div class="line"># Check if CMake can find the package</div>
@@ -644,7 +644,7 @@ Verification</h2>
 <div class="line"># Check pkg-config (if enabled)</div>
 <div class="line">pkg-config --cflags --libs unilink</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md336"></a>
+<h1><a class="anchor" id="autotoc_md335"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="installation_8md.html">Installation Guide</a> - Complete installation instructions</li>
@@ -659,7 +659,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 05:29:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -104,7 +104,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
-   <div id="projectname">unilink<span id="projectnumber">&#160;0.7.2</span>
+   <div id="projectname">unilink<span id="projectnumber">&#160;0.7.3</span>
    </div>
    <div id="projectbrief">A simple C++ library for unified async communication</div>
   </td>
@@ -754,17 +754,14 @@ Extension Points</h1>
 <h1><a class="anchor" id="autotoc_md160"></a>
 Development &amp; Tooling</h1>
 <h2><a class="anchor" id="autotoc_md161"></a>
-1. Container-based Development Environments</h2>
-<p>The core repository does not maintain Dockerfiles or Docker Compose services. Container images for downstream C++ development are maintained separately in <a href="https://github.com/unilink-lab/unilink-containers"><code>unilink-lab/unilink-containers</code></a>.</p>
-<h2><a class="anchor" id="autotoc_md162"></a>
-2. Documentation Generation</h2>
+Documentation Generation</h2>
 <p>You can generate API documentation directly from the source code using Doxygen.</p>
 <div class="fragment"><div class="line"># Direct generation via CMake</div>
 <div class="line">cmake --build build --target docs</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md164"></a>
+<h1><a class="anchor" id="autotoc_md163"></a>
 Testing Architecture</h1>
-<h2><a class="anchor" id="autotoc_md165"></a>
+<h2><a class="anchor" id="autotoc_md164"></a>
 1. Dependency Injection</h2>
 <div class="fragment"><div class="line"><span class="comment">// Easy to mock</span></div>
 <div class="line"><span class="keyword">class </span>Serial {</div>
@@ -776,19 +773,19 @@ Testing Architecture</h1>
 <div class="line"><span class="comment">// In tests</span></div>
 <div class="line"><span class="keyword">auto</span> mock_port = std::make_shared&lt;MockSerialPort&gt;();</div>
 <div class="line">Serial serial(mock_port);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md166"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md165"></a>
 2. Independent Contexts</h2>
 <div class="fragment"><div class="line"><span class="comment">// Isolated testing</span></div>
 <div class="line"><span class="keyword">auto</span> client = tcp_client(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code hl_function" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aae1db48c240ea8a0c454a970ab60e2f7">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Own IO thread</span></div>
 <div class="line">    .build();</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md167"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md166"></a>
 3. State Verification</h2>
 <div class="fragment"><div class="line"><span class="comment">// Check internal state</span></div>
 <div class="line">ASSERT_EQ(client-&gt;get_state(), State::CONNECTED);</div>
 <div class="line">ASSERT_TRUE(server-&gt;listening());</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md169"></a>
+<h1><a class="anchor" id="autotoc_md168"></a>
 Summary</h1>
 <p>Unilink's architecture emphasizes:</p>
 <p>✅ <b>Modularity</b> - Clear separation of concerns <br  />
@@ -811,7 +808,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun May 17 2026 03:29:28 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 05:29:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
