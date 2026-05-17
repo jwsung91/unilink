@@ -37,8 +37,6 @@ jobs:
             cxx: g++
             generator: Ninja
             build_type: Release
-            build_python: OFF
-            vcpkg_features: ""
           - name: C++ (Linux ARM64, GCC, Ubuntu 24.04)
             os: ubuntu-24.04-arm
             triplet: arm64-linux
@@ -46,8 +44,6 @@ jobs:
             cxx: g++
             generator: Ninja
             build_type: Release
-            build_python: OFF
-            vcpkg_features: ""
           - name: C++ (Linux, GCC, Ubuntu 22.04)
             os: ubuntu-22.04
             triplet: x64-linux
@@ -55,8 +51,6 @@ jobs:
             cxx: g++
             generator: Ninja
             build_type: Release
-            build_python: OFF
-            vcpkg_features: ""
           - name: C++ (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows-static-md
@@ -64,8 +58,6 @@ jobs:
             cxx: cl
             generator: "Visual Studio 17 2022"
             build_type: Release
-            build_python: OFF
-            vcpkg_features: ""
           - name: C++ (macOS, Clang)
             os: macos-15
             triplet: arm64-osx
@@ -73,55 +65,6 @@ jobs:
             cxx: /opt/homebrew/opt/llvm/bin/clang++
             generator: Ninja
             build_type: Release
-            build_python: OFF
-            vcpkg_features: ""
-
-          # Matrix for Python Enabled
-          - name: Python3 (Linux, GCC)
-            os: ubuntu-24.04
-            triplet: x64-linux
-            cc: gcc
-            cxx: g++
-            generator: Ninja
-            build_type: Release
-            build_python: ON
-            vcpkg_features: "python"
-          - name: Python3 (Linux ARM64, GCC, Ubuntu 24.04)
-            os: ubuntu-24.04-arm
-            triplet: arm64-linux
-            cc: gcc
-            cxx: g++
-            generator: Ninja
-            build_type: Release
-            build_python: ON
-            vcpkg_features: "python"
-          - name: Python3 (Linux, GCC, Ubuntu 22.04)
-            os: ubuntu-22.04
-            triplet: x64-linux
-            cc: gcc
-            cxx: g++
-            generator: Ninja
-            build_type: Release
-            build_python: ON
-            vcpkg_features: "python"
-          - name: Python3 (Windows, MSVC)
-            os: windows-2022
-            triplet: x64-windows-static-md
-            cc: cl
-            cxx: cl
-            generator: "Visual Studio 17 2022"
-            build_type: Release
-            build_python: ON
-            vcpkg_features: "python"
-          - name: Python3 (macOS, Clang)
-            os: macos-15
-            triplet: arm64-osx
-            cc: /opt/homebrew/opt/llvm/bin/clang
-            cxx: /opt/homebrew/opt/llvm/bin/clang++
-            generator: Ninja
-            build_type: Release
-            build_python: ON
-            vcpkg_features: "python"
 
     env:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
@@ -163,7 +106,7 @@ jobs:
         uses: ./.github/actions/setup-vcpkg
         with:
           triplet: ${{ matrix.triplet }}
-          packages: boost-asio boost-system spdlog pybind11
+          packages: boost-asio boost-system spdlog
 
       - name: Install dependencies with vcpkg (macOS)
         if: runner.os == 'macOS'
@@ -173,17 +116,7 @@ jobs:
           CXX: ${{ matrix.cxx }}
         with:
           triplet: ${{ matrix.triplet }}
-          packages: boost-asio boost-system spdlog pybind11
-
-      - name: Setup Python
-        if: matrix.build_python == 'ON'
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
-
-      - name: Install Python Test Dependencies
-        if: matrix.build_python == 'ON'
-        run: python -m pip install pytest pybind11
+          packages: boost-asio boost-system spdlog
 
       - name: Clone vcpkg
         if: runner.os == 'Windows'
@@ -232,16 +165,11 @@ jobs:
             return 0
           }
 
-          retry_command "$VCPKG_EXE" install boost-system boost-asio spdlog pybind11 --triplet ${{ matrix.triplet }}
+          retry_command "$VCPKG_EXE" install boost-system boost-asio spdlog --triplet ${{ matrix.triplet }}
 
       - name: Configure (Linux)
         if: runner.os == 'Linux'
         run: |
-          PYTHON_CMAKE_ARGS=()
-          if [ "${{ matrix.build_python }}" = "ON" ]; then
-            PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
-          fi
-
           cmake -S . -B build \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
@@ -249,10 +177,9 @@ jobs:
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            -DBUILD_PYTHON_BINDINGS=OFF \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
-            "${PYTHON_CMAKE_ARGS[@]}"
+            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
 
       - name: Configure (macOS)
         if: runner.os == 'macOS'
@@ -260,11 +187,6 @@ jobs:
           SDK_VER=$(xcrun --sdk macosx --show-sdk-version)
           echo "macOS SDK version: $SDK_VER"
           export MACOSX_DEPLOYMENT_TARGET="$SDK_VER"
-
-          PYTHON_CMAKE_ARGS=()
-          if [ "${{ matrix.build_python }}" = "ON" ]; then
-            PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
-          fi
 
           cmake -S . -B build \
             -G "${{ matrix.generator }}" \
@@ -274,21 +196,14 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            -DBUILD_PYTHON_BINDINGS=OFF \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
-            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}" \
-            "${PYTHON_CMAKE_ARGS[@]}"
+            -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $pythonCmakeArgs = @()
-          if ("${{ matrix.build_python }}" -eq "ON") {
-            $pythonExe = python -c "import sys; print(sys.executable)"
-            $pythonCmakeArgs += "-DPython3_EXECUTABLE=$pythonExe"
-          }
-
           cmake -S . -B build `
             -G "${{ matrix.generator }}" -A x64 `
             -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
@@ -296,8 +211,7 @@ jobs:
             -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} `
-            @pythonCmakeArgs
+            -DBUILD_PYTHON_BINDINGS=OFF
 
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel
@@ -307,67 +221,12 @@ jobs:
         run: cmake --build build --target unilink_unit_tests --config "${BUILD_TYPE}"
 
       - name: Test (Windows, Full C++)
-        if: runner.os == 'Windows' && matrix.build_python != 'ON'
+        if: runner.os == 'Windows'
         working-directory: build
         shell: pwsh
         run: ctest -C "${env:BUILD_TYPE}" --output-on-failure -LE docs_snippets
 
       - name: Test (Linux/macOS, Full C++)
-        if: runner.os != 'Windows' && matrix.build_python != 'ON'
+        if: runner.os != 'Windows'
         working-directory: build
         run: ctest --output-on-failure --parallel 2 -LE docs_snippets
-
-      - name: Test (Windows, Python C++ and transport smoke)
-        if: runner.os == 'Windows' && matrix.build_python == 'ON'
-        working-directory: build
-        shell: pwsh
-        run: |
-          # Full C++ coverage already runs in the pure C++ matrix.
-          # Python-enabled jobs keep fast unit coverage plus focused transport
-          # integration smoke, then verify install/import/pytest on top.
-          ctest -C "${env:BUILD_TYPE}" --output-on-failure -L "(unit_(common_fast|builder_fast|config_fast|memory_fast|transport_.*_fast|transport_reconnect_stable)|integration_transport_(tcp|udp|backpressure)_medium)"
-
-      - name: Test (Linux/macOS, Python C++ and transport smoke)
-        if: runner.os != 'Windows' && matrix.build_python == 'ON'
-        working-directory: build
-        run: |
-          # Full C++ coverage already runs in the pure C++ matrix.
-          # Python-enabled jobs keep fast unit coverage plus focused transport
-          # integration smoke, then verify install/import/pytest on top.
-          ctest --output-on-failure --parallel 2 -L '(unit_(common_fast|builder_fast|config_fast|memory_fast|transport_.*_fast|transport_reconnect_stable)|integration_transport_(tcp|udp|backpressure)_medium)'
-
-      - name: Stage Python Package (Windows)
-        if: matrix.build_python == 'ON' && runner.os == 'Windows'
-        shell: pwsh
-        run: cmake --install build --prefix build/install --config "${env:BUILD_TYPE}"
-
-      - name: Stage Python Package (Linux/macOS)
-        if: matrix.build_python == 'ON' && runner.os != 'Windows'
-        shell: bash
-        run: cmake --install build --prefix build/install
-
-      - name: Verify Python Import (Windows)
-        if: matrix.build_python == 'ON' && runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $sitePackages = python -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip(r'/\\'))"
-          $installPath = Join-Path $pwd "build/install/$sitePackages"
-          $packagePath = Join-Path $installPath "unilink"
-          $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
-          $env:UNILINK_INSTALL_PATH = $installPath
-          $env:UNILINK_PACKAGE_PATH = $packagePath
-          # Add package dir first (contains unilink.dll, spdlog.dll, boost DLLs copied at install),
-          # then vcpkg bin as fallback — both paths ensure DLLs are found by the Windows loader.
-          $env:PATH = "$packagePath;$env:VCPKG_ROOT\installed\${{ matrix.triplet }}\bin;$env:PATH"
-          python bindings/python/diagnose_windows_import.py
-          python bindings/python/tests/test_import.py
-          python -m pytest bindings/python/tests -q
-
-      - name: Verify Python Import (Linux/macOS)
-        if: matrix.build_python == 'ON' && runner.os != 'Windows'
-        shell: bash
-        run: |
-          PY_SITE=$(python3 -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip('/\\\\'))")
-          export PYTHONPATH="$PWD/build/install/$PY_SITE:$PYTHONPATH"
-          python3 bindings/python/tests/test_import.py
-          python3 -m pytest bindings/python/tests -q

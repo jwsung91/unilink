@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.12)
 
-# Python bindings option
-option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+# Deprecated Python bindings option
+option(BUILD_PYTHON_BINDINGS
+       "Deprecated: Python bindings moved to unilink-python" OFF
+)
 
 project(
   unilink
@@ -352,7 +354,11 @@ if(UNILINK_BUILD_TESTS)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
-  add_subdirectory(bindings/python)
+  message(
+    FATAL_ERROR
+      "BUILD_PYTHON_BINDINGS is deprecated. "
+      "Python bindings have moved to https://github.com/unilink-lab/unilink-python"
+  )
 endif()
 
 # Documentation generation with Doxygen

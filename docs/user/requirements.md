@@ -98,7 +98,7 @@ Applications must be able to resolve the same Boost 1.83.0+ dependency set used 
 - Validated on Jetson Orin Nano with Ubuntu 22.04 on `aarch64`
 - Current secondary validation target: Ubuntu 24.04 on `aarch64`
 - Full C++ test sweep passed on the Orin Nano testbed: 481 tests passed, 0 failed
-- Python bindings validation passed, including import smoke, API tests, and loopback-enabled TCP checks
+- Python binding validation now belongs to the unilink-python repository
 - ARM64 release packaging validation passed, including installed-package consumer smoke via `find_package(unilink)` and `unilink::unilink`
 - One test remains intentionally disabled in that run: `UdsErrorTest.ServerStopWithActiveSessions`
 - Serial integration tests require `socat` or physical loopback hardware
