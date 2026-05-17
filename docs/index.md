@@ -21,7 +21,7 @@ You are building an application using unilink.
 | [Requirements](user/requirements.md) | Platform and dependency expectations |
 | [API Reference](user/api_guide.md) | Full public API: builders, wrappers, callbacks |
 | [Troubleshooting](user/troubleshooting.md) | Common failures and debugging steps |
-| [Python Bindings](user/python_bindings.md) | Python API guide |
+| [Python Bindings](user/python_bindings.md) | Moved to unilink-python |
 | [Performance](user/performance.md) | Build and runtime tuning |
 
 **Tutorials:**

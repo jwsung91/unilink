@@ -15,7 +15,7 @@ Serial · TCP · UDP · UDS
 
 Simple async C++ communication library for Serial, TCP, UDP, and Unix Domain Sockets
 
-`unilink` provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families; Python bindings cover Serial, TCP, UDP, and UDS.
+`unilink` provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families.
 
 The project prioritizes **API clarity, predictable runtime behavior, and stability** over rapid feature expansion.
 
@@ -53,33 +53,14 @@ cmake --build --preset dev-linux-x64
 The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0.
 The preset-based contributor workflow uses `CMakePresets.json` schema version 3, so those `cmake --preset ...` commands require CMake 3.21+.
 
-## 🐍 Python Bindings
+## Python Bindings
 
-Unilink provides Python bindings for all core transport families (`TcpClient`, `TcpServer`, `Serial`, `Udp`, `UdsClient`, `UdsServer`). 
+Python bindings have moved to a separate repository:
 
-For a complete guide, see the **[Python Bindings Guide](docs/user/python_bindings.md)**.
+https://github.com/unilink-lab/unilink-python
 
-### Prerequisites
-
-* Python 3.8+ (dev headers)
-* pybind11 (`sudo apt-get install pybind11-dev python3-pybind11` on Ubuntu)
-* Boost 1.83.0+ (`boost-system`, `boost-asio`)
-
-### Build
-
-Pass `-DBUILD_PYTHON_BINDINGS=ON` to CMake:
-
-```bash
-cmake -B build -S . -DBUILD_PYTHON_BINDINGS=ON
-cmake --build build
-```
-
-This generates `unilink_py.cpython-*.so` in `build/lib`. Add this directory to your `PYTHONPATH` to use it:
-
-```bash
-export PYTHONPATH=$PWD/build/lib
-python3 -c "import unilink_py; print(unilink_py.__doc__)"
-```
+This repository focuses on the C++20 core library, CMake package, native
+runtime, and C++ API documentation.
 
 ## 📚 Documentation
 

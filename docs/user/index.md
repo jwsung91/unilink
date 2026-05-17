@@ -37,7 +37,7 @@ Step-by-step guides for each transport family:
 | Document | What it covers |
 |----------|----------------|
 | [Troubleshooting](troubleshooting.md) | Common failures and how to resolve them |
-| [Python Bindings](python_bindings.md) | Python API and configuration |
+| [Python Bindings](python_bindings.md) | Moved to unilink-python |
 | [Performance](performance.md) | Build and runtime tuning considerations |
 
 ---

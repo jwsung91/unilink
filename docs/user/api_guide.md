@@ -1038,16 +1038,10 @@ The strategy can also be changed at runtime on a running transport:
 client->set_backpressure_strategy(BackpressureStrategy::BestEffort);
 ```
 
-### Python Usage
+### Python Bindings
 
-```python
-import unilink_py as unilink
-
-client = unilink.TcpClient("192.168.1.10", 8080)
-client.backpressure_threshold = 512 * 1024
-client.backpressure_strategy  = unilink.BackpressureStrategy.BestEffort
-client.start()
-```
+Python bindings have moved to https://github.com/unilink-lab/unilink-python.
+This C++ core repository documents the native wrapper and builder APIs.
 
 ### Thresholds
 

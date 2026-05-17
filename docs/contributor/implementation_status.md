@@ -13,7 +13,6 @@ The repository currently contains implemented source trees for:
 - Configuration management
 - Memory and framing utilities
 - Test suites
-- Optional Python bindings
 
 ## C++ API Surface
 
@@ -30,18 +29,9 @@ If you need the exact public entry points, treat `unilink/unilink.hpp` and the h
 
 ## Python Binding Scope
 
-The Python extension module is generated from `bindings/python/module.cpp.in`.
-
-At a high level, the `unilink` Python package covers:
-
-- TCP client
-- TCP server
-- UDP
-- Serial
-- UDS client
-- UDS server
-
-If binding coverage changes, update this section only when the exposed API surface changes, not when the package version changes.
+Python bindings have moved to https://github.com/unilink-lab/unilink-python.
+This repository keeps only the C++20 core, native package metadata, runtime,
+tests, and C++ API documentation.
 
 ## Build And Test Status
 
@@ -61,7 +51,7 @@ Latest explicitly reported ARM64 validation:
 
 - Jetson Orin Nano on Ubuntu 22.04 `aarch64`
 - Full C++ `ctest` sweep passed: 481 passed, 0 failed
-- Python import smoke and Python API tests passed, including loopback-enabled TCP validation
+- Python binding validation now belongs to the unilink-python repository
 - ARM64 installed-package consumer smoke passed with `find_package(unilink)` and `unilink::unilink`
 - One disabled test was listed as not run: `UdsErrorTest.ServerStopWithActiveSessions`
 - See [Orin Nano Validation](orin_nano_validation.md) for the reproducible runbook and scope boundaries
