@@ -91,7 +91,6 @@ cmake -S . -B build-orin \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_BUILD_DOCS=OFF \
   -DUNILINK_BUILD_TESTS=ON \
-  -DBUILD_PYTHON_BINDINGS=OFF \
   -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
   -DVCPKG_TARGET_TRIPLET=arm64-linux
 ```

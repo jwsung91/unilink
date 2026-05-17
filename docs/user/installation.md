@@ -181,7 +181,6 @@ Other package managers (e.g., Conan) are not yet officially supported.
 | ---------------------------------- | ------- | ------------------------------------ |
 | `UNILINK_BUILD_SHARED`             | `ON`    | Build shared library                 |
 | `UNILINK_BUILD_STATIC`             | `ON`    | Build static library                 |
-| `UNILINK_BUILD_EXAMPLES`           | `OFF`   | Deprecated no-op; examples moved to `unilink-examples` |
 | `UNILINK_BUILD_TESTS`              | `ON`    | Build tests                          |
 | `UNILINK_BUILD_DOCS`               | `ON`    | Build documentation                  |
 | `UNILINK_ENABLE_CONFIG`            | `ON`    | Enable configuration management API  |

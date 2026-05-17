@@ -122,7 +122,6 @@ cmake --build build -j
 | `CMAKE_BUILD_TYPE`       | `Release` | Build type: `Release`, `Debug`, `RelWithDebInfo` |
 | `UNILINK_BUILD_SHARED`   | `ON`      | Build shared library                             |
 | `UNILINK_BUILD_STATIC`   | `ON`      | Build static library                             |
-| `UNILINK_BUILD_EXAMPLES` | `OFF`     | Deprecated no-op; examples moved to `unilink-examples` |
 | `UNILINK_BUILD_TESTS`    | `ON`      | Build tests                                      |
 | `UNILINK_BUILD_DOCS`     | `ON`      | Enable documentation targets                     |
 | `UNILINK_ENABLE_CONFIG`  | `ON`      | Enable configuration management API              |

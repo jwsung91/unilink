@@ -149,10 +149,6 @@ set(CPACK_SOURCE_IGNORE_FILES
 # Component-based packaging
 set(CPACK_COMPONENTS_ALL libraries headers cmake pkgconfig documentation)
 
-if(BUILD_PYTHON_BINDINGS)
-  list(APPEND CPACK_COMPONENTS_ALL python)
-endif()
-
 # Component descriptions
 set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries")
 set(CPACK_COMPONENT_LIBRARIES_DESCRIPTION "Unilink shared and static libraries")
@@ -177,14 +173,6 @@ set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION
     "API documentation and user guides"
 )
 set(CPACK_COMPONENT_DOCUMENTATION_DEPENDS headers)
-
-if(BUILD_PYTHON_BINDINGS)
-  set(CPACK_COMPONENT_PYTHON_DISPLAY_NAME "Python Bindings")
-  set(CPACK_COMPONENT_PYTHON_DESCRIPTION
-      "Python package, extension module, and runtime dependencies for unilink"
-  )
-  set(CPACK_COMPONENT_PYTHON_DEPENDS libraries)
-endif()
 
 # Package config and pkg-config generation
 if(UNILINK_ENABLE_INSTALL)

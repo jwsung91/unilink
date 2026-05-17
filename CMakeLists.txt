@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
 
-# Deprecated Python bindings option
-option(BUILD_PYTHON_BINDINGS
-       "Deprecated: Python bindings moved to unilink-python" OFF
-)
-
 project(
   unilink
   VERSION 0.7.2
@@ -23,282 +18,16 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkCompiler.cmake)
 # Include dependencies
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkDependencies.cmake)
 
-# Source files (explicitly listed, no globbing)
-set(UNILINK_SOURCES
-    unilink/transport/tcp_server/tcp_server.cc
-    unilink/transport/tcp_client/tcp_client.cc
-    unilink/transport/serial/serial.cc
-    unilink/builder/auto_initializer.cc
-    unilink/builder/serial_builder.cc
-    unilink/builder/tcp_client_builder.cc
-    unilink/builder/tcp_server_builder.cc
-    unilink/builder/udp_builder.cc
-    unilink/builder/unified_builder.cc
-    unilink/concurrency/io_context_manager.cc
-    unilink/config/config_factory.cc
-    unilink/config/config_manager.cc
-    unilink/diagnostics/error_handler.cc
-    unilink/diagnostics/exceptions.cc
-    unilink/diagnostics/logger.cc
-    unilink/factory/channel_factory.cc
-    unilink/interface/channel.cc
-    unilink/interface/itcp_acceptor.cc
-    unilink/interface/itcp_socket.cc
-    unilink/memory/memory_pool.cc
-    unilink/memory/memory_tracker.cc
-    unilink/memory/safe_data_buffer.cc
-    unilink/transport/tcp_server/boost_tcp_acceptor.cc
-    unilink/transport/tcp_server/boost_tcp_socket.cc
-    unilink/transport/tcp_server/tcp_server_session.cc
-    unilink/transport/udp/udp.cc
-    unilink/transport/uds/boost_uds_acceptor.cc
-    unilink/transport/uds/boost_uds_socket.cc
-    unilink/transport/uds/uds_client.cc
-    unilink/transport/uds/uds_server.cc
-    unilink/transport/uds/uds_server_session.cc
-    unilink/util/input_validator.cc
-    unilink/wrapper/serial/serial.cc
-    unilink/wrapper/tcp_client/tcp_client.cc
-    unilink/wrapper/tcp_server/tcp_server.cc
-    unilink/wrapper/udp/udp.cc
-    unilink/wrapper/udp/udp_server.cc
-    unilink/wrapper/uds_client/uds_client.cc
-    unilink/wrapper/uds_server/uds_server.cc
-    unilink/builder/uds_builder.cc
-    unilink/framer/line_framer.cc
-    unilink/framer/packet_framer.cc
-)
+# Include library sources and target construction
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkSources.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkTargets.cmake)
+unilink_add_library_targets()
 
-# Public headers (explicitly listed, no globbing)
-set(UNILINK_HEADERS
-    unilink/base/common.hpp
-    unilink/base/constants.hpp
-    unilink/base/deprecated.hpp
-    unilink/base/platform.hpp
-    unilink/base/visibility.hpp
-    unilink/framer/iframer.hpp
-    unilink/framer/line_framer.hpp
-    unilink/framer/packet_framer.hpp
-    unilink/builder/auto_initializer.hpp
-    unilink/builder/ibuilder.hpp
-    unilink/builder/serial_builder.hpp
-    unilink/builder/tcp_client_builder.hpp
-    unilink/builder/tcp_server_builder.hpp
-    unilink/builder/udp_builder.hpp
-    unilink/builder/uds_builder.hpp
-    unilink/builder/unified_builder.hpp
-    unilink/concurrency/io_context_manager.hpp
-    unilink/concurrency/thread_safe_state.hpp
-    unilink/config/config_factory.hpp
-    unilink/config/config_manager.hpp
-    unilink/config/iconfig_manager.hpp
-    unilink/config/serial_config.hpp
-    unilink/config/tcp_client_config.hpp
-    unilink/config/tcp_server_config.hpp
-    unilink/config/udp_config.hpp
-    unilink/config/uds_config.hpp
-    unilink/diagnostics/error_handler.hpp
-    unilink/diagnostics/error_types.hpp
-    unilink/diagnostics/exceptions.hpp
-    unilink/diagnostics/logger.hpp
-    unilink/factory/channel_factory.hpp
-    unilink/interface/channel.hpp
-    unilink/interface/iserial_port.hpp
-    unilink/interface/itcp_acceptor.hpp
-    unilink/interface/itcp_resolver.hpp
-    unilink/interface/itcp_socket.hpp
-    unilink/interface/itimer.hpp
-    unilink/interface/iuds_acceptor.hpp
-    unilink/interface/iuds_socket.hpp
-    unilink/memory/memory_pool.hpp
-    unilink/memory/memory_tracker.hpp
-    unilink/memory/memory_validator.hpp
-    unilink/memory/safe_data_buffer.hpp
-    unilink/memory/safe_span.hpp
-    unilink/transport/serial/boost_serial_port.hpp
-    unilink/transport/serial/serial.hpp
-    unilink/transport/base/bp_utils.hpp
-    unilink/transport/base/reconnect_policy.hpp
-    unilink/transport/tcp_client/tcp_client.hpp
-    unilink/transport/tcp_server/boost_tcp_acceptor.hpp
-    unilink/transport/tcp_server/boost_tcp_socket.hpp
-    unilink/transport/tcp_server/tcp_server_session.hpp
-    unilink/transport/tcp_server/tcp_server.hpp
-    unilink/transport/udp/udp.hpp
-    unilink/transport/uds/boost_uds_acceptor.hpp
-    unilink/transport/uds/boost_uds_socket.hpp
-    unilink/transport/uds/uds_client.hpp
-    unilink/transport/uds/uds_server.hpp
-    unilink/transport/uds/uds_server_session.hpp
-    unilink/unilink.hpp
-    unilink/util/input_validator.hpp
-    unilink/wrapper/ichannel.hpp
-    unilink/wrapper/serial/serial.hpp
-    unilink/wrapper/tcp_client/tcp_client.hpp
-    unilink/wrapper/tcp_server/tcp_server.hpp
-    unilink/wrapper/udp/udp.hpp
-    unilink/wrapper/uds_client/uds_client.hpp
-    unilink/wrapper/uds_server/uds_server.hpp
-)
-
-# Create the library
-if(UNILINK_BUILD_SHARED AND UNILINK_BUILD_STATIC)
-  # Build both shared and static libraries
-  add_library(unilink_shared SHARED ${UNILINK_SOURCES} ${UNILINK_HEADERS})
-  add_library(unilink_static STATIC ${UNILINK_SOURCES} ${UNILINK_HEADERS})
-
-  # Set target properties for shared library
-  set_target_properties(
-    unilink_shared
-    PROPERTIES VERSION ${PROJECT_VERSION}
-               SOVERSION ${PROJECT_VERSION_MAJOR}
-               OUTPUT_NAME "unilink"
-               CXX_VISIBILITY_PRESET hidden
-               VISIBILITY_INLINES_HIDDEN YES
-               WINDOWS_EXPORT_ALL_SYMBOLS OFF
-  )
-
-  # Set target properties for static library
-  set_target_properties(
-    unilink_static
-    PROPERTIES OUTPUT_NAME "unilink_static"
-               CXX_VISIBILITY_PRESET hidden
-               VISIBILITY_INLINES_HIDDEN YES
-  )
-
-  target_compile_definitions(
-    unilink_shared
-    PUBLIC UNILINK_BUILD_SHARED
-    PRIVATE UNILINK_BUILDING_LIBRARY
-  )
-  target_compile_definitions(unilink_static PUBLIC UNILINK_BUILD_STATIC)
-
-  # Create unified target
-  add_library(unilink INTERFACE)
-  target_link_libraries(
-    unilink
-    INTERFACE $<$<TARGET_EXISTS:unilink_shared>:unilink_shared>
-              $<$<NOT:$<TARGET_EXISTS:unilink_shared>>:unilink_static>
-              unilink_dependencies
-  )
-
-elseif(UNILINK_BUILD_SHARED)
-  # Build only shared library
-  add_library(unilink SHARED ${UNILINK_SOURCES} ${UNILINK_HEADERS})
-  set_target_properties(
-    unilink
-    PROPERTIES VERSION ${PROJECT_VERSION}
-               SOVERSION ${PROJECT_VERSION_MAJOR}
-               OUTPUT_NAME "unilink"
-               CXX_VISIBILITY_PRESET hidden
-               VISIBILITY_INLINES_HIDDEN YES
-               WINDOWS_EXPORT_ALL_SYMBOLS OFF
-  )
-  target_compile_definitions(
-    unilink
-    PUBLIC UNILINK_BUILD_SHARED
-    PRIVATE UNILINK_BUILDING_LIBRARY
-  )
-
-elseif(UNILINK_BUILD_STATIC)
-  # Build only static library
-  add_library(unilink STATIC ${UNILINK_SOURCES} ${UNILINK_HEADERS})
-  set_target_properties(
-    unilink
-    PROPERTIES OUTPUT_NAME "unilink"
-               CXX_VISIBILITY_PRESET hidden
-               VISIBILITY_INLINES_HIDDEN YES
-  )
-  target_compile_definitions(unilink PUBLIC UNILINK_BUILD_STATIC)
-
-else()
-  message(
-    FATAL_ERROR "At least one library type (shared or static) must be enabled"
-  )
-endif()
-
-# Create aliases for both shared and static libraries
-if(TARGET unilink_shared)
-  add_library(unilink::unilink_shared ALIAS unilink_shared)
-endif()
-if(TARGET unilink_static)
-  add_library(unilink::unilink_static ALIAS unilink_static)
-endif()
-if(TARGET unilink)
-  add_library(unilink::unilink ALIAS unilink)
-endif()
-
-# Helper to stage runtime dependencies (primarily for Windows shared builds)
-if(TARGET unilink_shared)
-  set(UNILINK_SHARED_LIBRARY_TARGET unilink_shared)
-elseif(UNILINK_BUILD_SHARED AND TARGET unilink)
-  set(UNILINK_SHARED_LIBRARY_TARGET unilink)
-endif()
-
-function(unilink_configure_executable target)
-  if(WIN32
-     AND UNILINK_BUILD_SHARED
-     AND UNILINK_SHARED_LIBRARY_TARGET
-  )
-    add_custom_command(
-      TARGET ${target}
-      POST_BUILD
-      COMMAND
-        ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:${UNILINK_SHARED_LIBRARY_TARGET}>
-        $<TARGET_FILE_DIR:${target}>
-      COMMENT
-        "Copying ${UNILINK_SHARED_LIBRARY_TARGET} runtime to ${target} output directory"
-    )
-  endif()
-endfunction()
-
-# Link dependencies and set include directories
-if(TARGET unilink_shared)
-  target_link_libraries(unilink_shared PUBLIC unilink_dependencies)
-  target_compile_features(unilink_shared PUBLIC cxx_std_20)
-  target_include_directories(
-    unilink_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-                          $<INSTALL_INTERFACE:include>
-  )
-endif()
-if(TARGET unilink_static)
-  target_link_libraries(unilink_static PUBLIC unilink_dependencies)
-  target_compile_features(unilink_static PUBLIC cxx_std_20)
-  target_include_directories(
-    unilink_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-                          $<INSTALL_INTERFACE:include>
-  )
-endif()
-if(TARGET unilink
-   AND NOT TARGET unilink_shared
-   AND NOT TARGET unilink_static
-)
-  target_link_libraries(unilink PUBLIC unilink_dependencies)
-  target_compile_features(unilink PUBLIC cxx_std_20)
-  target_include_directories(
-    unilink PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-                   $<INSTALL_INTERFACE:include>
-  )
-endif()
-
-# Disable MSVC LTCG for unilink libraries to avoid link.exe access violations
 # Disable MSVC LTCG for unilink libraries to avoid link.exe access violations.
 # This is a known workaround. Future investigation should aim to resolve the
 # underlying conflict that causes these violations when LTCG is enabled.
 if(MSVC)
-  set(_unilink_library_targets)
-  if(TARGET unilink_shared)
-    list(APPEND _unilink_library_targets unilink_shared)
-  endif()
-  if(TARGET unilink_static)
-    list(APPEND _unilink_library_targets unilink_static)
-  endif()
-  if(TARGET unilink AND NOT (TARGET unilink_shared OR TARGET unilink_static))
-    list(APPEND _unilink_library_targets unilink)
-  endif()
-
-  foreach(_target IN LISTS _unilink_library_targets)
+  foreach(_target IN LISTS UNILINK_LIBRARY_TARGETS)
     target_compile_options(
       ${_target}
       PRIVATE "$<$<CONFIG:Release>:/GL->" "$<$<CONFIG:RelWithDebInfo>:/GL->"
@@ -326,22 +55,14 @@ endif()
 if(UNILINK_ENABLE_EXPORT_HEADER)
   include(GenerateExportHeader)
 
-  # Generate export header for the main target
-  if(TARGET unilink_shared)
+  if(UNILINK_EXPORT_HEADER_TARGET)
     generate_export_header(
-      unilink_shared EXPORT_FILE_NAME
+      ${UNILINK_EXPORT_HEADER_TARGET} EXPORT_FILE_NAME
       "${CMAKE_CURRENT_BINARY_DIR}/unilink_export.hpp" BASE_NAME UNILINK
     )
     target_include_directories(
-      unilink_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    )
-  elseif(TARGET unilink)
-    generate_export_header(
-      unilink EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/unilink_export.hpp"
-      BASE_NAME UNILINK
-    )
-    target_include_directories(
-      unilink PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+      ${UNILINK_EXPORT_HEADER_TARGET}
+      PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     )
   endif()
 endif()
@@ -351,14 +72,6 @@ if(UNILINK_BUILD_TESTS)
   include(CTest)
   enable_testing()
   add_subdirectory(test)
-endif()
-
-if(BUILD_PYTHON_BINDINGS)
-  message(
-    FATAL_ERROR
-      "BUILD_PYTHON_BINDINGS is deprecated. "
-      "Python bindings have moved to https://github.com/unilink-lab/unilink-python"
-  )
 endif()
 
 # Documentation generation with Doxygen
