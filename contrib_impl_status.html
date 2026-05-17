@@ -185,7 +185,6 @@ Scope</h1>
 <li>Configuration management</li>
 <li>Memory and framing utilities</li>
 <li>Test suites</li>
-<li>Optional Python bindings</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md338"></a>
 C++ API Surface</h1>
@@ -201,17 +200,7 @@ C++ API Surface</h1>
 <p>If you need the exact public entry points, treat <code><a class="el" href="unilink_8hpp.html">unilink/unilink.hpp</a></code> and the headers under <code>unilink/wrapper/</code> and <code>unilink/builder/</code> as the source of truth.</p>
 <h1><a class="anchor" id="autotoc_md339"></a>
 Python Binding Scope</h1>
-<p>The Python extension module is generated from <code>bindings/python/module.cpp.in</code>.</p>
-<p>At a high level, the <code>unilink</code> Python package covers:</p>
-<ul>
-<li>TCP client</li>
-<li>TCP server</li>
-<li>UDP</li>
-<li>Serial</li>
-<li>UDS client</li>
-<li>UDS server</li>
-</ul>
-<p>If binding coverage changes, update this section only when the exposed API surface changes, not when the package version changes.</p>
+<p>Python bindings have moved to <a href="https://github.com/unilink-lab/unilink-python">https://github.com/unilink-lab/unilink-python</a>. This repository keeps only the C++20 core, native package metadata, runtime, tests, and C++ API documentation.</p>
 <h1><a class="anchor" id="autotoc_md340"></a>
 Build And Test Status</h1>
 <p>Dynamic build defaults and flags should be read from:</p>
@@ -230,7 +219,7 @@ Build And Test Status</h1>
 <ul>
 <li>Jetson Orin Nano on Ubuntu 22.04 <code>aarch64</code></li>
 <li>Full C++ <code>ctest</code> sweep passed: 481 passed, 0 failed</li>
-<li>Python import smoke and Python API tests passed, including loopback-enabled TCP validation</li>
+<li>Python binding validation now belongs to the unilink-python repository</li>
 <li>ARM64 installed-package consumer smoke passed with <code>find_package(unilink)</code> and <code>unilink::unilink</code></li>
 <li>One disabled test was listed as not run: <code>UdsErrorTest.ServerStopWithActiveSessions</code></li>
 <li>See <a class="el" href="orin__nano__validation_8md.html">Orin Nano Validation</a> for the reproducible runbook and scope boundaries</li>
@@ -252,7 +241,7 @@ Recommended Reading Order</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 16 2026 13:09:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun May 17 2026 00:45:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
