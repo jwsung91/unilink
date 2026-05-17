@@ -644,23 +644,11 @@ ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
 
 ## Development & Tooling
 
-### 1. Docker-based Environment
+### 1. Container-based Development Environments
 
-Unilink provides a Docker Compose-based environment to maintain a consistent development environment across various platforms.
-
-| Service | Purpose       | Key Features                                                 |
-| ------- | ------------- | ------------------------------------------------------------ |
-| `dev`   | Development   | Debug build, interactive shell provided                      |
-| `test`  | Testing       | Sanitizers (ASan/UBSan) and memory tracking enabled          |
-| `docs`  | Documentation | Doxygen documentation generation and HTTP server (port 8000) |
-| `prod`  | Production    | Optimized production image build                             |
-
-**Usage Examples:**
-
-```bash
-docker-compose up test  # Run all tests and sanitizers
-docker-compose up docs  # Generate API docs and start server
-```
+The core repository does not maintain Dockerfiles or Docker Compose services.
+Container images for downstream C++ development are maintained separately in
+[`unilink-lab/unilink-containers`](https://github.com/unilink-lab/unilink-containers).
 
 ### 2. Documentation Generation
 
@@ -668,10 +656,7 @@ You can generate API documentation directly from the source code using Doxygen.
 
 ```bash
 # Direct generation via CMake
-make docs
-
-# Generation via Docker
-docker-compose up docs
+cmake --build build --target docs
 ```
 
 ---
