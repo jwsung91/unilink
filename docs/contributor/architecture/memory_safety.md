@@ -594,7 +594,7 @@ ctest --output-on-failure
 
 ```bash
 # Run memory safety tests
-./build/test/run_memory_safety_tests
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 ```
 
 **Tests cover:**

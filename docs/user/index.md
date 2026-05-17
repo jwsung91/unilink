@@ -7,7 +7,7 @@ Documentation for developers using unilink as a library in their applications.
 ## Getting Started
 
 1. [Quick Start](quickstart.md) — First working client in minutes
-2. [Installation](installation.md) — vcpkg, source builds, and release packages
+2. [Installation](installation.md) — vcpkg, source builds, release packages, and containers
 3. [Requirements](requirements.md) — Supported platforms and dependencies
 
 ---

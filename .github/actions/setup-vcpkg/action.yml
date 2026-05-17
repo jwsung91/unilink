@@ -29,7 +29,7 @@ runs:
         retry_vcpkg_install() {
           local attempt
           for attempt in 1 2 3; do
-            if "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --overlay-triplets "${GITHUB_WORKSPACE}/vcpkg/triplets" --clean-after-build; then
+            if "${VCPKG_ROOT}/vcpkg" install ${{ inputs.packages }} --triplet "${{ inputs.triplet }}" --clean-after-build; then
               return 0
             fi
             if [ "${attempt}" -eq 3 ]; then

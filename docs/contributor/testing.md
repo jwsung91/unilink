@@ -101,23 +101,20 @@ Total Test time (real) = XX.XX sec
 
 ### Run Specific Test Categories
 
-Individual test executables are available:
+Use CTest labels for focused runs:
 
 ```bash
-# Core functionality tests
-./build/test/run_core_tests
+# Unit and focused component tests
+ctest --test-dir build --output-on-failure -L unit_common_fast
 
-# Integration tests (end-to-end)
-./build/test/run_integration_tests
+# Memory-focused tests
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 
-# Memory safety tests
-./build/test/run_memory_safety_tests
-
-# Thread safety and concurrency tests
-./build/test/run_concurrency_safety_tests
+# End-to-end scenarios
+ctest --test-dir build --output-on-failure -L e2e_scenario_slow
 
 # Stress and stability tests
-./build/test/run_stress_tests
+ctest --test-dir build --output-on-failure -L e2e_stress_slow
 ```
 
 ---
@@ -128,8 +125,8 @@ Individual test executables are available:
 # CTest verbose mode
 ctest --output-on-failure --verbose
 
-# Run specific test with GTest output
-./build/test/run_core_tests --gtest_filter=TcpClientTest.*
+# Run specific tests by CTest name pattern
+ctest --test-dir build --output-on-failure -R TcpClient
 ```
 
 ---
@@ -160,7 +157,7 @@ ctest -j 4
 Basic functionality and API tests.
 
 ```bash
-./build/test/run_core_tests
+ctest --test-dir build --output-on-failure -L unit_common_fast
 ```
 
 **Tests:**
@@ -170,26 +167,9 @@ Basic functionality and API tests.
 - Error handling
 - State management
 
+**Note:** Most unit tests now use granular labels like `unit_common_fast`, `unit_builder_fast`, `unit_config_fast`, `unit_memory_fast`, `unit_transport_fast`, etc. Use `-L unit` to run all unit tests, or specific labels for focused testing.
+
 **Coverage:** Fundamental library features
-
----
-
-### Integration Tests
-
-End-to-end communication tests with real networking.
-
-```bash
-./build/test/run_integration_tests
-```
-
-**Tests:**
-- TCP client-server communication
-- Serial loopback tests
-- Multi-client scenarios
-- Connection lifecycle
-- Data transfer validation
-
-**Coverage:** Real-world usage scenarios
 
 ---
 
@@ -198,7 +178,7 @@ End-to-end communication tests with real networking.
 Memory tracking, leak detection, and bounds checking.
 
 ```bash
-./build/test/run_memory_safety_tests
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 ```
 
 **Tests:**
@@ -228,7 +208,7 @@ Memory tracking, leak detection, and bounds checking.
 Thread safety and concurrent access patterns.
 
 ```bash
-./build/test/run_concurrency_safety_tests
+ctest --test-dir build --output-on-failure -R IoContext
 ```
 
 **Tests:**
@@ -247,8 +227,8 @@ Thread safety and concurrent access patterns.
 - Verifies that TCP server client IDs never get reused and that `stop()` is safe when called from callbacks.
 - Run the focused checks:
   ```bash
-  ./build/bin/run_unit_test_tcp_server_advanced \
-    --gtest_filter=AdvancedTcpServerCoverageTest.StableClientIdsAreMonotonicAndNotReused:AdvancedTcpServerCoverageTest.StopFromCallbackDoesNotDeadlock
+  ctest --test-dir build --output-on-failure \
+    -R "StableClientIdsAreMonotonicAndNotReused|StopFromCallbackDoesNotDeadlock"
   ```
 - Requires permission to bind local TCP ports; allow local sockets if your environment sandboxes networking.
 - TCP server multi-client send APIs return a bool (true on success, false if no target). Enable `send_failure_notify(true)` to trigger `on_error` when the target is missing or disconnected.
@@ -267,7 +247,7 @@ latency, throughput, and strategy sweeps out of the core test tree.
 High-load and stability testing.
 
 ```bash
-./build/test/run_stress_tests
+ctest --test-dir build --output-on-failure -L e2e_stress_slow
 ```
 
 **Tests:**
@@ -366,7 +346,7 @@ ctest -T memcheck
 
 # Or run specific test
 valgrind --leak-check=full --show-leak-kinds=all \
-  ./test/run_memory_safety_tests
+  ./bin/run_unit_test_pool_limits
 ```
 
 ---
@@ -545,7 +525,7 @@ TEST(CustomTest, ClientServerCommunication) {
 cmake --build build
 
 # Run
-./build/test/my_custom_test
+./build/bin/my_custom_test
 ```
 
 ---
@@ -605,7 +585,7 @@ If tests fail:
 
 2. **Run specific failing test:**
    ```bash
-   ./build/test/run_core_tests --gtest_filter=FailingTest
+   ctest --test-dir build --output-on-failure -R FailingTest
    ```
 
 3. **Check for resource issues:**
@@ -631,12 +611,12 @@ sudo kill -9 <PID>
 
 ```bash
 # Run with Valgrind for detailed analysis
-valgrind --leak-check=full ./build/test/run_memory_safety_tests
+valgrind --leak-check=full ./build/bin/run_unit_test_pool_limits
 
 # Or use AddressSanitizer
 cmake -S . -B build -DUNILINK_ENABLE_SANITIZERS=ON
 cmake --build build
-./build/test/run_memory_safety_tests
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 ```
 
 ---

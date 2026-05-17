@@ -177,7 +177,6 @@ jobs:
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DBUILD_PYTHON_BINDINGS=OFF \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
             -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
 
@@ -196,7 +195,6 @@ jobs:
             -DCMAKE_OSX_DEPLOYMENT_TARGET="$SDK_VER" \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DBUILD_PYTHON_BINDINGS=OFF \
             -DCMAKE_TOOLCHAIN_FILE="${CMAKE_TOOLCHAIN_FILE}" \
             -DVCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET}"
 
@@ -210,8 +208,7 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
             -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
             -DUNILINK_BUILD_DOCS=OFF `
-            -DUNILINK_BUILD_TESTS=ON `
-            -DBUILD_PYTHON_BINDINGS=OFF
+            -DUNILINK_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel

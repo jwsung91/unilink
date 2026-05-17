@@ -4,13 +4,24 @@
 # Build type options
 option(UNILINK_BUILD_SHARED "Build shared library" ON)
 option(UNILINK_BUILD_STATIC "Build static library" ON)
-option(
-  UNILINK_BUILD_EXAMPLES
-  "Deprecated: examples moved to https://github.com/unilink-lab/unilink-examples"
-  OFF
-)
 option(UNILINK_BUILD_TESTS "Build tests" ON)
 option(UNILINK_BUILD_DOCS "Build documentation" ON)
+
+if(DEFINED BUILD_PYTHON_BINDINGS AND BUILD_PYTHON_BINDINGS)
+  message(
+    FATAL_ERROR
+      "BUILD_PYTHON_BINDINGS has been removed. "
+      "Python bindings live at https://github.com/unilink-lab/unilink-python."
+  )
+endif()
+
+if(DEFINED UNILINK_BUILD_EXAMPLES AND UNILINK_BUILD_EXAMPLES)
+  message(
+    FATAL_ERROR
+      "UNILINK_BUILD_EXAMPLES has been removed. "
+      "Examples live at https://github.com/unilink-lab/unilink-examples."
+  )
+endif()
 
 # Feature options
 option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)

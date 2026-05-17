@@ -42,6 +42,22 @@ vcpkg install jwsung91-unilink
 
 For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/user/installation.md).
 
+### Container Image
+
+For isolated downstream C++ development, use the prebuilt core image from
+[`unilink-lab/unilink-containers`](https://github.com/unilink-lab/unilink-containers):
+
+```bash
+docker run --rm -it \
+  -v "$PWD:/workspace/app" \
+  -w /workspace/app \
+  ghcr.io/unilink-lab/unilink-core:latest \
+  bash
+```
+
+The image installs `unilink` under `/opt/unilink`; configure consumers with
+`-DCMAKE_PREFIX_PATH=/opt/unilink`.
+
 ### Contributor Development Setup
 
 ```bash
@@ -50,7 +66,8 @@ cmake --preset dev-linux-x64
 cmake --build --preset dev-linux-x64
 ```
 
-The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0.
+The setup script installs Boost and spdlog through an untracked, repository-local `vcpkg/` checkout by default. Delete that directory any time to reclaim space; rerun the setup script to recreate it. Set `VCPKG_ROOT` before running the script if you want to reuse an external vcpkg checkout.
+CMake remains the version gate and rejects Boost versions older than 1.83.0.
 The preset-based contributor workflow uses `CMakePresets.json` schema version 3, so those `cmake --preset ...` commands require CMake 3.21+.
 
 ## Python Bindings

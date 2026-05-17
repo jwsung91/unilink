@@ -38,6 +38,7 @@ cmake --install build/dev-linux-x64 --prefix /opt/unilink
 ```
 
 The repository intentionally does not use a root `vcpkg.json` manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through `UNILINK_MIN_BOOST_VERSION`.
+For contributor builds, `./scripts/setup_dev_env.sh` uses an untracked repository-local `vcpkg/` checkout by default. It is disposable and can be deleted when you need to reclaim space; rerun the script to recreate it. Set `VCPKG_ROOT` before running the script to reuse an external vcpkg checkout.
 The preset-based contributor workflow requires CMake 3.21+ because `CMakePresets.json` uses schema version 3. Plain source builds without presets remain supported on CMake 3.12+.
 
 ---
@@ -122,7 +123,6 @@ cmake --build build -j
 | `CMAKE_BUILD_TYPE`       | `Release` | Build type: `Release`, `Debug`, `RelWithDebInfo` |
 | `UNILINK_BUILD_SHARED`   | `ON`      | Build shared library                             |
 | `UNILINK_BUILD_STATIC`   | `ON`      | Build static library                             |
-| `UNILINK_BUILD_EXAMPLES` | `OFF`     | Deprecated no-op; examples moved to `unilink-examples` |
 | `UNILINK_BUILD_TESTS`    | `ON`      | Build tests                                      |
 | `UNILINK_BUILD_DOCS`     | `ON`      | Enable documentation targets                     |
 | `UNILINK_ENABLE_CONFIG`  | `ON`      | Enable configuration management API              |
@@ -479,20 +479,17 @@ cd build
 ctest --output-on-failure
 ```
 
-### Run Examples
+### Run Focused Tests
 
 ```bash
-# TCP Echo Server (sync)
-./build/bin/sync_tcp_echo_server
-
-# TCP Echo Client (in another terminal)
-./build/bin/sync_tcp_echo_client
+# Run common unit tests
+ctest --test-dir build --output-on-failure -L unit_common_fast
 ```
 
 ### Check Library Symbols
 
 ```bash
-nm -D build/libunilink.so | grep unilink
+nm -D build/lib/libunilink.so | grep unilink
 ```
 
 ---
