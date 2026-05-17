@@ -1,6 +1,6 @@
 # Installation Guide {#user_installation}
 
-This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option.
+This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option. Container images are available for isolated downstream development environments.
 
 ## Prerequisites
 
@@ -135,11 +135,43 @@ add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
+### Method 5: Container Image
+
+Use this method when you want an isolated C++ development environment with
+**unilink** already installed.
+
+Container definitions are maintained outside the core repository:
+
+https://github.com/unilink-lab/unilink-containers
+
+Run the core image from your downstream project:
+
+```bash
+docker run --rm -it \
+  -v "$PWD:/workspace/app" \
+  -w /workspace/app \
+  ghcr.io/unilink-lab/unilink-core:latest \
+  bash
+```
+
+Inside the container, configure your project with the installed package prefix:
+
+```bash
+cmake -S . -B build -DCMAKE_PREFIX_PATH=/opt/unilink
+cmake --build build
+```
+
+The image sets `UNILINK_ROOT`, `CMAKE_PREFIX_PATH`, `PKG_CONFIG_PATH`, and
+`LD_LIBRARY_PATH` for `/opt/unilink`.
+
 ## Packaging Notes
 
 - **vcpkg**
   - Official port: `jwsung91-unilink`
   - Recommended for most users
+- **Containers**
+  - Images and Dockerfiles: https://github.com/unilink-lab/unilink-containers
+  - Intended for downstream development and package-consumption checks
 
 Other package managers (e.g., Conan) are not yet officially supported.
 

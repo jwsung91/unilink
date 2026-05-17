@@ -42,6 +42,22 @@ vcpkg install jwsung91-unilink
 
 For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/user/installation.md).
 
+### Container Image
+
+For isolated downstream C++ development, use the prebuilt core image from
+[`unilink-lab/unilink-containers`](https://github.com/unilink-lab/unilink-containers):
+
+```bash
+docker run --rm -it \
+  -v "$PWD:/workspace/app" \
+  -w /workspace/app \
+  ghcr.io/unilink-lab/unilink-core:latest \
+  bash
+```
+
+The image installs `unilink` under `/opt/unilink`; configure consumers with
+`-DCMAKE_PREFIX_PATH=/opt/unilink`.
+
 ### Contributor Development Setup
 
 ```bash
