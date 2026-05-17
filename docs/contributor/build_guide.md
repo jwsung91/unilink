@@ -478,20 +478,16 @@ cd build
 ctest --output-on-failure
 ```
 
-### Run Examples
+### Run Focused Tests
 
 ```bash
-# TCP Echo Server (sync)
-./build/bin/sync_tcp_echo_server
-
-# TCP Echo Client (in another terminal)
-./build/bin/sync_tcp_echo_client
+ctest --test-dir build --output-on-failure -L unit
 ```
 
 ### Check Library Symbols
 
 ```bash
-nm -D build/libunilink.so | grep unilink
+nm -D build/lib/libunilink.so | grep unilink
 ```
 
 ---
