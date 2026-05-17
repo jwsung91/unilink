@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 
 # Deprecated Python bindings option
-option(
-  BUILD_PYTHON_BINDINGS
-  "Deprecated: Python bindings moved to unilink-python"
-  OFF
+option(BUILD_PYTHON_BINDINGS
+       "Deprecated: Python bindings moved to unilink-python" OFF
 )
 
 project(
