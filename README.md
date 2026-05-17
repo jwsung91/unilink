@@ -66,7 +66,8 @@ cmake --preset dev-linux-x64
 cmake --build --preset dev-linux-x64
 ```
 
-The setup script installs Boost and spdlog through a local `vcpkg/` checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0.
+The setup script installs Boost and spdlog through an untracked, repository-local `vcpkg/` checkout by default. Delete that directory any time to reclaim space; rerun the setup script to recreate it. Set `VCPKG_ROOT` before running the script if you want to reuse an external vcpkg checkout.
+CMake remains the version gate and rejects Boost versions older than 1.83.0.
 The preset-based contributor workflow uses `CMakePresets.json` schema version 3, so those `cmake --preset ...` commands require CMake 3.21+.
 
 ## Python Bindings

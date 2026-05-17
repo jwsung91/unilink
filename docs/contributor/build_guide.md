@@ -38,6 +38,7 @@ cmake --install build/dev-linux-x64 --prefix /opt/unilink
 ```
 
 The repository intentionally does not use a root `vcpkg.json` manifest. Dependency packages are installed explicitly by the setup script and CI actions, while CMake owns the Boost baseline through `UNILINK_MIN_BOOST_VERSION`.
+For contributor builds, `./scripts/setup_dev_env.sh` uses an untracked repository-local `vcpkg/` checkout by default. It is disposable and can be deleted when you need to reclaim space; rerun the script to recreate it. Set `VCPKG_ROOT` before running the script to reuse an external vcpkg checkout.
 The preset-based contributor workflow requires CMake 3.21+ because `CMakePresets.json` uses schema version 3. Plain source builds without presets remain supported on CMake 3.12+.
 
 ---

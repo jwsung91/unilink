@@ -25,6 +25,7 @@ detect_triplet() {
 VCPKG_TARGET_TRIPLET="${VCPKG_TARGET_TRIPLET:-"$(detect_triplet)"}"
 
 if [ ! -d "${VCPKG_ROOT}/.git" ]; then
+  echo "Creating local vcpkg checkout at ${VCPKG_ROOT}"
   git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
 fi
 
@@ -52,6 +53,10 @@ Development dependencies are ready.
 
 VCPKG_ROOT=${VCPKG_ROOT}
 VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
+
+By default this script uses the untracked repository-local vcpkg/ checkout.
+Delete it any time to reclaim space; rerun this script to recreate it.
+Set VCPKG_ROOT to reuse an external vcpkg checkout.
 
 The preset commands below require CMake 3.21+.
 Plain non-preset builds remain supported with CMake 3.12+.
