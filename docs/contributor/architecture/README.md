@@ -644,13 +644,7 @@ ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
 
 ## Development & Tooling
 
-### 1. Container-based Development Environments
-
-The core repository does not maintain Dockerfiles or Docker Compose services.
-Container images for downstream C++ development are maintained separately in
-[`unilink-lab/unilink-containers`](https://github.com/unilink-lab/unilink-containers).
-
-### 2. Documentation Generation
+### Documentation Generation
 
 You can generate API documentation directly from the source code using Doxygen.
 

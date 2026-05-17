@@ -1,6 +1,6 @@
 # Installation Guide {#user_installation}
 
-This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option. Container images are available for isolated downstream development environments.
+This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option.
 
 ## Prerequisites
 
@@ -82,8 +82,8 @@ Choose the archive matching your OS and architecture. Replace `${VERSION}` with 
 - **Windows**: `.zip`
 
 ```bash
-# Example for Linux x86_64 (replace ${VERSION} with the actual version, e.g., 0.4.3)
-export UNILINK_VERSION="0.4.3"
+# Example for Linux x86_64
+export UNILINK_VERSION="${VERSION}"
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
 tar -xzf unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
 cd unilink-${UNILINK_VERSION}-Linux-x86_64
@@ -91,7 +91,7 @@ cd unilink-${UNILINK_VERSION}-Linux-x86_64
 
 ```bash
 # Example for Linux ARM64 / aarch64
-export UNILINK_VERSION="0.4.3"
+export UNILINK_VERSION="${VERSION}"
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-aarch64.tar.gz
 tar -xzf unilink-${UNILINK_VERSION}-Linux-aarch64.tar.gz
 cd unilink-${UNILINK_VERSION}-Linux-aarch64
@@ -135,43 +135,13 @@ add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
-### Method 5: Container Image
-
-Use this method when you want an isolated C++ development environment with
-**unilink** already installed.
-
-Container definitions are maintained outside the core repository:
-
-https://github.com/unilink-lab/unilink-containers
-
-Run the core image from your downstream project:
-
-```bash
-docker run --rm -it \
-  -v "$PWD:/workspace/app" \
-  -w /workspace/app \
-  ghcr.io/unilink-lab/unilink-core:latest \
-  bash
-```
-
-Inside the container, configure your project with the installed package prefix:
-
-```bash
-cmake -S . -B build -DCMAKE_PREFIX_PATH=/opt/unilink
-cmake --build build
-```
-
-The image sets `UNILINK_ROOT`, `CMAKE_PREFIX_PATH`, `PKG_CONFIG_PATH`, and
-`LD_LIBRARY_PATH` for `/opt/unilink`.
-
 ## Packaging Notes
 
 - **vcpkg**
   - Official port: `jwsung91-unilink`
   - Recommended for most users
 - **Containers**
-  - Images and Dockerfiles: https://github.com/unilink-lab/unilink-containers
-  - Intended for downstream development and package-consumption checks
+  - [unilink-lab/unilink-containers](https://github.com/unilink-lab/unilink-containers)
 
 Other package managers (e.g., Conan) are not yet officially supported.
 

@@ -142,15 +142,14 @@ auto lidar = unilink::tcp_client("192.168.1.10", 2368)
     .backpressure_strategy(unilink::base::constants::BackpressureStrategy::BestEffort)
     .backpressure_threshold(1024 * 512)  // 0.5 MB threshold
     .build();
-
-// In Python
-client.backpressure_strategy = unilink.BackpressureStrategy.BestEffort
-client.backpressure_threshold = 1024 * 512
 ```
 
-**Benchmarking Insights:**
-*   In Python, using `BestEffort` without Flow Control can increase throughput by **up to 3x** (e.g., 133 MB/s → 414 MB/s) by preventing GIL contention caused by blocked sender threads.
-*   Aggressive flushing during network disconnects ensures that once reconnection occurs, the receiver instantly gets the **most recent frame** instead of waiting for a multi-gigabyte backlog to drain.
+Python-specific performance notes are maintained in
+[unilink-lab/unilink-python](https://github.com/unilink-lab/unilink-python).
+
+Aggressive flushing during network disconnects ensures that once reconnection
+occurs, the receiver instantly gets the most recent frame instead of waiting for
+a large backlog to drain.
 
 ### 3. Critical Reliable Data
 

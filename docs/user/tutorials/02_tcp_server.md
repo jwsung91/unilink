@@ -140,8 +140,7 @@ For tutorial simplicity, the example above uses the default bounded client limit
 
 Ready-to-build examples are maintained in the external examples repository:
 
-- [examples/tcp/sync/echo_server.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/tcp/sync/echo_server.cc) — echo back to individual clients
-- [examples/tcp/sync/broadcast_server.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/tcp/sync/broadcast_server.cc) — broadcast to all connected clients
+- [unilink-lab/unilink-examples](https://github.com/unilink-lab/unilink-examples)
 
 ---
 

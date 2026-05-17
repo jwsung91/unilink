@@ -147,7 +147,7 @@ After the client is running, use:
 
 Ready-to-build examples are maintained in the external examples repository:
 
-- [examples/tcp/sync/echo_client.cc](https://github.com/unilink-lab/unilink-examples/blob/main/examples/tcp/sync/echo_client.cc)
+- [unilink-lab/unilink-examples](https://github.com/unilink-lab/unilink-examples)
 
 This tutorial stays smaller than the example sources on purpose.
 

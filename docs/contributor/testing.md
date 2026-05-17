@@ -71,7 +71,7 @@ ctest --test-dir build-windows --output-on-failure
 ```
 
 **Windows-specific notes**
-- Re-run CMake (or create a fresh `build-windows` directory) after updating the repository so that example binaries inherit the post-build step that copies `unilink.dll` beside each executable.
+- Re-run CMake (or create a fresh `build-windows` directory) after updating the repository so that built test executables inherit the post-build step that copies `unilink.dll` beside each executable.
 - Serial error recovery scenarios rely on Unix-style device paths and are automatically skipped when running on Windows.
 - The async logging timing sanity check uses a lower Windows threshold because of OS timer granularity and scheduling differences.
 
@@ -237,8 +237,8 @@ ctest --test-dir build --output-on-failure -R IoContext
 
 ### Benchmarking
 
-Standalone performance benchmarks live in the `unilink-lab/unilink-benchmarks` repository. Keep timing-sensitive
-latency, throughput, and strategy sweeps out of the core test tree.
+Standalone performance benchmarks are maintained separately:
+[unilink-lab/unilink-benchmarks](https://github.com/unilink-lab/unilink-benchmarks).
 
 ---
 
@@ -623,8 +623,8 @@ ctest --test-dir build --output-on-failure -L unit_memory_fast
 
 ## Performance Regression Testing
 
-Use the standalone `unilink-lab/unilink-benchmarks` repository for benchmark baselines, latency sweeps, strategy sweeps,
-and release benchmark artifacts.
+Use the standalone benchmark repository:
+[unilink-lab/unilink-benchmarks](https://github.com/unilink-lab/unilink-benchmarks).
 
 ---
 

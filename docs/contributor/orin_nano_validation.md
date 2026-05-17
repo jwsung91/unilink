@@ -164,8 +164,9 @@ That creates two connected serial endpoints:
 - `/tmp/ttyA`
 - `/tmp/ttyB`
 
-You can then use the serial example or your own local smoke test against those
-endpoints.
+You can then use your own local smoke test against those endpoints. Runnable
+sample programs are maintained separately:
+[unilink-lab/unilink-examples](https://github.com/unilink-lab/unilink-examples).
 
 ### Physical Loopback
 
@@ -175,7 +176,7 @@ loopback path:
 1. Connect TX/RX appropriately for your adapter or board header.
 2. Confirm the device node, for example `/dev/ttyTHS0`, `/dev/ttyUSB0`, or
    `/dev/ttyACM0`.
-3. Run your smoke test or serial example with that path.
+3. Run your smoke test with that path.
 
 ---
 
@@ -199,7 +200,7 @@ For a stronger "generic Ubuntu ARM64" claim, add:
 1. The same validation on Ubuntu 24.04 ARM64.
 2. At least one serial validation path, either `socat` or physical loopback.
 3. unilink-python ARM64 validation if the Python package is part of your release
-   claim.
+   claim: https://github.com/unilink-lab/unilink-python
 
 ---
 

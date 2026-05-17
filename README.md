@@ -41,22 +41,7 @@ vcpkg install jwsung91-unilink
 ```
 
 For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/user/installation.md).
-
-### Container Image
-
-For isolated downstream C++ development, use the prebuilt core image from
-[`unilink-lab/unilink-containers`](https://github.com/unilink-lab/unilink-containers):
-
-```bash
-docker run --rm -it \
-  -v "$PWD:/workspace/app" \
-  -w /workspace/app \
-  ghcr.io/unilink-lab/unilink-core:latest \
-  bash
-```
-
-The image installs `unilink` under `/opt/unilink`; configure consumers with
-`-DCMAKE_PREFIX_PATH=/opt/unilink`.
+Container images are maintained separately in [unilink-lab/unilink-containers](https://github.com/unilink-lab/unilink-containers).
 
 ### Contributor Development Setup
 
@@ -70,15 +55,6 @@ The setup script installs Boost and spdlog through an untracked, repository-loca
 CMake remains the version gate and rejects Boost versions older than 1.83.0.
 The preset-based contributor workflow uses `CMakePresets.json` schema version 3, so those `cmake --preset ...` commands require CMake 3.21+.
 
-## Python Bindings
-
-Python bindings have moved to a separate repository:
-
-https://github.com/unilink-lab/unilink-python
-
-This repository focuses on the C++20 core library, CMake package, native
-runtime, and C++ API documentation.
-
 ## 📚 Documentation
 
 Documentation is split by audience. Visit our **[Online Documentation](https://jwsung91.github.io/unilink/)** for the full experience.
@@ -89,6 +65,7 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 * [Installation Guide](docs/user/installation.md) – Package, source, and build options
 * [Requirements](docs/user/requirements.md) – Supported platforms and dependencies
 * [API Reference](docs/user/api_guide.md) – Public API overview
+* [Python Bindings](https://github.com/unilink-lab/unilink-python) – External repository
 * [Troubleshooting](docs/user/troubleshooting.md) – Common issues and resolutions
 * [Tutorials](docs/user/tutorials/)
 
@@ -105,10 +82,6 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 ### 💡 Examples
 
 * [External examples repository](https://github.com/unilink-lab/unilink-examples)
-* [TCP Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/tcp)
-* [UDP Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/udp)
-* [Serial Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/serial)
-* [UDS Examples](https://github.com/unilink-lab/unilink-examples/tree/main/examples/uds)
 * [Documentation Index](docs/index.md)
 
 ---
