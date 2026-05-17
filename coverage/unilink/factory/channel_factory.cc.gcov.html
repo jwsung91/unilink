@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-17 03:36:02</td>
+            <td class="headerValue">2026-05-17 05:34:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -107,16 +107,16 @@
 <span id="L29"><span class="lineNum">      29</span>                 :             : namespace unilink {</span>
 <span id="L30"><span class="lineNum">      30</span>                 :             : namespace factory {</span>
 <span id="L31"><span class="lineNum">      31</span>                 :             : </span>
-<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">         175 : std::shared_ptr&lt;interface::Channel&gt; ChannelFactory::create(const ChannelOptions&amp; options,</span></span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">         173 : std::shared_ptr&lt;interface::Channel&gt; ChannelFactory::create(const ChannelOptions&amp; options,</span></span>
 <span id="L33"><span class="lineNum">      33</span>                 :             :                                                            std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc) {</span>
 <span id="L34"><span class="lineNum">      34</span>                 :             :   return std::visit(</span>
-<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">         350 :       [&amp;external_ioc](const auto&amp; config) -&gt; std::shared_ptr&lt;interface::Channel&gt; {</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">         346 :       [&amp;external_ioc](const auto&amp; config) -&gt; std::shared_ptr&lt;interface::Channel&gt; {</span></span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :         using T = std::decay_t&lt;decltype(config)&gt;;</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             : </span>
 <span id="L38"><span class="lineNum">      38</span>                 :             :         if constexpr (std::is_same_v&lt;T, config::TcpClientConfig&gt;) {</span>
 <span id="L39"><span class="lineNum">      39</span>         [<span class="tlaGBC" title="Branch 0 was taken 52 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          52 :           return create_tcp_client(config, external_ioc);</span></span>
 <span id="L40"><span class="lineNum">      40</span>                 :             :         } else if constexpr (std::is_same_v&lt;T, config::TcpServerConfig&gt;) {</span>
-<span id="L41"><span class="lineNum">      41</span>         [<span class="tlaGBC" title="Branch 0 was taken 81 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          81 :           return create_tcp_server(config, external_ioc);</span></span>
+<span id="L41"><span class="lineNum">      41</span>         [<span class="tlaGBC" title="Branch 0 was taken 79 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          79 :           return create_tcp_server(config, external_ioc);</span></span>
 <span id="L42"><span class="lineNum">      42</span>                 :             :         } else if constexpr (std::is_same_v&lt;T, config::SerialConfig&gt;) {</span>
 <span id="L43"><span class="lineNum">      43</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :           return create_serial(config, external_ioc);</span></span>
 <span id="L44"><span class="lineNum">      44</span>                 :             :         } else if constexpr (std::is_same_v&lt;T, config::UdpConfig&gt;) {</span>
@@ -130,16 +130,16 @@
 <span id="L52"><span class="lineNum">      52</span>                 :             :           return nullptr;</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             :         }</span>
 <span id="L54"><span class="lineNum">      54</span>                 :             :       },</span>
-<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 175 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         350 :       options);</span></span>
+<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 173 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         346 :       options);</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : }</span>
 <span id="L57"><span class="lineNum">      57</span>                 :             : </span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          81 : std::shared_ptr&lt;interface::Channel&gt; ChannelFactory::create_tcp_server(</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          79 : std::shared_ptr&lt;interface::Channel&gt; ChannelFactory::create_tcp_server(</span></span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :     const config::TcpServerConfig&amp; cfg, std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc) {</span>
-<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 77 times"> + </span>]:<span class="tlaGNC">          81 :   if (external_ioc) {</span></span>
+<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 75 times"> + </span>]:<span class="tlaGNC">          79 :   if (external_ioc) {</span></span>
 <span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :     auto acceptor = std::make_unique&lt;transport::BoostTcpAcceptor&gt;(*external_ioc);</span></span>
 <span id="L62"><span class="lineNum">      62</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :     return transport::TcpServer::create(cfg, std::move(acceptor), *external_ioc);</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           4 :   }</span></span>
-<span id="L64"><span class="lineNum">      64</span>         [<span class="tlaGBC" title="Branch 0 was taken 77 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          77 :   return transport::TcpServer::create(cfg);</span></span>
+<span id="L64"><span class="lineNum">      64</span>         [<span class="tlaGBC" title="Branch 0 was taken 75 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          75 :   return transport::TcpServer::create(cfg);</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             : }</span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : </span>
 <span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">          52 : std::shared_ptr&lt;interface::Channel&gt; ChannelFactory::create_tcp_client(</span></span>

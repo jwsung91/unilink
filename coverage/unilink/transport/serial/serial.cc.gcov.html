@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-17 03:36:02</td>
+            <td class="headerValue">2026-05-17 05:34:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">73.5&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">42.3&nbsp;%</td>
+            <td class="headerCovTableEntryLo">42.7&nbsp;%</td>
             <td class="headerCovTableEntry">768</td>
-            <td class="headerCovTableEntry">325</td>
+            <td class="headerCovTableEntry">328</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -459,8 +459,8 @@
 <span id="L359"><span class="lineNum">     359</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">           8 :     if (stopping_.load()) return;</span></span>
 <span id="L360"><span class="lineNum">     360</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           8 :     retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));</span></span>
 <span id="L361"><span class="lineNum">     361</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :     retry_timer_.async_wait([self](auto e) {</span></span>
-<span id="L362"><span class="lineNum">     362</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           8 :       if (!e &amp;&amp; self &amp;&amp; !self-&gt;get_impl()-&gt;stopping_.load()) self-&gt;get_impl()-&gt;open_and_configure(self);</span></span>
-<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
+<span id="L362"><span class="lineNum">     362</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           8 :       if (!e &amp;&amp; self &amp;&amp; !self-&gt;get_impl()-&gt;stopping_.load()) self-&gt;get_impl()-&gt;open_and_configure(self);</span></span>
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not taken"> - </span>]
 <span id="L363"><span class="lineNum">     363</span>                 :<span class="tlaGNC">           8 :     });</span></span>
 <span id="L364"><span class="lineNum">     364</span>                 :             :   }</span>
