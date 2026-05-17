@@ -228,18 +228,11 @@ if(UNILINK_ENABLE_INSTALL AND TARGET unilink_static)
   )
 endif()
 
-if(UNILINK_ENABLE_INSTALL
-   AND TARGET unilink
-   AND NOT TARGET unilink_shared
-   AND NOT TARGET unilink_static
-)
+if(UNILINK_ENABLE_INSTALL AND TARGET unilink)
   install(
     TARGETS unilink
     EXPORT unilinkTargets
     COMPONENT libraries
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endif()
 

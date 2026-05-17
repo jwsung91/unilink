@@ -45,9 +45,12 @@ ctest --output-on-failure
 ### Run By Broad Category
 
 ```bash
-ctest -L unit
-ctest -L integration
-ctest -L e2e
+# Run all unit tests (matches unit_* labels)
+ctest -L "unit_.*"
+# Run legacy integration tests
+ctest -L "legacy_integration"
+# Run all e2e tests (matches e2e_* labels)
+ctest -L "e2e_.*"
 ```
 
 Standalone benchmarks are maintained in the `unilink-lab/unilink-benchmarks` repository.
@@ -74,9 +77,9 @@ ctest -L "integration.*serial"
 
 ```bash
 ctest -N
-ctest -N -L unit
-ctest -N -L integration
-ctest -N -L e2e
+ctest -N -L "unit_.*"
+ctest -N -L "legacy_integration"
+ctest -N -L "e2e_.*"
 ```
 
 Use these commands instead of storing counts in documentation. The exact number of tests changes as coverage grows.

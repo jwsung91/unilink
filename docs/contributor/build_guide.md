@@ -482,7 +482,8 @@ ctest --output-on-failure
 ### Run Focused Tests
 
 ```bash
-ctest --test-dir build --output-on-failure -L unit
+# Run common unit tests
+ctest --test-dir build --output-on-failure -L unit_common_fast
 ```
 
 ### Check Library Symbols

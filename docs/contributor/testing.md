@@ -105,19 +105,16 @@ Use CTest labels for focused runs:
 
 ```bash
 # Unit and focused component tests
-ctest --test-dir build --output-on-failure -L unit
-
-# Integration tests
-ctest --test-dir build --output-on-failure -L integration
+ctest --test-dir build --output-on-failure -L unit_common_fast
 
 # Memory-focused tests
-ctest --test-dir build --output-on-failure -L unit_memory
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 
 # End-to-end scenarios
-ctest --test-dir build --output-on-failure -L e2e_scenario
+ctest --test-dir build --output-on-failure -L e2e_scenario_slow
 
 # Stress and stability tests
-ctest --test-dir build --output-on-failure -L e2e_stress
+ctest --test-dir build --output-on-failure -L e2e_stress_slow
 ```
 
 ---
@@ -160,7 +157,7 @@ ctest -j 4
 Basic functionality and API tests.
 
 ```bash
-ctest --test-dir build --output-on-failure -L unit_common
+ctest --test-dir build --output-on-failure -L unit_common_fast
 ```
 
 **Tests:**
@@ -170,26 +167,9 @@ ctest --test-dir build --output-on-failure -L unit_common
 - Error handling
 - State management
 
+**Note:** Most unit tests now use granular labels like `unit_common_fast`, `unit_builder_fast`, `unit_config_fast`, `unit_memory_fast`, `unit_transport_fast`, etc. Use `-L unit` to run all unit tests, or specific labels for focused testing.
+
 **Coverage:** Fundamental library features
-
----
-
-### Integration Tests
-
-End-to-end communication tests with real networking.
-
-```bash
-ctest --test-dir build --output-on-failure -L integration
-```
-
-**Tests:**
-- TCP client-server communication
-- Serial loopback tests
-- Multi-client scenarios
-- Connection lifecycle
-- Data transfer validation
-
-**Coverage:** Real-world usage scenarios
 
 ---
 
@@ -198,7 +178,7 @@ ctest --test-dir build --output-on-failure -L integration
 Memory tracking, leak detection, and bounds checking.
 
 ```bash
-ctest --test-dir build --output-on-failure -L unit_memory
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 ```
 
 **Tests:**
@@ -267,7 +247,7 @@ latency, throughput, and strategy sweeps out of the core test tree.
 High-load and stability testing.
 
 ```bash
-ctest --test-dir build --output-on-failure -L e2e_stress
+ctest --test-dir build --output-on-failure -L e2e_stress_slow
 ```
 
 **Tests:**
@@ -636,7 +616,7 @@ valgrind --leak-check=full ./build/bin/run_unit_test_pool_limits
 # Or use AddressSanitizer
 cmake -S . -B build -DUNILINK_ENABLE_SANITIZERS=ON
 cmake --build build
-ctest --test-dir build --output-on-failure -L unit_memory
+ctest --test-dir build --output-on-failure -L unit_memory_fast
 ```
 
 ---
