@@ -201,7 +201,7 @@ if(UNILINK_ENABLE_INSTALL)
     set(PKGCONFIG_CFLAGS "")
 
     configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/package/unilink.pc.in
+      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/unilink.pc.in
       ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc @ONLY
     )
   endif()
