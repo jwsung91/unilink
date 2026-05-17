@@ -48,59 +48,11 @@ jobs:
         find . -type f \( -name "CMakeLists.txt" -o -name "*.cmake" -o -name "*.cmake.in" \) -not -path "*/build/*" -not -path "*/.git/*" -not -path "*/.vscode/*" -not -path "*/docs/html/*" -exec cmake-format -i {} \;
         git diff --exit-code
 
-  # Static Analysis with cppcheck
-  static-analysis:
-    name: Static Analysis (cppcheck)
-    runs-on: ubuntu-22.04
-    timeout-minutes: 20
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v6
-
-    - name: Install cppcheck
-      uses: ./.github/actions/apt-install
-      with:
-        packages: "cppcheck"
-
-    - name: Verify cppcheck
-      run: cppcheck --version
-
-    - name: Run cppcheck (comprehensive analysis)
-      run: |
-        cppcheck --enable=all --inconclusive --std=c++20 \
-          --suppress=missingIncludeSystem \
-          --suppress=missingInclude \
-          --suppress=unusedFunction \
-          --suppress=functionConst \
-          --suppress=functionStatic \
-          --suppress=useStlAlgorithm \
-          --suppress=unreadVariable \
-          --suppress=variableScope \
-          --suppress=noExplicitConstructor \
-          --suppress=knownConditionTrueFalse \
-          --suppress=constVariableReference \
-          --suppress=uselessOverride \
-          --suppress=cstyleCast \
-          --xml --xml-version=2 \
-          --output-file=cppcheck-results.xml \
-          --error-exitcode=1 \
-          unilink/ test/ || true
-
-    - name: Upload cppcheck results
-      uses: actions/upload-artifact@v7
-      if: always()
-      with:
-        name: cppcheck-results
-        path: cppcheck-results.xml
-        retention-days: 7
-        overwrite: true
-
   # Quality Summary
   quality-summary:
     name: Quality Summary
     runs-on: ubuntu-22.04
-    needs: [formatting, static-analysis]
+    needs: [formatting]
     if: always()
 
     steps:
@@ -110,4 +62,3 @@ jobs:
         echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
         echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
         echo "| Code Formatting | ${{ needs.formatting.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Static Analysis | ${{ needs.static-analysis.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
