@@ -53,7 +53,8 @@ ctest -L "legacy_integration"
 ctest -L "e2e_.*"
 ```
 
-Standalone benchmarks are maintained in the `unilink-lab/unilink-benchmarks` repository.
+Standalone benchmarks are maintained separately:
+[unilink-lab/unilink-benchmarks](https://github.com/unilink-lab/unilink-benchmarks).
 
 ### Useful Focused Runs
 

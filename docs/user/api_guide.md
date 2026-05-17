@@ -1038,11 +1038,6 @@ The strategy can also be changed at runtime on a running transport:
 client->set_backpressure_strategy(BackpressureStrategy::BestEffort);
 ```
 
-### Python Bindings
-
-Python bindings have moved to https://github.com/unilink-lab/unilink-python.
-This C++ core repository documents the native wrapper and builder APIs.
-
 ### Thresholds
 
 Unilink uses **Dynamic Defaults** for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:
