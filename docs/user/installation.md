@@ -39,6 +39,8 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 
 int main() {
     auto client = unilink::tcp_client("127.0.0.1", 8080).build();
+    // Callbacks are optional for construction.
+    // Register on_error/on_data for production workflows.
     // ...
 }
 ```

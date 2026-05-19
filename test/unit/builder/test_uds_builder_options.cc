@@ -185,14 +185,19 @@ TEST(UdsBuilderOptionsTest, UdsServerLegacyClientLimitHelpers) {
   EXPECT_NE(multi, nullptr);
 }
 
-TEST(UdsBuilderOptionsTest, InvalidPathAndMissingMandatoryHandlersThrow) {
+TEST(UdsBuilderOptionsTest, InvalidPathThrows) {
   EXPECT_THROW(builder::UdsClientBuilder(""), diagnostics::BuilderException);
   EXPECT_THROW(builder::UdsServerBuilder(""), diagnostics::BuilderException);
+}
 
-#if __cplusplus >= 202002L
-  EXPECT_THROW(builder::UdsClientBuilder("/tmp/test_uds_client_missing.sock").build(), diagnostics::BuilderException);
-  EXPECT_THROW(builder::UdsServerBuilder("/tmp/test_uds_server_missing.sock").build(), diagnostics::BuilderException);
-#endif
+TEST(UdsBuilderOptionsTest, MissingCallbacksAreAllowed) {
+  auto client = builder::UdsClientBuilder("/tmp/test_uds_client_missing.sock").auto_start(false).build();
+  auto server = builder::UdsServerBuilder("/tmp/test_uds_server_missing.sock").auto_start(false).build();
+
+  EXPECT_NE(client, nullptr);
+  EXPECT_NE(server, nullptr);
+  EXPECT_FALSE(client->connected());
+  EXPECT_FALSE(server->listening());
 }
 
 }  // namespace test

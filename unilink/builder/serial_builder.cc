@@ -46,12 +46,6 @@ SerialBuilder<State>::SerialBuilder(const std::string& device, uint32_t baud_rat
 
 template <uint32_t State>
 std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("SerialBuilder: Mandatory handlers (on_data and on_error) must be set.");
-  }
-#endif
-
   std::unique_ptr<wrapper::Serial> serial;
   if (independent_context_) {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_, std::make_shared<boost::asio::io_context>());

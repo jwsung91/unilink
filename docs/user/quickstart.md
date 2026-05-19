@@ -41,6 +41,9 @@ int main() {
         .on_data([](const unilink::MessageContext& ctx) {
             std::cout << "Received: " << ctx.data() << std::endl;
         })
+        .on_error([](const unilink::ErrorContext& ctx) {
+            std::cerr << "Error: " << ctx.message() << std::endl;
+        })
         .build();
 
     bool started = client->start_sync();
@@ -84,6 +87,9 @@ int main() {
         .on_data([](const unilink::MessageContext& ctx) {
             std::cout << "Client " << ctx.client_id() << ": " << ctx.data() << std::endl;
         })
+        .on_error([](const unilink::ErrorContext& ctx) {
+            std::cerr << "Error: " << ctx.message() << std::endl;
+        })
         .build();
 
     if (!server->start_sync()) {
@@ -118,6 +124,9 @@ int main() {
         .on_data([](const unilink::MessageContext& ctx) {
             std::cout << "Received: " << ctx.data() << std::endl;
         })
+        .on_error([](const unilink::ErrorContext& ctx) {
+            std::cerr << "Error: " << ctx.message() << std::endl;
+        })
         .build();
 
     if (!serial->start_sync()) {
@@ -140,14 +149,20 @@ int main() {
 
 ## Common Patterns
 
+Callbacks are optional for construction. In production code, register `.on_error(...)` so failures are visible, and register a data or message callback for receive-oriented workflows.
+
 ### Pattern 1: Auto-Reconnection
 
 ```cpp
 #include <chrono>
+#include <iostream>
 using namespace std::chrono_literals;
 
 auto client = unilink::tcp_client("server.com", 8080)
     .retry_interval(3000ms)  // Retry every 3 seconds (default)
+    .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "Error: " << ctx.message() << std::endl;
+    })
     .build();
 
 client->start();  // Will automatically reconnect on disconnect

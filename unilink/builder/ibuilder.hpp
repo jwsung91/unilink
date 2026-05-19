@@ -36,7 +36,7 @@ namespace unilink {
 namespace builder {
 
 /**
- * @brief Concepts for mandatory handler validation
+ * @brief Concepts for callback signature validation
  */
 template <typename T>
 concept DataHandler = std::invocable<T, const wrapper::MessageContext&>;
@@ -51,7 +51,10 @@ template <typename T>
 concept ConnectionHandler = std::invocable<T, const wrapper::ConnectionContext&>;
 
 /**
- * @brief Builder state bitmask for compile-time tracking
+ * @brief Builder state bitmask for callback registration tracking.
+ *
+ * Callback registration is optional. The state is retained for fluent CRTP
+ * rebinding and future extension points, not for mandatory build gating.
  */
 enum BuilderState : uint32_t { None = 0, HasData = 1 << 0, HasError = 1 << 1, Ready = HasData | HasError };
 

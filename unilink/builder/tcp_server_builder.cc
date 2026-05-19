@@ -45,12 +45,6 @@ TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
 
 template <uint32_t State>
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("TcpServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
-  }
-#endif
-
   std::unique_ptr<wrapper::TcpServer> server;
   if (independent_context_) {
     server = std::make_unique<wrapper::TcpServer>(port_, std::make_shared<boost::asio::io_context>());

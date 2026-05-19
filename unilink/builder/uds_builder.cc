@@ -42,12 +42,6 @@ UdsClientBuilder<State>::UdsClientBuilder(const std::string& socket_path)
 
 template <uint32_t State>
 std::unique_ptr<wrapper::UdsClient> UdsClientBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("UdsClientBuilder: Mandatory handlers (on_data and on_error) must be set.");
-  }
-#endif
-
   std::unique_ptr<wrapper::UdsClient> client;
   if (independent_context_) {
     client = std::make_unique<wrapper::UdsClient>(socket_path_, std::make_shared<boost::asio::io_context>());
@@ -136,12 +130,6 @@ UdsServerBuilder<State>::UdsServerBuilder(const std::string& socket_path)
 
 template <uint32_t State>
 std::unique_ptr<wrapper::UdsServer> UdsServerBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("UdsServerBuilder: Mandatory handlers (on_data and on_error) must be set.");
-  }
-#endif
-
   std::unique_ptr<wrapper::UdsServer> server;
   if (independent_context_) {
     server = std::make_unique<wrapper::UdsServer>(socket_path_, std::make_shared<boost::asio::io_context>());
