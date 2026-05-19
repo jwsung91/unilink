@@ -357,14 +357,14 @@ if (client->connected()) {
 
 **Possible Causes & Solutions:**
 
-#### 1. Callback Not Registered
+#### 1. Receive Callback Not Registered
 
 ```cpp
-// BAD - Forgot to register callback
+// OK for construction, but nothing will handle incoming data
 auto client = tcp_client("server.com", 8080)
     .build();  // No on_data callback!
 
-// GOOD
+// Register a receive callback when data should be observed
 auto client = tcp_client("server.com", 8080)
     .on_data([](const unilink::MessageContext& ctx) {
         std::cout << ctx.data() << std::endl;

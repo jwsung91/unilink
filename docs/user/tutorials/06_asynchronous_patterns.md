@@ -15,6 +15,9 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Connected! This fires from a background thread." << std::endl;
     })
+    .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "Error: " << ctx.message() << std::endl;
+    })
     .build();
 
 // start() returns immediately
@@ -70,6 +73,8 @@ cloud_link->start();
 // setup the UI or other logic immediately.
 ```
 
+Callbacks are optional for construction, which keeps minimal startup code compact. For production async workflows, register `on_error` before `start()` so background failures are observable.
+
 ---
 
 ## 4. When to Use Async vs Sync
@@ -86,6 +91,6 @@ cloud_link->start();
 ## Summary
 
 - Use `start()` for non-blocking execution.
-- Register all event handlers (`on_data`, `on_connect`, etc.) **before** calling `start()`.
+- Register event handlers (`on_data`, `on_connect`, `on_error`, etc.) **before** calling `start()` when your workflow depends on them.
 - Be mindful of object lifetimes in lambda captures.
 - Prefer asynchronous patterns for production systems to maximize responsiveness.

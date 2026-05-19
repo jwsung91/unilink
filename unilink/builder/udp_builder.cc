@@ -45,12 +45,6 @@ UdpClientBuilder<State>::UdpClientBuilder(uint16_t local_port)
 
 template <uint32_t State>
 std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("UdpClientBuilder: Mandatory handlers must be set.");
-  }
-#endif
-
   std::unique_ptr<wrapper::UdpClient> client;
   config::UdpConfig cfg;
   cfg.bind_address = bind_address_;
@@ -156,12 +150,6 @@ UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)
 
 template <uint32_t State>
 std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException("UdpServerBuilder: Mandatory handlers must be set.");
-  }
-#endif
-
   std::unique_ptr<wrapper::UdpServer> server;
   config::UdpConfig cfg;
   cfg.bind_address = bind_address_;

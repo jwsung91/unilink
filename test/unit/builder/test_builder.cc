@@ -149,10 +149,12 @@ TEST_F(BuilderTest, TcpClientBuilderAdvancedOptions) {
 TEST_F(BuilderTest, TcpClientBuilderRejectsInvalidConfiguration) {
   EXPECT_THROW(tcp_client("", test_port_), diagnostics::BuilderException);
   EXPECT_THROW(tcp_client("127.0.0.1", 0), diagnostics::BuilderException);
+}
 
-#if __cplusplus >= 202002L
-  EXPECT_THROW(builder::TcpClientBuilder<>("127.0.0.1", test_port_).build(), diagnostics::BuilderException);
-#endif
+TEST_F(BuilderTest, TcpClientBuilderAllowsMissingCallbacks) {
+  auto client = builder::TcpClientBuilder<>("127.0.0.1", test_port_).build();
+  ASSERT_NE(client, nullptr);
+  EXPECT_FALSE(client->connected());
 }
 
 TEST_F(BuilderTest, SerialBuilderAdvancedOptions) {
@@ -208,10 +210,12 @@ TEST_F(BuilderTest, SerialBuilderStringParityAndFlowOptions) {
 
 TEST_F(BuilderTest, SerialBuilderRejectsInvalidConfiguration) {
   EXPECT_THROW(unilink::serial("", 9600), diagnostics::BuilderException);
+}
 
-#if __cplusplus >= 202002L
-  EXPECT_THROW(builder::SerialBuilder<>(nullDevice(), 9600).build(), diagnostics::BuilderException);
-#endif
+TEST_F(BuilderTest, SerialBuilderAllowsMissingCallbacks) {
+  auto serial = builder::SerialBuilder<>(nullDevice(), 9600).build();
+  ASSERT_NE(serial, nullptr);
+  EXPECT_FALSE(serial->connected());
 }
 
 TEST_F(BuilderTest, UdpBuilderBasic) {
@@ -301,10 +305,12 @@ TEST_F(BuilderTest, TcpServerBuilderLegacyClientHelpers) {
 
 TEST_F(BuilderTest, TcpServerBuilderRejectsInvalidConfiguration) {
   EXPECT_THROW(tcp_server(0), diagnostics::BuilderException);
+}
 
-#if __cplusplus >= 202002L
-  EXPECT_THROW(builder::TcpServerBuilder<>(test_port_).build(), diagnostics::BuilderException);
-#endif
+TEST_F(BuilderTest, TcpServerBuilderAllowsMissingCallbacks) {
+  auto server = builder::TcpServerBuilder<>(test_port_).build();
+  ASSERT_NE(server, nullptr);
+  EXPECT_FALSE(server->listening());
 }
 
 TEST_F(BuilderTest, CallbackRegistration) {

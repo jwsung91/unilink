@@ -52,6 +52,18 @@ auto channel = unilink::{type}(params)
 | `.on_message(callback)`          | Handle framed messages (`const MessageContext&`)                  | None     |
 | `.build()`                       | **Required**: Build the wrapper instance                          | -        |
 
+Default `None` means no callback is invoked.
+
+### Callback Registration Policy
+
+Callback registration is optional.
+
+If a callback is not registered, unilink treats it as a no-op. This keeps simple smoke tests, send-only clients, and minimal examples easy to write.
+
+For production applications, registering `.on_error(...)` is strongly recommended so startup, I/O, reconnection, and shutdown failures are visible to application code.
+
+At least one of `.on_data(...)`, `.on_data_batch(...)`, `.on_message(...)`, or `.on_message_batch(...)` is normally useful for receive-oriented workflows, but it is not required to build a wrapper.
+
 **`MessageContext` Data Access**
 
 Inside `on_data` and `on_message` callbacks, `ctx.data()` returns a `std::string_view` that is only valid for the duration of the callback. Do not store or capture it beyond the callback scope.

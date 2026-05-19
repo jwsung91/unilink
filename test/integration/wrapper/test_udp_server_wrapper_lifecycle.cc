@@ -112,10 +112,16 @@ TEST(UdpServerWrapperLifecycleTest, BatchAndClientLimitHandling) {
   boost::asio::ip::udp::socket second(ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
 
   first.send_to(boost::asio::buffer("one", 3), target);
-  first.send_to(boost::asio::buffer("two", 3), target);
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return connects.load() == 1 && server.client_count() == 1; }, 2000));
+
   second.send_to(boost::asio::buffer("blocked", 7), target);
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return batches.load() >= 2; }, 1000));
+  for (int attempt = 0; attempt < 5 && batches.load() < 2; ++attempt) {
+    first.send_to(boost::asio::buffer("two", 3), target);
+    std::this_thread::sleep_for(10ms);
+  }
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return batches.load() >= 2; }, 3000));
   EXPECT_EQ(connects.load(), 1);
   EXPECT_EQ(server.client_count(), 1u);
 

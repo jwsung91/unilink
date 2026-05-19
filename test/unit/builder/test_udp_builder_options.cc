@@ -168,11 +168,14 @@ TEST(UdpBuilderOptionsTest, UdpServerBuilderSettersAfterErrorHandler) {
   ASSERT_NE(server, nullptr);
 }
 
-TEST(UdpBuilderOptionsTest, MissingMandatoryHandlersThrow) {
-#if __cplusplus >= 202002L
-  EXPECT_THROW(builder::UdpClientBuilder<>(0).build(), diagnostics::BuilderException);
-  EXPECT_THROW(builder::UdpServerBuilder<>(0).build(), diagnostics::BuilderException);
-#endif
+TEST(UdpBuilderOptionsTest, MissingCallbacksAreAllowed) {
+  auto client = builder::UdpClientBuilder<>(0).auto_start(false).build();
+  auto server = builder::UdpServerBuilder<>(0).auto_start(false).build();
+
+  EXPECT_NE(client, nullptr);
+  EXPECT_NE(server, nullptr);
+  EXPECT_FALSE(client->connected());
+  EXPECT_FALSE(server->listening());
 }
 
 }  // namespace test

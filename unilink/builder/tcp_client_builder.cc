@@ -42,13 +42,6 @@ TcpClientBuilder<State>::TcpClientBuilder(const std::string& host, uint16_t port
 
 template <uint32_t State>
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder<State>::build() {
-#if __cplusplus >= 202002L
-  if constexpr (!((State & BuilderState::Ready) == BuilderState::Ready)) {
-    throw diagnostics::BuilderException(
-        "TcpClientBuilder: Mandatory handlers (on_data/on_message and on_error) must be registered.");
-  }
-#endif
-
   std::unique_ptr<wrapper::TcpClient> client;
   if (independent_context_) {
     client = std::make_unique<wrapper::TcpClient>(host_, port_, std::make_shared<boost::asio::io_context>());
