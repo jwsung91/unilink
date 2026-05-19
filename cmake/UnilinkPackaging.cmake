@@ -22,14 +22,15 @@ set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 # Install dirs
 include(GNUInstallDirs)
 
-# Package file naming Normalize architecture: x86_64/AMD64 -> amd64,
-# aarch64/arm64 -> arm64
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
+# Package file naming. Normalize architecture to the labels used by release
+# assets: x86_64/AMD64/x64 -> amd64, aarch64/arm64 -> arm64.
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" _unilink_processor_lower)
+if(_unilink_processor_lower MATCHES "x86_64|amd64|x64")
   set(_unilink_arch "amd64")
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64|ARM64")
+elseif(_unilink_processor_lower MATCHES "aarch64|arm64")
   set(_unilink_arch "arm64")
 else()
-  set(_unilink_arch "${CMAKE_SYSTEM_PROCESSOR}")
+  set(_unilink_arch "${_unilink_processor_lower}")
 endif()
 
 # UNILINK_OS_LABEL can be passed via -DUNILINK_OS_LABEL=ubuntu-22.04 etc. Falls
@@ -109,13 +110,13 @@ elseif(UNIX)
   set(CPACK_RPM_PACKAGE_RECOMMENDS "glibc-devel")
 
   # Set architecture
-  if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
+  if(_unilink_processor_lower MATCHES "x86_64|amd64|x64")
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
-  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i[3-6]86")
+  elseif(_unilink_processor_lower MATCHES "i[3-6]86")
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
-  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+  elseif(_unilink_processor_lower MATCHES "aarch64|arm64")
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "arm64")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "aarch64")
   endif()
@@ -284,6 +285,14 @@ if(UNILINK_ENABLE_INSTALL)
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
     )
   endif()
+
+  install(
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
+          ${CMAKE_CURRENT_SOURCE_DIR}/NOTICE
+          ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+    COMPONENT documentation
+    DESTINATION ${CMAKE_INSTALL_DOCDIR}
+  )
 
   if(UNILINK_BUILD_DOCS
      AND UNILINK_DOXYGEN_AVAILABLE
