@@ -194,11 +194,12 @@ Step 1: Install via vcpkg</h3>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md588"></a>
 Step 2: Use in your project</h3>
 <div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.12)</div>
-<div class="line">project(my_app CXX)</div>
+<div class="line">project(my_app LANGUAGES CXX)</div>
 <div class="line"> </div>
 <div class="line">find_package(unilink CONFIG REQUIRED)</div>
 <div class="line">add_executable(my_app main.cpp)</div>
 <div class="line">target_link_libraries(my_app PRIVATE unilink::unilink)</div>
+<div class="line">target_compile_features(my_app PRIVATE cxx_std_20)</div>
 </div><!-- fragment --><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
@@ -227,6 +228,7 @@ Step 2: Use in your project</h3>
 <div class="fragment"><div class="line">find_package(unilink CONFIG REQUIRED)</div>
 <div class="line">add_executable(my_app main.cpp)</div>
 <div class="line">target_link_libraries(my_app PRIVATE unilink::unilink)</div>
+<div class="line">target_compile_features(my_app PRIVATE cxx_std_20)</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md592"></a>
 Method 3: Release Packages</h2>
 <p>Pre-built binary packages are available from GitHub Releases.</p>
@@ -326,7 +328,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue May 19 2026 22:39:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Tue May 19 2026 22:55:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
