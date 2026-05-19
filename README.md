@@ -3,7 +3,7 @@
 ![unilink logo](docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only)
 ![unilink logo](docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only)
 
-**Unified async communication for modern C++.**
+**Unified async communication for modern C++20.**
 
 Serial · TCP · UDP · UDS
 

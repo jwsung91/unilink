@@ -89,8 +89,8 @@ int main() {
 If you saved the snippets as `udp_receiver.cpp` and `udp_sender.cpp`:
 
 ```bash
-g++ -std=c++17 udp_receiver.cpp -o udp_receiver -lunilink -lboost_system -pthread
-g++ -std=c++17 udp_sender.cpp -o udp_sender -lunilink -lboost_system -pthread
+g++ -std=c++20 udp_receiver.cpp -o udp_receiver -lunilink -lboost_system -pthread
+g++ -std=c++20 udp_sender.cpp -o udp_sender -lunilink -lboost_system -pthread
 ```
 
 ---

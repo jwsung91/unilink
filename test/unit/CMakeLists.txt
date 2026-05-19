@@ -151,6 +151,7 @@ set(_unilink_doc_extract_script
     ${CMAKE_SOURCE_DIR}/docs/scripts/extract_doc_snippet.py
 )
 set(_unilink_doc_snippets
+    "quickstart_tcp_client|docs/user/quickstart.md"
     "tutorial_getting_started_client|docs/user/tutorials/01_getting_started.md"
     "tutorial_tcp_server_echo|docs/user/tutorials/02_tcp_server.md"
     "tutorial_uds_server|docs/user/tutorials/03_uds_communication.md"
