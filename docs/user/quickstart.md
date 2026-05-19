@@ -26,6 +26,7 @@ sudo cmake --install build
 
 ## Your First TCP Client
 
+<!-- doc-compile: quickstart_tcp_client -->
 ```cpp
 #include <chrono>
 #include <iostream>
@@ -61,10 +62,35 @@ int main() {
 }
 ```
 
-**Compile:**
+**Compile with CMake (recommended):**
+
+Create `CMakeLists.txt` next to `my_client.cc`:
+
+```cmake
+cmake_minimum_required(VERSION 3.12)
+project(my_client_app LANGUAGES CXX)
+
+find_package(unilink CONFIG REQUIRED)
+
+add_executable(my_client my_client.cc)
+target_link_libraries(my_client PRIVATE unilink::unilink)
+target_compile_features(my_client PRIVATE cxx_std_20)
+```
+
+Then build and run:
 
 ```bash
-g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
+cmake -S . -B build
+cmake --build build
+./build/my_client
+```
+
+**Direct compiler invocation:**
+
+Direct compiler invocation can need different link flags depending on how Boost and unilink were installed.
+
+```bash
+g++ -std=c++20 my_client.cc -lunilink -lboost_system -pthread -o my_client
 ./my_client
 ```
 

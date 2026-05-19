@@ -27,11 +27,12 @@ vcpkg install jwsung91-unilink
 
 ```cmake
 cmake_minimum_required(VERSION 3.12)
-project(my_app CXX)
+project(my_app LANGUAGES CXX)
 
 find_package(unilink CONFIG REQUIRED)
 add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
+target_compile_features(my_app PRIVATE cxx_std_20)
 ```
 
 ```cpp
@@ -69,6 +70,7 @@ sudo cmake --install build
 find_package(unilink CONFIG REQUIRED)
 add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
+target_compile_features(my_app PRIVATE cxx_std_20)
 ```
 
 ### Method 3: Release Packages

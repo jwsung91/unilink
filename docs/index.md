@@ -1,6 +1,6 @@
 # Unilink Documentation {#docs_index}
 
-**Unified async communication for modern C++.**
+**Unified async communication for modern C++20.**
 
 Serial · TCP · UDP · UDS
 

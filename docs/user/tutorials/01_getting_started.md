@@ -87,7 +87,7 @@ find_package(unilink CONFIG REQUIRED)
 
 add_executable(my_first_client my_first_client.cpp)
 target_link_libraries(my_first_client PRIVATE unilink::unilink)
-target_compile_features(my_first_client PRIVATE cxx_std_17)
+target_compile_features(my_first_client PRIVATE cxx_std_20)
 ```
 
 Then build:

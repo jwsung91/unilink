@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 ## Step 3: Build And Run
 
 ```bash
-g++ -std=c++17 serial_terminal.cpp -o serial_terminal -lunilink -lboost_system -pthread
+g++ -std=c++20 serial_terminal.cpp -o serial_terminal -lunilink -lboost_system -pthread
 ```
 
 Run against a real device:
