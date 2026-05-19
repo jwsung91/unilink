@@ -54,7 +54,9 @@ for arg in "$@"; do
   esac
 done
 
+UNILINK_VERIFY_PRESET_USER_SET=1
 if [[ -z "${UNILINK_VERIFY_PRESET:-}" ]]; then
+  UNILINK_VERIFY_PRESET_USER_SET=0
   # Detect host platform and suggest a preset
   OS="$(uname -s)"
   ARCH="$(uname -m)"
@@ -66,11 +68,38 @@ if [[ -z "${UNILINK_VERIFY_PRESET:-}" ]]; then
   esac
 fi
 
+UNILINK_VERIFY_BUILD_DIR_USER_SET=1
 if [[ -z "${UNILINK_VERIFY_BUILD_DIR:-}" ]]; then
+  UNILINK_VERIFY_BUILD_DIR_USER_SET=0
   if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
     UNILINK_VERIFY_BUILD_DIR="build/${UNILINK_VERIFY_PRESET}"
   else
     UNILINK_VERIFY_BUILD_DIR="build"
+  fi
+fi
+
+if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
+  VCPKG_TOOLCHAIN="${PROJECT_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  PRESET_UNAVAILABLE_REASON=""
+  if [[ ! -f "${VCPKG_TOOLCHAIN}" ]]; then
+    PRESET_UNAVAILABLE_REASON="missing local vcpkg toolchain: ${VCPKG_TOOLCHAIN}"
+  elif ! command -v ninja >/dev/null 2>&1; then
+    PRESET_UNAVAILABLE_REASON="missing Ninja build tool required by CMakePresets.json"
+  fi
+
+  if [[ -n "${PRESET_UNAVAILABLE_REASON}" ]]; then
+    if [[ "${UNILINK_VERIFY_PRESET_USER_SET}" -eq 1 ]]; then
+      echo "Requested preset '${UNILINK_VERIFY_PRESET}' is unavailable: ${PRESET_UNAVAILABLE_REASON}" >&2
+      echo "Run ./scripts/setup_dev_env.sh or choose a non-preset build directory." >&2
+      exit 1
+    fi
+
+    echo "Auto-detected preset '${UNILINK_VERIFY_PRESET}' is unavailable: ${PRESET_UNAVAILABLE_REASON}"
+    UNILINK_VERIFY_PRESET=""
+    if [[ "${UNILINK_VERIFY_BUILD_DIR_USER_SET}" -eq 0 ]]; then
+      UNILINK_VERIFY_BUILD_DIR="build/verify"
+    fi
+    echo "Falling back to direct CMake configure in ${UNILINK_VERIFY_BUILD_DIR}."
   fi
 fi
 
@@ -106,9 +135,18 @@ else
     echo "Using local vcpkg toolchain: ${VCPKG_TOOLCHAIN}"
     cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" \
       -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_CXX_STANDARD=20 \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      -DUNILINK_BUILD_TESTS=ON \
+      -DUNILINK_ENABLE_CONFIG=ON \
       -DCMAKE_TOOLCHAIN_FILE="${VCPKG_TOOLCHAIN}"
   else
-    cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" -DCMAKE_BUILD_TYPE=Debug
+    cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_CXX_STANDARD=20 \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      -DUNILINK_BUILD_TESTS=ON \
+      -DUNILINK_ENABLE_CONFIG=ON
   fi
 fi
 cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
