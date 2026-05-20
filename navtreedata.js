@@ -467,7 +467,7 @@ var NAVTREE =
           ] ],
           [ "Method 3: Release Packages", "user_installation.html#autotoc_md592", [
             [ "Step 1: Download and extract", "user_installation.html#autotoc_md593", null ],
-            [ "Step 2: Install", "user_installation.html#autotoc_md594", null ],
+            [ "Step 2: Choose an install prefix", "user_installation.html#autotoc_md594", null ],
             [ "Step 3: Use in your project", "user_installation.html#autotoc_md595", null ]
           ] ],
           [ "Method 4: Git Submodule Integration", "user_installation.html#autotoc_md596", [
