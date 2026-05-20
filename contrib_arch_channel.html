@@ -216,9 +216,9 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 </ul>
 <h1><a class="anchor" id="autotoc_md6"></a>
 4. Backpressure Policy</h1>
-<p>To prevent memory exhaustion and manage flow control, channels implement a backpressure mechanism based on the size of the internal write queue.</p>
+<p>To prevent memory exhaustion and manage sender-side queue pressure, channels implement a backpressure mechanism based on the size of the internal write queue.</p>
 <p><b>Contract Rules:</b></p><ol type="1">
-<li><b>Triggering (High Watermark):</b> When the size of queued write data (bytes pending transmission) reaches or exceeds the configured <code>backpressure_threshold</code>, the transport MUST invoke its internal <code>on_backpressure</code> callback with the current queue size. Wrapper APIs may choose not to expose this directly.</li>
+<li><b>Triggering (High Watermark):</b> When the size of queued write data (bytes pending transmission) reaches or exceeds the configured <code>backpressure_threshold</code>, the transport MUST invoke its internal <code>on_backpressure</code> callback with the current queue size. Wrapper and builder APIs may expose backpressure notifications where the wrapper supports them. See the user API guide for public callback availability.</li>
 <li><b>Relieving (Low Watermark):</b> Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as <code>threshold / 2</code> or <code>0</code> depending on implementation, but must be strictly less than the high watermark), the transport MUST invoke its internal <code>on_backpressure</code> callback with the new lower queue size.</li>
 <li><b>No Relief on Stop:</b> As per the <b>Stop Semantics</b>, clearing the queue during a <code>stop()</code> or shutdown sequence MUST NOT trigger a backpressure relief callback. The application is shutting down the channel and does not need to know that the queue is empty.</li>
 </ol>
@@ -226,7 +226,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <li><b>TcpClient:</b> Implements a high watermark at <code>backpressure_threshold</code> and a low watermark at <code>threshold / 2</code> (or 1 if threshold is small). Checks are performed after every write operation (enqueue/dequeue).</li>
 <li><b>Serial:</b> Should follow the same logic as TcpClient.</li>
 <li><b>TcpServer:</b> Implements backpressure per-session (<code>TcpServerSession</code>).<ul>
-<li><b>Note:</b> This is a transport concern. The current wrapper/builder API does not expose a public <code>on_backpressure()</code> hook.</li>
+<li><b>Note:</b> Public wrapper-level backpressure notification is exposed through the wrapper/builder API where supported, but applications should treat it as queue-pressure notification rather than protocol-level flow control.</li>
 </ul>
 </li>
 </ul>
@@ -301,7 +301,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 13:44:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 20 2026 14:03:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

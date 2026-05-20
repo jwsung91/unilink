@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md770',1,'']]],
+  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md772',1,'']]],
   ['generate_20coverage_20report_1',['Generate Coverage Report',['../contrib_testing.html#autotoc_md458',1,'']]],
   ['generate_5fpattern_2',['generate_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ae260c99bd3684af69d879e6562f42712',1,'unilink::memory::MemoryPatternGenerator']]],
   ['generate_5frandom_5fpattern_3',['generate_random_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ad2f76b498219fc9678158f8b0f46ec34',1,'unilink::memory::MemoryPatternGenerator']]],
@@ -19,17 +19,16 @@ var searchData=
   ['get_5fplatform_5fwarning_16',['get_platform_warning',['../namespaceunilink_1_1base.html#a0138626e065771057209440b9d46be74',1,'unilink::base']]],
   ['get_5fsingleton_17',['get_singleton',['../classunilink_1_1config_1_1ConfigFactory.html#a58b060e083bed8f130f954828efc7905',1,'unilink::config::ConfigFactory']]],
   ['get_5fsupport_5fwarning_18',['get_support_warning',['../classunilink_1_1base_1_1PlatformInfo.html#af93848c1e0cea7695b4f53a12b38d563',1,'unilink::base::PlatformInfo']]],
-  ['get_5ftype_19',['get_type',['../classunilink_1_1config_1_1ConfigManagerInterface.html#aaf440e21d6f0c46dc2b65b533e4d633c',1,'unilink::config::ConfigManagerInterface::get_type()'],['../classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496',1,'unilink::config::ConfigManager::get_type()']]],
-  ['getting_20help_20',['Getting Help',['../user_troubleshooting.html#autotoc_md774',1,'']]],
-  ['getting_20started_21',['Getting Started',['../user_index.html#autotoc_md591',1,'']]],
+  ['get_5ftype_19',['get_type',['../classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496',1,'unilink::config::ConfigManager::get_type()'],['../classunilink_1_1config_1_1ConfigManagerInterface.html#aaf440e21d6f0c46dc2b65b533e4d633c',1,'unilink::config::ConfigManagerInterface::get_type()']]],
+  ['getting_20help_20',['Getting Help',['../user_troubleshooting.html#autotoc_md776',1,'']]],
+  ['getting_20started_21',['Getting Started',['../user_index.html#autotoc_md593',1,'']]],
   ['getting_20started_20with_20unilink_22',['Getting Started with Unilink',['../tutorial_01.html',1,'user_tutorials']]],
-  ['git_20submodule_20integration_23',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md611',1,'']]],
+  ['git_20submodule_20integration_23',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md613',1,'']]],
   ['github_20actions_20integration_24',['GitHub Actions Integration',['../contrib_testing.html#autotoc_md428',1,'']]],
   ['globalmemorypool_25',['globalmemorypool',['../classunilink_1_1memory_1_1GlobalMemoryPool.html',1,'unilink::memory::GlobalMemoryPool'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#a0068d4d81382e7001f2a0cd530840b44',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool()=delete'],['../classunilink_1_1memory_1_1GlobalMemoryPool.html#af805a5c371db16d7dd56923e3c74b41e',1,'unilink::memory::GlobalMemoryPool::GlobalMemoryPool(const GlobalMemoryPool &amp;)=delete']]],
   ['goals_26',['Design Goals',['../contrib_arch.html#autotoc_md101',1,'']]],
-  ['gps_20module_27',['GPS Module',['../user_api_guide.html#autotoc_md518',1,'']]],
+  ['gps_20module_27',['GPS Module',['../user_api_guide.html#autotoc_md519',1,'']]],
   ['graceful_20shutdown_28',['3. Graceful Shutdown',['../contrib_arch_runtime.html#autotoc_md207',1,'']]],
-  ['guarantees_29',['guarantees',['../contrib_arch_memory.html#autotoc_md13',1,'Memory Safety Guarantees'],['../contrib_arch.html#autotoc_md126',1,'Thread Safety Guarantees']]],
-  ['guide_30',['guide',['../contrib_build.html',1,'Build Guide'],['../contrib_index.html',1,'Contributor Guide'],['../user_installation.html',1,'Installation Guide'],['../user_performance.html',1,'Performance Guide'],['../contrib_testing.html',1,'Testing Guide'],['../user_troubleshooting.html',1,'Troubleshooting Guide'],['../user_api_guide.html',1,'Unilink API Guide'],['../user_quickstart.html',1,'Unilink Quick Start Guide'],['../user_index.html',1,'User Guide']]],
-  ['guides_31',['Guides',['../user_index.html#autotoc_md597',1,'']]]
+  ['guide_29',['guide',['../contrib_build.html',1,'Build Guide'],['../contrib_index.html',1,'Contributor Guide'],['../user_installation.html',1,'Installation Guide'],['../user_performance.html',1,'Performance Guide'],['../contrib_testing.html',1,'Testing Guide'],['../user_troubleshooting.html',1,'Troubleshooting Guide'],['../user_api_guide.html',1,'Unilink API Guide'],['../user_quickstart.html',1,'Unilink Quick Start Guide'],['../user_index.html',1,'User Guide']]],
+  ['guides_30',['Guides',['../user_index.html#autotoc_md599',1,'']]]
 ];

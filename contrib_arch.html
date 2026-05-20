@@ -509,11 +509,11 @@ Overview</h2>
 <br  />
 </p>
 <h2><a class="anchor" id="autotoc_md126"></a>
-Thread Safety Guarantees</h2>
+Thread Safety Model</h2>
 <h3><a class="anchor" id="autotoc_md127"></a>
-1. API Methods</h3>
-<p>All public API methods are thread-safe:</p>
-<div class="fragment"><div class="line"><span class="comment">// Safe to call from multiple threads</span></div>
+1. Runtime Methods</h3>
+<p>Runtime operations such as sending, stopping, and state inspection are designed for concurrent application use. Callback registration and configuration setters should normally be completed before startup.</p>
+<div class="fragment"><div class="line"><span class="comment">// Safe to call from multiple application threads</span></div>
 <div class="line">client-&gt;send(<span class="stringliteral">&quot;data1&quot;</span>);  <span class="comment">// Thread 1</span></div>
 <div class="line">client-&gt;send(<span class="stringliteral">&quot;data2&quot;</span>);  <span class="comment">// Thread 2</span></div>
 <div class="line">client-&gt;stop();         <span class="comment">// Thread 3</span></div>
@@ -808,7 +808,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 13:44:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 20 2026 14:03:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

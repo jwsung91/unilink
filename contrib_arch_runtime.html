@@ -209,7 +209,7 @@ Architecture Diagram</h2>
     IO-&gt;&gt;IO: Execute on_data callback
     Note over IO: ⚠️ Callbacks run in I/O thread&lt;br/&gt;Don't block here!
 
-    Note over App,Net: Thread-Safe API Calls
+    Note over App,Net: Concurrent Runtime Calls
     App-&gt;&gt;Queue: Multiple threads can call
     App-&gt;&gt;Queue: send(), stop(), etc.
     Queue-&gt;&gt;IO: Serialized execution </pre> <br  />
@@ -220,15 +220,16 @@ Architecture Diagram</h2>
 <h2><a class="anchor" id="autotoc_md176"></a>
 Key Points</h2>
 <h3><a class="anchor" id="autotoc_md177"></a>
-✅ Thread-Safe API Methods</h3>
-<p>All public API methods are thread-safe and can be called from any thread:</p>
-<div class="fragment"><div class="line"><span class="comment">// Safe to call from multiple threads simultaneously</span></div>
+Concurrent Runtime Methods</h3>
+<p>Runtime methods intended for concurrent application use are designed to be thread-safe. This includes methods such as <code>send()</code>, <code>try_send()</code>, <code>send_line()</code>, <code>stop()</code>, <code>connected()</code>, server <code>send_to()</code>, server <code>broadcast()</code>, and server state inspection helpers where available.</p>
+<div class="fragment"><div class="line"><span class="comment">// Runtime operations are safe to call from multiple application threads.</span></div>
 <div class="line">std::thread t1([&amp;client]() { client-&gt;send(<span class="stringliteral">&quot;data1&quot;</span>); });</div>
 <div class="line">std::thread t2([&amp;client]() { client-&gt;send(<span class="stringliteral">&quot;data2&quot;</span>); });</div>
 <div class="line">std::thread t3([&amp;client]() { client-&gt;stop(); });</div>
-</div><!-- fragment --><p><b>Implementation:</b></p>
+</div><!-- fragment --><p>Callback registration and configuration setters should normally be completed before <code>start()</code> or <code>auto_start(true)</code>.</p>
+<p><b>Implementation:</b></p>
 <ul>
-<li>All API calls are serialized through <code>boost::asio::post()</code></li>
+<li>Concurrent runtime operations are serialized through <code>boost::asio::post()</code></li>
 <li>Operations are queued and executed in the I/O thread</li>
 <li>No manual locking required by users</li>
 </ul>
@@ -253,7 +254,9 @@ Key Points</h2>
 <li><code>on_disconnect()</code> - Connection lost</li>
 <li><code>on_data()</code> - Data received</li>
 <li><code>on_error()</code> - Error occurred</li>
+<li><code>on_backpressure()</code> - Sender-side queue pressure changed</li>
 </ul>
+<p>Callbacks should be short and non-blocking. If work must be moved to another thread, copy callback-scoped views first.</p>
 <hr  />
 <h3><a class="anchor" id="autotoc_md181"></a>
 ⚠️ Never Block in Callbacks</h3>
@@ -267,17 +270,19 @@ Key Points</h2>
 </div><!-- fragment --><p><b>Good - Offload to worker threads:</b></p>
 <div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> <a class="code hl_class" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
 <div class="line">    <span class="comment">// ✅ GOOD: Offload to worker thread</span></div>
-<div class="line">    std::string payload(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());</div>
-<div class="line">    std::thread([payload]() {</div>
+<div class="line">    std::string payload = ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a8b634569a2e3dba8e2ed8645f85cf4e2">data_as_string</a>();</div>
+<div class="line">    std::thread([payload = std::move(payload)]() {</div>
 <div class="line">        heavy_computation(payload);</div>
 <div class="line">        database_query(payload);</div>
 <div class="line">    }).detach();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Or use a thread pool</span></div>
-<div class="line">    thread_pool.submit([payload]() {</div>
+<div class="line">    std::string payload_for_pool = ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a8b634569a2e3dba8e2ed8645f85cf4e2">data_as_string</a>();</div>
+<div class="line">    thread_pool.submit([payload = std::move(payload_for_pool)]() {</div>
 <div class="line">        heavy_computation(payload);</div>
 <div class="line">    });</div>
 <div class="line">})</div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a8b634569a2e3dba8e2ed8645f85cf4e2"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a8b634569a2e3dba8e2ed8645f85cf4e2">unilink::wrapper::MessageContext::data_as_string</a></div><div class="ttdeci">std::string data_as_string() const</div><div class="ttdoc">Get the received data as a std::string.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00055">context.hpp:55</a></div></div>
 </div><!-- fragment --><p><b>Impact of blocking:</b></p>
 <ul>
 <li>Blocks all I/O operations</li>
@@ -304,11 +309,11 @@ Threading Model Summary</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>I/O Thread</b>   </td><td class="markdownTableBodyNone">Single dedicated thread running <code>io_context.run()</code>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Application Threads</b>   </td><td class="markdownTableBodyNone">Any number of threads calling API methods    </td></tr>
+<td class="markdownTableBodyNone"><b>Application Threads</b>   </td><td class="markdownTableBodyNone">Any number of threads calling runtime operations    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>Callback Thread</b>   </td><td class="markdownTableBodyNone">Always I/O thread    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Thread Safety</b>   </td><td class="markdownTableBodyNone">All API methods thread-safe via <code>post()</code>    </td></tr>
+<td class="markdownTableBodyNone"><b>Thread Safety</b>   </td><td class="markdownTableBodyNone">Concurrent runtime operations serialized via <code>post()</code>    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>Synchronization</b>   </td><td class="markdownTableBodyNone">Automatic via Boost.Asio   </td></tr>
 </table>
@@ -488,7 +493,8 @@ Reconnection Best Practices</h2>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md209"></a>
 Backpressure Handling</h1>
-<p>When the send queue grows too large (network slower than application), <code>unilink</code> applies internal backpressure protection in the transport layer. Applications can monitor backpressure via the wrapper-level <code>on_backpressure</code> builder method callback, or implement additional rate limiting and queue monitoring at the application level.</p>
+<p>Backpressure is sender-side queue pressure. When the local outgoing queue grows too large because the transport is slower than the application, <code>unilink</code> applies internal backpressure protection in the transport layer. Applications can monitor queue pressure via the wrapper-level <code>on_backpressure</code> builder callback where supported, or implement additional rate limiting and queue monitoring at the application level.</p>
+<p>Backpressure does not mean the remote peer has processed data. For UDP, it only describes the local sender-side queue because UDP has no receiver-side flow control.</p>
 <h2><a class="anchor" id="autotoc_md210"></a>
 Backpressure Flow</h2>
 <p><br  />
@@ -501,13 +507,13 @@ Backpressure Flow</h2>
     Check --&gt;|No| Write[Continue Normal Write]
     Write --&gt; Complete([Data Sent])
 
-    Check --&gt;|Yes: queue_bytes &gt; 1MB| Protect[Internal backpressure protection]
+    Check --&gt;|Yes: queued bytes &gt; threshold| Protect[Internal backpressure protection]
     Protect --&gt; AppDecision{Application Decision}
 
     AppDecision --&gt;|Pause Sending| Wait[Wait for queue to drain]
     AppDecision --&gt;|Rate Limit| Throttle[Reduce send rate]
     AppDecision --&gt;|Drop Data| Drop[Skip non-critical data]
-    AppDecision --&gt;|Continue| Force[Force send anyway&lt;br/&gt;⚠️ May cause memory growth]
+    AppDecision --&gt;|Continue| Force[Continue producing&lt;br/&gt;May fail or trigger protection]
 
     Wait --&gt; Monitor{Queue Size &gt;&lt;br/&gt;Threshold?}
     Monitor --&gt;|Still high| Wait
@@ -528,8 +534,7 @@ Backpressure Flow</h2>
 <h2><a class="anchor" id="autotoc_md212"></a>
 Backpressure Configuration</h2>
 <p>Use transport-layer configuration if you need direct queue-threshold control. At the wrapper level, keep your own send budget and stop producing data when downstream systems slow down.</p>
-<p><b>Default threshold:</b> 1 MB (1,048,576 bytes) <br  />
- <b>Configurable range:</b> 1 KB - 100 MB <br  />
+<p><b>Default threshold:</b> Reliable defaults to 1 MiB; BestEffort defaults to 512 KiB when selected through the builder. Base transport configuration defaults to 1 MiB. <b>Configurable range:</b> 1 KB - 100 MB <br  />
  <b>Safety cap:</b> ~4x the high watermark (capped at 64 MB) triggers automatic close + Error state</p>
 <hr  />
 <h2><a class="anchor" id="autotoc_md214"></a>
@@ -587,7 +592,7 @@ Memory Safety</h2>
 <li>✅ Queue size is monitored continuously</li>
 <li>✅ Queue growth is bounded internally in the transport layer</li>
 <li>✅ Applications can add their own send throttling policy</li>
-<li>✅ Wrapper-level backpressure callbacks are available via the <code>on_backpressure</code> builder method</li>
+<li>✅ Wrapper-level backpressure notifications are available via the <code>on_backpressure</code> builder method where supported</li>
 <li>✅ Memory pools reduce allocation overhead for small buffers (&lt;64KB)</li>
 </ul>
 <hr  />
@@ -645,7 +650,7 @@ Best Practices</h1>
 ❌ DON'T</h3>
 <ul>
 <li>Ignore backpressure callbacks</li>
-<li>Assume unlimited memory</li>
+<li>Assume queue memory is unbounded</li>
 <li>Send without rate limiting</li>
 <li>Forget to handle high-load scenarios</li>
 </ul>
@@ -687,7 +692,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 13:44:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 20 2026 14:03:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -189,18 +189,18 @@ Table of Contents</h1>
 <h1><a class="anchor" id="autotoc_md12"></a>
 Overview</h1>
 <h2><a class="anchor" id="autotoc_md13"></a>
-Memory Safety Guarantees</h2>
+Memory Safety Model</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Feature   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Performance Impact    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Bounds Checking</b>   </td><td class="markdownTableBodyNone">All buffer access validated   </td><td class="markdownTableBodyNone">Minimal (&lt;1%)    </td></tr>
+<td class="markdownTableBodyNone"><b>Checked Access</b>   </td><td class="markdownTableBodyNone">Bounds-checked access is available through <code>at()</code> and checked slicing helpers; unchecked access remains available for performance-sensitive paths   </td><td class="markdownTableBodyNone">Minimal (&lt;1%)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Type Safety</b>   </td><td class="markdownTableBodyNone">Safe conversions prevent UB   </td><td class="markdownTableBodyNone">Zero (compile-time)    </td></tr>
+<td class="markdownTableBodyNone"><b>Type Safety</b>   </td><td class="markdownTableBodyNone">Safe conversions reduce UB risk   </td><td class="markdownTableBodyNone">Zero (compile-time)    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>Leak Detection</b>   </td><td class="markdownTableBodyNone">Track allocations/deallocations   </td><td class="markdownTableBodyNone">Zero (Release builds)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Thread Safety</b>   </td><td class="markdownTableBodyNone">All state management thread-safe   </td><td class="markdownTableBodyNone">Minimal (~2-5%)    </td></tr>
+<td class="markdownTableBodyNone"><b>Thread Safety</b>   </td><td class="markdownTableBodyNone">Thread-safe state helpers are available where shared state requires synchronization   </td><td class="markdownTableBodyNone">Minimal (~2-5%)    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>Memory Pools</b>   </td><td class="markdownTableBodyNone">Reduce fragmentation   </td><td class="markdownTableBodyNone">Positive (+30% for small buffers)   </td></tr>
 </table>
@@ -224,7 +224,7 @@ Safety Levels</h2>
 Safe Data Handling</h1>
 <h2><a class="anchor" id="autotoc_md18"></a>
 SafeDataBuffer</h2>
-<p>Immutable, type-safe buffer wrapper around existing data:</p>
+<p>Immutable, type-safe buffer wrapper that owns copied data:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="memory__tracker_8hpp.html">unilink/memory/memory_tracker.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__span_8hpp.html">unilink/memory/safe_span.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__data__buffer_8hpp.html">unilink/memory/safe_data_buffer.hpp</a>&quot;</span></div>
@@ -241,7 +241,8 @@ SafeDataBuffer</h2>
 <div class="ttc" id="amemory__tracker_8hpp_html"><div class="ttname"><a href="memory__tracker_8hpp.html">memory_tracker.hpp</a></div></div>
 <div class="ttc" id="asafe__data__buffer_8hpp_html"><div class="ttname"><a href="safe__data__buffer_8hpp.html">safe_data_buffer.hpp</a></div></div>
 <div class="ttc" id="asafe__span_8hpp_html"><div class="ttname"><a href="safe__span_8hpp.html">safe_span.hpp</a></div></div>
-</div><!-- fragment --><hr  />
+</div><!-- fragment --><p><code>SafeDataBuffer</code> owns its storage and provides checked <code>at()</code> access. Pointer access and unchecked indexing should be used only when the caller already controls bounds.</p>
+<hr  />
 <h2><a class="anchor" id="autotoc_md20"></a>
 Features</h2>
 <h3><a class="anchor" id="autotoc_md21"></a>
@@ -302,6 +303,7 @@ Safe Span</h2>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Bounds-checked access</span></div>
+<div class="line">    uint8_t checked = data.<a class="code hl_function" href="classunilink_1_1memory_1_1SafeSpan.html#a3c0a9accdf8ceb4d760063dfa6e21e3b">at</a>(0);</div>
 <div class="line">    <span class="keyword">auto</span> subset = data.<a class="code hl_function" href="classunilink_1_1memory_1_1SafeSpan.html#a6c87d2a61c52511f87e8813fcbef5c9f">subspan</a>(1, 2);  <span class="comment">// throws on invalid ranges</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -309,6 +311,7 @@ Safe Span</h2>
 <div class="line">std::vector&lt;uint8_t&gt; buffer = {1, 2, 3, 4, 5};</div>
 <div class="line">process_data(<a class="code hl_class" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a>(buffer));</div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">C++20 std::span based memory view.</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00033">safe_span.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a3c0a9accdf8ceb4d760063dfa6e21e3b"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a3c0a9accdf8ceb4d760063dfa6e21e3b">unilink::memory::SafeSpan::at</a></div><div class="ttdeci">constexpr Base::reference at(std::size_t index) const</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00045">safe_span.hpp:45</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a6c87d2a61c52511f87e8813fcbef5c9f"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a6c87d2a61c52511f87e8813fcbef5c9f">unilink::memory::SafeSpan::subspan</a></div><div class="ttdeci">constexpr SafeSpan&lt; T, std::dynamic_extent &gt; subspan(std::size_t offset, std::size_t count=std::dynamic_extent) const</div><div class="ttdef"><b>Definition</b> <a href="safe__span_8hpp_source.html#l00053">safe_span.hpp:53</a></div></div>
 </div><!-- fragment --><p><b>Features:</b></p>
 <ul>
@@ -317,6 +320,7 @@ Safe Span</h2>
 <li>Project-local span abstraction retained for API stability</li>
 <li>Zero overhead in release builds</li>
 </ul>
+<p><code>SafeSpan::at()</code> and checked slicing helpers validate ranges. <code>operator[]</code> follows <code>std::span</code> semantics and is unchecked.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md29"></a>
 Thread-Safe State Management</h1>
@@ -715,7 +719,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 13:44:30 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Wed May 20 2026 14:03:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
