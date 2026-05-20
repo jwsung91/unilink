@@ -20,6 +20,7 @@ You are building an application using unilink.
 | [Installation](user/installation.md) | vcpkg, source, release packages, containers |
 | [Requirements](user/requirements.md) | Platform and dependency expectations |
 | [API Reference](user/api_guide.md) | Full public API: builders, wrappers, callbacks |
+| [API Stability](user/api_stability.md) | Public API, source compatibility, ABI, and deprecation policy |
 | [Troubleshooting](user/troubleshooting.md) | Common failures and debugging steps |
 | [Python Bindings](user/python_bindings.md) | Moved to unilink-python |
 | [Performance](user/performance.md) | Build and runtime tuning |
@@ -48,6 +49,7 @@ You are developing or extending unilink itself.
 | [Build Guide](contributor/build_guide.md) | CMake options, build profiles, sanitizers |
 | [Testing](contributor/testing.md) | Running tests, CI integration |
 | [Orin Nano Validation](contributor/orin_nano_validation.md) | Ubuntu 22.04 ARM64 build and test runbook |
+| [Release Checklist](contributor/release_checklist.md) | Release validation and packaging checklist |
 | [Implementation Status](contributor/implementation_status.md) | Verified scope and known gaps |
 | [Test Structure](contributor/test_structure.md) | Test organization and coverage |
 | [Architecture Overview](contributor/architecture/README.md) | Layers, responsibilities, design patterns |

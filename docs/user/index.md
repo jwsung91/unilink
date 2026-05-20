@@ -15,6 +15,7 @@ Documentation for developers using unilink as a library in their applications.
 ## API Reference
 
 - [API Guide](api_guide.md) — Full public API: builders, wrappers, context types, error handling
+- [API Stability](api_stability.md) — Public API and compatibility policy
 
 ---
 

@@ -65,6 +65,7 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 * [Installation Guide](docs/user/installation.md) – Package, source, and build options
 * [Requirements](docs/user/requirements.md) – Supported platforms and dependencies
 * [API Reference](docs/user/api_guide.md) – Public API overview
+* [API Stability](docs/user/api_stability.md) – Public API and compatibility policy
 * [Python Bindings](https://github.com/unilink-lab/unilink-python) – External repository
 * [Troubleshooting](docs/user/troubleshooting.md) – Common issues and resolutions
 * [Tutorials](docs/user/tutorials/)
@@ -74,6 +75,7 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 * [Build Guide](docs/contributor/build_guide.md) – Build configurations, CMake flags, sanitizers
 * [Testing Guide](docs/contributor/testing.md) – Running tests and CI integration
 * [Orin Nano Validation](docs/contributor/orin_nano_validation.md) – Ubuntu 22.04 ARM64 bring-up and test runbook
+* [Release Checklist](docs/contributor/release_checklist.md) – Release validation checklist
 * [Implementation Status](docs/contributor/implementation_status.md) – Verified scope and known gaps
 * [Architecture Overview](docs/contributor/architecture/README.md) – High-level structure and layer responsibilities
 * [Runtime Behavior](docs/contributor/architecture/runtime_behavior.md) – Threading model, reconnection, backpressure
