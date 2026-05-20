@@ -344,14 +344,14 @@ graph TD
     Queue --> IO
 ```
 
-### Thread Safety Guarantees
+### Thread Safety Model
 
-#### 1. API Methods
+#### 1. Runtime Methods
 
-All public API methods are thread-safe:
+Runtime operations such as sending, stopping, and state inspection are designed for concurrent application use. Callback registration and configuration setters should normally be completed before startup.
 
 ```cpp
-// Safe to call from multiple threads
+// Safe to call from multiple application threads
 client->send("data1");  // Thread 1
 client->send("data2");  // Thread 2
 client->stop();         // Thread 3

@@ -17,14 +17,14 @@
 
 ## Overview
 
-### Memory Safety Guarantees
+### Memory Safety Model
 
 | Feature             | Description                      | Performance Impact                |
 | ------------------- | -------------------------------- | --------------------------------- |
-| **Bounds Checking** | All buffer access validated      | Minimal (<1%)                     |
-| **Type Safety**     | Safe conversions prevent UB      | Zero (compile-time)               |
+| **Checked Access**  | Bounds-checked access is available through `at()` and checked slicing helpers; unchecked access remains available for performance-sensitive paths | Minimal (<1%) |
+| **Type Safety**     | Safe conversions reduce UB risk  | Zero (compile-time)               |
 | **Leak Detection**  | Track allocations/deallocations  | Zero (Release builds)             |
-| **Thread Safety**   | All state management thread-safe | Minimal (~2-5%)                   |
+| **Thread Safety**   | Thread-safe state helpers are available where shared state requires synchronization | Minimal (~2-5%) |
 | **Memory Pools**    | Reduce fragmentation             | Positive (+30% for small buffers) |
 
 ---
@@ -47,7 +47,7 @@ flowchart TD
 
 ### SafeDataBuffer
 
-Immutable, type-safe buffer wrapper around existing data:
+Immutable, type-safe buffer wrapper that owns copied data:
 
 ```cpp
 #include "unilink/memory/memory_tracker.hpp"
@@ -63,6 +63,8 @@ auto span = from_vec.as_span();      // Non-owning view
 auto byte = from_vec.at(1);          // Bounds-checked
 auto unchecked = from_vec.data()[0]; // Pointer access
 ```
+
+`SafeDataBuffer` owns its storage and provides checked `at()` access. Pointer access and unchecked indexing should be used only when the caller already controls bounds.
 
 ---
 
@@ -138,6 +140,7 @@ void process_data(unilink::memory::ConstByteSpan data) {
     }
 
     // Bounds-checked access
+    uint8_t checked = data.at(0);
     auto subset = data.subspan(1, 2);  // throws on invalid ranges
 }
 
@@ -152,6 +155,8 @@ process_data(unilink::memory::ConstByteSpan(buffer));
 - `at()/subspan()` are checked; `operator[]` is unchecked
 - Project-local span abstraction retained for API stability
 - Zero overhead in release builds
+
+`SafeSpan::at()` and checked slicing helpers validate ranges. `operator[]` follows `std::span` semantics and is unchecked.
 
 ---
 
