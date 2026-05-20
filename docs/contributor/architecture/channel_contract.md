@@ -38,10 +38,10 @@ This rule ensures that once an application explicitly requests a channel to stop
     *   **Callbacks**: Callback member variables (`on_bytes_`, `on_multi_data_`, etc.) are protected by a mutex to prevent data races during registration and invocation.
 
 ## 4. Backpressure Policy
-To prevent memory exhaustion and manage flow control, channels implement a backpressure mechanism based on the size of the internal write queue.
+To prevent memory exhaustion and manage sender-side queue pressure, channels implement a backpressure mechanism based on the size of the internal write queue.
 
 **Contract Rules:**
-1.  **Triggering (High Watermark):** When the size of queued write data (bytes pending transmission) reaches or exceeds the configured `backpressure_threshold`, the transport MUST invoke its internal `on_backpressure` callback with the current queue size. Wrapper APIs may choose not to expose this directly.
+1.  **Triggering (High Watermark):** When the size of queued write data (bytes pending transmission) reaches or exceeds the configured `backpressure_threshold`, the transport MUST invoke its internal `on_backpressure` callback with the current queue size. Wrapper and builder APIs may expose backpressure notifications where the wrapper supports them. See the user API guide for public callback availability.
     
 2.  **Relieving (Low Watermark):** Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as `threshold / 2` or `0` depending on implementation, but must be strictly less than the high watermark), the transport MUST invoke its internal `on_backpressure` callback with the new lower queue size.
 
@@ -51,7 +51,7 @@ To prevent memory exhaustion and manage flow control, channels implement a backp
 *   **TcpClient:** Implements a high watermark at `backpressure_threshold` and a low watermark at `threshold / 2` (or 1 if threshold is small). Checks are performed after every write operation (enqueue/dequeue).
 *   **Serial:** Should follow the same logic as TcpClient.
 *   **TcpServer:** Implements backpressure per-session (`TcpServerSession`).
-    *   **Note:** This is a transport concern. The current wrapper/builder API does not expose a public `on_backpressure()` hook.
+    *   **Note:** Public wrapper-level backpressure notification is exposed through the wrapper/builder API where supported, but applications should treat it as queue-pressure notification rather than protocol-level flow control.
 
 ## 5. Error Handling Consistency
 

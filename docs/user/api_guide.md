@@ -42,8 +42,8 @@ auto channel = unilink::{type}(params)
 | `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None     |
 | `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None     |
 | `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None     |
-| `.on_backpressure(callback)`     | Handle queue threshold events (`void(size_t bytes)`)              | None     |
-| `.backpressure_threshold(bytes)` | Set queue limit for strategy or flow control                      | 512 KB   |
+| `.on_backpressure(callback)`     | Handle sender-side queue threshold events (`void(size_t bytes)`)  | None     |
+| `.backpressure_threshold(bytes)` | Set queued outgoing byte threshold                                | Reliable: 1 MiB, BestEffort: 512 KiB |
 | `.backpressure_strategy(enum)`   | Set behavior when threshold is reached (`Reliable`, `BestEffort`)  | `Reliable`|
 | `.auto_start(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
 | `.independent_context(bool)`     | Create and run a dedicated `io_context` thread managed by unilink | `false`  |
@@ -64,11 +64,13 @@ For production applications, registering `.on_error(...)` is strongly recommende
 
 At least one of `.on_data(...)`, `.on_data_batch(...)`, `.on_message(...)`, or `.on_message_batch(...)` is normally useful for receive-oriented workflows, but it is not required to build a wrapper.
 
-**`MessageContext` Data Access**
+### `MessageContext` Data Ownership
 
-Inside `on_data` and `on_message` callbacks, `ctx.data()` returns a `std::string_view` that is only valid for the duration of the callback. Do not store or capture it beyond the callback scope.
+Inside `on_data` and `on_message` callbacks, `ctx.data()` returns a callback-scoped non-owning `std::string_view`. It is intended for immediate use inside the callback only.
 
-To take ownership of the data, use:
+Do not store the returned `std::string_view`. Do not pass the view to worker threads unless you copy it first.
+
+If data needs to be stored, queued, moved to another thread, or used after the callback returns, take ownership with:
 - `ctx.data_as_string()` — returns `std::string` (copy)
 - `ctx.data_as_vector()` — returns `std::vector<uint8_t>` (copy)
 
@@ -100,7 +102,7 @@ Use `.on_message()` together with a framer when you want callback flow to operat
 **Benefits:**
 
 - **Performance**: Avoids `std::string` allocation overhead.
-- **Safety**: Bounds-checked access preventing buffer overflows.
+- **Ownership clarity**: Uses the same callback-scoped data view and explicit copy helpers as raw data callbacks.
 
 **Example:**
 
@@ -983,18 +985,24 @@ unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 
 ## Backpressure Strategy
 
-When a sender produces data faster than the network can deliver it, messages accumulate in the send queue. The `BackpressureStrategy` enum controls what happens when the queue approaches its threshold — trading off **completeness** against **freshness**.
+Backpressure controls the sender-side queue maintained by unilink. It is measured in queued outgoing bytes, not message count.
+
+Backpressure does not guarantee that the remote peer has processed the data. For UDP, backpressure only applies to the local sender-side queue because UDP has no receiver-side flow control.
+
+When a sender produces data faster than the transport can deliver it, messages accumulate in the send queue. The `BackpressureStrategy` enum controls what happens when the queue approaches its threshold, trading off local queue preservation against freshness.
 
 ### Strategies
 
-| Strategy     | Behaviour at threshold                     | Use when…                                           |
+| Strategy     | Behaviour at threshold                     | Use when...                                         |
 | ------------ | ------------------------------------------ | --------------------------------------------------- |
-| `Reliable`    | Keep queuing until the hard cap is reached | Every message must arrive — files, commands, logs   |
-| `BestEffort` | Drop the entire queue; keep sending fresh data | Latency matters more than completeness — sensor streams, robot state, video telemetry |
+| `Reliable`    | Preserve queued outgoing data until the queue limit is reached | Local queue drops must be avoided, such as files, commands, logs |
+| `BestEffort` | Drop older queued data to keep newer data moving | Freshness matters more than completeness, such as sensor streams, robot state, video telemetry |
 
-`Reliable` is the default for all transports. It is the safe choice: no data is silently discarded.
+`Reliable` is the default for all transports. It prioritizes preserving queued outgoing data until the configured queue limit is reached. If the queue cannot accept more data, send APIs may fail or the transport may report an error depending on the wrapper and transport state.
 
-`BestEffort` is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The `on_backpressure` callback fires each time the queue is flushed so callers can observe drops.
+`BestEffort` is inspired by DDS HISTORY QoS. It prioritizes freshness. When the queue exceeds the configured threshold, older queued data may be dropped to make room for newer data.
+
+`on_backpressure(callback)` is a notification hook. It is not a blocking flow-control mechanism. The callback receives the current queued byte count when the queue crosses implementation-defined high/low watermark transitions. Backpressure callbacks follow the same callback execution model as other wrapper callbacks, so keep them short and non-blocking.
 
 ### When to use each
 
@@ -1022,12 +1030,12 @@ using unilink::base::constants::BackpressureStrategy;
 config::TcpClientConfig cfg;
 cfg.host = "192.168.1.10";
 cfg.port = 8080;
-cfg.backpressure_threshold = 512 * 1024;            // 512 KB flush threshold
+cfg.backpressure_threshold = 512 * 1024;            // 512 KiB threshold
 cfg.backpressure_strategy  = BackpressureStrategy::BestEffort;
 
 auto client = TcpClient::create(cfg, ioc);
-client->on_backpressure([](size_t /* dropped_bytes */) {
-    // queue was flushed — stale data discarded
+client->on_backpressure([](size_t queued_bytes) {
+    // sender-side queued byte count crossed a watermark
 });
 ```
 
@@ -1039,16 +1047,11 @@ Or via the wrapper builder (fluent API):
 auto client = unilink::tcp_client("192.168.1.10", 8080)
     .backpressure_threshold(512 * 1024)
     .backpressure_strategy(unilink::base::constants::BackpressureStrategy::BestEffort)
-    .on_backpressure([](size_t) { /* queue flushed */ })
+    .on_backpressure([](size_t) { /* queue pressure changed */ })
     .build();
 ```
 
-The strategy can also be changed at runtime on a running transport:
-
-```cpp
-// Switch strategy dynamically (e.g. entering a high-rate burst mode)
-client->set_backpressure_strategy(BackpressureStrategy::BestEffort);
-```
+Configuration should normally be completed before `start()` or `auto_start(true)`.
 
 ### Thresholds
 
@@ -1056,15 +1059,25 @@ Unilink uses **Dynamic Defaults** for the backpressure threshold based on the se
 
 | Strategy | Default Threshold | Typical Use Case |
 | :--- | :--- | :--- |
-| `Reliable` | **4 MiB** | Commands, logs, file transfers |
+| `Reliable` | **1 MiB** | Commands, logs, file transfers |
 | `BestEffort` | **512 KiB** | LiDAR, Camera, Real-time state |
 
-A hard cap (`bp_limit_`) is automatically calculated as `max(threshold * 4, 4MB)` to prevent unbounded memory use while ensuring enough room for large individual messages.
+A hard cap (`bp_limit_`) is automatically calculated as `max(threshold * 4, 4 MiB)` to prevent unbounded memory use while ensuring enough room for large individual messages.
 
 | Parameter | Default | Notes |
 | :--- | :--- | :--- |
-| `backpressure_threshold` | *Dynamic* | 4MB for Reliable, 512KB for BestEffort |
+| `backpressure_threshold` | *Dynamic* | 1 MiB for Reliable, 512 KiB for BestEffort |
 | Hard cap (`bp_limit_`) | ≥ 4 MiB | Per-message reject limit |
+
+### Transport Meaning
+
+| Transport | Backpressure meaning |
+|----------|----------------------|
+| TCP client | Local outgoing queue pressure |
+| TCP server | Per-client/session outgoing queue pressure |
+| Serial | Local outgoing queue pressure |
+| UDP client/server | Local outgoing queue pressure only; no receiver-side flow control |
+| UDS client/server | Local outgoing queue pressure |
 
 ---
 

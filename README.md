@@ -22,7 +22,7 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 ## Feature Highlights
 
 * **Unified transport surface**: Consistent builders and wrappers for TCP client/server, UDP, Serial, and UDS.
-* **Zero-copy memory safety via SafeSpan**: Efficient data handling without unnecessary copies.
+* **Callback-scoped data views**: Avoid unnecessary copies during callbacks, with explicit ownership-copy helpers for stored data.
 * **Fluent API with CRTP Builders**: Type-safe configuration with improved method chaining.
 * **Tested runtime behavior**: Unit, integration, and end-to-end test suites are part of the repository and documented in `test/`.
 

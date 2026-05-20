@@ -129,7 +129,7 @@ Unilink provides two strategies for handling full queues:
 
 | Strategy | Behavior | Best For |
 |:---|:---|:---|
-| `Reliable` (Default) | Retains all data and applies backpressure based on the configured threshold (default: 4 MiB), bounded by system buffer limits (up to 64MB). | Reliable data (files, logs, commands). |
+| `Reliable` (Default) | Preserves queued outgoing data until the configured threshold is reached (default: 1 MiB), bounded by internal queue limits. | Reliable data (files, logs, commands). |
 | `BestEffort` | Drops oldest data when a threshold is reached. | Real-time sensors (LiDAR, Video, Telemetry). |
 
 ### 2. High-Throughput Sensors (LiDAR/Camera)
@@ -153,12 +153,12 @@ a large backlog to drain.
 
 ### 3. Critical Reliable Data
 
-For data that must not be lost, use `Reliable` combined with **Flow Control** in your application.
+For data where local queue drops are unacceptable, use `Reliable` combined with application-level send throttling.
 
 ```cpp
 bool paused = false;
 client->on_backpressure([&paused](size_t queued) {
-    // If queue exceeds 12MB, pause sending; resume when below 4MB
+    // Pause/resume based on your application's queued-byte budget.
     if (queued > 12 * 1024 * 1024) paused = true;
     else if (queued < 4 * 1024 * 1024) paused = false;
 });

@@ -37,7 +37,7 @@ sequenceDiagram
     IO->>IO: Execute on_data callback
     Note over IO: ⚠️ Callbacks run in I/O thread<br/>Don't block here!
 
-    Note over App,Net: Thread-Safe API Calls
+    Note over App,Net: Concurrent Runtime Calls
     App->>Queue: Multiple threads can call
     App->>Queue: send(), stop(), etc.
     Queue->>IO: Serialized execution
@@ -47,20 +47,22 @@ sequenceDiagram
 
 ### Key Points
 
-#### ✅ Thread-Safe API Methods
+#### Concurrent Runtime Methods
 
-All public API methods are thread-safe and can be called from any thread:
+Runtime methods intended for concurrent application use are designed to be thread-safe. This includes methods such as `send()`, `try_send()`, `send_line()`, `stop()`, `connected()`, server `send_to()`, server `broadcast()`, and server state inspection helpers where available.
 
 ```cpp
-// Safe to call from multiple threads simultaneously
+// Runtime operations are safe to call from multiple application threads.
 std::thread t1([&client]() { client->send("data1"); });
 std::thread t2([&client]() { client->send("data2"); });
 std::thread t3([&client]() { client->stop(); });
 ```
 
+Callback registration and configuration setters should normally be completed before `start()` or `auto_start(true)`.
+
 **Implementation:**
 
-- All API calls are serialized through `boost::asio::post()`
+- Concurrent runtime operations are serialized through `boost::asio::post()`
 - Operations are queued and executed in the I/O thread
 - No manual locking required by users
 
@@ -86,6 +88,9 @@ auto client = unilink::tcp_client("server.com", 8080)
 - `on_disconnect()` - Connection lost
 - `on_data()` - Data received
 - `on_error()` - Error occurred
+- `on_backpressure()` - Sender-side queue pressure changed
+
+Callbacks should be short and non-blocking. If work must be moved to another thread, copy callback-scoped views first.
 
 ---
 
@@ -107,14 +112,15 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```cpp
 .on_data([](const unilink::MessageContext& ctx) {
     // ✅ GOOD: Offload to worker thread
-    std::string payload(ctx.data());
-    std::thread([payload]() {
+    std::string payload = ctx.data_as_string();
+    std::thread([payload = std::move(payload)]() {
         heavy_computation(payload);
         database_query(payload);
     }).detach();
 
     // Or use a thread pool
-    thread_pool.submit([payload]() {
+    std::string payload_for_pool = ctx.data_as_string();
+    thread_pool.submit([payload = std::move(payload_for_pool)]() {
         heavy_computation(payload);
     });
 })
@@ -149,9 +155,9 @@ boost::asio::post(io_context, [&client]() {
 | Aspect                  | Details                                            |
 | ----------------------- | -------------------------------------------------- |
 | **I/O Thread**          | Single dedicated thread running `io_context.run()` |
-| **Application Threads** | Any number of threads calling API methods          |
+| **Application Threads** | Any number of threads calling runtime operations   |
 | **Callback Thread**     | Always I/O thread                                  |
-| **Thread Safety**       | All API methods thread-safe via `post()`           |
+| **Thread Safety**       | Concurrent runtime operations serialized via `post()` |
 | **Synchronization**     | Automatic via Boost.Asio                           |
 
 ---
@@ -340,7 +346,9 @@ client.reset();
 
 ## Backpressure Handling
 
-When the send queue grows too large (network slower than application), `unilink` applies internal backpressure protection in the transport layer. Applications can monitor backpressure via the wrapper-level `on_backpressure` builder method callback, or implement additional rate limiting and queue monitoring at the application level.
+Backpressure is sender-side queue pressure. When the local outgoing queue grows too large because the transport is slower than the application, `unilink` applies internal backpressure protection in the transport layer. Applications can monitor queue pressure via the wrapper-level `on_backpressure` builder callback where supported, or implement additional rate limiting and queue monitoring at the application level.
+
+Backpressure does not mean the remote peer has processed data. For UDP, it only describes the local sender-side queue because UDP has no receiver-side flow control.
 
 ### Backpressure Flow
 
@@ -352,13 +360,13 @@ flowchart TD
     Check -->|No| Write[Continue Normal Write]
     Write --> Complete([Data Sent])
 
-    Check -->|Yes: queue_bytes > 1MB| Protect[Internal backpressure protection]
+    Check -->|Yes: queued bytes > threshold| Protect[Internal backpressure protection]
     Protect --> AppDecision{Application Decision}
 
     AppDecision -->|Pause Sending| Wait[Wait for queue to drain]
     AppDecision -->|Rate Limit| Throttle[Reduce send rate]
     AppDecision -->|Drop Data| Drop[Skip non-critical data]
-    AppDecision -->|Continue| Force[Force send anyway<br/>⚠️ May cause memory growth]
+    AppDecision -->|Continue| Force[Continue producing<br/>May fail or trigger protection]
 
     Wait --> Monitor{Queue Size ><br/>Threshold?}
     Monitor -->|Still high| Wait
@@ -380,7 +388,7 @@ flowchart TD
 
 Use transport-layer configuration if you need direct queue-threshold control. At the wrapper level, keep your own send budget and stop producing data when downstream systems slow down.
 
-**Default threshold:** 1 MB (1,048,576 bytes)  
+**Default threshold:** Reliable defaults to 1 MiB; BestEffort defaults to 512 KiB when selected through the builder. Base transport configuration defaults to 1 MiB.
 **Configurable range:** 1 KB - 100 MB  
 **Safety cap:** ~4x the high watermark (capped at 64 MB) triggers automatic close + Error state
 
@@ -464,7 +472,7 @@ Backpressure handling ensures:
 - ✅ Queue size is monitored continuously
 - ✅ Queue growth is bounded internally in the transport layer
 - ✅ Applications can add their own send throttling policy
-- ✅ Wrapper-level backpressure callbacks are available via the `on_backpressure` builder method
+- ✅ Wrapper-level backpressure notifications are available via the `on_backpressure` builder method where supported
 - ✅ Memory pools reduce allocation overhead for small buffers (<64KB)
 
 ---
@@ -519,7 +527,7 @@ Backpressure handling ensures:
 #### ❌ DON'T
 
 - Ignore backpressure callbacks
-- Assume unlimited memory
+- Assume queue memory is unbounded
 - Send without rate limiting
 - Forget to handle high-load scenarios
 
