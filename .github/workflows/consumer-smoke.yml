@@ -1,0 +1,67 @@
+name: Consumer Smoke
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - 'unilink/**'
+      - 'scripts/verify_installed_consumer.sh'
+      - '.github/workflows/consumer-smoke.yml'
+      - '.github/actions/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - 'unilink/**'
+      - 'scripts/verify_installed_consumer.sh'
+      - '.github/workflows/consumer-smoke.yml'
+      - '.github/actions/**'
+  workflow_dispatch:
+
+env:
+  CXX_STANDARD: 20
+
+jobs:
+  installed-consumer:
+    name: Installed consumer (${{ matrix.os }}, ${{ matrix.library_mode }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            triplet: x64-linux
+            library_mode: shared
+          - os: ubuntu-24.04
+            triplet: x64-linux
+            library_mode: static
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install tools
+        uses: ./.github/actions/apt-install
+        with:
+          packages: "build-essential cmake ninja-build"
+
+      - name: Install dependencies with vcpkg
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: ${{ matrix.triplet }}
+
+      - name: Run installed consumer smoke
+        run: |
+          scripts/verify_installed_consumer.sh \
+            --library-mode "${{ matrix.library_mode }}" \
+            --build-dir "build/consumer-${{ matrix.library_mode }}" \
+            --install-prefix "build/install-${{ matrix.library_mode }}" \
+            --consumer-dir "build/consumer-app-${{ matrix.library_mode }}"
