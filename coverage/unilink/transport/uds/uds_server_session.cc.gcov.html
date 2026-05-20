@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-20 11:13:58</td>
+            <td class="headerValue">2026-05-20 13:09:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">96.3&nbsp;%</td>
@@ -135,8 +135,8 @@
 <span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          20 :   });</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          20 : }</span></span>
 <span id="L59"><span class="lineNum">      59</span>                 :             : </span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">           9 : void UdsServerSession::stop() {</span></span>
-<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">           9 :   if (closing_.exchange(true)) return;</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          10 : void UdsServerSession::stop() {</span></span>
+<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">          10 :   if (closing_.exchange(true)) return;</span></span>
 <span id="L62"><span class="lineNum">      62</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           7 :   net::post(strand_, [this, self = shared_from_this()]() {</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           7 :     on_bytes_ = nullptr;</span></span>
 <span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">           7 :     on_bp_ = nullptr;</span></span>
