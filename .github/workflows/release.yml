@@ -211,19 +211,105 @@ jobs:
           done
           ls -la package/
 
-      - name: Show package contents (Unix)
+      - name: Verify package files exist
+        shell: bash
+        run: |
+          echo "Package directory:"
+          ls -la build/package
+
+          count=$(find build/package -maxdepth 1 -type f \( -name "unilink-*.tar.gz" -o -name "unilink-*.zip" -o -name "unilink-*.dmg" \) | wc -l | tr -d ' ')
+          if [ "$count" -eq 0 ]; then
+            echo "No release package files found"
+            exit 1
+          fi
+
+          echo "Release package files:"
+          find build/package -maxdepth 1 -type f \( -name "unilink-*.tar.gz" -o -name "unilink-*.zip" -o -name "unilink-*.dmg" \) -print | sort
+
+      - name: Verify package contents (TGZ)
         if: runner.os != 'Windows'
         shell: bash
-        run: tar -tzf build/package/unilink-*.tar.gz | sed -n '1,20p'
+        run: |
+          pkg=$(find build/package -maxdepth 1 -name 'unilink-*.tar.gz' | head -n1)
+          if [ -z "$pkg" ]; then
+            echo "No TGZ package found"
+            exit 1
+          fi
+
+          echo "Checking package: $pkg"
+          tar -tzf "$pkg" | tee package-files.txt | sed -n '1,80p'
+
+          grep -E '/include/unilink/unilink.hpp$' package-files.txt
+          grep -E '/lib/(lib)?unilink[^/]*\.(a|so|dylib)(\.[0-9.]+)?$|/bin/unilink[^/]*\.(dll|exe)$' package-files.txt
+          grep -E '/unilinkConfig\.cmake$' package-files.txt
+          grep -E '/unilinkTargets\.cmake$' package-files.txt
+          grep -E '/LICENSE$' package-files.txt
+          grep -E '/NOTICE$' package-files.txt
+          grep -E '/README\.md$' package-files.txt
+
+      - name: Verify package contents (ZIP)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $pkg = Get-ChildItem build/package -Filter "unilink-*.zip" | Select-Object -First 1
+          if (-not $pkg) {
+            Write-Error "No ZIP package found"
+            exit 1
+          }
+
+          Write-Host "Checking package: $($pkg.FullName)"
+          $dest = "build/package-check"
+          if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
+          New-Item -ItemType Directory -Path $dest | Out-Null
+
+          Expand-Archive -Path $pkg.FullName -DestinationPath $dest
+
+          Get-ChildItem -Recurse $dest | Select-Object -First 80 | ForEach-Object { $_.FullName }
+
+          $libraryFiles = Get-ChildItem -Recurse $dest | Where-Object {
+            $_.FullName -match '[\\/](lib|bin)[\\/]' -and $_.Name -match '^(unilink|libunilink).*\.(dll|lib|a)$'
+          }
+          if (-not $libraryFiles) {
+            Write-Error "Missing unilink library output under lib/ or bin/"
+            exit 1
+          }
+          if (-not (Get-ChildItem -Recurse $dest -Filter "unilink.hpp")) {
+            Write-Error "Missing unilink.hpp"
+            exit 1
+          }
+          if (-not (Get-ChildItem -Recurse $dest -Filter "unilinkConfig.cmake")) {
+            Write-Error "Missing unilinkConfig.cmake"
+            exit 1
+          }
+          if (-not (Get-ChildItem -Recurse $dest -Filter "unilinkTargets.cmake")) {
+            Write-Error "Missing unilinkTargets.cmake"
+            exit 1
+          }
+          if (-not (Get-ChildItem -Recurse $dest -Filter "LICENSE")) {
+            Write-Error "Missing LICENSE"
+            exit 1
+          }
+          if (-not (Get-ChildItem -Recurse $dest -Filter "NOTICE")) {
+            Write-Error "Missing NOTICE"
+            exit 1
+          }
+          if (-not (Get-ChildItem -Recurse $dest -Filter "README.md")) {
+            Write-Error "Missing README.md"
+            exit 1
+          }
 
       - name: Summary
         shell: bash
         run: |
           echo "## Release Summary - ${{ matrix.os }}" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Build: Success" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Package: Created" >> $GITHUB_STEP_SUMMARY
-          ls -la build/package/ >> $GITHUB_STEP_SUMMARY
+          echo "Build: Success" >> $GITHUB_STEP_SUMMARY
+          echo "Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "Package: Created" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Package files" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          find build/package -maxdepth 1 -type f -name "unilink-*" -print | sort >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Release Asset
         if: github.event_name == 'push' || inputs.upload == true || inputs.upload == 'true'

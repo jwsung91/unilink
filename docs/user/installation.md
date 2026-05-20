@@ -79,44 +79,63 @@ Pre-built binary packages are available from GitHub Releases.
 
 #### Step 1: Download and extract
 
-Choose the archive matching your OS and architecture. Replace `${VERSION}` with the current version number (found in the root `CMakeLists.txt`).
+Choose the archive matching your OS and architecture. Release assets use this naming pattern:
 
-- **Linux**: `.tar.gz` (e.g. `unilink-${VERSION}-Linux-x86_64.tar.gz` or `unilink-${VERSION}-Linux-aarch64.tar.gz`)
-- **macOS**: `.tar.gz`, `.dmg`
-- **Windows**: `.zip`
+```text
+unilink-${VERSION}-${OS_LABEL}-${ARCH}.${EXT}
+```
+
+`VERSION` is the package version from the release asset name. It normally matches the root `CMakeLists.txt` project version for the GitHub Release. For example, a `v0.1.0` release typically publishes assets named with `0.1.0`.
+
+Common asset names:
+
+| Platform           | Asset                                                   |
+| ------------------ | ------------------------------------------------------- |
+| Ubuntu 22.04 x64   | `unilink-${VERSION}-ubuntu-22.04-amd64.tar.gz`          |
+| Ubuntu 22.04 ARM64 | `unilink-${VERSION}-ubuntu-22.04-arm64.tar.gz`          |
+| Ubuntu 24.04 x64   | `unilink-${VERSION}-ubuntu-24.04-amd64.tar.gz`          |
+| Ubuntu 24.04 ARM64 | `unilink-${VERSION}-ubuntu-24.04-arm64.tar.gz`          |
+| macOS 15 ARM64     | `unilink-${VERSION}-macos-15-arm64.tar.gz`              |
+| macOS 15 DMG       | `unilink-${VERSION}-macos-15-arm64.dmg`                 |
+| Windows x64        | `unilink-${VERSION}-windows-amd64.zip`                  |
+| Windows ARM64      | `unilink-${VERSION}-windows-arm64.zip`                  |
 
 ```bash
-# Example for Linux x86_64
-export UNILINK_VERSION="${VERSION}"
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
-tar -xzf unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
-cd unilink-${UNILINK_VERSION}-Linux-x86_64
+# Example for Ubuntu 22.04 x64
+export UNILINK_VERSION="<latest-release-version>"
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-ubuntu-22.04-amd64.tar.gz
+tar -xzf unilink-${UNILINK_VERSION}-ubuntu-22.04-amd64.tar.gz
+cd unilink-${UNILINK_VERSION}-ubuntu-22.04-amd64
 ```
 
 ```bash
-# Example for Linux ARM64 / aarch64
-export UNILINK_VERSION="${VERSION}"
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-aarch64.tar.gz
-tar -xzf unilink-${UNILINK_VERSION}-Linux-aarch64.tar.gz
-cd unilink-${UNILINK_VERSION}-Linux-aarch64
+# Example for Ubuntu 22.04 ARM64 / aarch64
+export UNILINK_VERSION="<latest-release-version>"
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-ubuntu-22.04-arm64.tar.gz
+tar -xzf unilink-${UNILINK_VERSION}-ubuntu-22.04-arm64.tar.gz
+cd unilink-${UNILINK_VERSION}-ubuntu-22.04-arm64
 ```
 
 ARM64 release artifacts are intended to be produced from an Ubuntu 22.04 baseline so Jetson/Orin systems can consume the same package without relying on Ubuntu 24.04 userspace.
 
-#### Step 2: Install
+#### Step 2: Choose an install prefix
+
+Release archives are already laid out as an install prefix. You can use the extracted directory directly or copy it to a stable location.
 
 ```bash
-# System install
-sudo cmake --install .
+# Use the extracted directory directly
+export UNILINK_PREFIX="$PWD"
 
-# Custom prefix
-cmake --install . --prefix /opt/unilink
+# Or install under /opt/unilink on Unix
+sudo mkdir -p /opt/unilink
+sudo cp -a include lib share /opt/unilink/
+export UNILINK_PREFIX="/opt/unilink"
 ```
 
 #### Step 3: Use in your project
 
 ```cmake
-set(CMAKE_PREFIX_PATH "/opt/unilink")
+set(CMAKE_PREFIX_PATH "$ENV{UNILINK_PREFIX}")
 find_package(unilink CONFIG REQUIRED)
 ```
 
