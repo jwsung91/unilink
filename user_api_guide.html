@@ -235,6 +235,8 @@ Common Methods (All Builders)</h2>
 <td class="markdownTableBodyNone"><code>.build()</code>   </td><td class="markdownTableBodyNone"><b>Required</b>: Build the wrapper instance   </td><td class="markdownTableBodyNone">-   </td></tr>
 </table>
 <p>Default <code>None</code> means no callback is invoked.</p>
+<p><code>backpressure_threshold(bytes)</code> is measured in queued outgoing bytes, not message count.</p>
+<p><code>on_backpressure(...)</code> is a notification hook. It is not a blocking flow-control mechanism.</p>
 <h2><a class="anchor" id="autotoc_md482"></a>
 Callback Registration Policy</h2>
 <p>Callback registration is optional.</p>
@@ -293,11 +295,15 @@ Framed Message Handling</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>-&gt;stop()</code>   </td><td class="markdownTableBodyNone">Stop the connection    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>TcpClient</code> / <code>Serial</code> / <code>UdpClient</code> / <code>UdsClient</code>: <code>-&gt;send(data)</code> / <code>-&gt;send_line(text)</code>   </td><td class="markdownTableBodyNone">Send data to the configured peer    </td></tr>
+<td class="markdownTableBodyNone"><code>TcpClient</code> / <code>Serial</code> / <code>UdpClient</code> / <code>UdsClient</code>: <code>-&gt;send(data)</code> / <code>-&gt;try_send(data)</code> / <code>-&gt;send_line(text)</code>   </td><td class="markdownTableBodyNone">Send data to the configured peer    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>TcpClient</code> / <code>Serial</code> / <code>UdpClient</code> / <code>UdsClient</code>: <code>-&gt;connected()</code>   </td><td class="markdownTableBodyNone">Check channel state   </td></tr>
+<td class="markdownTableBodyNone"><code>TcpClient</code> / <code>Serial</code> / <code>UdpClient</code> / <code>UdsClient</code>: <code>-&gt;connected()</code>   </td><td class="markdownTableBodyNone">Check channel state    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>TcpServer</code> / <code>UdsServer</code>: <code>-&gt;broadcast(data)</code> / <code>-&gt;send_to(client_id, data)</code>   </td><td class="markdownTableBodyNone">Send data to one or more connected clients    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>TcpServer</code> / <code>UdsServer</code>: <code>-&gt;listening()</code>   </td><td class="markdownTableBodyNone">Check if the server socket is bound and listening   </td></tr>
 </table>
-<p>| <code>TcpServer</code> / <code>UdsServer</code>: <code>-&gt;broadcast(data)</code> / <code>-&gt;send_to(client_id, data)</code> | Send data to one or more connected clients | | <code>TcpServer</code> / <code>UdsServer</code>: <code>-&gt;listening()</code> | Check if the server socket is bound and listening |</p>
+<p>For producer loops that must not block, prefer <code>try_send()</code> or configure <code>BestEffort</code>. In <code>Reliable</code> mode, <code>send()</code> may wait for queue pressure to clear.</p>
 <p><b>Builder Flow</b></p>
 <div class="fragment"><div class="line">tcp_server(port)</div>
 <div class="line">    ↓ configure callbacks / limits / port retry</div>
@@ -1183,6 +1189,24 @@ Strategies</h2>
 <p><code>BestEffort</code> is inspired by DDS HISTORY QoS. It prioritizes freshness. When the queue exceeds the configured threshold, older queued data may be dropped to make room for newer data.</p>
 <p><code>on_backpressure(callback)</code> is a notification hook. It is not a blocking flow-control mechanism. The callback receives the current queued byte count when the queue crosses implementation-defined high/low watermark transitions. Backpressure callbacks follow the same callback execution model as other wrapper callbacks, so keep them short and non-blocking.</p>
 <h2><a class="anchor" id="autotoc_md575"></a>
+Send And Backpressure Semantics</h2>
+<p><code>unilink</code> separates send acceptance, queue preservation, and remote delivery.</p>
+<p>A successful <code>send()</code> or <code>try_send()</code> means that the payload was accepted by the local wrapper/transport send path. It does not guarantee that the remote peer has already received or processed the data.</p>
+<h3><a class="anchor" id="autotoc_md576"></a>
+Reliable</h3>
+<p><code>Reliable</code> is the default strategy. It prioritizes preserving queued outgoing data.</p>
+<p>In <code>Reliable</code> mode, <code>send()</code> may block when the local outgoing queue is under backpressure. Use <code>try_send()</code> when producer code must remain non-blocking.</p>
+<p>If the queue cannot accept more data, send APIs may return <code>false</code>.</p>
+<h3><a class="anchor" id="autotoc_md577"></a>
+BestEffort</h3>
+<p><code>BestEffort</code> prioritizes freshness over preserving every queued payload.</p>
+<p>In <code>BestEffort</code> mode, a successful send means the new payload was accepted into the local send path. It does not imply that older queued payloads were preserved. Older queued data may be dropped when queue pressure is high.</p>
+<p>This is useful for telemetry, sensor frames, or other freshness-oriented data where processing stale payloads is worse than dropping them.</p>
+<h3><a class="anchor" id="autotoc_md578"></a>
+Throughput Interpretation</h3>
+<p>Accepted throughput is not the same as delivered or received throughput.</p>
+<p>For <code>BestEffort</code>, evaluate behavior using received throughput, delivery rate, queue depth, and drop metrics when available, not accepted throughput alone.</p>
+<h2><a class="anchor" id="autotoc_md579"></a>
 When to use each</h2>
 <p><b>Use <code>Reliable</code> (default) when:</b></p><ul>
 <li>Reliability is critical: file transfers, command sequences, logs, financial data</li>
@@ -1194,7 +1218,7 @@ When to use each</h2>
 <li>You are streaming robot joint angles, camera frames, or GNSS positions over a slow link</li>
 <li>A stale value is worse than a dropped value</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md576"></a>
+<h2><a class="anchor" id="autotoc_md580"></a>
 C++ Usage</h2>
 <p>Set the strategy via the transport config before starting:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
@@ -1231,7 +1255,7 @@ C++ Usage</h2>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a006597a9daa6b0e6dbc618775978a09a"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a006597a9daa6b0e6dbc618775978a09a">unilink::builder::BuilderInterface::backpressure_threshold</a></div><div class="ttdeci">Derived &amp; backpressure_threshold(size_t threshold)</div><div class="ttdoc">Set the backpressure threshold in bytes.</div><div class="ttdef"><b>Definition</b> <a href="ibuilder_8hpp_source.html#l00240">ibuilder.hpp:240</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_1_1constants_html_af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230"><div class="ttname"><a href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0aab4ee632ee2b420e4c4954189eafa9230">unilink::base::constants::BackpressureStrategy::BestEffort</a></div><div class="ttdeci">@ BestEffort</div></div>
 </div><!-- fragment --><p>Configuration should normally be completed before <code>start()</code> or <code>auto_start(true)</code>.</p>
-<h2><a class="anchor" id="autotoc_md577"></a>
+<h2><a class="anchor" id="autotoc_md581"></a>
 Thresholds</h2>
 <p>Unilink uses <b>Dynamic Defaults</b> for the backpressure threshold based on the selected strategy. If you do not explicitly set a threshold, the following values are used:</p>
 <table class="markdownTable">
@@ -1251,7 +1275,7 @@ Thresholds</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft">Hard cap (<code>bp_limit_</code>)   </td><td class="markdownTableBodyLeft">≥ 4 MiB   </td><td class="markdownTableBodyLeft">Per-message reject limit   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md578"></a>
+<h2><a class="anchor" id="autotoc_md582"></a>
 Transport Meaning</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -1268,9 +1292,9 @@ Transport Meaning</h2>
 <td class="markdownTableBodyNone">UDS client/server   </td><td class="markdownTableBodyNone">Local outgoing queue pressure   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md580"></a>
+<h1><a class="anchor" id="autotoc_md584"></a>
 Security</h1>
-<h2><a class="anchor" id="autotoc_md581"></a>
+<h2><a class="anchor" id="autotoc_md585"></a>
 Validate All Input</h2>
 <p>Always validate data received from the network before processing it.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
@@ -1284,7 +1308,7 @@ Validate All Input</h2>
 <div class="line">    }</div>
 <div class="line">    process_message(msg);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md582"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md586"></a>
 Rate Limiting</h2>
 <p>Protect your server from abuse by limiting requests per client.</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>RateLimiter {</div>
@@ -1306,7 +1330,7 @@ Rate Limiting</h2>
 <div class="line">    <span class="keywordflow">if</span> (!limiter.is_allowed(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>())) <span class="keywordflow">return</span>;</div>
 <div class="line">    process_data(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972">client_id</a>(), std::string(ctx.<a class="code hl_function" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>()));</div>
 <div class="line">});</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md583"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md587"></a>
 Connection Limits</h2>
 <p>Use <code>.multi_client(N)</code> to cap simultaneous connections, or enforce limits manually:</p>
 <div class="fragment"><div class="line"><span class="comment">// Built-in limit via builder</span></div>
@@ -1320,7 +1344,7 @@ Connection Limits</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 14:36:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

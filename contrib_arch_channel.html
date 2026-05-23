@@ -217,6 +217,13 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <h1><a class="anchor" id="autotoc_md6"></a>
 4. Backpressure Policy</h1>
 <p>To prevent memory exhaustion and manage sender-side queue pressure, channels implement a backpressure mechanism based on the size of the internal write queue.</p>
+<p>Backpressure is a sender-side queue management mechanism. It does not guarantee that the remote peer has processed data.</p>
+<p>A transport may accept a new payload while dropping older queued payloads when using a freshness-oriented policy such as <code>BestEffort</code>.</p>
+<p>A rejected send and a dropped queued payload are different events:</p>
+<ul>
+<li>rejected send: the new payload was not accepted into the local send path</li>
+<li>dropped queued payload: an older queued payload was removed after a newer payload was accepted</li>
+</ul>
 <p><b>Contract Rules:</b></p><ol type="1">
 <li><b>Triggering (High Watermark):</b> When the size of queued write data (bytes pending transmission) reaches or exceeds the configured <code>backpressure_threshold</code>, the transport MUST invoke its internal <code>on_backpressure</code> callback with the current queue size. Wrapper and builder APIs may expose backpressure notifications where the wrapper supports them. See the user API guide for public callback availability.</li>
 <li><b>Relieving (Low Watermark):</b> Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as <code>threshold / 2</code> or <code>0</code> depending on implementation, but must be strictly less than the high watermark), the transport MUST invoke its internal <code>on_backpressure</code> callback with the new lower queue size.</li>
@@ -229,6 +236,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <li><b>Note:</b> Public wrapper-level backpressure notification is exposed through the wrapper/builder API where supported, but applications should treat it as queue-pressure notification rather than protocol-level flow control.</li>
 </ul>
 </li>
+<li><b>UDP:</b> Backpressure applies only to the local sender-side queue. UDP does not provide receiver-side flow control or delivery guarantees.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md7"></a>
 5. Error Handling Consistency</h1>
@@ -301,7 +309,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 14:36:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

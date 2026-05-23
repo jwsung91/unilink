@@ -222,6 +222,7 @@ Key Points</h2>
 <h3><a class="anchor" id="autotoc_md177"></a>
 Concurrent Runtime Methods</h3>
 <p>Runtime methods intended for concurrent application use are designed to be thread-safe. This includes methods such as <code>send()</code>, <code>try_send()</code>, <code>send_line()</code>, <code>stop()</code>, <code>connected()</code>, server <code>send_to()</code>, server <code>broadcast()</code>, and server state inspection helpers where available.</p>
+<p>Thread-safe does not mean non-blocking. In <code>Reliable</code> mode, <code>send()</code> may wait for backpressure to clear. Use <code>try_send()</code> for non-blocking producer loops.</p>
 <div class="fragment"><div class="line"><span class="comment">// Runtime operations are safe to call from multiple application threads.</span></div>
 <div class="line">std::thread t1([&amp;client]() { client-&gt;send(<span class="stringliteral">&quot;data1&quot;</span>); });</div>
 <div class="line">std::thread t2([&amp;client]() { client-&gt;send(<span class="stringliteral">&quot;data2&quot;</span>); });</div>
@@ -495,6 +496,13 @@ Reconnection Best Practices</h2>
 Backpressure Handling</h1>
 <p>Backpressure is sender-side queue pressure. When the local outgoing queue grows too large because the transport is slower than the application, <code>unilink</code> applies internal backpressure protection in the transport layer. Applications can monitor queue pressure via the wrapper-level <code>on_backpressure</code> builder callback where supported, or implement additional rate limiting and queue monitoring at the application level.</p>
 <p>Backpressure does not mean the remote peer has processed data. For UDP, it only describes the local sender-side queue because UDP has no receiver-side flow control.</p>
+<p>Applications that produce data faster than the transport can send it should choose an explicit policy:</p>
+<ul>
+<li>use <code>Reliable</code> when completeness is more important than latency</li>
+<li>use <code>BestEffort</code> when freshness is more important than preserving every queued payload</li>
+<li>use <code>try_send()</code> when producer threads must not block</li>
+<li>monitor queue pressure and dropped data when available</li>
+</ul>
 <h2><a class="anchor" id="autotoc_md210"></a>
 Backpressure Flow</h2>
 <p><br  />
@@ -692,7 +700,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed May 20 2026 14:36:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
