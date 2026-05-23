@@ -5,6 +5,6 @@ var searchData=
   ['5_20raii_20resource_20acquisition_20is_20initialization_2',['5. RAII (Resource Acquisition Is Initialization)',['../contrib_arch.html#autotoc_md121',1,'']]],
   ['5_20release_20assets_3',['5. Release Assets',['../contrib_release_checklist.html#autotoc_md375',1,'']]],
   ['5_20sanitizers_4',['5. Sanitizers',['../contrib_arch_memory.html#autotoc_md80',1,'']]],
-  ['5_20use_20member_20functions_20for_20oop_20design_5',['5. Use Member Functions for OOP Design',['../user_api_guide.html#autotoc_md567',1,'']]],
+  ['5_20use_20member_20functions_20for_20oop_20design_5',['5. Use Member Functions for OOP Design',['../user_api_guide.html#autotoc_md568',1,'']]],
   ['5_3a_20build_20with_20specific_20compiler_6',['Example 5: Build with Specific Compiler',['../contrib_build.html#autotoc_md292',1,'']]]
 ];

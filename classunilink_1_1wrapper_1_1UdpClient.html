@@ -244,6 +244,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7d722cdd17b55bf28d1d8519b821c0a9" id="r_a7d722cdd17b55bf28d1d8519b821c0a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a7d722cdd17b55bf28d1d8519b821c0a9">try_send_line</a> (std::string_view line) override</td></tr>
 <tr class="memdesc:a7d722cdd17b55bf28d1d8519b821c0a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
 <tr class="separator:a7d722cdd17b55bf28d1d8519b821c0a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b9f3021878016dfc5d7a791f96bd140" id="r_a8b9f3021878016dfc5d7a791f96bd140"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a8b9f3021878016dfc5d7a791f96bd140">send_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
+<tr class="memdesc:a8b9f3021878016dfc5d7a791f96bd140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a vector payload by transferring ownership, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a8b9f3021878016dfc5d7a791f96bd140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4ae89a7fc2227c82c7ce5deab5704b6" id="r_aa4ae89a7fc2227c82c7ce5deab5704b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aa4ae89a7fc2227c82c7ce5deab5704b6">try_send_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
+<tr class="memdesc:aa4ae89a7fc2227c82c7ce5deab5704b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking ownership-transfer send.  <br /></td></tr>
+<tr class="separator:aa4ae89a7fc2227c82c7ce5deab5704b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec444b7354ea0a7f8600d108c02d2af9" id="r_aec444b7354ea0a7f8600d108c02d2af9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aec444b7354ea0a7f8600d108c02d2af9">send_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data) override</td></tr>
+<tr class="memdesc:aec444b7354ea0a7f8600d108c02d2af9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue an immutable shared vector payload, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:aec444b7354ea0a7f8600d108c02d2af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80644162d553926a57589a9489a06898" id="r_a80644162d553926a57589a9489a06898"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a80644162d553926a57589a9489a06898">try_send_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data) override</td></tr>
+<tr class="memdesc:a80644162d553926a57589a9489a06898"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking shared-buffer send.  <br /></td></tr>
+<tr class="separator:a80644162d553926a57589a9489a06898"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad16cce62431aa696336ba43b47a422b8" id="r_ad16cce62431aa696336ba43b47a422b8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#ad16cce62431aa696336ba43b47a422b8">connected</a> () const override</td></tr>
 <tr class="separator:ad16cce62431aa696336ba43b47a422b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfda6e0aa5c176cacc233513defa2818" id="r_adfda6e0aa5c176cacc233513defa2818"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1wrapper_1_1RuntimeStats.html">RuntimeStats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#adfda6e0aa5c176cacc233513defa2818">stats</a> () const override</td></tr>
@@ -307,7 +319,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Modernized UDP Wrapper. </p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8hpp_source.html#l00047">47</a> of file <a class="el" href="wrapper_2udp_2udp_8hpp_source.html">udp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8hpp_source.html#l00048">48</a> of file <a class="el" href="wrapper_2udp_2udp_8hpp_source.html">udp.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8f40701ae6bc6f771fb5280ea06f0073" name="a8f40701ae6bc6f771fb5280ea06f0073"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f40701ae6bc6f771fb5280ea06f0073">&#9670;&#160;</a></span>UdpClient() <span class="overload">[1/5]</span></h2>
@@ -333,7 +345,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00412">412</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00451">451</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -363,7 +375,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00413">413</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00452">452</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -391,7 +403,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00415">415</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00454">454</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -499,7 +511,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a0be9ef3024aa184ef1f269de5818fce6">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00481">481</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00528">528</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -526,7 +538,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00493">493</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00540">540</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -546,7 +558,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00487">487</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00534">534</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -566,7 +578,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00515">515</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00562">562</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -586,7 +598,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00509">509</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00556">556</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -615,7 +627,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00429">429</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00476">476</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -653,7 +665,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae4d31378b6d7df475b6dd89a53ed2ea7">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00468">468</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00515">515</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -673,7 +685,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00504">504</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00551">551</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -712,7 +724,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aab51ca2988d45a77f9f611518c27374b">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00462">462</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00509">509</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -742,7 +754,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a7ccebfd1ca90fadac61ea71d7c695c5a">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00446">446</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00493">493</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -772,7 +784,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a224eb09b48d5949b4703453c1d962e62">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00436">436</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00483">483</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -804,7 +816,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a203b730e7939654f6f5a13c3211dbd32">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00441">441</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00488">488</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -834,7 +846,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a66634563d389183767a929be3bdc10a8">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00451">451</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00498">498</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -864,7 +876,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00456">456</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00503">503</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -902,7 +914,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a18914bd90699c0925677760b42814993">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00472">472</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00519">519</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -934,7 +946,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aa00e90b812175cdfd977a9c52fae35fd">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00476">476</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00523">523</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1027,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af1c6311b4e821e312a75a246e0ba481a">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00434">434</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00481">481</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1051,7 +1063,7 @@ false Data was dropped (not connected, or BestEffort queue full). </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00423">423</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00462">462</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1087,7 +1099,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86c5b4222bc621a8dd0ec8e7a2ca9226">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00427">427</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00474">474</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1122,7 +1134,7 @@ false Data was dropped. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00425">425</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00464">464</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1169,79 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aa5851fe0dbc0eea11e5ee94d6f3e72d2">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00428">428</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00475">475</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="a8b9f3021878016dfc5d7a791f96bd140" name="a8b9f3021878016dfc5d7a791f96bd140"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b9f3021878016dfc5d7a791f96bd140">&#9670;&#160;</a></span>send_move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpClient::send_move </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enqueue a vector payload by transferring ownership, honouring the backpressure strategy. </p>
+<p>After this call, the caller must treat the moved-from vector as consumed regardless of the return value. Existing string_view send APIs remain available for borrowed data.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a9cdf237812f4b82d3dd2f935d0323fd9">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00466">466</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="aec444b7354ea0a7f8600d108c02d2af9" name="aec444b7354ea0a7f8600d108c02d2af9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec444b7354ea0a7f8600d108c02d2af9">&#9670;&#160;</a></span>send_shared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpClient::send_shared </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enqueue an immutable shared vector payload, honouring the backpressure strategy. </p>
+<p>The shared buffer must be non-null and non-empty.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2b94c1a058878d67fd021108c5c8ec94">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00468">468</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1189,7 +1273,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2060c51ac6a3120e7245cef5117dc021">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00421">421</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00460">460</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -1232,7 +1316,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a76316593164594b80e25825860a0d328">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00433">433</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00480">480</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1264,7 +1348,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00422">422</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00461">461</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1300,7 +1384,7 @@ false Dropped (not connected or queue full). </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6b2212d41ed3f4ec66f7e783e607c22f">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00424">424</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00463">463</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1335,7 +1419,79 @@ false Dropped. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad85f6064ab3b5f575bbaa3c87dc1c102">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00426">426</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00465">465</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="aa4ae89a7fc2227c82c7ce5deab5704b6" name="aa4ae89a7fc2227c82c7ce5deab5704b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4ae89a7fc2227c82c7ce5deab5704b6">&#9670;&#160;</a></span>try_send_move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpClient::try_send_move </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking ownership-transfer send. </p>
+<p>Always returns without waiting for backpressure. The moved-from vector is consumed regardless of the return value.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a33cad8d457df26cb1dbbe410ecf8b516">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00467">467</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="a80644162d553926a57589a9489a06898" name="a80644162d553926a57589a9489a06898"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80644162d553926a57589a9489a06898">&#9670;&#160;</a></span>try_send_shared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::UdpClient::try_send_shared </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking shared-buffer send. </p>
+<p>The shared buffer must be non-null and non-empty.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a712e0ebe7d66f34f45cb12626f91f3a3">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00471">471</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1349,7 +1505,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html">UdpClient</a></li>
-    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

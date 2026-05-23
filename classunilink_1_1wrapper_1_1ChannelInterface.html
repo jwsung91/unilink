@@ -245,6 +245,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad85f6064ab3b5f575bbaa3c87dc1c102" id="r_ad85f6064ab3b5f575bbaa3c87dc1c102"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad85f6064ab3b5f575bbaa3c87dc1c102">try_send_line</a> (std::string_view line)=0</td></tr>
 <tr class="memdesc:ad85f6064ab3b5f575bbaa3c87dc1c102"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
 <tr class="separator:ad85f6064ab3b5f575bbaa3c87dc1c102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cdf237812f4b82d3dd2f935d0323fd9" id="r_a9cdf237812f4b82d3dd2f935d0323fd9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a9cdf237812f4b82d3dd2f935d0323fd9">send_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data)=0</td></tr>
+<tr class="memdesc:a9cdf237812f4b82d3dd2f935d0323fd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a vector payload by transferring ownership, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a9cdf237812f4b82d3dd2f935d0323fd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33cad8d457df26cb1dbbe410ecf8b516" id="r_a33cad8d457df26cb1dbbe410ecf8b516"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a33cad8d457df26cb1dbbe410ecf8b516">try_send_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data)=0</td></tr>
+<tr class="memdesc:a33cad8d457df26cb1dbbe410ecf8b516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking ownership-transfer send.  <br /></td></tr>
+<tr class="separator:a33cad8d457df26cb1dbbe410ecf8b516"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b94c1a058878d67fd021108c5c8ec94" id="r_a2b94c1a058878d67fd021108c5c8ec94"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2b94c1a058878d67fd021108c5c8ec94">send_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data)=0</td></tr>
+<tr class="memdesc:a2b94c1a058878d67fd021108c5c8ec94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue an immutable shared vector payload, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a2b94c1a058878d67fd021108c5c8ec94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a712e0ebe7d66f34f45cb12626f91f3a3" id="r_a712e0ebe7d66f34f45cb12626f91f3a3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a712e0ebe7d66f34f45cb12626f91f3a3">try_send_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data)=0</td></tr>
+<tr class="memdesc:a712e0ebe7d66f34f45cb12626f91f3a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking shared-buffer send.  <br /></td></tr>
+<tr class="separator:a712e0ebe7d66f34f45cb12626f91f3a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a224eb09b48d5949b4703453c1d962e62" id="r_a224eb09b48d5949b4703453c1d962e62"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a224eb09b48d5949b4703453c1d962e62">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler)=0</td></tr>
 <tr class="separator:a224eb09b48d5949b4703453c1d962e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a203b730e7939654f6f5a13c3211dbd32" id="r_a203b730e7939654f6f5a13c3211dbd32"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a203b730e7939654f6f5a13c3211dbd32">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a99c2b03add0a2f596bd2227f7e70bedc">BatchMessageHandler</a> handler)=0</td></tr>
@@ -493,7 +505,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a691435de162ec7a5cc4da3621f3d9260">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd0d53e98349d037b977c876a936535e">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a71f925263ff0e584ecaa90b5291a213c">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ac2723395fb6d0652997da82bc76d4e6e">unilink::wrapper::UdsClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00163">163</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00201">201</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -866,6 +878,74 @@ false Channel stopped while waiting. </dd></dl>
 
 </div>
 </div>
+<a id="a9cdf237812f4b82d3dd2f935d0323fd9" name="a9cdf237812f4b82d3dd2f935d0323fd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cdf237812f4b82d3dd2f935d0323fd9">&#9670;&#160;</a></span>send_move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::send_move </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enqueue a vector payload by transferring ownership, honouring the backpressure strategy. </p>
+<p>After this call, the caller must treat the moved-from vector as consumed regardless of the return value. Existing string_view send APIs remain available for borrowed data.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a1f61ad7c584a55ece3b05bd703f3a5cf">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a85c2795390adf6717c7ef63e8048a76e">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a8b9f3021878016dfc5d7a791f96bd140">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a854a69ab0263b80e6951775a48f4886e">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
+<a id="a2b94c1a058878d67fd021108c5c8ec94" name="a2b94c1a058878d67fd021108c5c8ec94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b94c1a058878d67fd021108c5c8ec94">&#9670;&#160;</a></span>send_shared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::send_shared </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enqueue an immutable shared vector payload, honouring the backpressure strategy. </p>
+<p>The shared buffer must be non-null and non-empty.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad6321b84e24a6f1a9a8e96b569b65789">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aa3bec2c5fedcac6aea653412de945754">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aec444b7354ea0a7f8600d108c02d2af9">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#afc9b8c53abfbcc77c9bf55f1bd6658e0">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
 <a id="a2060c51ac6a3120e7245cef5117dc021" name="a2060c51ac6a3120e7245cef5117dc021"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2060c51ac6a3120e7245cef5117dc021">&#9670;&#160;</a></span>start()</h2>
 
@@ -1050,6 +1130,74 @@ false Dropped. </dd></dl>
 
 </div>
 </div>
+<a id="a33cad8d457df26cb1dbbe410ecf8b516" name="a33cad8d457df26cb1dbbe410ecf8b516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33cad8d457df26cb1dbbe410ecf8b516">&#9670;&#160;</a></span>try_send_move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::try_send_move </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking ownership-transfer send. </p>
+<p>Always returns without waiting for backpressure. The moved-from vector is consumed regardless of the return value.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a09fa75d3ffb4fd6764b4c48679300fda">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aab335b8d9b3da1c43d997282d96334d1">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#aa4ae89a7fc2227c82c7ce5deab5704b6">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a6288fceb2b845c10779bd46b2539d7ee">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
+<a id="a712e0ebe7d66f34f45cb12626f91f3a3" name="a712e0ebe7d66f34f45cb12626f91f3a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a712e0ebe7d66f34f45cb12626f91f3a3">&#9670;&#160;</a></span>try_send_shared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::try_send_shared </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking shared-buffer send. </p>
+<p>The shared buffer must be non-null and non-empty.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad5a7c664eeeb5ce407f6389dcd3857d4">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a73f63a4092db7d6842c3713a32963a6a">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a80644162d553926a57589a9489a06898">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#aeb2c32a0b09865e4986f0a8e2cd9347c">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>unilink/wrapper/<a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a></li>
 </ul>
@@ -1059,7 +1207,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

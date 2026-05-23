@@ -245,6 +245,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af0f88a7d2ad73cb9d761b33052644200" id="r_af0f88a7d2ad73cb9d761b33052644200"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#af0f88a7d2ad73cb9d761b33052644200">try_send_line</a> (std::string_view line) override</td></tr>
 <tr class="memdesc:af0f88a7d2ad73cb9d761b33052644200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking send_line that always drops on a full queue, ignoring strategy.  <br /></td></tr>
 <tr class="separator:af0f88a7d2ad73cb9d761b33052644200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f61ad7c584a55ece3b05bd703f3a5cf" id="r_a1f61ad7c584a55ece3b05bd703f3a5cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a1f61ad7c584a55ece3b05bd703f3a5cf">send_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
+<tr class="memdesc:a1f61ad7c584a55ece3b05bd703f3a5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a vector payload by transferring ownership, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:a1f61ad7c584a55ece3b05bd703f3a5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09fa75d3ffb4fd6764b4c48679300fda" id="r_a09fa75d3ffb4fd6764b4c48679300fda"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a09fa75d3ffb4fd6764b4c48679300fda">try_send_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
+<tr class="memdesc:a09fa75d3ffb4fd6764b4c48679300fda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking ownership-transfer send.  <br /></td></tr>
+<tr class="separator:a09fa75d3ffb4fd6764b4c48679300fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6321b84e24a6f1a9a8e96b569b65789" id="r_ad6321b84e24a6f1a9a8e96b569b65789"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad6321b84e24a6f1a9a8e96b569b65789">send_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data) override</td></tr>
+<tr class="memdesc:ad6321b84e24a6f1a9a8e96b569b65789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue an immutable shared vector payload, honouring the backpressure strategy.  <br /></td></tr>
+<tr class="separator:ad6321b84e24a6f1a9a8e96b569b65789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a7c664eeeb5ce407f6389dcd3857d4" id="r_ad5a7c664eeeb5ce407f6389dcd3857d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad5a7c664eeeb5ce407f6389dcd3857d4">try_send_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt; data) override</td></tr>
+<tr class="memdesc:ad5a7c664eeeb5ce407f6389dcd3857d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking shared-buffer send.  <br /></td></tr>
+<tr class="separator:ad5a7c664eeeb5ce407f6389dcd3857d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b9f553c0f4fe67d316a9c30e391c3d8" id="r_a5b9f553c0f4fe67d316a9c30e391c3d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a5b9f553c0f4fe67d316a9c30e391c3d8">connected</a> () const override</td></tr>
 <tr class="separator:a5b9f553c0f4fe67d316a9c30e391c3d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78ffe70fb208f89214a7e9154458fc23" id="r_a78ffe70fb208f89214a7e9154458fc23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1wrapper_1_1RuntimeStats.html">RuntimeStats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a78ffe70fb208f89214a7e9154458fc23">stats</a> () const override</td></tr>
@@ -325,7 +337,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Modernized <a class="el" href="classunilink_1_1wrapper_1_1Serial.html" title="Modernized Serial Wrapper.">Serial</a> Wrapper. </p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8hpp_source.html#l00047">47</a> of file <a class="el" href="wrapper_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8hpp_source.html#l00048">48</a> of file <a class="el" href="wrapper_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa0f2fccb8e5d86b5e35b4cc0adebb66d" name="aa0f2fccb8e5d86b5e35b4cc0adebb66d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa0f2fccb8e5d86b5e35b4cc0adebb66d">&#9670;&#160;</a></span>Serial() <span class="overload">[1/5]</span></h2>
@@ -353,7 +365,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00455">455</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00502">502</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -389,7 +401,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00456">456</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00503">503</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -417,7 +429,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00458">458</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00505">505</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -525,7 +537,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a0be9ef3024aa184ef1f269de5818fce6">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00526">526</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00581">581</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -552,7 +564,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00573">573</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00628">628</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -572,7 +584,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00567">567</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00622">622</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -592,7 +604,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00599">599</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00654">654</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -612,7 +624,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00593">593</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00648">648</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -632,7 +644,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00532">532</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00587">587</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -659,7 +671,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00583">583</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00638">638</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -688,7 +700,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00474">474</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00529">529</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -708,7 +720,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00537">537</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00592">592</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -728,7 +740,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00552">552</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00607">607</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -766,7 +778,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae4d31378b6d7df475b6dd89a53ed2ea7">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00513">513</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00568">568</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -786,7 +798,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00588">588</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00643">643</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -825,7 +837,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aab51ca2988d45a77f9f611518c27374b">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00507">507</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00562">562</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -855,7 +867,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a7ccebfd1ca90fadac61ea71d7c695c5a">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00491">491</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00546">546</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -885,7 +897,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a224eb09b48d5949b4703453c1d962e62">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00481">481</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00536">536</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -917,7 +929,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a203b730e7939654f6f5a13c3211dbd32">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00486">486</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00541">541</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -947,7 +959,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a66634563d389183767a929be3bdc10a8">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00496">496</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00551">551</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -977,7 +989,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00501">501</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00556">556</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1027,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a18914bd90699c0925677760b42814993">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00517">517</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00572">572</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1047,7 +1059,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aa00e90b812175cdfd977a9c52fae35fd">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00521">521</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00576">576</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1119,7 +1131,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00547">547</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00602">602</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1148,7 +1160,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af1c6311b4e821e312a75a246e0ba481a">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00479">479</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00534">534</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1180,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00557">557</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00612">612</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1204,7 +1216,7 @@ false Data was dropped (not connected, or BestEffort queue full). </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00468">468</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00515">515</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1240,7 +1252,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86c5b4222bc621a8dd0ec8e7a2ca9226">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00472">472</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00527">527</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1275,7 +1287,7 @@ false Data was dropped. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00470">470</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00517">517</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1310,7 +1322,79 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aa5851fe0dbc0eea11e5ee94d6f3e72d2">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00473">473</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00528">528</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="a1f61ad7c584a55ece3b05bd703f3a5cf" name="a1f61ad7c584a55ece3b05bd703f3a5cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f61ad7c584a55ece3b05bd703f3a5cf">&#9670;&#160;</a></span>send_move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::Serial::send_move </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enqueue a vector payload by transferring ownership, honouring the backpressure strategy. </p>
+<p>After this call, the caller must treat the moved-from vector as consumed regardless of the return value. Existing string_view send APIs remain available for borrowed data.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a9cdf237812f4b82d3dd2f935d0323fd9">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00519">519</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="ad6321b84e24a6f1a9a8e96b569b65789" name="ad6321b84e24a6f1a9a8e96b569b65789"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6321b84e24a6f1a9a8e96b569b65789">&#9670;&#160;</a></span>send_shared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::Serial::send_shared </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enqueue an immutable shared vector payload, honouring the backpressure strategy. </p>
+<p>The shared buffer must be non-null and non-empty.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2b94c1a058878d67fd021108c5c8ec94">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00521">521</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1342,7 +1426,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2060c51ac6a3120e7245cef5117dc021">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00466">466</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00513">513</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -1385,7 +1469,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a76316593164594b80e25825860a0d328">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00478">478</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00533">533</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1417,7 +1501,7 @@ false Channel stopped while waiting. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00467">467</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00514">514</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1437,7 +1521,7 @@ false Channel stopped while waiting. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00542">542</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00597">597</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1473,7 +1557,7 @@ false Dropped (not connected or queue full). </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6b2212d41ed3f4ec66f7e783e607c22f">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00469">469</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00516">516</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1508,7 +1592,79 @@ false Dropped. </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad85f6064ab3b5f575bbaa3c87dc1c102">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00471">471</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00518">518</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="a09fa75d3ffb4fd6764b4c48679300fda" name="a09fa75d3ffb4fd6764b4c48679300fda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09fa75d3ffb4fd6764b4c48679300fda">&#9670;&#160;</a></span>try_send_move()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::Serial::try_send_move </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; uint8_t &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking ownership-transfer send. </p>
+<p>Always returns without waiting for backpressure. The moved-from vector is consumed regardless of the return value.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a33cad8d457df26cb1dbbe410ecf8b516">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00520">520</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="ad5a7c664eeeb5ce407f6389dcd3857d4" name="ad5a7c664eeeb5ce407f6389dcd3857d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a7c664eeeb5ce407f6389dcd3857d4">&#9670;&#160;</a></span>try_send_shared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::Serial::try_send_shared </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Non-blocking shared-buffer send. </p>
+<p>The shared buffer must be non-null and non-empty.</p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted. </dd>
+<dd>
+false Data was dropped or rejected. </dd></dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a712e0ebe7d66f34f45cb12626f91f3a3">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00524">524</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1522,7 +1678,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a></li>
-    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

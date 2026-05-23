@@ -33,9 +33,13 @@ var classunilink_1_1wrapper_1_1UdsClient =
     [ "send_blocking", "classunilink_1_1wrapper_1_1UdsClient.html#a16051f191494afecb289d407df70b86c", null ],
     [ "send_line", "classunilink_1_1wrapper_1_1UdsClient.html#a2f4b0a463087c84d0600d3e1966edc5a", null ],
     [ "send_line_blocking", "classunilink_1_1wrapper_1_1UdsClient.html#a2b232bfea432f1d987a580470a9dbdab", null ],
+    [ "send_move", "classunilink_1_1wrapper_1_1UdsClient.html#a854a69ab0263b80e6951775a48f4886e", null ],
+    [ "send_shared", "classunilink_1_1wrapper_1_1UdsClient.html#afc9b8c53abfbcc77c9bf55f1bd6658e0", null ],
     [ "start", "classunilink_1_1wrapper_1_1UdsClient.html#ae95799bd17d533a9f5d613a40d3a19c9", null ],
     [ "stats", "classunilink_1_1wrapper_1_1UdsClient.html#ae8509970a0e0975a3c31e01dbf676e48", null ],
     [ "stop", "classunilink_1_1wrapper_1_1UdsClient.html#af158de7b71848d08c1655e43bc5c39eb", null ],
     [ "try_send", "classunilink_1_1wrapper_1_1UdsClient.html#ad12bbabbdbd68695c040d337a8cc89a3", null ],
-    [ "try_send_line", "classunilink_1_1wrapper_1_1UdsClient.html#ab8ce1f88f3b7a8613f82990568f4abb1", null ]
+    [ "try_send_line", "classunilink_1_1wrapper_1_1UdsClient.html#ab8ce1f88f3b7a8613f82990568f4abb1", null ],
+    [ "try_send_move", "classunilink_1_1wrapper_1_1UdsClient.html#a6288fceb2b845c10779bd46b2539d7ee", null ],
+    [ "try_send_shared", "classunilink_1_1wrapper_1_1UdsClient.html#aeb2c32a0b09865e4986f0a8e2cd9347c", null ]
 ];
