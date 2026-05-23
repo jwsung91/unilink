@@ -5,7 +5,7 @@ var searchData=
   ['tcp_5fclient_5fbuilder_2ecc_2',['tcp_client_builder.cc',['../tcp__client__builder_8cc.html',1,'']]],
   ['tcp_5fclient_5fbuilder_2ehpp_3',['tcp_client_builder.hpp',['../tcp__client__builder_8hpp.html',1,'']]],
   ['tcp_5fclient_5fconfig_2ehpp_4',['tcp_client_config.hpp',['../tcp__client__config_8hpp.html',1,'']]],
-  ['tcp_5fserver_2ecc_5',['tcp_server.cc',['../transport_2tcp__server_2tcp__server_8cc.html',1,'(Global Namespace)'],['../wrapper_2tcp__server_2tcp__server_8cc.html',1,'(Global Namespace)']]],
+  ['tcp_5fserver_2ecc_5',['tcp_server.cc',['../wrapper_2tcp__server_2tcp__server_8cc.html',1,'(Global Namespace)'],['../transport_2tcp__server_2tcp__server_8cc.html',1,'(Global Namespace)']]],
   ['tcp_5fserver_2ehpp_6',['tcp_server.hpp',['../wrapper_2tcp__server_2tcp__server_8hpp.html',1,'(Global Namespace)'],['../transport_2tcp__server_2tcp__server_8hpp.html',1,'(Global Namespace)']]],
   ['tcp_5fserver_5fbuilder_2ecc_7',['tcp_server_builder.cc',['../tcp__server__builder_8cc.html',1,'']]],
   ['tcp_5fserver_5fbuilder_2ehpp_8',['tcp_server_builder.hpp',['../tcp__server__builder_8hpp.html',1,'']]],
@@ -15,5 +15,6 @@ var searchData=
   ['test_5fstructure_2emd_12',['test_structure.md',['../test__structure_8md.html',1,'']]],
   ['testing_2emd_13',['testing.md',['../testing_8md.html',1,'']]],
   ['thread_5fsafe_5fstate_2ehpp_14',['thread_safe_state.hpp',['../thread__safe__state_8hpp.html',1,'']]],
-  ['troubleshooting_2emd_15',['troubleshooting.md',['../troubleshooting_8md.html',1,'']]]
+  ['transport_5fmatrix_2emd_15',['transport_matrix.md',['../transport__matrix_8md.html',1,'']]],
+  ['troubleshooting_2emd_16',['troubleshooting.md',['../troubleshooting_8md.html',1,'']]]
 ];

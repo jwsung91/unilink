@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md801',1,'']]],
+  ['gdb_20for_20debugging_0',['Use GDB for Debugging',['../user_troubleshooting.html#autotoc_md813',1,'']]],
   ['generate_20coverage_20report_1',['Generate Coverage Report',['../contrib_testing.html#autotoc_md479',1,'']]],
   ['generate_5fpattern_2',['generate_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ae260c99bd3684af69d879e6562f42712',1,'unilink::memory::MemoryPatternGenerator']]],
   ['generate_5frandom_5fpattern_3',['generate_random_pattern',['../classunilink_1_1memory_1_1MemoryPatternGenerator.html#ad2f76b498219fc9678158f8b0f46ec34',1,'unilink::memory::MemoryPatternGenerator']]],
@@ -20,7 +20,7 @@ var searchData=
   ['get_5fsingleton_17',['get_singleton',['../classunilink_1_1config_1_1ConfigFactory.html#a58b060e083bed8f130f954828efc7905',1,'unilink::config::ConfigFactory']]],
   ['get_5fsupport_5fwarning_18',['get_support_warning',['../classunilink_1_1base_1_1PlatformInfo.html#af93848c1e0cea7695b4f53a12b38d563',1,'unilink::base::PlatformInfo']]],
   ['get_5ftype_19',['get_type',['../classunilink_1_1config_1_1ConfigManagerInterface.html#aaf440e21d6f0c46dc2b65b533e4d633c',1,'unilink::config::ConfigManagerInterface::get_type()'],['../classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496',1,'unilink::config::ConfigManager::get_type()']]],
-  ['getting_20help_20',['Getting Help',['../user_troubleshooting.html#autotoc_md805',1,'']]],
+  ['getting_20help_20',['Getting Help',['../user_troubleshooting.html#autotoc_md817',1,'']]],
   ['getting_20started_21',['Getting Started',['../user_index.html#autotoc_md621',1,'']]],
   ['getting_20started_20with_20unilink_22',['Getting Started with Unilink',['../tutorial_01.html',1,'user_tutorials']]],
   ['git_20submodule_20integration_23',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md641',1,'']]],
