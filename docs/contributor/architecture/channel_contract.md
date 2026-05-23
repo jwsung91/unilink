@@ -40,6 +40,15 @@ This rule ensures that once an application explicitly requests a channel to stop
 ## 4. Backpressure Policy
 To prevent memory exhaustion and manage sender-side queue pressure, channels implement a backpressure mechanism based on the size of the internal write queue.
 
+Backpressure is a sender-side queue management mechanism. It does not guarantee that the remote peer has processed data.
+
+A transport may accept a new payload while dropping older queued payloads when using a freshness-oriented policy such as `BestEffort`.
+
+A rejected send and a dropped queued payload are different events:
+
+- rejected send: the new payload was not accepted into the local send path
+- dropped queued payload: an older queued payload was removed after a newer payload was accepted
+
 **Contract Rules:**
 1.  **Triggering (High Watermark):** When the size of queued write data (bytes pending transmission) reaches or exceeds the configured `backpressure_threshold`, the transport MUST invoke its internal `on_backpressure` callback with the current queue size. Wrapper and builder APIs may expose backpressure notifications where the wrapper supports them. See the user API guide for public callback availability.
     
@@ -52,6 +61,7 @@ To prevent memory exhaustion and manage sender-side queue pressure, channels imp
 *   **Serial:** Should follow the same logic as TcpClient.
 *   **TcpServer:** Implements backpressure per-session (`TcpServerSession`).
     *   **Note:** Public wrapper-level backpressure notification is exposed through the wrapper/builder API where supported, but applications should treat it as queue-pressure notification rather than protocol-level flow control.
+*   **UDP:** Backpressure applies only to the local sender-side queue. UDP does not provide receiver-side flow control or delivery guarantees.
 
 ## 5. Error Handling Consistency
 

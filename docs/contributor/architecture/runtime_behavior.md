@@ -51,6 +51,8 @@ sequenceDiagram
 
 Runtime methods intended for concurrent application use are designed to be thread-safe. This includes methods such as `send()`, `try_send()`, `send_line()`, `stop()`, `connected()`, server `send_to()`, server `broadcast()`, and server state inspection helpers where available.
 
+Thread-safe does not mean non-blocking. In `Reliable` mode, `send()` may wait for backpressure to clear. Use `try_send()` for non-blocking producer loops.
+
 ```cpp
 // Runtime operations are safe to call from multiple application threads.
 std::thread t1([&client]() { client->send("data1"); });
@@ -349,6 +351,13 @@ client.reset();
 Backpressure is sender-side queue pressure. When the local outgoing queue grows too large because the transport is slower than the application, `unilink` applies internal backpressure protection in the transport layer. Applications can monitor queue pressure via the wrapper-level `on_backpressure` builder callback where supported, or implement additional rate limiting and queue monitoring at the application level.
 
 Backpressure does not mean the remote peer has processed data. For UDP, it only describes the local sender-side queue because UDP has no receiver-side flow control.
+
+Applications that produce data faster than the transport can send it should choose an explicit policy:
+
+- use `Reliable` when completeness is more important than latency
+- use `BestEffort` when freshness is more important than preserving every queued payload
+- use `try_send()` when producer threads must not block
+- monitor queue pressure and dropped data when available
 
 ### Backpressure Flow
 

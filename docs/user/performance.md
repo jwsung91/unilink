@@ -132,6 +132,20 @@ Unilink provides two strategies for handling full queues:
 | `Reliable` (Default) | Preserves queued outgoing data until the configured threshold is reached (default: 1 MiB), bounded by internal queue limits. | Reliable data (files, logs, commands). |
 | `BestEffort` | Drops oldest data when a threshold is reached. | Real-time sensors (LiDAR, Video, Telemetry). |
 
+### Interpreting Strategy Results
+
+For throughput or pressure tests, distinguish between:
+
+- **accepted throughput**: data accepted into the local send path
+- **received throughput**: data observed by the receiver
+- **delivery rate**: received data relative to accepted data
+- **failed sends**: send calls that were rejected before being accepted
+- **dropped data**: queued data discarded by a freshness-oriented policy such as `BestEffort`
+
+In `BestEffort` mode, accepted throughput can be much higher than received throughput because older queued payloads may be dropped to keep newer data fresh. This is expected for unbounded producer pressure, but it must be monitored in real applications.
+
+In `Reliable` mode, throughput is usually limited by queue pressure and receiver progress, but accepted data is preserved unless the queue cannot accept more data.
+
 ### 2. High-Throughput Sensors (LiDAR/Camera)
 
 For robotics perception, processing stale data is often worse than skipping frames. Use `BestEffort` with a low threshold to prevent **Bufferbloat**.
@@ -151,9 +165,13 @@ Aggressive flushing during network disconnects ensures that once reconnection
 occurs, the receiver instantly gets the most recent frame instead of waiting for
 a large backlog to drain.
 
+For freshness-oriented streams, monitor dropped data and received rate. A high accepted rate alone does not mean the receiver is processing every payload.
+
 ### 3. Critical Reliable Data
 
 For data where local queue drops are unacceptable, use `Reliable` combined with application-level send throttling.
+
+For producer loops that must never block, use `try_send()` and handle `false` explicitly. `send()` in `Reliable` mode may block while waiting for backpressure to clear.
 
 ```cpp
 bool paused = false;
