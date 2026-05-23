@@ -257,6 +257,28 @@ struct UdsClient::Impl {
     return try_send(data);
   }
 
+  bool send_move(std::vector<uint8_t>&& data) {
+    if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) {
+      std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+      bp_cv_.wait(bp_lock, [this] {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
+      });
+    }
+    return try_send_move(std::move(data));
+  }
+
+  bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) {
+      std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+      bp_cv_.wait(bp_lock, [this] {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
+      });
+    }
+    return try_send_shared(std::move(data));
+  }
+
   bool send_line(std::string_view line) {
     if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
     return try_send_line(line);
@@ -278,6 +300,23 @@ struct UdsClient::Impl {
     if (channel_ && channel_->is_connected()) {
       return channel_->async_write_copy(
           memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    }
+    return false;
+  }
+
+  bool try_send_move(std::vector<uint8_t>&& data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel_ && channel_->is_connected()) {
+      return channel_->async_write_move(std::move(data));
+    }
+    return false;
+  }
+
+  bool try_send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (!data || data->empty()) return false;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel_ && channel_->is_connected()) {
+      return channel_->async_write_shared(std::move(data));
     }
     return false;
   }
@@ -461,6 +500,14 @@ void UdsClient::stop() { impl_->stop(); }
 
 bool UdsClient::send(std::string_view data) { return impl_->send(data); }
 bool UdsClient::try_send(std::string_view data) { return impl_->try_send(data); }
+bool UdsClient::send_move(std::vector<uint8_t>&& data) { return impl_->send_move(std::move(data)); }
+bool UdsClient::try_send_move(std::vector<uint8_t>&& data) { return impl_->try_send_move(std::move(data)); }
+bool UdsClient::send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  return impl_->send_shared(std::move(data));
+}
+bool UdsClient::try_send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  return impl_->try_send_shared(std::move(data));
+}
 
 bool UdsClient::send_line(std::string_view line) { return impl_->send_line(line); }
 bool UdsClient::try_send_line(std::string_view line) { return impl_->try_send_line(line); }

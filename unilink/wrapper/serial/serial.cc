@@ -243,9 +243,56 @@ struct Serial::Impl {
     return false;
   }
 
+  bool try_send_move(std::vector<uint8_t>&& data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
+      return channel->async_write_move(std::move(data));
+    }
+    return false;
+  }
+
+  bool try_send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (!data || data->empty()) return false;
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
+      return channel->async_write_shared(std::move(data));
+    }
+    return false;
+  }
+
   bool send(std::string_view data) {
     if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
     return try_send(data);
+  }
+
+  bool send_move(std::vector<uint8_t>&& data) {
+    if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
+      std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+      while (true) {
+        {
+          std::shared_lock<std::shared_mutex> lock(mutex_);
+          if (!started_.load() || !channel || !channel->is_connected()) return false;
+          if (!channel->is_backpressure_active()) break;
+        }
+        bp_cv_.wait(bp_lock);
+      }
+    }
+    return try_send_move(std::move(data));
+  }
+
+  bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
+      std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+      while (true) {
+        {
+          std::shared_lock<std::shared_mutex> lock(mutex_);
+          if (!started_.load() || !channel || !channel->is_connected()) return false;
+          if (!channel->is_backpressure_active()) break;
+        }
+        bp_cv_.wait(bp_lock);
+      }
+    }
+    return try_send_shared(std::move(data));
   }
 
   bool send_line(std::string_view line) {
@@ -469,6 +516,14 @@ bool Serial::send(std::string_view data) { return impl_->send(data); }
 bool Serial::try_send(std::string_view data) { return impl_->try_send(data); }
 bool Serial::send_line(std::string_view line) { return impl_->send_line(line); }
 bool Serial::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
+bool Serial::send_move(std::vector<uint8_t>&& data) { return impl_->send_move(std::move(data)); }
+bool Serial::try_send_move(std::vector<uint8_t>&& data) { return impl_->try_send_move(std::move(data)); }
+bool Serial::send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  return impl_->send_shared(std::move(data));
+}
+bool Serial::try_send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  return impl_->try_send_shared(std::move(data));
+}
 bool Serial::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
 bool Serial::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool Serial::connected() const {

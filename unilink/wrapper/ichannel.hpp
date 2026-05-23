@@ -142,6 +142,44 @@ class UNILINK_API ChannelInterface {
    */
   virtual bool try_send_line(std::string_view line) = 0;
 
+  /**
+   * @brief Enqueue a vector payload by transferring ownership, honouring the backpressure strategy.
+   *
+   * After this call, the caller must treat the moved-from vector as consumed regardless
+   * of the return value. Existing string_view send APIs remain available for borrowed data.
+   *
+   * @return true Data was accepted. @return false Data was dropped or rejected.
+   */
+  virtual bool send_move(std::vector<uint8_t>&& data) = 0;
+
+  /**
+   * @brief Non-blocking ownership-transfer send.
+   *
+   * Always returns without waiting for backpressure. The moved-from vector is consumed
+   * regardless of the return value.
+   *
+   * @return true Data was accepted. @return false Data was dropped or rejected.
+   */
+  virtual bool try_send_move(std::vector<uint8_t>&& data) = 0;
+
+  /**
+   * @brief Enqueue an immutable shared vector payload, honouring the backpressure strategy.
+   *
+   * The shared buffer must be non-null and non-empty.
+   *
+   * @return true Data was accepted. @return false Data was dropped or rejected.
+   */
+  virtual bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) = 0;
+
+  /**
+   * @brief Non-blocking shared-buffer send.
+   *
+   * The shared buffer must be non-null and non-empty.
+   *
+   * @return true Data was accepted. @return false Data was dropped or rejected.
+   */
+  virtual bool try_send_shared(std::shared_ptr<const std::vector<uint8_t>> data) = 0;
+
   // Event handlers
   virtual ChannelInterface& on_data(MessageHandler handler) = 0;
 
