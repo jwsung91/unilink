@@ -437,6 +437,15 @@ TEST(TransportSerialTest, BestEffortDropsOldestWhileWriteIsInFlight) {
 
   EXPECT_GE(port_raw->write_count(), 1);
   EXPECT_TRUE(serial->is_backpressure_active());
+  auto stats = serial->stats();
+  EXPECT_EQ(stats.failed_sends, 0u);
+  EXPECT_EQ(stats.dropped_messages, 1u);
+  EXPECT_EQ(stats.dropped_bytes, payload.size());
+  serial->reset_stats();
+  stats = serial->stats();
+  EXPECT_EQ(stats.dropped_messages, 0u);
+  EXPECT_EQ(stats.dropped_bytes, 0u);
+  EXPECT_GT(stats.queued_bytes, 0u);
 
   port_raw->complete_pending_write();
   ioc.run_for(30ms);

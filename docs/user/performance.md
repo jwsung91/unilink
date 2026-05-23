@@ -156,6 +156,8 @@ Use `stats()` to monitor queue pressure and drops:
 - `failed_sends`
 - `backpressure_events`
 
+When using `BestEffort`, monitor `dropped_messages` and `dropped_bytes`. A high accepted rate does not imply that every queued payload was preserved.
+
 ### 2. High-Throughput Sensors (LiDAR/Camera)
 
 For robotics perception, processing stale data is often worse than skipping frames. Use `BestEffort` with a low threshold to prevent **Bufferbloat**.

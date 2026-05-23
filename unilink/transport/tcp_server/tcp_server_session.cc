@@ -446,7 +446,9 @@ void TcpServerSession::do_close() {
 }
 
 void TcpServerSession::maybe_flush_for_keep_latest(size_t added) {
-  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
+  const auto dropped =
+      queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
+  if (dropped.any()) stats_.record_dropped(dropped.messages, dropped.bytes);
 }
 
 void TcpServerSession::observe_queue() {

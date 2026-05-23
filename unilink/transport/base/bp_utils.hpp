@@ -20,6 +20,7 @@
 #include <cstddef>
 #include <memory>
 #include <type_traits>
+#include <variant>
 #include <vector>
 
 #include "unilink/base/constants.hpp"
@@ -27,6 +28,13 @@
 namespace unilink {
 namespace transport {
 namespace queue_util {
+
+struct DropAccounting {
+  size_t messages = 0;
+  size_t bytes = 0;
+
+  bool any() const { return messages > 0 || bytes > 0; }
+};
 
 // Returns the byte size of a buffer held in a transport BufferVariant alternative.
 // shared_ptr<const vector<uint8_t>> goes through ->size(); everything else via .size().
@@ -47,20 +55,24 @@ inline size_t variant_buffer_size(const T& buf) {
 //   added >= bp_high  →  drop entire tx_ (full keep-latest replacement).
 //   otherwise         →  pop oldest tx_ entries until queue_bytes + added <= bp_high.
 template <typename Deque>
-inline void maybe_flush_for_keep_latest(::unilink::base::constants::BackpressureStrategy bp_strategy, size_t added,
-                                        size_t bp_high, Deque& tx, std::atomic<size_t>& queue_bytes,
-                                        const std::atomic<bool>& backpressure_active) {
-  if (bp_strategy != ::unilink::base::constants::BackpressureStrategy::BestEffort) return;
+inline DropAccounting maybe_flush_for_keep_latest(::unilink::base::constants::BackpressureStrategy bp_strategy,
+                                                  size_t added, size_t bp_high, Deque& tx,
+                                                  std::atomic<size_t>& queue_bytes,
+                                                  const std::atomic<bool>& backpressure_active) {
+  DropAccounting dropped;
+  if (bp_strategy != ::unilink::base::constants::BackpressureStrategy::BestEffort) return dropped;
 
   if (added >= bp_high) {
     size_t removed_bytes = 0;
     for (const auto& buf : tx) {
       removed_bytes += std::visit([](const auto& b) { return variant_buffer_size(b); }, buf);
     }
+    dropped.messages = tx.size();
+    dropped.bytes = removed_bytes;
     tx.clear();
     const size_t qb = queue_bytes.load(std::memory_order_relaxed);
     queue_bytes.store(qb > removed_bytes ? qb - removed_bytes : 0, std::memory_order_relaxed);
-    return;
+    return dropped;
   }
 
   if (backpressure_active.load(std::memory_order_relaxed) ||
@@ -71,8 +83,11 @@ inline void maybe_flush_for_keep_latest(::unilink::base::constants::Backpressure
       const size_t oldest = std::visit([](const auto& b) { return variant_buffer_size(b); }, tx.front());
       queue_bytes.store(qb > oldest ? qb - oldest : 0, std::memory_order_relaxed);
       tx.pop_front();
+      ++dropped.messages;
+      dropped.bytes += oldest;
     }
   }
+  return dropped;
 }
 
 }  // namespace queue_util

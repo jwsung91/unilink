@@ -39,6 +39,7 @@
 #include "unilink/diagnostics/runtime_stats_counter.hpp"
 #include "unilink/interface/iserial_port.hpp"
 #include "unilink/memory/memory_pool.hpp"
+#include "unilink/transport/base/bp_utils.hpp"
 #include "unilink/transport/serial/boost_serial_port.hpp"
 
 namespace unilink {
@@ -96,6 +97,12 @@ struct Serial::Impl {
   void observe_queue() {
     stats_.observe_queue(queued_bytes_.load(std::memory_order_relaxed) +
                          pending_bytes_.load(std::memory_order_relaxed));
+  }
+
+  void maybe_flush_for_keep_latest(size_t added) {
+    const auto dropped = queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queued_bytes_,
+                                                                 backpressure_active_);
+    if (dropped.any()) stats_.record_dropped(dropped.messages, dropped.bytes);
   }
 
   explicit Impl(const config::SerialConfig& cfg)
@@ -581,28 +588,7 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
           return;
         }
 
-        if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
-            (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-          if (added >= impl->bp_high_) {
-            impl->tx_.clear();
-            impl->queued_bytes_ = 0;
-          } else {
-            while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-              size_t oldest_size = std::visit(
-                  [](auto&& buf) -> size_t {
-                    using T = std::decay_t<decltype(buf)>;
-                    if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                      return buf ? buf->size() : 0;
-                    } else {
-                      return buf.size();
-                    }
-                  },
-                  impl->tx_.front());
-              impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-              impl->tx_.pop_front();
-            }
-          }
-        }
+        impl->maybe_flush_for_keep_latest(added);
 
         if (impl->queued_bytes_ + added > impl->bp_limit_) {
           UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded, dropping message");
@@ -641,28 +627,7 @@ bool Serial::async_write_copy(memory::ConstByteSpan data) {
       return;
     }
 
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
-        (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-      if (added >= impl->bp_high_) {
-        impl->tx_.clear();
-        impl->queued_bytes_ = 0;
-      } else {
-        while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-          size_t oldest_size = std::visit(
-              [](auto&& buf) -> size_t {
-                using T = std::decay_t<decltype(buf)>;
-                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                  return buf ? buf->size() : 0;
-                } else {
-                  return buf.size();
-                }
-              },
-              impl->tx_.front());
-          impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-          impl->tx_.pop_front();
-        }
-      }
-    }
+    impl->maybe_flush_for_keep_latest(added);
 
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
       impl->report_backpressure(impl->queued_bytes_ + added);
@@ -714,28 +679,7 @@ bool Serial::async_write_move(std::vector<uint8_t>&& data) {
       return;
     }
 
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
-        (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-      if (added >= impl->bp_high_) {
-        impl->tx_.clear();
-        impl->queued_bytes_ = 0;
-      } else {
-        while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-          size_t oldest_size = std::visit(
-              [](auto&& buf) -> size_t {
-                using T = std::decay_t<decltype(buf)>;
-                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                  return buf ? buf->size() : 0;
-                } else {
-                  return buf.size();
-                }
-              },
-              impl->tx_.front());
-          impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-          impl->tx_.pop_front();
-        }
-      }
-    }
+    impl->maybe_flush_for_keep_latest(added);
 
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
       impl->report_backpressure(impl->queued_bytes_ + added);
@@ -787,28 +731,7 @@ bool Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
       return;
     }
 
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
-        (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
-      if (added >= impl->bp_high_) {
-        impl->tx_.clear();
-        impl->queued_bytes_ = 0;
-      } else {
-        while (!impl->tx_.empty() && (impl->queued_bytes_ + added > impl->bp_high_)) {
-          size_t oldest_size = std::visit(
-              [](auto&& buf) -> size_t {
-                using T = std::decay_t<decltype(buf)>;
-                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                  return buf ? buf->size() : 0;
-                } else {
-                  return buf.size();
-                }
-              },
-              impl->tx_.front());
-          impl->queued_bytes_ = (impl->queued_bytes_ > oldest_size) ? (impl->queued_bytes_ - oldest_size) : 0;
-          impl->tx_.pop_front();
-        }
-      }
-    }
+    impl->maybe_flush_for_keep_latest(added);
 
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
       impl->report_backpressure(impl->queued_bytes_ + added);

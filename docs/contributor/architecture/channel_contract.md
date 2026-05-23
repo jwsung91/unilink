@@ -49,6 +49,8 @@ A rejected send and a dropped queued payload are different events:
 - rejected send: the new payload was not accepted into the local send path
 - dropped queued payload: an older queued payload was removed after a newer payload was accepted
 
+A dropped queued payload must be accounted separately from a rejected send. `BestEffort` drop accounting should count only payloads that were previously accepted into the local outgoing queue. In-flight writes are not counted as dropped queued payloads.
+
 **Contract Rules:**
 1.  **Triggering (High Watermark):** When the size of queued write data (bytes pending transmission) reaches or exceeds the configured `backpressure_threshold`, the transport MUST invoke its internal `on_backpressure` callback with the current queue size. Wrapper and builder APIs may expose backpressure notifications where the wrapper supports them. See the user API guide for public callback availability.
     

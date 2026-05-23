@@ -208,11 +208,13 @@ TEST(BackpressureQueueUtilTest, ReliableStrategyDoesNotTrimQueue) {
   std::atomic<size_t> queue_bytes{7};
   std::atomic<bool> backpressure_active{true};
 
-  maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::Reliable, 10, 5, tx, queue_bytes,
-                              backpressure_active);
+  const auto dropped = maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::Reliable, 10, 5, tx,
+                                                   queue_bytes, backpressure_active);
 
   EXPECT_EQ(tx.size(), 2);
   EXPECT_EQ(queue_bytes.load(), 7);
+  EXPECT_EQ(dropped.messages, 0u);
+  EXPECT_EQ(dropped.bytes, 0u);
 }
 
 TEST(BackpressureQueueUtilTest, BestEffortDropsQueueWhenAddedBufferExceedsHighWatermark) {
@@ -222,14 +224,16 @@ TEST(BackpressureQueueUtilTest, BestEffortDropsQueueWhenAddedBufferExceedsHighWa
   std::deque<Buffer> tx;
   tx.emplace_back(std::vector<uint8_t>{1, 2, 3, 4});
   tx.emplace_back(std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{5, 6, 7, 8, 9}));
-  std::atomic<size_t> queue_bytes{3};
+  std::atomic<size_t> queue_bytes{9};
   std::atomic<bool> backpressure_active{false};
 
-  maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::BestEffort, 10, 10, tx, queue_bytes,
-                              backpressure_active);
+  const auto dropped = maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::BestEffort, 10, 10, tx,
+                                                   queue_bytes, backpressure_active);
 
   EXPECT_TRUE(tx.empty());
   EXPECT_EQ(queue_bytes.load(), 0);
+  EXPECT_EQ(dropped.messages, 2u);
+  EXPECT_EQ(dropped.bytes, 9u);
 }
 
 TEST(BackpressureQueueUtilTest, BestEffortTrimsOldestBuffersUntilAddedBufferFits) {
@@ -243,9 +247,11 @@ TEST(BackpressureQueueUtilTest, BestEffortTrimsOldestBuffersUntilAddedBufferFits
   std::atomic<size_t> queue_bytes{12};
   std::atomic<bool> backpressure_active{false};
 
-  maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::BestEffort, 3, 10, tx, queue_bytes,
-                              backpressure_active);
+  const auto dropped = maybe_flush_for_keep_latest(base::constants::BackpressureStrategy::BestEffort, 3, 10, tx,
+                                                   queue_bytes, backpressure_active);
 
   ASSERT_EQ(tx.size(), 1);
   EXPECT_EQ(queue_bytes.load(), 4);
+  EXPECT_EQ(dropped.messages, 2u);
+  EXPECT_EQ(dropped.bytes, 8u);
 }

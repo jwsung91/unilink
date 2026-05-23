@@ -39,6 +39,7 @@
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/diagnostics/runtime_stats_counter.hpp"
 #include "unilink/memory/memory_pool.hpp"
+#include "unilink/transport/base/bp_utils.hpp"
 
 namespace unilink {
 namespace transport {
@@ -480,39 +481,31 @@ struct UdpChannel::Impl {
 
     if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (backpressure_active_ || queue_bytes_ + size > bp_high_)) {
+      size_t dropped_messages = 0;
+      size_t dropped_bytes = 0;
       if (size >= bp_high_) {
         // Compute bytes to remove from tx_ (note: in-flight datagram already popped from tx_)
         size_t removed_bytes = 0;
         for (const auto& item : tx_) {
-          removed_bytes += std::visit(
-              [](auto&& b) -> size_t {
-                using T = std::decay_t<decltype(b)>;
-                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                  return b ? b->size() : 0;
-                } else {
-                  return b.size();
-                }
-              },
-              item.buffer);
+          removed_bytes += std::visit([](const auto& b) { return queue_util::variant_buffer_size(b); }, item.buffer);
         }
+        dropped_messages = tx_.size();
+        dropped_bytes = removed_bytes;
         tx_.clear();
         queue_bytes_ = (queue_bytes_ > removed_bytes) ? (queue_bytes_ - removed_bytes) : 0;
       } else {
         while (!tx_.empty() && (queue_bytes_ + size > bp_high_)) {
           auto& oldest = tx_.front();
-          size_t oldest_size = std::visit(
-              [](auto&& buf) -> size_t {
-                using T = std::decay_t<decltype(buf)>;
-                if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
-                  return buf ? buf->size() : 0;
-                } else {
-                  return buf.size();
-                }
-              },
-              oldest.buffer);
+          size_t oldest_size =
+              std::visit([](const auto& buf) { return queue_util::variant_buffer_size(buf); }, oldest.buffer);
           queue_bytes_ = (queue_bytes_ > oldest_size) ? (queue_bytes_ - oldest_size) : 0;
           tx_.pop_front();
+          ++dropped_messages;
+          dropped_bytes += oldest_size;
         }
+      }
+      if (dropped_messages > 0 || dropped_bytes > 0) {
+        stats_.record_dropped(dropped_messages, dropped_bytes);
       }
     }
 
