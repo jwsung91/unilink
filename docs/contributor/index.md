@@ -29,6 +29,16 @@ Internal design and contracts that all transport implementations must follow:
 
 ---
 
+## Design Notes
+
+Proposed APIs and runtime semantics before implementation:
+
+| Document | What it covers |
+|----------|----------------|
+| [SendResult API](design/send_result_api.md) | Proposed extended send result semantics |
+
+---
+
 ## Quick Links (User Docs)
 
 - [API Reference](../user/api_guide.md)
