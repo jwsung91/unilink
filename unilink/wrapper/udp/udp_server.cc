@@ -677,6 +677,18 @@ UdpServer& UdpServer::backpressure_strategy(base::constants::BackpressureStrateg
   return *this;
 }
 
+UdpServer& UdpServer::send_buffer_size(size_t bytes) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.send_buffer_size = bytes;
+  return *this;
+}
+
+UdpServer& UdpServer::receive_buffer_size(size_t bytes) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.receive_buffer_size = bytes;
+  return *this;
+}
+
 UdpServer& UdpServer::manage_external_context(bool m) {
   impl_->manage_external_context.store(m);
   return *this;

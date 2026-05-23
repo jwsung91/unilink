@@ -98,6 +98,10 @@ class UNILINK_API TcpClient : public ChannelInterface {
   TcpClient& connection_timeout(std::chrono::milliseconds timeout);
   TcpClient& backpressure_threshold(size_t threshold);
   TcpClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);
+  TcpClient& tcp_no_delay(bool enable = true);
+  TcpClient& keep_alive(bool enable = true);
+  TcpClient& send_buffer_size(size_t bytes);
+  TcpClient& receive_buffer_size(size_t bytes);
   TcpClient& manage_external_context(bool manage);
 
  private:

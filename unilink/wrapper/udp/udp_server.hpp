@@ -92,6 +92,8 @@ class UNILINK_API UdpServer : public ServerInterface {
   UdpServer& max_clients(size_t max);
   UdpServer& backpressure_threshold(size_t threshold);
   UdpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
+  UdpServer& send_buffer_size(size_t bytes);
+  UdpServer& receive_buffer_size(size_t bytes);
   UdpServer& manage_external_context(bool manage);
   UdpServer& batch_size(size_t size);
   UdpServer& batch_latency(std::chrono::milliseconds latency);

@@ -156,6 +156,7 @@ struct TcpClient::Impl {
   void observe_queue();
   void notify_state();
   void reset_io_objects();
+  void apply_socket_options();
   void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
                     const boost::system::error_code& ec, std::string_view msg, bool retryable, uint32_t retry_count);
 };
@@ -570,6 +571,45 @@ void TcpClient::set_reconnect_policy(ReconnectPolicy policy) {
 
 // Impl methods implementation
 
+void TcpClient::Impl::apply_socket_options() {
+  boost::system::error_code ec;
+
+  if (cfg_.tcp_no_delay) {
+    socket_.set_option(tcp::no_delay(true), ec);
+    if (ec) {
+      UNILINK_LOG_WARNING("tcp_client", "socket_options",
+                          fmt::format("Failed to set TCP_NODELAY: {}", ec.message()));
+      ec.clear();
+    }
+  }
+
+  if (cfg_.keep_alive) {
+    socket_.set_option(net::socket_base::keep_alive(true), ec);
+    if (ec) {
+      UNILINK_LOG_WARNING("tcp_client", "socket_options", fmt::format("Failed to set keep_alive: {}", ec.message()));
+      ec.clear();
+    }
+  }
+
+  if (cfg_.send_buffer_size > 0) {
+    socket_.set_option(net::socket_base::send_buffer_size(static_cast<int>(cfg_.send_buffer_size)), ec);
+    if (ec) {
+      UNILINK_LOG_WARNING("tcp_client", "socket_options",
+                          fmt::format("Failed to set send buffer size: {}", ec.message()));
+      ec.clear();
+    }
+  }
+
+  if (cfg_.receive_buffer_size > 0) {
+    socket_.set_option(net::socket_base::receive_buffer_size(static_cast<int>(cfg_.receive_buffer_size)), ec);
+    if (ec) {
+      UNILINK_LOG_WARNING("tcp_client", "socket_options",
+                          fmt::format("Failed to set receive buffer size: {}", ec.message()));
+      ec.clear();
+    }
+  }
+}
+
 void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64_t seq) {
   resolver_.async_resolve(
       cfg_.host, fmt::format("{}", cfg_.port), [self, seq](auto ec, tcp::resolver::results_type results) {
@@ -639,6 +679,7 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                              static_cast<socklen_t>(sizeof(yes)));
 #endif
 
+          self->impl_->apply_socket_options();
           self->impl_->transition_to(LinkState::Connected);
           boost::system::error_code ep_ec;
           auto rep = self->impl_->socket_.remote_endpoint(ep_ec);

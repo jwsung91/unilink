@@ -57,7 +57,9 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         enable_broadcast_(other.enable_broadcast_),
-        reuse_address_(other.reuse_address_) {
+        reuse_address_(other.reuse_address_),
+        send_buffer_size_(other.send_buffer_size_),
+        receive_buffer_size_(other.receive_buffer_size_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -91,6 +93,8 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
   UdpClientBuilder<State>& broadcast(bool enable = true);
   UdpClientBuilder<State>& reuse_address(bool enable = true);
   UdpClientBuilder<State>& independent_context(bool use_independent = true);
+  UdpClientBuilder<State>& send_buffer_size(size_t bytes);
+  UdpClientBuilder<State>& receive_buffer_size(size_t bytes);
 
  private:
   template <uint32_t S>
@@ -104,6 +108,8 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient,
   bool independent_context_;
   bool enable_broadcast_;
   bool reuse_address_;
+  size_t send_buffer_size_;
+  size_t receive_buffer_size_;
 };
 
 using UdpClientBuilderDefault = UdpClientBuilder<BuilderState::None>;
@@ -132,7 +138,9 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
         max_clients_(other.max_clients_),
         client_limit_enabled_(other.client_limit_enabled_),
         idle_timeout_(other.idle_timeout_),
-        idle_timeout_set_(other.idle_timeout_set_) {
+        idle_timeout_set_(other.idle_timeout_set_),
+        send_buffer_size_(other.send_buffer_size_),
+        receive_buffer_size_(other.receive_buffer_size_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -166,6 +174,8 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   UdpServerBuilder<State>& reuse_address(bool enable = true);
   UdpServerBuilder<State>& independent_context(bool use_independent = true);
   UdpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
+  UdpServerBuilder<State>& send_buffer_size(size_t bytes);
+  UdpServerBuilder<State>& receive_buffer_size(size_t bytes);
 
  private:
   template <uint32_t S>
@@ -181,6 +191,8 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   bool client_limit_enabled_ = false;
   std::chrono::milliseconds idle_timeout_{0};
   bool idle_timeout_set_ = false;
+  size_t send_buffer_size_;
+  size_t receive_buffer_size_;
 };
 
 using UdpServerBuilderDefault = UdpServerBuilder<BuilderState::None>;

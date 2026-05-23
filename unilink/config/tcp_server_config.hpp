@@ -39,13 +39,23 @@ struct TcpServerConfig {
   int port_retry_interval_ms = 1000;  // Retry interval in milliseconds
 
   int idle_timeout_ms = 0;  // Idle connection timeout in milliseconds (0 = disabled)
+  bool tcp_no_delay = false;
+  bool keep_alive = false;
+  size_t send_buffer_size = 0;
+  size_t receive_buffer_size = 0;
 
   // Validation methods
   bool is_valid() const {
     return (util::InputValidator::is_valid_ipv4(bind_address) || util::InputValidator::is_valid_ipv6(bind_address)) &&
            port > 0 && backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections >= 0 &&
-           idle_timeout_ms >= 0;
+           idle_timeout_ms >= 0 &&
+           (send_buffer_size == 0 ||
+            (send_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+             send_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
+           (receive_buffer_size == 0 ||
+            (receive_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+             receive_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE));
   }
 
   // Apply validation and clamp values to valid ranges
@@ -64,6 +74,18 @@ struct TcpServerConfig {
 
     if (idle_timeout_ms < 0) {
       idle_timeout_ms = 0;
+    }
+
+    if (send_buffer_size != 0 && send_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE) {
+      send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+    } else if (send_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE) {
+      send_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
+    }
+
+    if (receive_buffer_size != 0 && receive_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE) {
+      receive_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+    } else if (receive_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE) {
+      receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
     }
   }
 };

@@ -32,7 +32,11 @@ TcpClientBuilder<State>::TcpClientBuilder(const std::string& host, uint16_t port
       independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
-      connection_timeout_(5000) {
+      connection_timeout_(5000),
+      tcp_no_delay_(false),
+      keep_alive_(false),
+      send_buffer_size_(0),
+      receive_buffer_size_(0) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
   if (host.empty()) throw diagnostics::BuilderException("Host cannot be empty");
 
@@ -60,6 +64,10 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder<State>::build() {
   client->retry_interval(retry_interval_);
   client->max_retries(max_retries_);
   client->connection_timeout(connection_timeout_);
+  client->tcp_no_delay(tcp_no_delay_);
+  client->keep_alive(keep_alive_);
+  client->send_buffer_size(send_buffer_size_);
+  client->receive_buffer_size(receive_buffer_size_);
 
   if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
   client->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -108,6 +116,30 @@ TcpClientBuilder<State>& TcpClientBuilder<State>::connection_timeout(std::chrono
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::independent_context(bool use_independent) {
   independent_context_ = use_independent;
+  return *this;
+}
+
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::tcp_no_delay(bool enable) {
+  tcp_no_delay_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::keep_alive(bool enable) {
+  keep_alive_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::send_buffer_size(size_t bytes) {
+  send_buffer_size_ = bytes;
+  return *this;
+}
+
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::receive_buffer_size(size_t bytes) {
+  receive_buffer_size_ = bytes;
   return *this;
 }
 

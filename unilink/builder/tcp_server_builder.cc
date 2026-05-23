@@ -36,7 +36,11 @@ TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
       max_port_retries_(10),
       port_retry_interval_ms_(1000),
       idle_timeout_(0),
-      idle_timeout_set_(false) {
+      idle_timeout_set_(false),
+      tcp_no_delay_(false),
+      keep_alive_(false),
+      send_buffer_size_(0),
+      receive_buffer_size_(0) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
 
   // Ensure background IO service is running
@@ -68,6 +72,10 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
   server->port_retry(port_retry_enabled_, static_cast<int>(max_port_retries_),
                      static_cast<int>(port_retry_interval_ms_));
   if (idle_timeout_set_) server->idle_timeout(idle_timeout_);
+  server->tcp_no_delay(tcp_no_delay_);
+  server->keep_alive(keep_alive_);
+  server->send_buffer_size(send_buffer_size_);
+  server->receive_buffer_size(receive_buffer_size_);
 
   if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -129,6 +137,30 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::max_port_retries(uint32_t max_
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry_interval(std::chrono::milliseconds interval) {
   port_retry_interval_ms_ = static_cast<uint32_t>(interval.count());
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::tcp_no_delay(bool enable) {
+  tcp_no_delay_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::keep_alive(bool enable) {
+  keep_alive_ = enable;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::send_buffer_size(size_t bytes) {
+  send_buffer_size_ = bytes;
+  return *this;
+}
+
+template <uint32_t State>
+TcpServerBuilder<State>& TcpServerBuilder<State>::receive_buffer_size(size_t bytes) {
+  receive_buffer_size_ = bytes;
   return *this;
 }
 

@@ -38,7 +38,9 @@ UdpClientBuilder<State>::UdpClientBuilder(uint16_t local_port)
       auto_start_(false),
       independent_context_(false),
       enable_broadcast_(false),
-      reuse_address_(false) {
+      reuse_address_(false),
+      send_buffer_size_(0),
+      receive_buffer_size_(0) {
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
@@ -53,6 +55,8 @@ std::unique_ptr<wrapper::UdpClient> UdpClientBuilder<State>::build() {
   cfg.remote_port = remote_port_;
   cfg.enable_broadcast = enable_broadcast_;
   cfg.reuse_address = reuse_address_;
+  cfg.send_buffer_size = send_buffer_size_;
+  cfg.receive_buffer_size = receive_buffer_size_;
 
   if (independent_context_) {
     client = std::make_unique<wrapper::UdpClient>(cfg, std::make_shared<boost::asio::io_context>());
@@ -131,6 +135,18 @@ UdpClientBuilder<State>& UdpClientBuilder<State>::independent_context(bool use_i
   return *this;
 }
 
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::send_buffer_size(size_t bytes) {
+  send_buffer_size_ = bytes;
+  return *this;
+}
+
+template <uint32_t State>
+UdpClientBuilder<State>& UdpClientBuilder<State>::receive_buffer_size(size_t bytes) {
+  receive_buffer_size_ = bytes;
+  return *this;
+}
+
 // UdpServerBuilder implementation
 
 template <uint32_t State>
@@ -143,7 +159,9 @@ UdpServerBuilder<State>::UdpServerBuilder(uint16_t local_port)
       auto_start_(false),
       independent_context_(false),
       enable_broadcast_(false),
-      reuse_address_(false) {
+      reuse_address_(false),
+      send_buffer_size_(0),
+      receive_buffer_size_(0) {
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
@@ -156,6 +174,8 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder<State>::build() {
   cfg.local_port = local_port_;
   cfg.enable_broadcast = enable_broadcast_;
   cfg.reuse_address = reuse_address_;
+  cfg.send_buffer_size = send_buffer_size_;
+  cfg.receive_buffer_size = receive_buffer_size_;
 
   if (independent_context_) {
     server = std::make_unique<wrapper::UdpServer>(cfg, std::make_shared<boost::asio::io_context>());
@@ -245,6 +265,18 @@ template <uint32_t State>
 UdpServerBuilder<State>& UdpServerBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
   idle_timeout_ = timeout;
   idle_timeout_set_ = true;
+  return *this;
+}
+
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::send_buffer_size(size_t bytes) {
+  send_buffer_size_ = bytes;
+  return *this;
+}
+
+template <uint32_t State>
+UdpServerBuilder<State>& UdpServerBuilder<State>::receive_buffer_size(size_t bytes) {
+  receive_buffer_size_ = bytes;
   return *this;
 }
 

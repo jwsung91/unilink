@@ -65,6 +65,10 @@ struct TcpServer::Impl {
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
       base::constants::BackpressureStrategy::Reliable};
+  std::atomic<bool> tcp_no_delay_{false};
+  std::atomic<bool> keep_alive_{false};
+  std::atomic<size_t> send_buffer_size_{0};
+  std::atomic<size_t> receive_buffer_size_{0};
 
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_disconnect_{nullptr};
@@ -214,6 +218,10 @@ struct TcpServer::Impl {
       config.idle_timeout_ms = idle_timeout_ms_.load();
       config.backpressure_threshold = backpressure_threshold_.load();
       config.backpressure_strategy = backpressure_strategy_.load();
+      config.tcp_no_delay = tcp_no_delay_.load();
+      config.keep_alive = keep_alive_.load();
+      config.send_buffer_size = send_buffer_size_.load();
+      config.receive_buffer_size = receive_buffer_size_.load();
 
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
@@ -606,6 +614,26 @@ TcpServer& TcpServer::backpressure_threshold(size_t threshold) {
 
 TcpServer& TcpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
   impl_->backpressure_strategy_.store(strategy);
+  return *this;
+}
+
+TcpServer& TcpServer::tcp_no_delay(bool enable) {
+  impl_->tcp_no_delay_.store(enable);
+  return *this;
+}
+
+TcpServer& TcpServer::keep_alive(bool enable) {
+  impl_->keep_alive_.store(enable);
+  return *this;
+}
+
+TcpServer& TcpServer::send_buffer_size(size_t bytes) {
+  impl_->send_buffer_size_.store(bytes);
+  return *this;
+}
+
+TcpServer& TcpServer::receive_buffer_size(size_t bytes) {
+  impl_->receive_buffer_size_.store(bytes);
   return *this;
 }
 

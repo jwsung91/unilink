@@ -17,6 +17,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 
@@ -52,7 +53,11 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
         independent_context_(other.independent_context_),
         retry_interval_(other.retry_interval_),
         max_retries_(other.max_retries_),
-        connection_timeout_(other.connection_timeout_) {
+        connection_timeout_(other.connection_timeout_),
+        tcp_no_delay_(other.tcp_no_delay_),
+        keep_alive_(other.keep_alive_),
+        send_buffer_size_(other.send_buffer_size_),
+        receive_buffer_size_(other.receive_buffer_size_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -80,6 +85,10 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   TcpClientBuilder<State>& max_retries(int max_retries);
   TcpClientBuilder<State>& connection_timeout(std::chrono::milliseconds timeout);
   TcpClientBuilder<State>& independent_context(bool use_independent = true);
+  TcpClientBuilder<State>& tcp_no_delay(bool enable = true);
+  TcpClientBuilder<State>& keep_alive(bool enable = true);
+  TcpClientBuilder<State>& send_buffer_size(size_t bytes);
+  TcpClientBuilder<State>& receive_buffer_size(size_t bytes);
 
  private:
   template <uint32_t S>
@@ -93,6 +102,10 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
+  bool tcp_no_delay_;
+  bool keep_alive_;
+  size_t send_buffer_size_;
+  size_t receive_buffer_size_;
 };
 
 using TcpClientBuilderDefault = TcpClientBuilder<BuilderState::None>;
