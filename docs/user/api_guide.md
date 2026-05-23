@@ -1053,6 +1053,10 @@ Runtime statistics are diagnostic snapshots. They are intended for monitoring an
 
 `messages_accepted` means the local send path accepted the payload. It does not guarantee remote delivery. `messages_sent` means the transport reported a successful write completion, and `messages_received` means incoming data was observed by the transport or wrapper. Use application-level acknowledgements when delivery confirmation matters.
 
+`dropped_messages` and `dropped_bytes` count payloads that were previously accepted into the local queue and later discarded by a freshness-oriented policy such as `BestEffort`.
+
+They are different from `failed_sends`. A failed send means the new payload was not accepted into the local send path.
+
 `reset_stats()` clears cumulative counters such as accepted, sent, received, failed send, drop, and backpressure event counts. Current gauges such as `queued_bytes`, `pending_bytes`, and `backpressure_active` continue to reflect the live transport state.
 
 ### When to use each

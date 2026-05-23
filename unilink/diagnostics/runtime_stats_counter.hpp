@@ -61,9 +61,9 @@ struct RuntimeStatsCounters {
 
   void record_failed_send() { failed_sends.fetch_add(1, std::memory_order_relaxed); }
 
-  void record_dropped(size_t bytes) {
-    dropped_messages.fetch_add(1, std::memory_order_relaxed);
-    dropped_bytes.fetch_add(bytes, std::memory_order_relaxed);
+  void record_dropped(size_t messages, size_t bytes) {
+    dropped_messages.fetch_add(static_cast<uint64_t>(messages), std::memory_order_relaxed);
+    dropped_bytes.fetch_add(static_cast<uint64_t>(bytes), std::memory_order_relaxed);
   }
 
   void record_backpressure_event() { backpressure_events.fetch_add(1, std::memory_order_relaxed); }
