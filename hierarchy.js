@@ -45,6 +45,7 @@ var hierarchy =
     ] ],
     [ "unilink::config::ConfigPresets", "classunilink_1_1config_1_1ConfigPresets.html", null ],
     [ "unilink::wrapper::ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", null ],
+    [ "unilink::transport::queue_util::DropAccounting", "structunilink_1_1transport_1_1queue__util_1_1DropAccounting.html", null ],
     [ "std::enable_shared_from_this", null, [
       [ "unilink::transport::Serial", "classunilink_1_1transport_1_1Serial.html", null ],
       [ "unilink::transport::TcpClient", "classunilink_1_1transport_1_1TcpClient.html", null ],

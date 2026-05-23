@@ -197,8 +197,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abecb6252d1aca27788c09360a6752bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1efdbf4c871d615e713348dfcd5e39ad" id="r_a1efdbf4c871d615e713348dfcd5e39ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a1efdbf4c871d615e713348dfcd5e39ad">record_failed_send</a> ()</td></tr>
 <tr class="separator:a1efdbf4c871d615e713348dfcd5e39ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92a740fa10f262605a55b6e37d778112" id="r_a92a740fa10f262605a55b6e37d778112"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a92a740fa10f262605a55b6e37d778112">record_dropped</a> (size_t bytes)</td></tr>
-<tr class="separator:a92a740fa10f262605a55b6e37d778112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8681370b38761ea0e4ca64f74ae672b1" id="r_a8681370b38761ea0e4ca64f74ae672b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a8681370b38761ea0e4ca64f74ae672b1">record_dropped</a> (size_t messages, size_t bytes)</td></tr>
+<tr class="separator:a8681370b38761ea0e4ca64f74ae672b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26c3070c482b008b898d397b52ec0771" id="r_a26c3070c482b008b898d397b52ec0771"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a> ()</td></tr>
 <tr class="separator:a26c3070c482b008b898d397b52ec0771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49b2ee2a4d5cd544eb0658007688d1bd" id="r_a49b2ee2a4d5cd544eb0658007688d1bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a49b2ee2a4d5cd544eb0658007688d1bd">observe_queue</a> (size_t queued)</td></tr>
@@ -341,8 +341,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a92a740fa10f262605a55b6e37d778112" name="a92a740fa10f262605a55b6e37d778112"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92a740fa10f262605a55b6e37d778112">&#9670;&#160;</a></span>record_dropped()</h2>
+<a id="a8681370b38761ea0e4ca64f74ae672b1" name="a8681370b38761ea0e4ca64f74ae672b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8681370b38761ea0e4ca64f74ae672b1">&#9670;&#160;</a></span>record_dropped()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -354,8 +354,18 @@ Public Attributes</h2></td></tr>
           <td class="memname">void unilink::diagnostics::RuntimeStatsCounters::record_dropped </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>bytes</em></td><td>)</td>
+          <td class="paramname"><em>messages</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>bytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -366,6 +376,13 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="runtime__stats__counter_8hpp_source.html#l00064">64</a> of file <a class="el" href="runtime__stats__counter_8hpp_source.html">runtime_stats_counter.hpp</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1diagnostics_1_1RuntimeStatsCounters_a8681370b38761ea0e4ca64f74ae672b1_icgraph.svg" width="418" height="302"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -393,11 +410,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="runtime__stats__counter_8hpp_source.html#l00062">62</a> of file <a class="el" href="runtime__stats__counter_8hpp_source.html">runtime_stats_counter.hpp</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1diagnostics_1_1RuntimeStatsCounters_a1efdbf4c871d615e713348dfcd5e39ad_icgraph.svg" width="592" height="302"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -428,11 +445,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="runtime__stats__counter_8hpp_source.html#l00057">57</a> of file <a class="el" href="runtime__stats__counter_8hpp_source.html">runtime_stats_counter.hpp</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1diagnostics_1_1RuntimeStatsCounters_abecb6252d1aca27788c09360a6752bff_icgraph.svg" width="390" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -491,11 +508,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="runtime__stats__counter_8hpp_source.html#l00097">97</a> of file <a class="el" href="runtime__stats__counter_8hpp_source.html">runtime_stats_counter.hpp</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1diagnostics_1_1RuntimeStatsCounters_a6085b62a367f16775e617c0e77e3fed5_icgraph.svg" width="390" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -542,11 +559,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="runtime__stats__counter_8hpp_source.html#l00078">78</a> of file <a class="el" href="runtime__stats__counter_8hpp_source.html">runtime_stats_counter.hpp</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1diagnostics_1_1RuntimeStatsCounters_a79c70032977678a0d3288810d8822b9c_icgraph.svg" width="422" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -738,7 +755,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1diagnostics.html">diagnostics</a></li><li class="navelem"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html">RuntimeStatsCounters</a></li>
-    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

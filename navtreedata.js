@@ -913,13 +913,13 @@ var NAVTREEINDEX =
 "platform_8hpp_source.html",
 "structunilink_1_1config_1_1UdsClientConfig.html#a6603b7ada53ed04dc10c38112f69ab4c",
 "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#ac75d31ba7fa11adbd3ffddb2d6e86398",
-"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ae1a24bd1c77622db6144d4c798074097",
-"structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9bf80f30777cdbfb65cf05af5ae3d0fa",
-"structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a0996a4ce73a35697af7937c79adc7196",
-"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a49aac01b289fa881be0b80acc30b0023",
-"structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a629801f653d6855fa41f33ede86b845a",
-"tutorial_04.html#autotoc_md840",
-"user_requirements.html#autotoc_md689"
+"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ad669c0ffe1085bdf4204af6edc70c5f7",
+"structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a900ea123e4615bf7b2402b2ac5624d05",
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#af93b38560d51425059bb3ac877e8a232",
+"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#a2efdb2ae4eab24161d8c0adee210b83d",
+"structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#a4658dd824ed63d5f254dce7606cb68d8",
+"tutorial_03.html#autotoc_md821",
+"user_requirements.html#autotoc_md677"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -224,6 +224,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <li>rejected send: the new payload was not accepted into the local send path</li>
 <li>dropped queued payload: an older queued payload was removed after a newer payload was accepted</li>
 </ul>
+<p>A dropped queued payload must be accounted separately from a rejected send. <code>BestEffort</code> drop accounting should count only payloads that were previously accepted into the local outgoing queue. In-flight writes are not counted as dropped queued payloads.</p>
 <p><b>Contract Rules:</b></p><ol type="1">
 <li><b>Triggering (High Watermark):</b> When the size of queued write data (bytes pending transmission) reaches or exceeds the configured <code>backpressure_threshold</code>, the transport MUST invoke its internal <code>on_backpressure</code> callback with the current queue size. Wrapper and builder APIs may expose backpressure notifications where the wrapper supports them. See the user API guide for public callback availability.</li>
 <li><b>Relieving (Low Watermark):</b> Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as <code>threshold / 2</code> or <code>0</code> depending on implementation, but must be strictly less than the high watermark), the transport MUST invoke its internal <code>on_backpressure</code> callback with the new lower queue size.</li>
@@ -309,7 +310,7 @@ $(document).ready(function(){initNavTree('contrib_arch_channel.html',''); initRe
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

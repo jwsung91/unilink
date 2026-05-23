@@ -1216,6 +1216,8 @@ Runtime Statistics</h2>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;dropped messages: &quot;</span> &lt;&lt; stats.dropped_messages &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 </div><!-- fragment --><p>Runtime statistics are diagnostic snapshots. They are intended for monitoring and tuning, not for synchronization.</p>
 <p><code>messages_accepted</code> means the local send path accepted the payload. It does not guarantee remote delivery. <code>messages_sent</code> means the transport reported a successful write completion, and <code>messages_received</code> means incoming data was observed by the transport or wrapper. Use application-level acknowledgements when delivery confirmation matters.</p>
+<p><code>dropped_messages</code> and <code>dropped_bytes</code> count payloads that were previously accepted into the local queue and later discarded by a freshness-oriented policy such as <code>BestEffort</code>.</p>
+<p>They are different from <code>failed_sends</code>. A failed send means the new payload was not accepted into the local send path.</p>
 <p><code>reset_stats()</code> clears cumulative counters such as accepted, sent, received, failed send, drop, and backpressure event counts. Current gauges such as <code>queued_bytes</code>, <code>pending_bytes</code>, and <code>backpressure_active</code> continue to reflect the live transport state.</p>
 <h2><a class="anchor" id="autotoc_md580"></a>
 When to use each</h2>
@@ -1355,7 +1357,7 @@ Connection Limits</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

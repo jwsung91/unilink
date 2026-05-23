@@ -794,84 +794,86 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
 <div class="foldopen" id="foldopen00564" data-start="{" data-end="}">
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#afc0f2b564e8b6679cb5fda7805a3d879">  564</a></span><span class="keywordtype">void</span> UdsClient::Impl::maybe_flush_for_keep_latest(<span class="keywordtype">size_t</span> added) {</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>  queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>}</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>  <span class="keyword">const</span> <span class="keyword">auto</span> dropped =</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>      queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>  <span class="keywordflow">if</span> (dropped.any()) stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a8681370b38761ea0e4ca64f74ae672b1">record_dropped</a>(dropped.messages, dropped.bytes);</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>}</div>
 </div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span> </div>
-<div class="foldopen" id="foldopen00568" data-start="{" data-end="}">
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a900ea123e4615bf7b2402b2ac5624d05">  568</a></span><span class="keywordtype">void</span> UdsClient::Impl::observe_queue() {</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>  stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a49b2ee2a4d5cd544eb0658007688d1bd">observe_queue</a>(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>}</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
+<div class="foldopen" id="foldopen00570" data-start="{" data-end="}">
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a900ea123e4615bf7b2402b2ac5624d05">  570</a></span><span class="keywordtype">void</span> UdsClient::Impl::observe_queue() {</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>  stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a49b2ee2a4d5cd544eb0658007688d1bd">observe_queue</a>(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>}</div>
 </div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span> </div>
-<div class="foldopen" id="foldopen00572" data-start="{" data-end="}">
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a493008a5d245aaaf2ccf94da956486b4">  572</a></span><span class="keywordtype">void</span> UdsClient::Impl::report_backpressure(std::shared_ptr&lt;UdsClient&gt; self, <span class="keywordtype">size_t</span> queued_bytes) {</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>  <span class="keywordflow">if</span> (stop_requested_.load() || stopping_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>  observe_queue();</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span> </div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>  <a class="code hl_typedef" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> on_bp;</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>  {</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    std::lock_guard&lt;std::mutex&gt; lock(callback_mtx_);</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    on_bp = on_bp_;</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>  }</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span> </div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>    backpressure_active_ = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>    stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a>();</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>    <span class="keywordflow">if</span> (on_bp) {</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>      <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>        on_bp(queued_bytes);</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>      } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>        <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                          fmt::format(<span class="stringliteral">&quot;Exception in backpressure callback: {}&quot;</span>, e.what()));</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>      } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>        <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>      }</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    }</div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>    <span class="comment">// Flush pending_ → tx_</span></div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> moved = pending_bytes_.exchange(0);</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>    queue_bytes_ += moved;</div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    <span class="keywordflow">while</span> (!pending_.empty()) {</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>      tx_.emplace_back(std::move(pending_.front()));</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>      pending_.pop_front();</div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>    }</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>    observe_queue();</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>    backpressure_active_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a>();</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>    <span class="keywordflow">if</span> (on_bp) {</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>      <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>        on_bp(queued_bytes);</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>      } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>      }  <span class="comment">// fire OFF with pre-flush queue size</span></div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>    }</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>    <span class="comment">// If post-flush queue is still high, fire ON again</span></div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>    <span class="keywordflow">if</span> (queue_bytes_ &gt;= bp_high_) {</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>      backpressure_active_ = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>      stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a>();</div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>      <span class="keywordflow">if</span> (on_bp) {</div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>          on_bp(queue_bytes_);</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>        } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>        }</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>      }</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>    }</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>    <span class="keywordflow">if</span> (!writing_) do_write(self, current_seq_.load());</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>  }</div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>}</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span> </div>
+<div class="foldopen" id="foldopen00574" data-start="{" data-end="}">
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a493008a5d245aaaf2ccf94da956486b4">  574</a></span><span class="keywordtype">void</span> UdsClient::Impl::report_backpressure(std::shared_ptr&lt;UdsClient&gt; self, <span class="keywordtype">size_t</span> queued_bytes) {</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>  <span class="keywordflow">if</span> (stop_requested_.load() || stopping_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>  observe_queue();</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span> </div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>  <a class="code hl_typedef" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> on_bp;</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>  {</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>    std::lock_guard&lt;std::mutex&gt; lock(callback_mtx_);</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>    on_bp = on_bp_;</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>  }</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span> </div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>    backpressure_active_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>    stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a>();</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>    <span class="keywordflow">if</span> (on_bp) {</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>      <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>        on_bp(queued_bytes);</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>      } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>        <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                          fmt::format(<span class="stringliteral">&quot;Exception in backpressure callback: {}&quot;</span>, e.what()));</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>      } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>        <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_client&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>      }</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>    }</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>    <span class="comment">// Flush pending_ → tx_</span></div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> moved = pending_bytes_.exchange(0);</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>    queue_bytes_ += moved;</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>    <span class="keywordflow">while</span> (!pending_.empty()) {</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>      tx_.emplace_back(std::move(pending_.front()));</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>      pending_.pop_front();</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>    }</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    observe_queue();</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>    backpressure_active_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>    stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a>();</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>    <span class="keywordflow">if</span> (on_bp) {</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>      <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>        on_bp(queued_bytes);</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>      } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>      }  <span class="comment">// fire OFF with pre-flush queue size</span></div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>    }</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>    <span class="comment">// If post-flush queue is still high, fire ON again</span></div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>    <span class="keywordflow">if</span> (queue_bytes_ &gt;= bp_high_) {</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>      backpressure_active_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>      stats_.<a class="code hl_function" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">record_backpressure_event</a>();</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>      <span class="keywordflow">if</span> (on_bp) {</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>          on_bp(queue_bytes_);</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>        } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        }</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>      }</div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>    }</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>    <span class="keywordflow">if</span> (!writing_) do_write(self, current_seq_.load());</div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>  }</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>}</div>
 </div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span> </div>
-<div class="foldopen" id="foldopen00627" data-start="{" data-end="}">
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">  627</a></span><span class="keywordtype">void</span> UdsClient::Impl::record_error(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat,</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>                                   std::string_view operation, <span class="keyword">const</span> boost::system::error_code&amp; ec,</div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>                                   std::string_view msg, <span class="keywordtype">bool</span> retryable, uint32_t) {</div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>  std::lock_guard&lt;std::mutex&gt; lock(last_err_mtx_);</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>  last_error_info_ = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>(lvl, cat, <span class="stringliteral">&quot;uds_client&quot;</span>, operation, msg, ec, retryable);</div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>}</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span> </div>
+<div class="foldopen" id="foldopen00629" data-start="{" data-end="}">
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">  629</a></span><span class="keywordtype">void</span> UdsClient::Impl::record_error(<a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="code hl_enumeration" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat,</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>                                   std::string_view operation, <span class="keyword">const</span> boost::system::error_code&amp; ec,</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>                                   std::string_view msg, <span class="keywordtype">bool</span> retryable, uint32_t) {</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>  std::lock_guard&lt;std::mutex&gt; lock(last_err_mtx_);</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>  last_error_info_ = <a class="code hl_struct" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>(lvl, cat, <span class="stringliteral">&quot;uds_client&quot;</span>, operation, msg, ec, retryable);</div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>}</div>
 </div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span> </div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span> </div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__uds__socket_8hpp_html"><div class="ttname"><a href="boost__uds__socket_8hpp.html">boost_uds_socket.hpp</a></div></div>
 <div class="ttc" id="abp__utils_8hpp_html"><div class="ttname"><a href="bp__utils_8hpp.html">bp_utils.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition</b> <a href="channel_8hpp_source.html#l00032">channel.hpp:32</a></div></div>
@@ -922,6 +924,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1RuntimeStatsCounters_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html">unilink::diagnostics::RuntimeStatsCounters</a></div><div class="ttdef"><b>Definition</b> <a href="runtime__stats__counter_8hpp_source.html#l00028">runtime_stats_counter.hpp:28</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1RuntimeStatsCounters_html_a26c3070c482b008b898d397b52ec0771"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771">unilink::diagnostics::RuntimeStatsCounters::record_backpressure_event</a></div><div class="ttdeci">void record_backpressure_event()</div><div class="ttdef"><b>Definition</b> <a href="runtime__stats__counter_8hpp_source.html#l00069">runtime_stats_counter.hpp:69</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1RuntimeStatsCounters_html_a49b2ee2a4d5cd544eb0658007688d1bd"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a49b2ee2a4d5cd544eb0658007688d1bd">unilink::diagnostics::RuntimeStatsCounters::observe_queue</a></div><div class="ttdeci">void observe_queue(size_t queued)</div><div class="ttdef"><b>Definition</b> <a href="runtime__stats__counter_8hpp_source.html#l00071">runtime_stats_counter.hpp:71</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1RuntimeStatsCounters_html_a8681370b38761ea0e4ca64f74ae672b1"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a8681370b38761ea0e4ca64f74ae672b1">unilink::diagnostics::RuntimeStatsCounters::record_dropped</a></div><div class="ttdeci">void record_dropped(size_t messages, size_t bytes)</div><div class="ttdef"><b>Definition</b> <a href="runtime__stats__counter_8hpp_source.html#l00064">runtime_stats_counter.hpp:64</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a0bf7c232632514b3f5b23d12d686b966"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a0bf7c232632514b3f5b23d12d686b966">unilink::transport::UdsClient::Impl::cfg_</a></div><div class="ttdeci">UdsClientConfig cfg_</div><div class="ttdef"><b>Definition</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00065">uds_client.cc:65</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a0ddf46cb3d02268a2a7fd61134be6c9a"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a0ddf46cb3d02268a2a7fd61134be6c9a">unilink::transport::UdsClient::Impl::backpressure_active_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; backpressure_active_</div><div class="ttdef"><b>Definition</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00083">uds_client.cc:83</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a131b9c554866d0a445940ea9a731064e"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a131b9c554866d0a445940ea9a731064e">unilink::transport::UdsClient::Impl::callback_mtx_</a></div><div class="ttdeci">std::mutex callback_mtx_</div><div class="ttdef"><b>Definition</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00089">uds_client.cc:89</a></div></div>
@@ -976,7 +979,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="transport_2uds_2uds__client_8cc.html">uds_client.cc</a></li>
-    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 09:01:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

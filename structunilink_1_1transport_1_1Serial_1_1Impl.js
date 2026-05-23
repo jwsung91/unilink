@@ -7,6 +7,7 @@ var structunilink_1_1transport_1_1Serial_1_1Impl =
     [ "do_write", "structunilink_1_1transport_1_1Serial_1_1Impl.html#aa9a10ed30a142988cefbf14c3ed148fa", null ],
     [ "handle_error", "structunilink_1_1transport_1_1Serial_1_1Impl.html#aa5e52109390c2e3c10257ad646c71478", null ],
     [ "init", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a00cf67d7809c4054f345fde3f5ee42c1", null ],
+    [ "maybe_flush_for_keep_latest", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a1094459738e37e55fc52370cca725f42", null ],
     [ "notify_state", "structunilink_1_1transport_1_1Serial_1_1Impl.html#a564a050630f8980db63c40b0afe01620", null ],
     [ "observe_queue", "structunilink_1_1transport_1_1Serial_1_1Impl.html#ab69a32400c95674e780be4ca68e82258", null ],
     [ "open_and_configure", "structunilink_1_1transport_1_1Serial_1_1Impl.html#af6a469ca2253395f5998f0e18bcdf615", null ],

@@ -3,7 +3,7 @@ var structunilink_1_1diagnostics_1_1RuntimeStatsCounters =
     [ "observe_queue", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a49b2ee2a4d5cd544eb0658007688d1bd", null ],
     [ "record_accepted", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#ab4f053a78d4b410cb2426d8f334b70b8", null ],
     [ "record_backpressure_event", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771", null ],
-    [ "record_dropped", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a92a740fa10f262605a55b6e37d778112", null ],
+    [ "record_dropped", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a8681370b38761ea0e4ca64f74ae672b1", null ],
     [ "record_failed_send", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a1efdbf4c871d615e713348dfcd5e39ad", null ],
     [ "record_received", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#abecb6252d1aca27788c09360a6752bff", null ],
     [ "record_sent", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a99b7fcab79f206fed76e9e08e7bc7e20", null ],

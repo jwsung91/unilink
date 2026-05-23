@@ -308,6 +308,7 @@ Interpreting Strategy Results</h2>
 <li><code>failed_sends</code></li>
 <li><code>backpressure_events</code></li>
 </ul>
+<p>When using <code>BestEffort</code>, monitor <code>dropped_messages</code> and <code>dropped_bytes</code>. A high accepted rate does not imply that every queued payload was preserved.</p>
 <h2><a class="anchor" id="autotoc_md643"></a>
 2. High-Throughput Sensors (LiDAR/Camera)</h2>
 <p>For robotics perception, processing stale data is often worse than skipping frames. Use <code>BestEffort</code> with a low threshold to prevent <b>Bufferbloat</b>.</p>
@@ -340,7 +341,7 @@ Interpreting Strategy Results</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

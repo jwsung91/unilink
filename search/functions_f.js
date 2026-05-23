@@ -4,7 +4,7 @@ var searchData=
   ['recent_5ferrors_1',['recent_errors',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#a8d203481864ef2c2f5d8e3546fcf5e38',1,'unilink::diagnostics::ErrorHandler']]],
   ['record_5faccepted_2',['record_accepted',['../structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#ab4f053a78d4b410cb2426d8f334b70b8',1,'unilink::diagnostics::RuntimeStatsCounters']]],
   ['record_5fbackpressure_5fevent_3',['record_backpressure_event',['../structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a26c3070c482b008b898d397b52ec0771',1,'unilink::diagnostics::RuntimeStatsCounters']]],
-  ['record_5fdropped_4',['record_dropped',['../structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a92a740fa10f262605a55b6e37d778112',1,'unilink::diagnostics::RuntimeStatsCounters']]],
+  ['record_5fdropped_4',['record_dropped',['../structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a8681370b38761ea0e4ca64f74ae672b1',1,'unilink::diagnostics::RuntimeStatsCounters']]],
   ['record_5ferror_5',['record_error',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a0717bc9eb7976b754e41a562418035e4',1,'unilink::transport::TcpClient::Impl::record_error()'],['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6',1,'unilink::transport::UdsClient::Impl::record_error()']]],
   ['record_5ffailed_5fsend_6',['record_failed_send',['../structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#a1efdbf4c871d615e713348dfcd5e39ad',1,'unilink::diagnostics::RuntimeStatsCounters']]],
   ['record_5freceived_7',['record_received',['../structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html#abecb6252d1aca27788c09360a6752bff',1,'unilink::diagnostics::RuntimeStatsCounters']]],

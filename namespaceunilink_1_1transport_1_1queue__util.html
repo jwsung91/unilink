@@ -171,23 +171,29 @@ $(document).ready(function(){initNavTree('namespaceunilink_1_1transport_1_1queue
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">unilink::transport::queue_util Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1queue__util_1_1DropAccounting.html">DropAccounting</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a969f23360d48a823427a3ca737024c4e" id="r_a969f23360d48a823427a3ca737024c4e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a969f23360d48a823427a3ca737024c4e"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1queue__util.html#a969f23360d48a823427a3ca737024c4e">variant_buffer_size</a> (const T &amp;buf)</td></tr>
 <tr class="separator:a969f23360d48a823427a3ca737024c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2da4fca05512c14f792648bd05f4c63" id="r_af2da4fca05512c14f792648bd05f4c63"><td class="memTemplParams" colspan="2">template&lt;typename Deque &gt; </td></tr>
-<tr class="memitem:af2da4fca05512c14f792648bd05f4c63"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1queue__util.html#af2da4fca05512c14f792648bd05f4c63">maybe_flush_for_keep_latest</a> (<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">::unilink::base::constants::BackpressureStrategy</a> bp_strategy, size_t added, size_t bp_high, Deque &amp;tx, std::atomic&lt; size_t &gt; &amp;queue_bytes, const std::atomic&lt; bool &gt; &amp;backpressure_active)</td></tr>
-<tr class="separator:af2da4fca05512c14f792648bd05f4c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f65a62a47c86fc0f5b6c7c55d3e89c5" id="r_a6f65a62a47c86fc0f5b6c7c55d3e89c5"><td class="memTemplParams" colspan="2">template&lt;typename Deque &gt; </td></tr>
+<tr class="memitem:a6f65a62a47c86fc0f5b6c7c55d3e89c5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1transport_1_1queue__util_1_1DropAccounting.html">DropAccounting</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1queue__util.html#a6f65a62a47c86fc0f5b6c7c55d3e89c5">maybe_flush_for_keep_latest</a> (<a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">::unilink::base::constants::BackpressureStrategy</a> bp_strategy, size_t added, size_t bp_high, Deque &amp;tx, std::atomic&lt; size_t &gt; &amp;queue_bytes, const std::atomic&lt; bool &gt; &amp;backpressure_active)</td></tr>
+<tr class="separator:a6f65a62a47c86fc0f5b6c7c55d3e89c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="af2da4fca05512c14f792648bd05f4c63" name="af2da4fca05512c14f792648bd05f4c63"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2da4fca05512c14f792648bd05f4c63">&#9670;&#160;</a></span>maybe_flush_for_keep_latest()</h2>
+<a id="a6f65a62a47c86fc0f5b6c7c55d3e89c5" name="a6f65a62a47c86fc0f5b6c7c55d3e89c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f65a62a47c86fc0f5b6c7c55d3e89c5">&#9670;&#160;</a></span>maybe_flush_for_keep_latest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -198,7 +204,7 @@ template&lt;typename Deque &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void unilink::transport::queue_util::maybe_flush_for_keep_latest </td>
+          <td class="memname"><a class="el" href="structunilink_1_1transport_1_1queue__util_1_1DropAccounting.html">DropAccounting</a> unilink::transport::queue_util::maybe_flush_for_keep_latest </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceunilink_1_1base_1_1constants.html#af1e6ca56552bcb7c548ec6091a4d2e0a">::unilink::base::constants::BackpressureStrategy</a>&#160;</td>
           <td class="paramname"><em>bp_strategy</em>, </td>
@@ -246,13 +252,13 @@ template&lt;typename Deque &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bp__utils_8hpp_source.html#l00050">50</a> of file <a class="el" href="bp__utils_8hpp_source.html">bp_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bp__utils_8hpp_source.html#l00058">58</a> of file <a class="el" href="bp__utils_8hpp_source.html">bp_utils.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceunilink_1_1transport_1_1queue__util_af2da4fca05512c14f792648bd05f4c63_cgraph.svg" width="378" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceunilink_1_1transport_1_1queue__util_a6f65a62a47c86fc0f5b6c7c55d3e89c5_cgraph.svg" width="378" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -283,13 +289,13 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bp__utils_8hpp_source.html#l00034">34</a> of file <a class="el" href="bp__utils_8hpp_source.html">bp_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bp__utils_8hpp_source.html#l00042">42</a> of file <a class="el" href="bp__utils_8hpp_source.html">bp_utils.hpp</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceunilink_1_1transport_1_1queue__util_a969f23360d48a823427a3ca737024c4e_icgraph.svg" width="378" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceunilink_1_1transport_1_1queue__util_a969f23360d48a823427a3ca737024c4e_icgraph.svg" width="378" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -300,7 +306,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport_1_1queue__util.html">queue_util</a></li>
-    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 09:01:18 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
