@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-20 14:46:54</td>
+            <td class="headerValue">2026-05-23 08:32:48</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -191,21 +191,21 @@
 <span id="L113"><span class="lineNum">     113</span>                 :             :  * @param size Number of bytes to copy</span>
 <span id="L114"><span class="lineNum">     114</span>                 :             :  * @throws std::invalid_argument if parameters are invalid</span>
 <span id="L115"><span class="lineNum">     115</span>                 :             :  */</span>
-<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC tlaBgGNC">        1180 : inline void safe_memcpy(uint8_t* dest, const uint8_t* src, size_t size) {</span></span>
-<span id="L117"><span class="lineNum">     117</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1179 times"> + </span>]:<span class="tlaGNC">        1180 :   if (!dest) {</span></span>
+<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC tlaBgGNC">        1178 : inline void safe_memcpy(uint8_t* dest, const uint8_t* src, size_t size) {</span></span>
+<span id="L117"><span class="lineNum">     117</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1177 times"> + </span>]:<span class="tlaGNC">        1178 :   if (!dest) {</span></span>
 <span id="L118"><span class="lineNum">     118</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     throw std::invalid_argument(&quot;Destination pointer is null&quot;);</span></span>
 <span id="L119"><span class="lineNum">     119</span>                 :             :   }</span>
-<span id="L120"><span class="lineNum">     120</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1178 times"> + </span>]:<span class="tlaGNC">        1179 :   if (!src) {</span></span>
+<span id="L120"><span class="lineNum">     120</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1176 times"> + </span>]:<span class="tlaGNC">        1177 :   if (!src) {</span></span>
 <span id="L121"><span class="lineNum">     121</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     throw std::invalid_argument(&quot;Source pointer is null&quot;);</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :             :   }</span>
-<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1177 times"> + </span>]:<span class="tlaGNC">        1178 :   if (size == 0) {</span></span>
+<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1175 times"> + </span>]:<span class="tlaGNC">        1176 :   if (size == 0) {</span></span>
 <span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">           1 :     return;  // Nothing to copy</span></span>
 <span id="L125"><span class="lineNum">     125</span>                 :             :   }</span>
-<span id="L126"><span class="lineNum">     126</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1176 times"> + </span>]:<span class="tlaGNC">        1177 :   if (size &gt; constants::MAX_BUFFER_SIZE) {</span></span>
+<span id="L126"><span class="lineNum">     126</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1174 times"> + </span>]:<span class="tlaGNC">        1175 :   if (size &gt; constants::MAX_BUFFER_SIZE) {</span></span>
 <span id="L127"><span class="lineNum">     127</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     throw std::invalid_argument(&quot;Copy size too large (max MAX_BUFFER_SIZE)&quot;);</span></span>
 <span id="L128"><span class="lineNum">     128</span>                 :             :   }</span>
 <span id="L129"><span class="lineNum">     129</span>                 :             : </span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">        1176 :   std::memcpy(dest, src, size);</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">        1174 :   std::memcpy(dest, src, size);</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :             : }</span>
 <span id="L132"><span class="lineNum">     132</span>                 :             : </span>
 <span id="L133"><span class="lineNum">     133</span>                 :             : /**</span>
@@ -262,8 +262,8 @@
 <span id="L184"><span class="lineNum">     184</span>                 :             :  * @param str The string to convert</span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :  * @return std::pair&lt;const uint8_t*, size_t&gt; containing pointer and size</span>
 <span id="L186"><span class="lineNum">     186</span>                 :             :  */</span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">        1159 : inline std::pair&lt;const uint8_t*, size_t&gt; string_to_bytes(std::string_view str) {</span></span>
-<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">        1159 :   return {reinterpret_cast&lt;const uint8_t*&gt;(str.data()), str.size()};</span></span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">        1162 : inline std::pair&lt;const uint8_t*, size_t&gt; string_to_bytes(std::string_view str) {</span></span>
+<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">        1162 :   return {reinterpret_cast&lt;const uint8_t*&gt;(str.data()), str.size()};</span></span>
 <span id="L189"><span class="lineNum">     189</span>                 :             : }</span>
 <span id="L190"><span class="lineNum">     190</span>                 :             : }  // namespace safe_convert</span>
 <span id="L191"><span class="lineNum">     191</span>                 :             : </span>

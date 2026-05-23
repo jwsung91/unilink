@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-20 14:46:54</td>
+            <td class="headerValue">2026-05-23 08:32:48</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -141,31 +141,33 @@
 <span id="L63"><span class="lineNum">      63</span>                 :             :   void stop() override;</span>
 <span id="L64"><span class="lineNum">      64</span>                 :             :   bool is_connected() const override;</span>
 <span id="L65"><span class="lineNum">      65</span>                 :             :   bool is_backpressure_active() const override;</span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :   boost::asio::any_io_executor get_executor() override;</span>
-<span id="L67"><span class="lineNum">      67</span>                 :             : </span>
-<span id="L68"><span class="lineNum">      68</span>                 :             :   bool async_write_copy(memory::ConstByteSpan data) override;</span>
-<span id="L69"><span class="lineNum">      69</span>                 :             :   bool async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) override;</span>
-<span id="L70"><span class="lineNum">      70</span>                 :             :   bool async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) override;</span>
-<span id="L71"><span class="lineNum">      71</span>                 :             : </span>
-<span id="L72"><span class="lineNum">      72</span>                 :             :   void on_bytes(OnBytes cb) override;</span>
-<span id="L73"><span class="lineNum">      73</span>                 :             :   void on_state(OnState cb) override;</span>
-<span id="L74"><span class="lineNum">      74</span>                 :             :   void on_backpressure(OnBackpressure cb) override;</span>
-<span id="L75"><span class="lineNum">      75</span>                 :             : </span>
-<span id="L76"><span class="lineNum">      76</span>                 :             :   void set_backpressure_strategy(base::constants::BackpressureStrategy strategy);</span>
-<span id="L77"><span class="lineNum">      77</span>                 :             :   void set_retry_interval(unsigned interval_ms);</span>
-<span id="L78"><span class="lineNum">      78</span>                 :             : </span>
-<span id="L79"><span class="lineNum">      79</span>                 :             :  private:</span>
-<span id="L80"><span class="lineNum">      80</span>                 :             :   explicit Serial(const config::SerialConfig&amp; cfg);</span>
-<span id="L81"><span class="lineNum">      81</span>                 :             :   Serial(const config::SerialConfig&amp; cfg, std::unique_ptr&lt;interface::SerialPortInterface&gt; port,</span>
-<span id="L82"><span class="lineNum">      82</span>                 :             :          boost::asio::io_context&amp; ioc);</span>
-<span id="L83"><span class="lineNum">      83</span>                 :             : </span>
-<span id="L84"><span class="lineNum">      84</span>                 :             :   struct Impl;</span>
-<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC tlaBgGNC">           9 :   const Impl* get_impl() const { return impl_.get(); }</span></span>
-<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">         136 :   Impl* get_impl() { return impl_.get(); }</span></span>
-<span id="L87"><span class="lineNum">      87</span>                 :             :   std::unique_ptr&lt;Impl&gt; impl_;</span>
-<span id="L88"><span class="lineNum">      88</span>                 :             : };</span>
-<span id="L89"><span class="lineNum">      89</span>                 :             : }  // namespace transport</span>
-<span id="L90"><span class="lineNum">      90</span>                 :             : }  // namespace unilink</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :   wrapper::RuntimeStats stats() const override;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :   void reset_stats() override;</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :   boost::asio::any_io_executor get_executor() override;</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : </span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :   bool async_write_copy(memory::ConstByteSpan data) override;</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :   bool async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) override;</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :   bool async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) override;</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : </span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :   void on_bytes(OnBytes cb) override;</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :   void on_state(OnState cb) override;</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :   void on_backpressure(OnBackpressure cb) override;</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : </span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :   void set_backpressure_strategy(base::constants::BackpressureStrategy strategy);</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :   void set_retry_interval(unsigned interval_ms);</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : </span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :  private:</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :   explicit Serial(const config::SerialConfig&amp; cfg);</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :   Serial(const config::SerialConfig&amp; cfg, std::unique_ptr&lt;interface::SerialPortInterface&gt; port,</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :          boost::asio::io_context&amp; ioc);</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : </span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :   struct Impl;</span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC tlaBgGNC">           9 :   const Impl* get_impl() const { return impl_.get(); }</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">         135 :   Impl* get_impl() { return impl_.get(); }</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :   std::unique_ptr&lt;Impl&gt; impl_;</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             : };</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : }  // namespace transport</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
