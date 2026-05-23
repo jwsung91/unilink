@@ -54,6 +54,10 @@ auto channel = unilink::{type}(params)
 
 Default `None` means no callback is invoked.
 
+`backpressure_threshold(bytes)` is measured in queued outgoing bytes, not message count.
+
+`on_backpressure(...)` is a notification hook. It is not a blocking flow-control mechanism.
+
 ### Callback Registration Policy
 
 Callback registration is optional.
@@ -119,11 +123,12 @@ Use `.on_message()` together with a framer when you want callback flow to operat
 | `->start()` | Start the connection (returns `std::future<bool>`) |
 | `->start_sync()` | Start the connection and block until established (returns `bool`) |
 | `->stop()` | Stop the connection |
-| `TcpClient` / `Serial` / `UdpClient` / `UdsClient`: `->send(data)` / `->send_line(text)` | Send data to the configured peer |
+| `TcpClient` / `Serial` / `UdpClient` / `UdsClient`: `->send(data)` / `->try_send(data)` / `->send_line(text)` | Send data to the configured peer |
 | `TcpClient` / `Serial` / `UdpClient` / `UdsClient`: `->connected()` | Check channel state |
-
 | `TcpServer` / `UdsServer`: `->broadcast(data)` / `->send_to(client_id, data)` | Send data to one or more connected clients |
 | `TcpServer` / `UdsServer`: `->listening()` | Check if the server socket is bound and listening |
+
+For producer loops that must not block, prefer `try_send()` or configure `BestEffort`. In `Reliable` mode, `send()` may wait for queue pressure to clear.
 
 **Builder Flow**
 
@@ -1003,6 +1008,34 @@ When a sender produces data faster than the transport can deliver it, messages a
 `BestEffort` is inspired by DDS HISTORY QoS. It prioritizes freshness. When the queue exceeds the configured threshold, older queued data may be dropped to make room for newer data.
 
 `on_backpressure(callback)` is a notification hook. It is not a blocking flow-control mechanism. The callback receives the current queued byte count when the queue crosses implementation-defined high/low watermark transitions. Backpressure callbacks follow the same callback execution model as other wrapper callbacks, so keep them short and non-blocking.
+
+### Send And Backpressure Semantics
+
+`unilink` separates send acceptance, queue preservation, and remote delivery.
+
+A successful `send()` or `try_send()` means that the payload was accepted by the local wrapper/transport send path. It does not guarantee that the remote peer has already received or processed the data.
+
+#### Reliable
+
+`Reliable` is the default strategy. It prioritizes preserving queued outgoing data.
+
+In `Reliable` mode, `send()` may block when the local outgoing queue is under backpressure. Use `try_send()` when producer code must remain non-blocking.
+
+If the queue cannot accept more data, send APIs may return `false`.
+
+#### BestEffort
+
+`BestEffort` prioritizes freshness over preserving every queued payload.
+
+In `BestEffort` mode, a successful send means the new payload was accepted into the local send path. It does not imply that older queued payloads were preserved. Older queued data may be dropped when queue pressure is high.
+
+This is useful for telemetry, sensor frames, or other freshness-oriented data where processing stale payloads is worse than dropping them.
+
+#### Throughput Interpretation
+
+Accepted throughput is not the same as delivered or received throughput.
+
+For `BestEffort`, evaluate behavior using received throughput, delivery rate, queue depth, and drop metrics when available, not accepted throughput alone.
 
 ### When to use each
 
