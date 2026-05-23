@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-23 09:08:30</td>
+            <td class="headerValue">2026-05-23 10:22:48</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">89.6&nbsp;%</td>
@@ -365,22 +365,22 @@
 <span id="L282"><span class="lineNum">     282</span>                 :<span class="tlaGNC">          12 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::UdsServer&gt;(server_);</span></span>
 <span id="L283"><span class="lineNum">     283</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          12 :     if (transport_server) {</span></span>
 <span id="L284"><span class="lineNum">     284</span>   [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          11 :       transport_server-&gt;on_multi_connect([this, weak_alive](ClientId id, const std::string&amp; info) {</span></span>
-<span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaGNC">           8 :         auto alive = weak_alive.lock();</span></span>
-<span id="L286"><span class="lineNum">     286</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">           8 :         if (!alive) return;</span></span>
+<span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaGNC">           9 :         auto alive = weak_alive.lock();</span></span>
+<span id="L286"><span class="lineNum">     286</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">           9 :         if (!alive) return;</span></span>
 <span id="L287"><span class="lineNum">     287</span>                 :             : </span>
-<span id="L288"><span class="lineNum">     288</span>                 :<span class="tlaGNC">           8 :         ConnectionHandler handler;</span></span>
+<span id="L288"><span class="lineNum">     288</span>                 :<span class="tlaGNC">           9 :         ConnectionHandler handler;</span></span>
 <span id="L289"><span class="lineNum">     289</span>                 :             :         {</span>
-<span id="L290"><span class="lineNum">     290</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :           std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
-<span id="L291"><span class="lineNum">     291</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span>]:<span class="tlaGNC">           8 :           if (framer_factory_) {</span></span>
+<span id="L290"><span class="lineNum">     290</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :           std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
+<span id="L291"><span class="lineNum">     291</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">           9 :           if (framer_factory_) {</span></span>
 <span id="L292"><span class="lineNum">     292</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           2 :             framers_[id] = framer_factory_();</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L293"><span class="lineNum">     293</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :             attach_framer_callback(id);</span></span>
 <span id="L294"><span class="lineNum">     294</span>                 :             :           }</span>
-<span id="L295"><span class="lineNum">     295</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :           handler = client_connect_handler_;</span></span>
-<span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">           8 :         }</span></span>
-<span id="L297"><span class="lineNum">     297</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           8 :         if (handler) handler(ConnectionContext(id, info));</span></span>
+<span id="L295"><span class="lineNum">     295</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :           handler = client_connect_handler_;</span></span>
+<span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">           9 :         }</span></span>
+<span id="L297"><span class="lineNum">     297</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           9 :         if (handler) handler(ConnectionContext(id, info));</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L298"><span class="lineNum">     298</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :       });</span></span>
+<span id="L298"><span class="lineNum">     298</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :       });</span></span>
 <span id="L299"><span class="lineNum">     299</span>   [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          11 :       transport_server-&gt;on_multi_data([this, weak_alive](ClientId id, memory::ConstByteSpan data_span) {</span></span>
 <span id="L300"><span class="lineNum">     300</span>                 :<span class="tlaGNC">           6 :         auto alive = weak_alive.lock();</span></span>
 <span id="L301"><span class="lineNum">     301</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span>]:<span class="tlaGNC">           6 :         if (!alive) return;</span></span>
