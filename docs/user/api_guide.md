@@ -130,6 +130,26 @@ Use `.on_message()` together with a framer when you want callback flow to operat
 
 For producer loops that must not block, prefer `try_send()` or configure `BestEffort`. In `Reliable` mode, `send()` may wait for queue pressure to clear.
 
+### Move And Shared Buffer Sends
+
+For large binary payloads, client-style wrappers provide advanced send APIs that can avoid unnecessary wrapper-level copies.
+
+```cpp
+std::vector<uint8_t> payload = build_frame();
+client->send_move(std::move(payload));
+```
+
+After calling `send_move(...)` or `try_send_move(...)`, treat the vector as consumed regardless of the return value.
+
+For immutable payloads that should be shared with unilink:
+
+```cpp
+auto payload = std::make_shared<const std::vector<uint8_t>>(build_frame());
+client->try_send_shared(payload);
+```
+
+`send_move(...)` and `send_shared(...)` follow the same Reliable/BestEffort backpressure semantics as `send(...)`. The `try_send_move(...)` and `try_send_shared(...)` variants are non-blocking escape hatches like `try_send(...)`.
+
 **Builder Flow**
 
 ```

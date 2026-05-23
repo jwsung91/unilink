@@ -22,6 +22,7 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
@@ -68,6 +69,10 @@ class UNILINK_API TcpClient : public ChannelInterface {
   bool send_line_blocking(std::string_view line) override;
   bool try_send(std::string_view data) override;
   bool try_send_line(std::string_view line) override;
+  bool send_move(std::vector<uint8_t>&& data) override;
+  bool try_send_move(std::vector<uint8_t>&& data) override;
+  bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
+  bool try_send_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
   bool connected() const override;
   RuntimeStats stats() const override;
   void reset_stats() override;

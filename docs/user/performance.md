@@ -72,13 +72,21 @@ Never perform heavy computation or blocking operations (like `sleep`) inside cal
 Use move semantics and avoid unnecessary string copies.
 
 ```cpp
-// ✅ GOOD: Move (no copy)
-std::string large_data = generate_data(1024 * 1024);
-client->send(std::move(large_data));
+// GOOD: transfer a large binary buffer into the send path
+std::vector<uint8_t> large_data = generate_frame(1024 * 1024);
+client->send_move(std::move(large_data));
 
-// ✅ GOOD: Use string_view for parsing (if supported)
+// GOOD: Use string_view for parsing (if supported)
 void parse(std::string_view msg) { ... }
 ```
+
+For large binary payloads, prefer move/shared send APIs when available:
+
+- `send_move(...)` transfers vector ownership into the send path.
+- `send_shared(...)` shares immutable payload ownership with unilink.
+- `try_send_move(...)` and `try_send_shared(...)` provide non-blocking variants.
+
+After calling `send_move(...)` or `try_send_move(...)`, treat the moved vector as consumed regardless of the return value.
 
 ### 2. Reserve Vector Capacity
 When building vectors of data, always `reserve` capacity to avoid reallocations.
