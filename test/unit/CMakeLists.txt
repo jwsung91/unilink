@@ -117,8 +117,7 @@ endforeach()
 
 # Wrapper tests (separate executables across TCP/UDP/UDS/Serial)
 foreach(test_file test_serial_wrapper_lifecycle.cc
-                  test_serial_wrapper_options.cc
-                  test_runtime_stats.cc
+                  test_serial_wrapper_options.cc test_runtime_stats.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
