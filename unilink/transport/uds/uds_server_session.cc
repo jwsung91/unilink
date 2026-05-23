@@ -68,14 +68,34 @@ void UdsServerSession::stop() {
 
 bool UdsServerSession::alive() const { return alive_.load(); }
 
+wrapper::RuntimeStats UdsServerSession::stats() const {
+  return stats_.snapshot(queue_bytes_.load(std::memory_order_relaxed), pending_bytes_.load(std::memory_order_relaxed),
+                         backpressure_active_.load(std::memory_order_relaxed));
+}
+
+void UdsServerSession::reset_stats() {
+  stats_.reset(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));
+}
+
 bool UdsServerSession::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> vec(data.begin(), data.end());
   return async_write_move(std::move(vec));
 }
 
 bool UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
-  if (!alive_ || closing_) return false;
-  if (queue_bytes_ + pending_bytes_ + data.size() > bp_limit_) return false;
+  if (!alive_ || closing_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  if (data.empty()) {
+    stats_.record_failed_send();
+    return false;
+  }
+  if (queue_bytes_ + pending_bytes_ + data.size() > bp_limit_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  stats_.record_accepted(data.size());
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     if (!alive_) return;
     size_t added = data.size();
@@ -88,6 +108,7 @@ bool UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
       }
       pending_bytes_ += added;
       pending_.emplace_back(std::move(data));
+      observe_queue();
       return;
     }
 
@@ -100,6 +121,7 @@ bool UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
 
     queue_bytes_ += added;
     tx_.emplace_back(std::move(data));
+    observe_queue();
     report_backpressure(queue_bytes_);
     if (!writing_) do_write();
   });
@@ -107,8 +129,15 @@ bool UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 bool UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!alive_ || closing_ || !data) return false;
-  if (queue_bytes_ + pending_bytes_ + data->size() > bp_limit_) return false;
+  if (!alive_ || closing_ || !data || data->empty()) {
+    stats_.record_failed_send();
+    return false;
+  }
+  if (queue_bytes_ + pending_bytes_ + data->size() > bp_limit_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  stats_.record_accepted(data->size());
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     if (!alive_) return;
     size_t added = data->size();
@@ -121,6 +150,7 @@ bool UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
       }
       pending_bytes_ += added;
       pending_.emplace_back(std::move(data));
+      observe_queue();
       return;
     }
 
@@ -133,6 +163,7 @@ bool UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
 
     queue_bytes_ += added;
     tx_.emplace_back(std::move(data));
+    observe_queue();
     report_backpressure(queue_bytes_);
     if (!writing_) do_write();
   });
@@ -152,6 +183,7 @@ void UdsServerSession::start_read() {
           do_close();
           return;
         }
+        if (bytes > 0) stats_.record_received(bytes);
         if (on_bytes_) on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));
         reset_idle_timer();
         start_read();
@@ -179,7 +211,7 @@ void UdsServerSession::do_write() {
 
   size_t bytes_to_write = buffer.size();
   socket_->async_write(buffer, net::bind_executor(strand_, [this, self = shared_from_this(), bytes_to_write](
-                                                               const boost::system::error_code& ec, size_t) {
+                                                               const boost::system::error_code& ec, size_t written) {
                          if (closing_ || !alive_) return;
                          writing_ = false;
                          current_write_buffer_ = std::nullopt;
@@ -190,6 +222,7 @@ void UdsServerSession::do_write() {
                            do_close();
                            return;
                          }
+                         stats_.record_sent(written);
                          if (!tx_.empty()) do_write();
                        }));
 }
@@ -221,15 +254,22 @@ void UdsServerSession::maybe_flush_for_keep_latest(size_t added) {
   queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
 }
 
+void UdsServerSession::observe_queue() {
+  stats_.observe_queue(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));
+}
+
 void UdsServerSession::report_backpressure(size_t queued_bytes) {
   if (closing_ || !alive_) return;
-  if (!on_bp_) return;
+  observe_queue();
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
-    try {
-      on_bp_(queued_bytes);
-    } catch (...) {
+    stats_.record_backpressure_event();
+    if (on_bp_) {
+      try {
+        on_bp_(queued_bytes);
+      } catch (...) {
+      }
     }
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
     // Flush pending_ → tx_
@@ -239,17 +279,24 @@ void UdsServerSession::report_backpressure(size_t queued_bytes) {
       tx_.emplace_back(std::move(pending_.front()));
       pending_.pop_front();
     }
+    observe_queue();
     backpressure_active_ = false;
-    try {
-      on_bp_(queued_bytes);
-    } catch (...) {
-    }  // fire OFF with pre-flush queue size
+    stats_.record_backpressure_event();
+    if (on_bp_) {
+      try {
+        on_bp_(queued_bytes);
+      } catch (...) {
+      }  // fire OFF with pre-flush queue size
+    }
     // If post-flush queue is still high, fire ON again
     if (queue_bytes_ >= bp_high_) {
       backpressure_active_ = true;
-      try {
-        on_bp_(queue_bytes_);
-      } catch (...) {
+      stats_.record_backpressure_event();
+      if (on_bp_) {
+        try {
+          on_bp_(queue_bytes_);
+        } catch (...) {
+        }
       }
     }
     if (!writing_) do_write();

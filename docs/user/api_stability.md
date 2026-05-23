@@ -36,6 +36,10 @@ The following callback context types are user-facing:
 - `unilink::ConnectionContext`
 - `unilink::ErrorContext`
 
+The following diagnostics type is user-facing:
+
+- `unilink::RuntimeStats`
+
 ## Supported But Advanced Headers
 
 These headers are supported, but most users should prefer including `<unilink/unilink.hpp>`:

@@ -69,6 +69,8 @@ class UNILINK_API UdsClient : public ChannelInterface {
   bool try_send(std::string_view data) override;
   bool try_send_line(std::string_view line) override;
   bool connected() const override;
+  RuntimeStats stats() const override;
+  void reset_stats() override;
 
   UdsClient& on_data(MessageHandler handler) override;
   UdsClient& on_data_batch(BatchMessageHandler handler) override;

@@ -59,6 +59,8 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   void stop() override;
   bool is_connected() const override;
   bool is_backpressure_active() const override;
+  wrapper::RuntimeStats stats() const override;
+  void reset_stats() override;
 
   // 1:1 writes (using configured remote_endpoint_)
   bool async_write_copy(memory::ConstByteSpan data) override;

@@ -27,6 +27,7 @@
 #include "unilink/wrapper/context.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 #include "unilink/wrapper/iserver.hpp"
+#include "unilink/wrapper/runtime_stats.hpp"
 
 // Wrapper implementations
 #include "unilink/wrapper/serial/serial.hpp"
@@ -74,6 +75,7 @@ using UdsServer = wrapper::UdsServer;
 using MessageContext = wrapper::MessageContext;
 using ConnectionContext = wrapper::ConnectionContext;
 using ErrorContext = wrapper::ErrorContext;
+using RuntimeStats = wrapper::RuntimeStats;
 
 // === Public Builder API Convenience Functions ===
 

@@ -37,6 +37,7 @@
 #include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/diagnostics/error_mapping.hpp"
 #include "unilink/diagnostics/logger.hpp"
+#include "unilink/diagnostics/runtime_stats_counter.hpp"
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/base/bp_utils.hpp"
 #include "unilink/transport/uds/boost_uds_socket.hpp"
@@ -80,6 +81,7 @@ struct UdsClient::Impl {
   size_t bp_low_;
   size_t bp_limit_;
   std::atomic<bool> backpressure_active_{false};
+  diagnostics::RuntimeStatsCounters stats_;
 
   OnBytes on_bytes_;
   OnState on_state_;
@@ -131,6 +133,7 @@ struct UdsClient::Impl {
   void recalculate_backpressure_bounds();
   void maybe_flush_for_keep_latest(size_t added);
   void report_backpressure(std::shared_ptr<UdsClient> self, size_t queued_bytes);
+  void observe_queue();
   void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
                     const boost::system::error_code& ec, std::string_view msg, bool retryable, uint32_t retry_count);
 
@@ -251,6 +254,15 @@ void UdsClient::stop() {
 
 bool UdsClient::is_connected() const { return impl_->connected_.load(); }
 bool UdsClient::is_backpressure_active() const { return impl_->backpressure_active_.load(); }
+wrapper::RuntimeStats UdsClient::stats() const {
+  return impl_->stats_.snapshot(impl_->queue_bytes_.load(std::memory_order_relaxed),
+                                impl_->pending_bytes_.load(std::memory_order_relaxed),
+                                impl_->backpressure_active_.load(std::memory_order_relaxed));
+}
+void UdsClient::reset_stats() {
+  impl_->stats_.reset(impl_->queue_bytes_.load(std::memory_order_relaxed) +
+                      impl_->pending_bytes_.load(std::memory_order_relaxed));
+}
 
 boost::asio::any_io_executor UdsClient::get_executor() { return impl_->strand_; }
 
@@ -260,8 +272,19 @@ bool UdsClient::async_write_copy(memory::ConstByteSpan data) {
 }
 
 bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
-  if (!impl_->connected_.load() || impl_->stop_requested_.load()) return false;
-  if (impl_->queue_bytes_ + impl_->pending_bytes_ + data.size() > impl_->bp_limit_) return false;
+  if (!impl_->connected_.load() || impl_->stop_requested_.load()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  if (data.empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  if (impl_->queue_bytes_ + impl_->pending_bytes_ + data.size() > impl_->bp_limit_) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  impl_->stats_.record_accepted(data.size());
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data.size();
 
@@ -274,6 +297,7 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
       }
       impl_->pending_bytes_ += added;
       impl_->pending_.emplace_back(std::move(data));
+      impl_->observe_queue();
       return;
     }
 
@@ -286,6 +310,7 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
     }
     impl_->queue_bytes_ += added;
     impl_->tx_.emplace_back(std::move(data));
+    impl_->observe_queue();
     impl_->report_backpressure(self, impl_->queue_bytes_);
     if (!impl_->writing_) {
       impl_->do_write(self, impl_->current_seq_.load());
@@ -295,8 +320,15 @@ bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!impl_->connected_.load() || impl_->stop_requested_.load() || !data) return false;
-  if (impl_->queue_bytes_ + impl_->pending_bytes_ + data->size() > impl_->bp_limit_) return false;
+  if (!impl_->connected_.load() || impl_->stop_requested_.load() || !data || data->empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  if (impl_->queue_bytes_ + impl_->pending_bytes_ + data->size() > impl_->bp_limit_) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  impl_->stats_.record_accepted(data->size());
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data->size();
 
@@ -309,6 +341,7 @@ bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
       }
       impl_->pending_bytes_ += added;
       impl_->pending_.emplace_back(std::move(data));
+      impl_->observe_queue();
       return;
     }
 
@@ -321,6 +354,7 @@ bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     }
     impl_->queue_bytes_ += added;
     impl_->tx_.emplace_back(std::move(data));
+    impl_->observe_queue();
     impl_->report_backpressure(self, impl_->queue_bytes_);
     if (!impl_->writing_) impl_->do_write(self, impl_->current_seq_.load());
   });
@@ -444,6 +478,7 @@ void UdsClient::Impl::start_read(std::shared_ptr<UdsClient> self, uint64_t seq) 
                                std::lock_guard<std::mutex> lock(self->impl_->callback_mtx_);
                                cb = self->impl_->on_bytes_;
                              }
+                             if (bytes > 0) self->impl_->stats_.record_received(bytes);
                              if (cb) cb(memory::ConstByteSpan(self->impl_->rx_.data(), bytes));
                              self->impl_->start_read(self, seq);
                            }));
@@ -470,7 +505,8 @@ void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
 
   size_t bytes_to_write = buffer.size();
   socket_->async_write(
-      buffer, net::bind_executor(strand_, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t) {
+      buffer,
+      net::bind_executor(strand_, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t written) {
         if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
         self->impl_->writing_ = false;
         self->impl_->current_write_buffer_ = std::nullopt;
@@ -482,6 +518,7 @@ void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
           self->impl_->handle_close(self, seq, ec);
           return;
         }
+        self->impl_->stats_.record_sent(written);
         if (!self->impl_->tx_.empty()) self->impl_->do_write(self, seq);
       }));
 }
@@ -528,25 +565,32 @@ void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
   queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
 }
 
+void UdsClient::Impl::observe_queue() {
+  stats_.observe_queue(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));
+}
+
 void UdsClient::Impl::report_backpressure(std::shared_ptr<UdsClient> self, size_t queued_bytes) {
   if (stop_requested_.load() || stopping_.load()) return;
+  observe_queue();
 
   OnBackpressure on_bp;
   {
     std::lock_guard<std::mutex> lock(callback_mtx_);
     on_bp = on_bp_;
   }
-  if (!on_bp) return;
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
-    try {
-      on_bp(queued_bytes);
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
-                        fmt::format("Exception in backpressure callback: {}", e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
+    stats_.record_backpressure_event();
+    if (on_bp) {
+      try {
+        on_bp(queued_bytes);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                          fmt::format("Exception in backpressure callback: {}", e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
+      }
     }
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
     // Flush pending_ → tx_
@@ -556,17 +600,24 @@ void UdsClient::Impl::report_backpressure(std::shared_ptr<UdsClient> self, size_
       tx_.emplace_back(std::move(pending_.front()));
       pending_.pop_front();
     }
+    observe_queue();
     backpressure_active_ = false;
-    try {
-      on_bp(queued_bytes);
-    } catch (...) {
-    }  // fire OFF with pre-flush queue size
+    stats_.record_backpressure_event();
+    if (on_bp) {
+      try {
+        on_bp(queued_bytes);
+      } catch (...) {
+      }  // fire OFF with pre-flush queue size
+    }
     // If post-flush queue is still high, fire ON again
     if (queue_bytes_ >= bp_high_) {
       backpressure_active_ = true;
-      try {
-        on_bp(queue_bytes_);
-      } catch (...) {
+      stats_.record_backpressure_event();
+      if (on_bp) {
+        try {
+          on_bp(queue_bytes_);
+        } catch (...) {
+        }
       }
     }
     if (!writing_) do_write(self, current_seq_.load());

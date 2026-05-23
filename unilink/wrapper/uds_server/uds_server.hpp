@@ -64,6 +64,8 @@ class UNILINK_API UdsServer : public ServerInterface {
   [[nodiscard]] std::future<bool> start() override;
   void stop() override;
   bool listening() const override;
+  RuntimeStats stats() const override;
+  void reset_stats() override;
 
   // Transmission
   bool broadcast(std::string_view data) override;

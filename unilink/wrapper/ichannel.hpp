@@ -26,6 +26,7 @@
 #include "unilink/base/visibility.hpp"
 #include "unilink/framer/iframer.hpp"
 #include "unilink/wrapper/context.hpp"
+#include "unilink/wrapper/runtime_stats.hpp"
 
 namespace unilink {
 namespace wrapper {
@@ -70,6 +71,8 @@ class UNILINK_API ChannelInterface {
    */
   virtual void stop() = 0;
   virtual bool connected() const = 0;
+  virtual RuntimeStats stats() const = 0;
+  virtual void reset_stats() = 0;
 
   // Transmission
   //
