@@ -146,6 +146,16 @@ In `BestEffort` mode, accepted throughput can be much higher than received throu
 
 In `Reliable` mode, throughput is usually limited by queue pressure and receiver progress, but accepted data is preserved unless the queue cannot accept more data.
 
+Use `stats()` to monitor queue pressure and drops:
+
+- `queued_bytes`
+- `pending_bytes`
+- `max_queued_bytes`
+- `dropped_messages`
+- `dropped_bytes`
+- `failed_sends`
+- `backpressure_events`
+
 ### 2. High-Throughput Sensors (LiDAR/Camera)
 
 For robotics perception, processing stale data is often worse than skipping frames. Use `BestEffort` with a low threshold to prevent **Bufferbloat**.

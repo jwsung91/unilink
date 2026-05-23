@@ -31,6 +31,7 @@
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/diagnostics/logger.hpp"
+#include "unilink/diagnostics/runtime_stats_counter.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
@@ -61,6 +62,7 @@ struct TcpServer::Impl {
   MultiClientConnectHandler on_multi_connect_;
   MultiClientDataHandler on_multi_data_;
   MultiClientDisconnectHandler on_multi_disconnect_;
+  diagnostics::RuntimeStatsCounters stats_;
 
   mutable std::mutex sessions_mutex_;
   std::unordered_map<ClientId, std::shared_ptr<TcpServerSession>> sessions_;
@@ -501,9 +503,46 @@ bool TcpServer::is_backpressure_active(ClientId client_id) const {
 
 boost::asio::any_io_executor TcpServer::get_executor() { return impl_->ioc_.get_executor(); }
 
+wrapper::RuntimeStats TcpServer::stats() const {
+  auto impl = get_impl();
+  auto aggregate = impl->stats_.snapshot(0, 0, false);
+  std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+  for (const auto& entry : impl->sessions_) {
+    if (!entry.second) continue;
+    const auto session_stats = entry.second->stats();
+    aggregate.bytes_accepted += session_stats.bytes_accepted;
+    aggregate.messages_accepted += session_stats.messages_accepted;
+    aggregate.bytes_sent += session_stats.bytes_sent;
+    aggregate.messages_sent += session_stats.messages_sent;
+    aggregate.bytes_received += session_stats.bytes_received;
+    aggregate.messages_received += session_stats.messages_received;
+    aggregate.failed_sends += session_stats.failed_sends;
+    aggregate.dropped_messages += session_stats.dropped_messages;
+    aggregate.dropped_bytes += session_stats.dropped_bytes;
+    aggregate.backpressure_events += session_stats.backpressure_events;
+    aggregate.queued_bytes += session_stats.queued_bytes;
+    aggregate.pending_bytes += session_stats.pending_bytes;
+    aggregate.max_queued_bytes += session_stats.max_queued_bytes;
+    aggregate.backpressure_active = aggregate.backpressure_active || session_stats.backpressure_active;
+  }
+  return aggregate;
+}
+
+void TcpServer::reset_stats() {
+  auto impl = get_impl();
+  impl->stats_.reset(0);
+  std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+  for (const auto& entry : impl->sessions_) {
+    if (entry.second) entry.second->reset_stats();
+  }
+}
+
 bool TcpServer::async_write_copy(memory::ConstByteSpan data) {
   auto impl = get_impl();
-  if (impl->stopping_.load()) return false;
+  if (impl->stopping_.load()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -513,12 +552,16 @@ bool TcpServer::async_write_copy(memory::ConstByteSpan data) {
   if (session && session->alive()) {
     return session->async_write_copy(data);
   }
+  impl->stats_.record_failed_send();
   return false;
 }
 
 bool TcpServer::async_write_move(std::vector<uint8_t>&& data) {
   auto impl = get_impl();
-  if (impl->stopping_.load()) return false;
+  if (impl->stopping_.load()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -528,12 +571,16 @@ bool TcpServer::async_write_move(std::vector<uint8_t>&& data) {
   if (session && session->alive()) {
     return session->async_write_move(std::move(data));
   }
+  impl->stats_.record_failed_send();
   return false;
 }
 
 bool TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   auto impl = get_impl();
-  if (impl->stopping_.load() || !data) return false;
+  if (impl->stopping_.load() || !data || data->empty()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -543,6 +590,7 @@ bool TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   if (session && session->alive()) {
     return session->async_write_shared(std::move(data));
   }
+  impl->stats_.record_failed_send();
   return false;
 }
 
@@ -574,12 +622,15 @@ bool TcpServer::broadcast(std::string_view message) {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   bool sent = false;
+  bool attempted = false;
   for (auto& entry : impl->sessions_) {
     auto& session = entry.second;
     if (session && session->alive()) {
+      attempted = true;
       if (session->async_write_shared(shared_data)) sent = true;
     }
   }
+  if (!attempted) impl->stats_.record_failed_send();
   return sent;
 }
 
@@ -588,12 +639,15 @@ bool TcpServer::broadcast(memory::ConstByteSpan data) {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   bool sent = false;
+  bool attempted = false;
   for (auto& entry : impl->sessions_) {
     auto& session = entry.second;
     if (session && session->alive()) {
+      attempted = true;
       if (session->async_write_shared(shared_data)) sent = true;
     }
   }
+  if (!attempted) impl->stats_.record_failed_send();
   return sent;
 }
 
@@ -609,6 +663,7 @@ bool TcpServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   if (it != impl->sessions_.end() && it->second && it->second->alive()) {
     return it->second->async_write_copy(data);
   }
+  impl->stats_.record_failed_send();
   return false;
 }
 

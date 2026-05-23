@@ -286,6 +286,16 @@ struct TcpClient::Impl {
     return channel_ && channel_->is_connected();
   }
 
+  RuntimeStats stats() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return channel_ ? channel_->stats() : RuntimeStats{};
+  }
+
+  void reset_stats() {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel_) channel_->reset_stats();
+  }
+
   void setup_internal_handlers() {
     if (!channel_) return;
 
@@ -446,6 +456,8 @@ bool TcpClient::try_send_line(std::string_view line) { return impl_->try_send_li
 bool TcpClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
 bool TcpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool TcpClient::connected() const { return get_impl()->connected(); }
+RuntimeStats TcpClient::stats() const { return get_impl()->stats(); }
+void TcpClient::reset_stats() { impl_->reset_stats(); }
 
 TcpClient& TcpClient::on_data(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);

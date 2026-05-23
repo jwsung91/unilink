@@ -73,6 +73,8 @@ class UNILINK_API UdsClient : public Channel, public std::enable_shared_from_thi
   void stop() override;
   bool is_connected() const override;
   bool is_backpressure_active() const override;
+  wrapper::RuntimeStats stats() const override;
+  void reset_stats() override;
   boost::asio::any_io_executor get_executor() override;
 
   bool async_write_copy(memory::ConstByteSpan data) override;

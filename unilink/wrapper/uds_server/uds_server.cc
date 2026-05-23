@@ -382,6 +382,16 @@ struct UdsServer::Impl {
     });
   }
 
+  RuntimeStats stats() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return server_ ? server_->stats() : RuntimeStats{};
+  }
+
+  void reset_stats() {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (server_) server_->reset_stats();
+  }
+
   void attach_framer_callback(ClientId id) {
     auto it = framers_.find(id);
     if (it == framers_.end()) return;
@@ -428,6 +438,8 @@ std::future<bool> UdsServer::start() { return impl_->start(); }
 void UdsServer::stop() { impl_->stop(); }
 
 bool UdsServer::listening() const { return impl_->is_listening_.load(); }
+RuntimeStats UdsServer::stats() const { return impl_->stats(); }
+void UdsServer::reset_stats() { impl_->reset_stats(); }
 
 bool UdsServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
 bool UdsServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }

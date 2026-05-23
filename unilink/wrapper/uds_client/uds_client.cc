@@ -284,6 +284,16 @@ struct UdsClient::Impl {
 
   bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
 
+  RuntimeStats stats() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return channel_ ? channel_->stats() : RuntimeStats{};
+  }
+
+  void reset_stats() {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel_) channel_->reset_stats();
+  }
+
   void setup_internal_handlers() {
     if (!channel_) return;
 
@@ -463,6 +473,8 @@ bool UdsClient::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->channel_ && impl_->channel_->is_connected();
 }
+RuntimeStats UdsClient::stats() const { return impl_->stats(); }
+void UdsClient::reset_stats() { impl_->reset_stats(); }
 
 UdsClient& UdsClient::on_data(MessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);

@@ -63,6 +63,8 @@ class UNILINK_API Serial : public interface::Channel, public std::enable_shared_
   void stop() override;
   bool is_connected() const override;
   bool is_backpressure_active() const override;
+  wrapper::RuntimeStats stats() const override;
+  void reset_stats() override;
   boost::asio::any_io_executor get_executor() override;
 
   bool async_write_copy(memory::ConstByteSpan data) override;

@@ -32,6 +32,7 @@
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/diagnostics/logger.hpp"
+#include "unilink/diagnostics/runtime_stats_counter.hpp"
 #include "unilink/interface/iuds_acceptor.hpp"
 #include "unilink/transport/uds/boost_uds_acceptor.hpp"
 #include "unilink/transport/uds/uds_server_session.hpp"
@@ -62,6 +63,7 @@ struct UdsServer::Impl {
   MultiClientConnectHandler on_multi_connect_;
   MultiClientDataHandler on_multi_data_;
   MultiClientDisconnectHandler on_multi_disconnect_;
+  diagnostics::RuntimeStatsCounters stats_;
 
   mutable std::mutex sessions_mutex_;
   std::unordered_map<ClientId, std::shared_ptr<UdsServerSession>> sessions_;
@@ -259,6 +261,38 @@ bool UdsServer::is_backpressure_active(ClientId client_id) const {
 
 boost::asio::any_io_executor UdsServer::get_executor() { return impl_->ioc_->get_executor(); }
 
+wrapper::RuntimeStats UdsServer::stats() const {
+  auto aggregate = impl_->stats_.snapshot(0, 0, false);
+  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  for (const auto& pair : impl_->sessions_) {
+    if (!pair.second) continue;
+    const auto session_stats = pair.second->stats();
+    aggregate.bytes_accepted += session_stats.bytes_accepted;
+    aggregate.messages_accepted += session_stats.messages_accepted;
+    aggregate.bytes_sent += session_stats.bytes_sent;
+    aggregate.messages_sent += session_stats.messages_sent;
+    aggregate.bytes_received += session_stats.bytes_received;
+    aggregate.messages_received += session_stats.messages_received;
+    aggregate.failed_sends += session_stats.failed_sends;
+    aggregate.dropped_messages += session_stats.dropped_messages;
+    aggregate.dropped_bytes += session_stats.dropped_bytes;
+    aggregate.backpressure_events += session_stats.backpressure_events;
+    aggregate.queued_bytes += session_stats.queued_bytes;
+    aggregate.pending_bytes += session_stats.pending_bytes;
+    aggregate.max_queued_bytes += session_stats.max_queued_bytes;
+    aggregate.backpressure_active = aggregate.backpressure_active || session_stats.backpressure_active;
+  }
+  return aggregate;
+}
+
+void UdsServer::reset_stats() {
+  impl_->stats_.reset(0);
+  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  for (const auto& pair : impl_->sessions_) {
+    if (pair.second) pair.second->reset_stats();
+  }
+}
+
 bool UdsServer::async_write_copy(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
   return async_write_shared(shared_data);
@@ -270,14 +304,22 @@ bool UdsServer::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 bool UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (impl_->stopping_.load() || !data || data->empty()) return false;
+  if (impl_->stopping_.load() || !data || data->empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   bool sent = false;
+  bool attempted = false;
   for (auto& pair : impl_->sessions_) {
     if (pair.second && pair.second->alive() && pair.second->async_write_shared(data)) {
+      attempted = true;
       sent = true;
+    } else if (pair.second && pair.second->alive()) {
+      attempted = true;
     }
   }
+  if (!attempted) impl_->stats_.record_failed_send();
   return sent;
 }
 
@@ -323,6 +365,7 @@ bool UdsServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   if (session) {
     return session->async_write_copy(data);
   }
+  impl_->stats_.record_failed_send();
   return false;
 }
 

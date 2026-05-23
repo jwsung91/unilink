@@ -456,6 +456,16 @@ struct TcpServer::Impl {
       }
     });
   }
+
+  RuntimeStats stats() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return channel_ ? channel_->stats() : RuntimeStats{};
+  }
+
+  void reset_stats() {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel_) channel_->reset_stats();
+  }
 };
 
 TcpServer::TcpServer(uint16_t port) : impl_(std::make_unique<Impl>(port)) {}
@@ -470,6 +480,8 @@ TcpServer& TcpServer::operator=(TcpServer&&) noexcept = default;
 std::future<bool> TcpServer::start() { return impl_->start(); }
 void TcpServer::stop() { impl_->stop(); }
 bool TcpServer::listening() const { return get_impl()->is_listening_.load(); }
+RuntimeStats TcpServer::stats() const { return get_impl()->stats(); }
+void TcpServer::reset_stats() { impl_->reset_stats(); }
 
 bool TcpServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
 bool TcpServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }

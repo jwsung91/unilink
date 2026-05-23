@@ -1037,6 +1037,24 @@ Accepted throughput is not the same as delivered or received throughput.
 
 For `BestEffort`, evaluate behavior using received throughput, delivery rate, queue depth, and drop metrics when available, not accepted throughput alone.
 
+### Runtime Statistics
+
+Wrappers expose runtime statistics for monitoring queue pressure and transport behavior.
+
+```cpp
+auto stats = client->stats();
+
+std::cout << "queued bytes: " << stats.queued_bytes << "\n";
+std::cout << "accepted messages: " << stats.messages_accepted << "\n";
+std::cout << "dropped messages: " << stats.dropped_messages << "\n";
+```
+
+Runtime statistics are diagnostic snapshots. They are intended for monitoring and tuning, not for synchronization.
+
+`messages_accepted` means the local send path accepted the payload. It does not guarantee remote delivery. `messages_sent` means the transport reported a successful write completion, and `messages_received` means incoming data was observed by the transport or wrapper. Use application-level acknowledgements when delivery confirmation matters.
+
+`reset_stats()` clears cumulative counters such as accepted, sent, received, failed send, drop, and backpressure event counts. Current gauges such as `queued_bytes`, `pending_bytes`, and `backpressure_active` continue to reflect the live transport state.
+
 ### When to use each
 
 **Use `Reliable` (default) when:**

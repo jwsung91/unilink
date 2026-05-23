@@ -75,11 +75,19 @@ void TcpServerSession::start() {
 }
 
 bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
-  if (!alive_ || closing_) return false;  // Don't queue writes if session is not alive
+  if (!alive_ || closing_) {
+    stats_.record_failed_send();
+    return false;
+  }  // Don't queue writes if session is not alive
 
   size_t size = data.size();
+  if (size == 0) {
+    stats_.record_failed_send();
+    return false;
+  }
   if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
+    stats_.record_failed_send();
     return false;
   }
 
@@ -89,7 +97,11 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
       base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
-      if (queue_bytes_ + pending_bytes_ + size > bp_limit_) return false;
+      if (queue_bytes_ + pending_bytes_ + size > bp_limit_) {
+        stats_.record_failed_send();
+        return false;
+      }
+      stats_.record_accepted(size);
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
         const auto added = buf.size();
@@ -103,6 +115,7 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
           }
           self->pending_bytes_ += added;
           self->pending_.emplace_back(std::move(buf));
+          self->observe_queue();
           return;
         }
 
@@ -114,6 +127,7 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
         }
         self->queue_bytes_ += added;
         self->tx_.emplace_back(std::move(buf));
+        self->observe_queue();
         self->report_backpressure(self->queue_bytes_);
         if (!self->writing_) self->do_write();
       });
@@ -122,8 +136,12 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
   }
 
   // Fallback to regular allocation for large buffers or pool exhaustion
-  if (queue_bytes_ + pending_bytes_ + size > bp_limit_) return false;
+  if (queue_bytes_ + pending_bytes_ + size > bp_limit_) {
+    stats_.record_failed_send();
+    return false;
+  }
   std::vector<uint8_t> fallback(data.begin(), data.end());
+  stats_.record_accepted(size);
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
@@ -137,6 +155,7 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
       }
       self->pending_bytes_ += added;
       self->pending_.emplace_back(std::move(buf));
+      self->observe_queue();
       return;
     }
 
@@ -148,6 +167,7 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
     }
     self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
+    self->observe_queue();
     self->report_backpressure(self->queue_bytes_);
     if (!self->writing_) self->do_write();
   });
@@ -155,13 +175,25 @@ bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
 }
 
 bool TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
-  if (!alive_ || closing_) return false;
-  const auto added = data.size();
-  if (added > base::constants::MAX_BUFFER_SIZE) {
-    UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
+  if (!alive_ || closing_) {
+    stats_.record_failed_send();
     return false;
   }
-  if (queue_bytes_ + pending_bytes_ + added > bp_limit_) return false;
+  const auto added = data.size();
+  if (added == 0) {
+    stats_.record_failed_send();
+    return false;
+  }
+  if (added > base::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
+    stats_.record_failed_send();
+    return false;
+  }
+  if (queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  stats_.record_accepted(added);
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
 
@@ -173,6 +205,7 @@ bool TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
       }
       self->pending_bytes_ += added;
       self->pending_.emplace_back(std::move(buf));
+      self->observe_queue();
       return;
     }
 
@@ -184,6 +217,7 @@ bool TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
     }
     self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
+    self->observe_queue();
     self->report_backpressure(self->queue_bytes_);
     if (!self->writing_) self->do_write();
   });
@@ -191,13 +225,21 @@ bool TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 bool TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!alive_ || closing_ || !data) return false;
+  if (!alive_ || closing_ || !data || data->empty()) {
+    stats_.record_failed_send();
+    return false;
+  }
   const auto added = data->size();
   if (added > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
+    stats_.record_failed_send();
     return false;
   }
-  if (queue_bytes_ + pending_bytes_ + added > bp_limit_) return false;
+  if (queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  stats_.record_accepted(added);
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
 
@@ -209,6 +251,7 @@ bool TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
       }
       self->pending_bytes_ += added;
       self->pending_.emplace_back(std::move(buf));
+      self->observe_queue();
       return;
     }
 
@@ -220,6 +263,7 @@ bool TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
     }
     self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
+    self->observe_queue();
     self->report_backpressure(self->queue_bytes_);
     if (!self->writing_) self->do_write();
   });
@@ -249,6 +293,15 @@ void TcpServerSession::on_close(OnClose cb) {
 }
 
 bool TcpServerSession::alive() const { return alive_.load(); }
+
+wrapper::RuntimeStats TcpServerSession::stats() const {
+  return stats_.snapshot(queue_bytes_.load(std::memory_order_relaxed), pending_bytes_.load(std::memory_order_relaxed),
+                         backpressure_active_.load(std::memory_order_relaxed));
+}
+
+void TcpServerSession::reset_stats() {
+  stats_.reset(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));
+}
 
 void TcpServerSession::stop() {
   if (closing_.exchange(true)) return;
@@ -287,6 +340,7 @@ void TcpServerSession::start_read() {
           return;
         }
         self->reset_idle_timer();
+        if (n > 0) self->stats_.record_received(n);
         if (self->on_bytes_) {
           try {
             self->on_bytes_(memory::ConstByteSpan(self->rx_.data(), n));
@@ -337,6 +391,7 @@ void TcpServerSession::do_write() {
       self->do_close();
       return;
     }
+    self->stats_.record_sent(n);
     self->reset_idle_timer();
     self->do_write();
   };
@@ -394,17 +449,25 @@ void TcpServerSession::maybe_flush_for_keep_latest(size_t added) {
   queue_util::maybe_flush_for_keep_latest(bp_strategy_, added, bp_high_, tx_, queue_bytes_, backpressure_active_);
 }
 
+void TcpServerSession::observe_queue() {
+  stats_.observe_queue(queue_bytes_.load(std::memory_order_relaxed) + pending_bytes_.load(std::memory_order_relaxed));
+}
+
 void TcpServerSession::report_backpressure(size_t queued_bytes) {
-  if (closing_ || !alive_ || !on_bp_) return;
+  if (closing_ || !alive_) return;
+  observe_queue();
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
-    try {
-      on_bp_(queued_bytes);
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
-                        "Exception in backpressure callback: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+    stats_.record_backpressure_event();
+    if (on_bp_) {
+      try {
+        on_bp_(queued_bytes);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
+                          "Exception in backpressure callback: " + std::string(e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+      }
     }
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
     // Flush pending_ → tx_
@@ -414,17 +477,24 @@ void TcpServerSession::report_backpressure(size_t queued_bytes) {
       tx_.emplace_back(std::move(pending_.front()));
       pending_.pop_front();
     }
+    observe_queue();
     backpressure_active_ = false;
-    try {
-      on_bp_(queued_bytes);
-    } catch (...) {
-    }  // fire OFF with pre-flush queue size
+    stats_.record_backpressure_event();
+    if (on_bp_) {
+      try {
+        on_bp_(queued_bytes);
+      } catch (...) {
+      }  // fire OFF with pre-flush queue size
+    }
     // If post-flush queue is still high, fire ON again
     if (queue_bytes_ >= bp_high_) {
       backpressure_active_ = true;
-      try {
-        on_bp_(queue_bytes_);
-      } catch (...) {
+      stats_.record_backpressure_event();
+      if (on_bp_) {
+        try {
+          on_bp_(queue_bytes_);
+        } catch (...) {
+        }
       }
     }
     if (!writing_) do_write();

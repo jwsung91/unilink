@@ -508,6 +508,16 @@ struct UdpServer::Impl {
     auto bytes = base::safe_convert::string_to_bytes(data);
     return channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
   }
+
+  RuntimeStats stats() const {
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    return channel ? channel->stats() : RuntimeStats{};
+  }
+
+  void reset_stats() {
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    if (channel) channel->reset_stats();
+  }
 };
 
 UdpServer::UdpServer(uint16_t port) {
@@ -531,6 +541,8 @@ UdpServer& UdpServer::operator=(UdpServer&&) noexcept = default;
 std::future<bool> UdpServer::start() { return impl_->start(); }
 void UdpServer::stop() { impl_->stop(); }
 bool UdpServer::listening() const { return impl_->is_listening.load(); }
+RuntimeStats UdpServer::stats() const { return impl_->stats(); }
+void UdpServer::reset_stats() { impl_->reset_stats(); }
 
 bool UdpServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
 bool UdpServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }

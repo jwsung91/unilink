@@ -77,6 +77,7 @@ set(UNILINK_HEADERS
     unilink/diagnostics/error_types.hpp
     unilink/diagnostics/exceptions.hpp
     unilink/diagnostics/logger.hpp
+    unilink/diagnostics/runtime_stats_counter.hpp
     unilink/factory/channel_factory.hpp
     unilink/interface/channel.hpp
     unilink/interface/iserial_port.hpp
@@ -109,6 +110,7 @@ set(UNILINK_HEADERS
     unilink/unilink.hpp
     unilink/util/input_validator.hpp
     unilink/wrapper/ichannel.hpp
+    unilink/wrapper/runtime_stats.hpp
     unilink/wrapper/serial/serial.hpp
     unilink/wrapper/tcp_client/tcp_client.hpp
     unilink/wrapper/tcp_server/tcp_server.hpp

@@ -71,6 +71,8 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
+  wrapper::RuntimeStats stats() const override;
+  void reset_stats() override;
 
   // Multi-client support
   bool broadcast(std::string_view message);

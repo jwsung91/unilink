@@ -273,6 +273,16 @@ struct Serial::Impl {
 
   bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
 
+  RuntimeStats stats() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return channel ? channel->stats() : RuntimeStats{};
+  }
+
+  void reset_stats() {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel) channel->reset_stats();
+  }
+
   void setup_internal_handlers() {
     if (!channel) return;
 
@@ -465,6 +475,8 @@ bool Serial::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->channel && impl_->channel->is_connected();
 }
+RuntimeStats Serial::stats() const { return impl_->stats(); }
+void Serial::reset_stats() { impl_->reset_stats(); }
 
 Serial& Serial::on_data(MessageHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);

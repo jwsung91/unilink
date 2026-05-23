@@ -32,6 +32,7 @@
 #include "unilink/base/visibility.hpp"
 #include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/diagnostics/logger.hpp"
+#include "unilink/diagnostics/runtime_stats_counter.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/iuds_socket.hpp"
 #include "unilink/memory/memory_pool.hpp"
@@ -73,6 +74,8 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   void on_close(OnClose cb);
   bool alive() const;
   bool is_backpressure_active() const { return backpressure_active_.load(); }
+  wrapper::RuntimeStats stats() const;
+  void reset_stats();
   void stop();
 
  private:
@@ -82,6 +85,7 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   void maybe_flush_for_keep_latest(size_t added);
   void report_backpressure(size_t queued_bytes);
   void reset_idle_timer();
+  void observe_queue();
 
  private:
   net::io_context& ioc_;
@@ -100,6 +104,7 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   size_t bp_low_;
   size_t bp_limit_;
   std::atomic<bool> backpressure_active_{false};
+  diagnostics::RuntimeStatsCounters stats_;
   int idle_timeout_ms_ = 0;
 
   OnBytes on_bytes_;

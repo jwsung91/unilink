@@ -23,6 +23,7 @@
 #include "unilink/base/common.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/memory/safe_span.hpp"
+#include "unilink/wrapper/runtime_stats.hpp"
 
 namespace unilink {
 namespace interface {
@@ -38,6 +39,8 @@ class UNILINK_API Channel {
   virtual void stop() = 0;
   virtual bool is_connected() const = 0;
   virtual bool is_backpressure_active() const = 0;
+  virtual wrapper::RuntimeStats stats() const { return {}; }
+  virtual void reset_stats() {}
 
   virtual boost::asio::any_io_executor get_executor() = 0;
 
