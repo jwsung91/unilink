@@ -115,6 +115,13 @@ foreach(test_file test_pool_limits.cc)
   )
 endforeach()
 
+# Diagnostics tests
+unilink_add_unit_gtest(
+  run_unit_test_runtime_stats_counter
+  ${CMAKE_CURRENT_SOURCE_DIR}/diagnostics/test_runtime_stats_counter.cc
+  "unit_diagnostics_fast" 30
+)
+
 # Wrapper tests (separate executables across TCP/UDP/UDS/Serial)
 foreach(test_file test_serial_wrapper_lifecycle.cc
                   test_serial_wrapper_options.cc test_runtime_stats.cc

@@ -54,6 +54,10 @@ TEST(TransportTcpServerSessionTest, QueueLimitDropsMessage) {
   // 5MB exceeds bp_limit (4MB): message rejected synchronously, backpressure DOES NOT fire as it's not queued
   std::vector<uint8_t> huge(5 * 1024 * 1024, 0xAA);
   EXPECT_FALSE(session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size())));
+  auto stats = session->stats();
+  EXPECT_EQ(stats.failed_sends, 1u);
+  EXPECT_EQ(stats.dropped_messages, 0u);
+  EXPECT_EQ(stats.dropped_bytes, 0u);
 
   ioc.run_for(50ms);
 
@@ -78,6 +82,10 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   // 5MB exceeds bp_limit (4MB): message rejected synchronously, backpressure DOES NOT fire
   std::vector<uint8_t> huge(5 * 1024 * 1024, 0xBB);
   EXPECT_FALSE(session->async_write_move(std::move(huge)));
+  auto stats = session->stats();
+  EXPECT_EQ(stats.failed_sends, 1u);
+  EXPECT_EQ(stats.dropped_messages, 0u);
+  EXPECT_EQ(stats.dropped_bytes, 0u);
 
   ioc.run_for(50ms);
 
@@ -102,11 +110,42 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   // 5MB exceeds bp_limit (4MB): message rejected synchronously, backpressure DOES NOT fire
   auto huge = std::make_shared<const std::vector<uint8_t>>(5 * 1024 * 1024, 0xCC);
   EXPECT_FALSE(session->async_write_shared(huge));
+  auto stats = session->stats();
+  EXPECT_EQ(stats.failed_sends, 1u);
+  EXPECT_EQ(stats.dropped_messages, 0u);
+  EXPECT_EQ(stats.dropped_bytes, 0u);
 
   ioc.run_for(50ms);
 
   EXPECT_FALSE(backpressure_seen.load());
   EXPECT_TRUE(session->alive());
+}
+
+TEST(TransportTcpServerSessionTest, BestEffortDropStatsExcludeInFlightWrite) {
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+  size_t bp_threshold = 1024;
+
+  auto socket = std::make_unique<FakeTcpSocket>(ioc);
+  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold, 0,
+                                                    base::constants::BackpressureStrategy::BestEffort);
+
+  session->start();
+  ASSERT_TRUE(session->alive());
+
+  std::vector<uint8_t> payload(bp_threshold * 2, 0xAB);
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(payload)));
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(payload)));
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(payload)));
+
+  ioc.run_for(50ms);
+
+  auto stats = session->stats();
+  EXPECT_EQ(stats.messages_accepted, 3u);
+  EXPECT_EQ(stats.bytes_accepted, payload.size() * 3);
+  EXPECT_EQ(stats.failed_sends, 0u);
+  EXPECT_EQ(stats.dropped_messages, 1u);
+  EXPECT_EQ(stats.dropped_bytes, payload.size());
 }
 
 TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
