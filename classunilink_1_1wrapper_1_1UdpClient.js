@@ -25,11 +25,13 @@ var classunilink_1_1wrapper_1_1UdpClient =
     [ "on_message_batch", "classunilink_1_1wrapper_1_1UdpClient.html#a24c87a370e521b22d18031d1bddc012c", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1UdpClient.html#ab98bf966b32028e4099fdb4238f670cb", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1UdpClient.html#ab5fdcb6f6998e30c96c5dc5e8b9f9e4c", null ],
+    [ "reset_stats", "classunilink_1_1wrapper_1_1UdpClient.html#a5dc4d04071781042eab04df36352a7a7", null ],
     [ "send", "classunilink_1_1wrapper_1_1UdpClient.html#ac7cb513ae60cf2683582feb75c64e5b3", null ],
     [ "send_blocking", "classunilink_1_1wrapper_1_1UdpClient.html#a36d93116993af6f41498adb999298c55", null ],
     [ "send_line", "classunilink_1_1wrapper_1_1UdpClient.html#a926ac38e4174653fda3d00a504cac4c1", null ],
     [ "send_line_blocking", "classunilink_1_1wrapper_1_1UdpClient.html#abe7052cb9b8ab3834b82aacc817542e7", null ],
     [ "start", "classunilink_1_1wrapper_1_1UdpClient.html#aad3d1eca8457045707edc7dd37e169c0", null ],
+    [ "stats", "classunilink_1_1wrapper_1_1UdpClient.html#adfda6e0aa5c176cacc233513defa2818", null ],
     [ "stop", "classunilink_1_1wrapper_1_1UdpClient.html#ac4c0ff48cb0f623322204fff6a31ee3e", null ],
     [ "try_send", "classunilink_1_1wrapper_1_1UdpClient.html#a34ae992b5705c5b3adfb147baa10820d", null ],
     [ "try_send_line", "classunilink_1_1wrapper_1_1UdpClient.html#a7d722cdd17b55bf28d1d8519b821c0a9", null ]

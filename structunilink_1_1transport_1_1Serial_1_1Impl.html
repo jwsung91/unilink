@@ -187,6 +187,8 @@ $(document).ready(function(){initNavTree('structunilink_1_1transport_1_1Serial_1
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ab69a32400c95674e780be4ca68e82258" id="r_ab69a32400c95674e780be4ca68e82258"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#ab69a32400c95674e780be4ca68e82258">observe_queue</a> ()</td></tr>
+<tr class="separator:ab69a32400c95674e780be4ca68e82258"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86cd568a4a26c8745cc926354c54ac8f" id="r_a86cd568a4a26c8745cc926354c54ac8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a86cd568a4a26c8745cc926354c54ac8f">Impl</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">config::SerialConfig</a> &amp;cfg)</td></tr>
 <tr class="separator:a86cd568a4a26c8745cc926354c54ac8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacd6cb2f5aebf77c7de5982a749d4f36" id="r_aacd6cb2f5aebf77c7de5982a749d4f36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#aacd6cb2f5aebf77c7de5982a749d4f36">Impl</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">config::SerialConfig</a> &amp;cfg, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1SerialPortInterface.html">interface::SerialPortInterface</a> &gt; port, net::io_context &amp;ioc)</td></tr>
@@ -260,6 +262,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a742bd4150abb83defcfa5d05076169c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb8275bba6cd2b234f6727fe1df1bf5b" id="r_adb8275bba6cd2b234f6727fe1df1bf5b"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#adb8275bba6cd2b234f6727fe1df1bf5b">backpressure_active_</a> {false}</td></tr>
 <tr class="separator:adb8275bba6cd2b234f6727fe1df1bf5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fc110e6e9f48983d0c4aed9ca6e7f18" id="r_a6fc110e6e9f48983d0c4aed9ca6e7f18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html">diagnostics::RuntimeStatsCounters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a6fc110e6e9f48983d0c4aed9ca6e7f18">stats_</a></td></tr>
+<tr class="separator:a6fc110e6e9f48983d0c4aed9ca6e7f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af88981533657cc7968ea84f79944c52d" id="r_af88981533657cc7968ea84f79944c52d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#af88981533657cc7968ea84f79944c52d">on_bytes_</a></td></tr>
 <tr class="separator:af88981533657cc7968ea84f79944c52d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0467c0824620098701d1d88cb4e54e6f" id="r_a0467c0824620098701d1d88cb4e54e6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html#a0467c0824620098701d1d88cb4e54e6f">on_state_</a></td></tr>
@@ -273,7 +277,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00061">61</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00062">62</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a86cd568a4a26c8745cc926354c54ac8f" name="a86cd568a4a26c8745cc926354c54ac8f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a86cd568a4a26c8745cc926354c54ac8f">&#9670;&#160;</a></span>Impl() <span class="overload">[1/2]</span></h2>
@@ -299,7 +303,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00094">94</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00101">101</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -350,7 +354,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00106">106</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00113">113</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -384,7 +388,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00128">128</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00135">135</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -419,7 +423,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00366">366</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00375">375</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -447,7 +451,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00248">248</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00256">256</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -498,7 +502,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00320">320</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00329">329</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -539,7 +543,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00118">118</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00125">125</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
@@ -580,13 +584,47 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00373">373</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00382">382</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-9-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1Serial_1_1Impl_a564a050630f8980db63c40b0afe01620_icgraph.svg" width="392" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ab69a32400c95674e780be4ca68e82258" name="ab69a32400c95674e780be4ca68e82258"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab69a32400c95674e780be4ca68e82258">&#9670;&#160;</a></span>observe_queue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::transport::Serial::Impl::observe_queue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00096">96</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1Serial_1_1Impl_ab69a32400c95674e780be4ca68e82258_cgraph.svg" width="446" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -615,12 +653,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00144">144</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00151">151</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1Serial_1_1Impl_af6a469ca2253395f5998f0e18bcdf615_cgraph.svg" width="620" height="243"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -649,12 +687,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00303">303</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00312">312</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1Serial_1_1Impl_acdcdebe610cfcff07bad20b93515437f_icgraph.svg" width="375" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -684,7 +722,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00381">381</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00390">390</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -728,7 +766,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00356">356</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00365">365</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -756,12 +794,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00210">210</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
-<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00217">217</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1Serial_1_1Impl_a03550974f31a2cc63e548699291da649_icgraph.svg" width="382" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -780,7 +818,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00085">85</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00086">86</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -796,7 +834,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00082">82</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00083">83</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -812,7 +850,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00083">83</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00084">84</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -828,7 +866,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00084">84</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00085">85</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -844,7 +882,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00081">81</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00082">82</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -860,7 +898,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00071">71</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00072">72</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -876,7 +914,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00078">78</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00079">79</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -892,7 +930,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00064">64</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00065">65</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -908,7 +946,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00068">68</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00069">69</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -924,7 +962,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00089">89</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00091">91</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -940,7 +978,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00087">87</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00089">89</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -956,7 +994,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00088">88</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00090">90</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -972,7 +1010,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00091">91</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00093">93</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1026,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00065">65</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00066">66</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1004,7 +1042,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00076">76</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00077">77</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1020,7 +1058,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00077">77</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00078">78</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1074,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00070">70</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00071">71</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1052,7 +1090,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00080">80</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00081">81</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1068,7 +1106,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00072">72</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00073">73</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1084,7 +1122,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00074">74</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00075">75</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1100,7 +1138,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00062">62</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00063">63</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1116,7 +1154,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00092">92</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00094">94</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="a6fc110e6e9f48983d0c4aed9ca6e7f18" name="a6fc110e6e9f48983d0c4aed9ca6e7f18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fc110e6e9f48983d0c4aed9ca6e7f18">&#9670;&#160;</a></span>stats_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html">diagnostics::RuntimeStatsCounters</a> unilink::transport::Serial::Impl::stats_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00087">87</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1186,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00063">63</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00064">64</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1148,7 +1202,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00066">66</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00067">67</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1164,7 +1218,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00075">75</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00076">76</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1180,7 +1234,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00067">67</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00068">68</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1196,7 +1250,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00079">79</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00080">80</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -1209,7 +1263,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

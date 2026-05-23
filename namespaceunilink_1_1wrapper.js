@@ -4,6 +4,7 @@ var namespaceunilink_1_1wrapper =
     [ "ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", "classunilink_1_1wrapper_1_1ConnectionContext" ],
     [ "ErrorContext", "classunilink_1_1wrapper_1_1ErrorContext.html", "classunilink_1_1wrapper_1_1ErrorContext" ],
     [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", "classunilink_1_1wrapper_1_1MessageContext" ],
+    [ "RuntimeStats", "structunilink_1_1wrapper_1_1RuntimeStats.html", "structunilink_1_1wrapper_1_1RuntimeStats" ],
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html", "classunilink_1_1wrapper_1_1Serial" ],
     [ "ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", "classunilink_1_1wrapper_1_1ServerInterface" ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", "classunilink_1_1wrapper_1_1TcpClient" ],

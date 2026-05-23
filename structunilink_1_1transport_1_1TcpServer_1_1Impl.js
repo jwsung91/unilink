@@ -28,6 +28,7 @@ var structunilink_1_1transport_1_1TcpServer_1_1Impl =
     [ "sessions_", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#aab7f493b4ecc8ffd2b30d9fba6d3ab4a", null ],
     [ "sessions_mutex_", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a835797e22bc3ce07b91083b300abe500", null ],
     [ "state_", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ac3dd3b051df474ba65e14156c7382f33", null ],
+    [ "stats_", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a8765a97f15b34c1c52672e8ad7f7afb5", null ],
     [ "stopping_", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a8434e943d0474ae2323c3a4dadb1c755", null ],
     [ "uses_global_ioc_", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ab7554e0f68caf56fc6f2a2048403ed5e", null ]
 ];

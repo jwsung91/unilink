@@ -50,6 +50,7 @@ var annotated_dup =
         [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
         [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
         [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],
+        [ "RuntimeStatsCounters", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters" ],
         [ "UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", "classunilink_1_1diagnostics_1_1UnilinkException" ],
         [ "ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", "classunilink_1_1diagnostics_1_1ValidationException" ]
       ] ],
@@ -108,6 +109,7 @@ var annotated_dup =
         [ "ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", "classunilink_1_1wrapper_1_1ConnectionContext" ],
         [ "ErrorContext", "classunilink_1_1wrapper_1_1ErrorContext.html", "classunilink_1_1wrapper_1_1ErrorContext" ],
         [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", "classunilink_1_1wrapper_1_1MessageContext" ],
+        [ "RuntimeStats", "structunilink_1_1wrapper_1_1RuntimeStats.html", "structunilink_1_1wrapper_1_1RuntimeStats" ],
         [ "Serial", "classunilink_1_1wrapper_1_1Serial.html", "classunilink_1_1wrapper_1_1Serial" ],
         [ "ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", "classunilink_1_1wrapper_1_1ServerInterface" ],
         [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", "classunilink_1_1wrapper_1_1TcpClient" ],

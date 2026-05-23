@@ -224,6 +224,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a988cc589cc3d3d23176f77dc44bb41a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a328c04f53504a865d95d1712928140cd" id="r_a328c04f53504a865d95d1712928140cd"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a328c04f53504a865d95d1712928140cd">listening</a> () const =0</td></tr>
 <tr class="separator:a328c04f53504a865d95d1712928140cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87357c414fe2410857ad770255488a2a" id="r_a87357c414fe2410857ad770255488a2a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structunilink_1_1wrapper_1_1RuntimeStats.html">RuntimeStats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a87357c414fe2410857ad770255488a2a">stats</a> () const =0</td></tr>
+<tr class="separator:a87357c414fe2410857ad770255488a2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dfb77ccdf8ee0532dd3671372e096b7" id="r_a1dfb77ccdf8ee0532dd3671372e096b7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a1dfb77ccdf8ee0532dd3671372e096b7">reset_stats</a> ()=0</td></tr>
+<tr class="separator:a1dfb77ccdf8ee0532dd3671372e096b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20b16e1e57ab82297d6d443a24adf0e1" id="r_a20b16e1e57ab82297d6d443a24adf0e1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a20b16e1e57ab82297d6d443a24adf0e1">send_to</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view data)=0</td></tr>
 <tr class="memdesc:a20b16e1e57ab82297d6d443a24adf0e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send to a specific client, honouring the backpressure strategy.  <br /></td></tr>
 <tr class="separator:a20b16e1e57ab82297d6d443a24adf0e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -284,7 +288,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for 1:N server communication (e.g., <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html" title="Modernized TCP Server Wrapper.">TcpServer</a>) </p>
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00035">35</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00036">36</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ab7dfaa37043deeff5f3f14be8f8998b9" name="ab7dfaa37043deeff5f3f14be8f8998b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab7dfaa37043deeff5f3f14be8f8998b9">&#9670;&#160;</a></span>BatchMessageHandler</h2>
@@ -298,7 +302,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00038">38</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00039">39</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -314,7 +318,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00039">39</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00040">40</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -330,7 +334,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00040">40</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00041">41</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -346,7 +350,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00041">41</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00042">42</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -362,7 +366,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00037">37</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00038">38</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -634,7 +638,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a379257413af142eb2a92667c75520b3c">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a5807a610a96a7dd226b5b97985c92e33">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a316be62b50f4e1b71c28b51363a1a588">unilink::wrapper::UdsServer</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00156">156</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00159">159</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -846,6 +850,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1dfb77ccdf8ee0532dd3671372e096b7" name="a1dfb77ccdf8ee0532dd3671372e096b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dfb77ccdf8ee0532dd3671372e096b7">&#9670;&#160;</a></span>reset_stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void unilink::wrapper::ServerInterface::reset_stats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a8d361aef25cef126c7483b58321a189e">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ad7233b9f50b12daa473b53348593ff25">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a1e8262538dc232d7359a81b18dcdbb79">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
 <a id="a20b16e1e57ab82297d6d443a24adf0e1" name="a20b16e1e57ab82297d6d443a24adf0e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a20b16e1e57ab82297d6d443a24adf0e1">&#9670;&#160;</a></span>send_to()</h2>
 
@@ -1025,7 +1056,34 @@ false Server stopped while waiting. </dd></dl>
 
 <p>Synchronously start the channel/server and wait for the result. </p>
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00051">51</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00052">52</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a87357c414fe2410857ad770255488a2a" name="a87357c414fe2410857ad770255488a2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87357c414fe2410857ad770255488a2a">&#9670;&#160;</a></span>stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structunilink_1_1wrapper_1_1RuntimeStats.html">RuntimeStats</a> unilink::wrapper::ServerInterface::stats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#af3574006da1d12d72e7bbeaf16fc6964">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ac33ffd02a9904b075124be9f8d84b656">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a3f7952a2df078abc3a3bf62269caaae4">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -1213,7 +1271,7 @@ false Dropped or client not found. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a></li>
-    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

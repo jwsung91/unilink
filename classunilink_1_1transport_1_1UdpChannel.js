@@ -21,7 +21,9 @@ var classunilink_1_1transport_1_1UdpChannel =
     [ "on_state", "classunilink_1_1transport_1_1UdpChannel.html#a15f914c9f91ab4d1b04dec8c02aa3222", null ],
     [ "operator=", "classunilink_1_1transport_1_1UdpChannel.html#a1546befc500344dfa5722ee3a876780a", null ],
     [ "operator=", "classunilink_1_1transport_1_1UdpChannel.html#ac24c8b199d8a44510a788e8398e65d00", null ],
+    [ "reset_stats", "classunilink_1_1transport_1_1UdpChannel.html#adf11c5485cb49eae8600256b2269471b", null ],
     [ "set_backpressure_strategy", "classunilink_1_1transport_1_1UdpChannel.html#a098ba188fefb85a1c70b1d101557c02d", null ],
     [ "start", "classunilink_1_1transport_1_1UdpChannel.html#a48a842372f9e9e56eda1a1cd0925c09c", null ],
+    [ "stats", "classunilink_1_1transport_1_1UdpChannel.html#a8a8d230e72ba49b4c847c5052b6a5467", null ],
     [ "stop", "classunilink_1_1transport_1_1UdpChannel.html#adcf4c3c74fed39f8127701fe6c3af831", null ]
 ];

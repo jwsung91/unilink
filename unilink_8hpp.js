@@ -3,6 +3,7 @@ var unilink_8hpp =
     [ "ConnectionContext", "unilink_8hpp.html#a10eb1cdfe769e7647fadc9f121653078", null ],
     [ "ErrorContext", "unilink_8hpp.html#a232034af41d73e7be8a4711f483baa7f", null ],
     [ "MessageContext", "unilink_8hpp.html#a6ead8cfc72c859b6958cd90fed663e15", null ],
+    [ "RuntimeStats", "unilink_8hpp.html#a2878267339d2617c995bb323bc0a6ddc", null ],
     [ "Serial", "unilink_8hpp.html#a2b404056fdf0a846b06ce934ae923bfc", null ],
     [ "TcpClient", "unilink_8hpp.html#a790be55fcb59a0aea5dfb178072fd6c7", null ],
     [ "TcpServer", "unilink_8hpp.html#a1e364de9a0a37d3437cb9e10eb1bfba7", null ],

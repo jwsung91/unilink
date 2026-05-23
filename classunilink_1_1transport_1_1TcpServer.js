@@ -29,10 +29,12 @@ var classunilink_1_1transport_1_1TcpServer =
     [ "operator=", "classunilink_1_1transport_1_1TcpServer.html#a0596fa8dc01028cec78db598e698b685", null ],
     [ "operator=", "classunilink_1_1transport_1_1TcpServer.html#a2f57aa2bd9eb388ccf4f50a72fdef7fd", null ],
     [ "request_stop", "classunilink_1_1transport_1_1TcpServer.html#af8eac26a2744e09859d0023838a61ae3", null ],
+    [ "reset_stats", "classunilink_1_1transport_1_1TcpServer.html#ab14f99459dcec42912cafaf66dc829b2", null ],
     [ "send_to_client", "classunilink_1_1transport_1_1TcpServer.html#a0e8a84d5dfd0855018b62725dc7df33a", null ],
     [ "send_to_client", "classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656", null ],
     [ "set_client_limit", "classunilink_1_1transport_1_1TcpServer.html#afa002ff3287e69e7815e73d39cc4aac8", null ],
     [ "start", "classunilink_1_1transport_1_1TcpServer.html#a7dc115cc9cc67ae7c5990c0d01a5a0a6", null ],
     [ "state", "classunilink_1_1transport_1_1TcpServer.html#aa0f9e066743d5432ad15655eda1c6031", null ],
+    [ "stats", "classunilink_1_1transport_1_1TcpServer.html#ab7e7caffc5c6b91421acd9bc99401255", null ],
     [ "stop", "classunilink_1_1transport_1_1TcpServer.html#a3535932f4b2d08af75ac212aa6d11a12", null ]
 ];

@@ -8,5 +8,6 @@ var dir_34a3e415d531ea922631bc75d11c4e39 =
     [ "uds_server", "dir_b88a6c339073afb50b2b7b303399597d.html", "dir_b88a6c339073afb50b2b7b303399597d" ],
     [ "context.hpp", "context_8hpp.html", "context_8hpp" ],
     [ "ichannel.hpp", "ichannel_8hpp.html", "ichannel_8hpp" ],
-    [ "iserver.hpp", "iserver_8hpp.html", "iserver_8hpp" ]
+    [ "iserver.hpp", "iserver_8hpp.html", "iserver_8hpp" ],
+    [ "runtime_stats.hpp", "runtime__stats_8hpp.html", "runtime__stats_8hpp" ]
 ];

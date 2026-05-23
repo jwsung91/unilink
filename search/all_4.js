@@ -10,9 +10,9 @@ var searchData=
   ['4_20memory_20tracking_7',['4. Memory Tracking',['../contrib_arch_memory.html#autotoc_md76',1,'']]],
   ['4_20safe_20data_20buffer_8',['4. Safe Data Buffer',['../contrib_arch.html#autotoc_md138',1,'']]],
   ['4_20singleton_20pattern_9',['4. Singleton Pattern',['../contrib_arch.html#autotoc_md120',1,'']]],
-  ['4_20when_20to_20use_20async_20vs_20sync_10',['4. When to Use Async vs Sync',['../user_tutorial_async.html#autotoc_md871',1,'']]],
+  ['4_20when_20to_20use_20async_20vs_20sync_10',['4. When to Use Async vs Sync',['../user_tutorial_async.html#autotoc_md872',1,'']]],
   ['4_3a_20build_20with_20custom_20boost_20location_11',['Example 4: Build with Custom Boost Location',['../contrib_build.html#autotoc_md290',1,'']]],
-  ['4_3a_20git_20submodule_20integration_12',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md617',1,'']]],
-  ['4_3a_20run_20both_20programs_13',['Step 4: Run Both Programs',['../tutorial_05.html#autotoc_md852',1,'']]],
-  ['4_3a_20test_20with_20a_20second_20terminal_14',['Step 4: Test With A Second Terminal',['../tutorial_04.html#autotoc_md835',1,'']]]
+  ['4_3a_20git_20submodule_20integration_12',['Method 4: Git Submodule Integration',['../user_installation.html#autotoc_md618',1,'']]],
+  ['4_3a_20run_20both_20programs_13',['Step 4: Run Both Programs',['../tutorial_05.html#autotoc_md853',1,'']]],
+  ['4_3a_20test_20with_20a_20second_20terminal_14',['Step 4: Test With A Second Terminal',['../tutorial_04.html#autotoc_md836',1,'']]]
 ];

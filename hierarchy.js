@@ -105,6 +105,8 @@ var hierarchy =
         [ "unilink::diagnostics::ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", null ]
       ] ]
     ] ],
+    [ "unilink::wrapper::RuntimeStats", "structunilink_1_1wrapper_1_1RuntimeStats.html", null ],
+    [ "unilink::diagnostics::RuntimeStatsCounters", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html", null ],
     [ "unilink::memory::SafeDataBuffer", "classunilink_1_1memory_1_1SafeDataBuffer.html", null ],
     [ "unilink::memory::ScopedMemoryTracker", "classunilink_1_1memory_1_1ScopedMemoryTracker.html", null ],
     [ "unilink::config::SerialConfig", "structunilink_1_1config_1_1SerialConfig.html", null ],

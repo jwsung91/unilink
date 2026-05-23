@@ -13,6 +13,8 @@ var classunilink_1_1interface_1_1Channel =
     [ "on_backpressure", "classunilink_1_1interface_1_1Channel.html#a4b311bb483fedf3c5ae93508e4e54d8b", null ],
     [ "on_bytes", "classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a", null ],
     [ "on_state", "classunilink_1_1interface_1_1Channel.html#aa4462e2992427c466d6e12fa492e1b80", null ],
+    [ "reset_stats", "classunilink_1_1interface_1_1Channel.html#aa80d10419a797dc42575bdf2e4c160b9", null ],
     [ "start", "classunilink_1_1interface_1_1Channel.html#a0e33349d34d5aa72709307ed52500a4e", null ],
+    [ "stats", "classunilink_1_1interface_1_1Channel.html#a654f4bb7d2e9df76a60acb90eb2e49b1", null ],
     [ "stop", "classunilink_1_1interface_1_1Channel.html#a98ff6856a5ebd04adc7a9760437c9cf1", null ]
 ];

@@ -223,6 +223,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2110813c183960be6a743c1fa5477dfa" id="r_a2110813c183960be6a743c1fa5477dfa"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">connected</a> () const =0</td></tr>
 <tr class="separator:a2110813c183960be6a743c1fa5477dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76316593164594b80e25825860a0d328" id="r_a76316593164594b80e25825860a0d328"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structunilink_1_1wrapper_1_1RuntimeStats.html">RuntimeStats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a76316593164594b80e25825860a0d328">stats</a> () const =0</td></tr>
+<tr class="separator:a76316593164594b80e25825860a0d328"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1c6311b4e821e312a75a246e0ba481a" id="r_af1c6311b4e821e312a75a246e0ba481a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af1c6311b4e821e312a75a246e0ba481a">reset_stats</a> ()=0</td></tr>
+<tr class="separator:af1c6311b4e821e312a75a246e0ba481a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea0f1a7ed2e31e0dad1680a996687b48" id="r_aea0f1a7ed2e31e0dad1680a996687b48"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">send</a> (std::string_view data)=0</td></tr>
 <tr class="memdesc:aea0f1a7ed2e31e0dad1680a996687b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue data for transmission, honouring the backpressure strategy.  <br /></td></tr>
 <tr class="separator:aea0f1a7ed2e31e0dad1680a996687b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -270,7 +274,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common interface for 1:1 point-to-point communication (e.g., <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html" title="Modernized TCP Client Wrapper.">TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Serial.html" title="Modernized Serial Wrapper.">Serial</a>, Udp) </p>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00036">36</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00037">37</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a99c2b03add0a2f596bd2227f7e70bedc" name="a99c2b03add0a2f596bd2227f7e70bedc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a99c2b03add0a2f596bd2227f7e70bedc">&#9670;&#160;</a></span>BatchMessageHandler</h2>
@@ -284,7 +288,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00039">39</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00040">40</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -300,7 +304,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00040">40</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00041">41</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -316,7 +320,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00041">41</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00042">42</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -332,7 +336,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00038">38</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00039">39</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -489,7 +493,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a691435de162ec7a5cc4da3621f3d9260">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd0d53e98349d037b977c876a936535e">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a71f925263ff0e584ecaa90b5291a213c">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ac2723395fb6d0652997da82bc76d4e6e">unilink::wrapper::UdsClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00160">160</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00163">163</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -701,6 +705,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af1c6311b4e821e312a75a246e0ba481a" name="af1c6311b4e821e312a75a246e0ba481a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1c6311b4e821e312a75a246e0ba481a">&#9670;&#160;</a></span>reset_stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void unilink::wrapper::ChannelInterface::reset_stats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a8982cd4bf07746ad44737ffbca502a43">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2e596554b3e0ffe073a5da710cb5861e">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a5dc4d04071781042eab04df36352a7a7">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ae3b3d2873d2d40d26ef9b7b7dfcb6881">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
 <a id="aea0f1a7ed2e31e0dad1680a996687b48" name="aea0f1a7ed2e31e0dad1680a996687b48"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea0f1a7ed2e31e0dad1680a996687b48">&#9670;&#160;</a></span>send()</h2>
 
@@ -891,7 +922,34 @@ false Channel stopped while waiting. </dd></dl>
 <p>Synchronously start the channel and wait for the result. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if connected/listening, false on failure. On false, the registered <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">on_error()</a> callback will have been invoked with the specific failure reason. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00063">63</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00064">64</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a76316593164594b80e25825860a0d328" name="a76316593164594b80e25825860a0d328"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76316593164594b80e25825860a0d328">&#9670;&#160;</a></span>stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structunilink_1_1wrapper_1_1RuntimeStats.html">RuntimeStats</a> unilink::wrapper::ChannelInterface::stats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a78ffe70fb208f89214a7e9154458fc23">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ace822358ff4958232806a6a6d26136e9">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#adfda6e0aa5c176cacc233513defa2818">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ae8509970a0e0975a3c31e01dbf676e48">unilink::wrapper::UdsClient</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +1059,7 @@ false Dropped. </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

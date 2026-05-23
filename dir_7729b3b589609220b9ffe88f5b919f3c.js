@@ -7,5 +7,6 @@ var dir_7729b3b589609220b9ffe88f5b919f3c =
     [ "exceptions.cc", "exceptions_8cc.html", null ],
     [ "exceptions.hpp", "exceptions_8hpp.html", "exceptions_8hpp" ],
     [ "logger.cc", "logger_8cc.html", "logger_8cc" ],
-    [ "logger.hpp", "logger_8hpp.html", "logger_8hpp" ]
+    [ "logger.hpp", "logger_8hpp.html", "logger_8hpp" ],
+    [ "runtime_stats_counter.hpp", "runtime__stats__counter_8hpp.html", "runtime__stats__counter_8hpp" ]
 ];

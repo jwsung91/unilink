@@ -15,6 +15,8 @@ var classunilink_1_1transport_1_1TcpServerSession =
     [ "on_backpressure", "classunilink_1_1transport_1_1TcpServerSession.html#add8ff438bf1570f20b0214c822304bae", null ],
     [ "on_bytes", "classunilink_1_1transport_1_1TcpServerSession.html#a8a3a1b2fcaa3d6e679ba6ec8376ada7c", null ],
     [ "on_close", "classunilink_1_1transport_1_1TcpServerSession.html#a983ed436fee72fc93556e567c654a577", null ],
+    [ "reset_stats", "classunilink_1_1transport_1_1TcpServerSession.html#ab53557ae3ef23742c6572c1ef2db27cb", null ],
     [ "start", "classunilink_1_1transport_1_1TcpServerSession.html#af06c5ae133e8ee9a040d75f1eefccd90", null ],
+    [ "stats", "classunilink_1_1transport_1_1TcpServerSession.html#a74d23a524f746d273f285a08cfba1f74", null ],
     [ "stop", "classunilink_1_1transport_1_1TcpServerSession.html#a6f2e8e32e9d48cf6e310bd2c129ac780", null ]
 ];

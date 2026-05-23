@@ -20,6 +20,7 @@ var structunilink_1_1transport_1_1UdsServer_1_1Impl =
     [ "sessions_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a3542b896405f8b9049a073783072e19d", null ],
     [ "sessions_mutex_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acb5caf069199746ee80db483aa51b1b7", null ],
     [ "state_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#aa97bad37cb730d4fafbe6e3f302dc1ff", null ],
+    [ "stats_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#ae2c20421357822e1b99006ce99d2d306", null ],
     [ "stopping_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#ae8966bfa90d3c74babd07b8861a1d7e9", null ],
     [ "work_guard_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a2c7146f0b1a252018b9763434b823ca3", null ]
 ];

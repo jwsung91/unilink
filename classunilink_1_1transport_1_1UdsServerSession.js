@@ -14,6 +14,8 @@ var classunilink_1_1transport_1_1UdsServerSession =
     [ "on_backpressure", "classunilink_1_1transport_1_1UdsServerSession.html#a669ebc539aec487ee5456dbf200101c2", null ],
     [ "on_bytes", "classunilink_1_1transport_1_1UdsServerSession.html#a577871abc2e3e744f0bf26dd4394c3ad", null ],
     [ "on_close", "classunilink_1_1transport_1_1UdsServerSession.html#a4a6fa50cac80917a4774b0fd5813746d", null ],
+    [ "reset_stats", "classunilink_1_1transport_1_1UdsServerSession.html#a3a4dfb0e91bfaf96a29401e365558618", null ],
     [ "start", "classunilink_1_1transport_1_1UdsServerSession.html#a94a570e6bedeabc8a5b96340b16ed6b3", null ],
+    [ "stats", "classunilink_1_1transport_1_1UdsServerSession.html#a64b4d1f7293386cab59e3ab25298ea47", null ],
     [ "stop", "classunilink_1_1transport_1_1UdsServerSession.html#a4d4fe9adc2f7d0c8f5e20e23f6b908c6", null ]
 ];

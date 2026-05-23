@@ -21,6 +21,7 @@ var namespaceunilink_1_1diagnostics =
     [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
     [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
     [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],
+    [ "RuntimeStatsCounters", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html", "structunilink_1_1diagnostics_1_1RuntimeStatsCounters" ],
     [ "UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", "classunilink_1_1diagnostics_1_1UnilinkException" ],
     [ "ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", "classunilink_1_1diagnostics_1_1ValidationException" ],
     [ "callback_sink_mt", "namespaceunilink_1_1diagnostics.html#ac806d9d4e21cdca49053a7c3e316aaaa", null ],

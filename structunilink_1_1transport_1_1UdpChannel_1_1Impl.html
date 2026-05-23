@@ -221,6 +221,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a02133b55618d46a87bcd02a94b7f660d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a285bf7d9f865446768b2147b7e4074" id="r_a4a285bf7d9f865446768b2147b7e4074"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a4a285bf7d9f865446768b2147b7e4074">report_backpressure</a> (std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a> &gt; self, size_t queued_bytes)</td></tr>
 <tr class="separator:a4a285bf7d9f865446768b2147b7e4074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48a32bd74bd3623ca5dd6492ecb3049c" id="r_a48a32bd74bd3623ca5dd6492ecb3049c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a48a32bd74bd3623ca5dd6492ecb3049c">observe_queue</a> ()</td></tr>
+<tr class="separator:a48a32bd74bd3623ca5dd6492ecb3049c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9397ef06bddbc9e3c5518067f4a6abda" id="r_a9397ef06bddbc9e3c5518067f4a6abda"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a9397ef06bddbc9e3c5518067f4a6abda">enqueue_buffer</a> (std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a> &gt; self, <a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a94063d24141e05cc656f05a60b707e53">BufferVariant</a> &amp;&amp;buffer, size_t size, std::optional&lt; udp::endpoint &gt; dest=std::nullopt)</td></tr>
 <tr class="separator:a9397ef06bddbc9e3c5518067f4a6abda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae1872efd583c676a56c45ad23ff109c" id="r_aae1872efd583c676a56c45ad23ff109c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aae1872efd583c676a56c45ad23ff109c">set_remote_from_config</a> ()</td></tr>
@@ -278,6 +280,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a00f183f1c6fb72cb39b36dd644d35e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00a75291d0ff2fd57cfd4ea4f86247ce" id="r_a00a75291d0ff2fd57cfd4ea4f86247ce"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a00a75291d0ff2fd57cfd4ea4f86247ce">backpressure_active_</a> {false}</td></tr>
 <tr class="separator:a00a75291d0ff2fd57cfd4ea4f86247ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c31d897b1f501b1b5edcad677b39733" id="r_a3c31d897b1f501b1b5edcad677b39733"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html">diagnostics::RuntimeStatsCounters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3c31d897b1f501b1b5edcad677b39733">stats_</a></td></tr>
+<tr class="separator:a3c31d897b1f501b1b5edcad677b39733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa50917bcedf75a44da8c396a45103ea4" id="r_aa50917bcedf75a44da8c396a45103ea4"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aa50917bcedf75a44da8c396a45103ea4">stop_requested_</a> {false}</td></tr>
 <tr class="separator:aa50917bcedf75a44da8c396a45103ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0795f885dca1333945e6d17f5c75e5ed" id="r_a0795f885dca1333945e6d17f5c75e5ed"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a0795f885dca1333945e6d17f5c75e5ed">stopping_</a> {false}</td></tr>
@@ -303,7 +307,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00050">50</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00051">51</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a94063d24141e05cc656f05a60b707e53" name="a94063d24141e05cc656f05a60b707e53"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94063d24141e05cc656f05a60b707e53">&#9670;&#160;</a></span>BufferVariant</h2>
@@ -317,7 +321,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00063">63</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00064">64</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -346,7 +350,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00096">96</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00098">98</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -391,7 +395,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00108">108</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00110">110</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -425,7 +429,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00132">132</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00134">134</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -460,7 +464,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00388">388</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00392">392</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -495,13 +499,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00293">293</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00296">296</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-5-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_ae29267b4cb8f4bc26f6f120ab30d5989_cgraph.svg" width="368" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_ae29267b4cb8f4bc26f6f120ab30d5989_cgraph.svg" width="100%" height="408"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
@@ -559,13 +563,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00442">442</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00461">461</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-7-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a9397ef06bddbc9e3c5518067f4a6abda_cgraph.svg" width="571" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a9397ef06bddbc9e3c5518067f4a6abda_cgraph.svg" width="100%" height="485"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -610,13 +614,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00224">224</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00226">226</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-8-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_aba65af15d38f615afb33e770f2fbcdbf_cgraph.svg" width="368" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_aba65af15d38f615afb33e770f2fbcdbf_cgraph.svg" width="390" height="223"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -644,7 +648,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00119">119</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00121">121</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
@@ -686,7 +690,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00572">572</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00593">593</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -713,7 +717,48 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00394">394</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00398">398</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="a48a32bd74bd3623ca5dd6492ecb3049c" name="a48a32bd74bd3623ca5dd6492ecb3049c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48a32bd74bd3623ca5dd6492ecb3049c">&#9670;&#160;</a></span>observe_queue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::transport::UdpChannel::Impl::observe_queue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00457">457</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a48a32bd74bd3623ca5dd6492ecb3049c_cgraph.svg" width="390" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a48a32bd74bd3623ca5dd6492ecb3049c_icgraph.svg" width="571" height="168"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -741,12 +786,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00152">152</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00154">154</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a3662a44297cd68fef9d33e21a849a7d0_cgraph.svg" width="368" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -775,19 +820,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00543">543</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00564">564</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div id="dynsection-14-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_afa86606b29258250381704e4786caed5_cgraph.svg" width="380" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-15-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-13-content" class="dyncontent" style="display:none;">
+<div id="dynsection-15-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_afa86606b29258250381704e4786caed5_icgraph.svg" width="420" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -827,19 +872,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00405">405</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00409">409</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-16-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-16-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-14-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a4a285bf7d9f865446768b2147b7e4074_cgraph.svg" width="368" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-16-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a4a285bf7d9f865446768b2147b7e4074_cgraph.svg" width="647" height="247"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-15" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-15-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-15-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-17" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-17-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-17-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-15-content" class="dyncontent" style="display:none;">
+<div id="dynsection-17-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a4a285bf7d9f865446768b2147b7e4074_icgraph.svg" width="368" height="168"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -868,12 +913,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00510">510</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-<div id="dynsection-16" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-16-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-16-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00531">531</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-18" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-18-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-18-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-16-content" class="dyncontent" style="display:none;">
+<div id="dynsection-18-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_aae1872efd583c676a56c45ad23ff109c_icgraph.svg" width="644" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -903,12 +948,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00211">211</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-<div id="dynsection-17" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-17-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-17-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00213">213</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-19" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-19-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-19-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-17-content" class="dyncontent" style="display:none;">
+<div id="dynsection-19-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_a28f3e3dc957341391c504b173e9188ed_icgraph.svg" width="368" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -948,12 +993,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00520">520</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-<div id="dynsection-18" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-18-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-18-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00541">541</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<div id="dynsection-20" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-20-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-20-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-18-content" class="dyncontent" style="display:none;">
+<div id="dynsection-20-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1UdpChannel_1_1Impl_acdd9c40ebb804a42273169a24fdd55ca_icgraph.svg" width="623" height="223"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -972,7 +1017,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00081">81</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00082">82</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1033,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00078">78</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00079">79</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1004,7 +1049,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00080">80</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00081">81</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1020,7 +1065,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00079">79</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00080">80</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1081,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00077">77</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00078">78</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1052,7 +1097,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00076">76</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00077">77</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1068,7 +1113,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00086">86</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00088">88</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1084,7 +1129,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00052">52</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00053">53</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1100,7 +1145,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00056">56</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00057">57</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1116,7 +1161,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00059">59</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00060">60</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1177,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00094">94</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00096">96</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1148,7 +1193,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00091">91</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00093">93</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1164,7 +1209,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00092">92</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00094">94</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1180,7 +1225,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00093">93</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00095">95</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1196,7 +1241,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00085">85</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00087">87</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1212,7 +1257,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00051">51</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00052">52</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1228,7 +1273,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00053">53</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00054">54</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1244,7 +1289,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00072">72</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00073">73</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1260,7 +1305,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00073">73</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00074">74</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1276,7 +1321,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00075">75</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00076">76</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1292,7 +1337,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00060">60</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00061">61</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1308,7 +1353,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00061">61</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00062">62</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1324,7 +1369,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00070">70</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00071">71</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1340,7 +1385,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00058">58</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00059">59</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1356,7 +1401,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00087">87</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00089">89</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1372,7 +1417,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00088">88</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00090">90</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="a3c31d897b1f501b1b5edcad677b39733" name="a3c31d897b1f501b1b5edcad677b39733"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c31d897b1f501b1b5edcad677b39733">&#9670;&#160;</a></span>stats_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structunilink_1_1diagnostics_1_1RuntimeStatsCounters.html">diagnostics::RuntimeStatsCounters</a> unilink::transport::UdpChannel::Impl::stats_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00083">83</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1388,7 +1449,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00083">83</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00085">85</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1404,7 +1465,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00084">84</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00086">86</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1420,7 +1481,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00054">54</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00055">55</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1436,7 +1497,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00089">89</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00091">91</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1452,7 +1513,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00071">71</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00072">72</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1468,7 +1529,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00055">55</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00056">56</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1484,7 +1545,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00074">74</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00075">75</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -1497,7 +1558,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat May 23 2026 05:22:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 08:23:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
