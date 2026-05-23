@@ -50,12 +50,10 @@ struct TcpServerConfig {
            port > 0 && backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections >= 0 &&
            idle_timeout_ms >= 0 &&
-           (send_buffer_size == 0 ||
-            (send_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
-             send_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
-           (receive_buffer_size == 0 ||
-            (receive_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
-             receive_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE));
+           (send_buffer_size == 0 || (send_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+                                      send_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
+           (receive_buffer_size == 0 || (receive_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+                                         receive_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE));
   }
 
   // Apply validation and clamp values to valid ranges

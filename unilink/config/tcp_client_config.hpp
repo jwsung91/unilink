@@ -52,12 +52,10 @@ struct TcpClientConfig {
            retry_interval_ms <= base::constants::MAX_RETRY_INTERVAL_MS &&
            backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD &&
-           (send_buffer_size == 0 ||
-            (send_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
-             send_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
-           (receive_buffer_size == 0 ||
-            (receive_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
-             receive_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
+           (send_buffer_size == 0 || (send_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+                                      send_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
+           (receive_buffer_size == 0 || (receive_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+                                         receive_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
            (max_retries == -1 || (max_retries >= 0 && max_retries <= base::constants::MAX_RETRIES_LIMIT));
   }
 

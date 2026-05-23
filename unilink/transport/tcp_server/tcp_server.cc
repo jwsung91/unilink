@@ -144,8 +144,7 @@ struct TcpServer::Impl {
     if (cfg_.tcp_no_delay) {
       sock.set_option(tcp::no_delay(true), ec);
       if (ec) {
-        UNILINK_LOG_WARNING("tcp_server", "socket_options",
-                            fmt::format("Failed to set TCP_NODELAY: {}", ec.message()));
+        UNILINK_LOG_WARNING("tcp_server", "socket_options", fmt::format("Failed to set TCP_NODELAY: {}", ec.message()));
         ec.clear();
       }
     }

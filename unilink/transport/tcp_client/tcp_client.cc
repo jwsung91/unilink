@@ -577,8 +577,7 @@ void TcpClient::Impl::apply_socket_options() {
   if (cfg_.tcp_no_delay) {
     socket_.set_option(tcp::no_delay(true), ec);
     if (ec) {
-      UNILINK_LOG_WARNING("tcp_client", "socket_options",
-                          fmt::format("Failed to set TCP_NODELAY: {}", ec.message()));
+      UNILINK_LOG_WARNING("tcp_client", "socket_options", fmt::format("Failed to set TCP_NODELAY: {}", ec.message()));
       ec.clear();
     }
   }

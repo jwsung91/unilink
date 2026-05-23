@@ -198,8 +198,8 @@ struct UdpChannel::Impl {
 
     // Set large OS buffers for UDP to prevent drops unless explicitly configured.
     const int automatic_buf_size = std::max(static_cast<int>(bp_high_), 4 * 1024 * 1024);
-    const int recv_buf_size = cfg_.receive_buffer_size > 0 ? static_cast<int>(cfg_.receive_buffer_size)
-                                                           : automatic_buf_size;
+    const int recv_buf_size =
+        cfg_.receive_buffer_size > 0 ? static_cast<int>(cfg_.receive_buffer_size) : automatic_buf_size;
     const int send_buf_size = cfg_.send_buffer_size > 0 ? static_cast<int>(cfg_.send_buffer_size) : automatic_buf_size;
 
     socket_.set_option(net::socket_base::receive_buffer_size(recv_buf_size), ec);
