@@ -10,6 +10,7 @@ Documentation for developers building, extending, or contributing to unilink its
 - [Testing](testing.md) — Running the test suite, CI integration, writing tests
 - [Orin Nano Validation](orin_nano_validation.md) — Ubuntu 22.04 ARM64 bring-up and test runbook
 - [Release Checklist](release_checklist.md) — Release validation steps
+- [v0.7.5 Release Notes Draft](releases/v0.7.5.md) — Performance-readiness release notes draft
 - [Implementation Status](implementation_status.md) — Verified scope, known gaps, and codebase snapshot
 - [Test Structure](test_structure.md) — Test organization and coverage breakdown
 

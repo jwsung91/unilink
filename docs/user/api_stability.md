@@ -40,6 +40,8 @@ The following diagnostics type is user-facing:
 
 - `unilink::RuntimeStats`
 
+Runtime statistics APIs are user-facing diagnostics APIs.
+
 ## Supported But Advanced Headers
 
 These headers are supported, but most users should prefer including `<unilink/unilink.hpp>`:
@@ -113,3 +115,5 @@ Direct builder or wrapper includes are supported for advanced users, but the umb
 Move/shared buffer send APIs are user-facing advanced APIs intended for large binary payloads.
 
 Socket tuning builder options are user-facing advanced APIs intended for workload-specific latency, throughput, and tail-behavior tuning.
+
+`SendResult` is currently design-only and is not part of the public runtime API unless implemented in the release line.
