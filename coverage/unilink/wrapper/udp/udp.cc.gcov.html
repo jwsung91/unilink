@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryMed">81.7&nbsp;%</td>
-            <td class="headerCovTableEntry">378</td>
+            <td class="headerCovTableEntryMed">79.6&nbsp;%</td>
+            <td class="headerCovTableEntry">388</td>
             <td class="headerCovTableEntry">309</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-23 10:22:48</td>
+            <td class="headerValue">2026-05-23 14:34:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">83.3&nbsp;%</td>
-            <td class="headerCovTableEntry">72</td>
+            <td class="headerCovTableEntryMed">81.1&nbsp;%</td>
+            <td class="headerCovTableEntry">74</td>
             <td class="headerCovTableEntry">60</td>
           </tr>
           <tr>
@@ -56,8 +56,8 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">47.4&nbsp;%</td>
-            <td class="headerCovTableEntry">563</td>
+            <td class="headerCovTableEntryLo">47.1&nbsp;%</td>
+            <td class="headerCovTableEntry">567</td>
             <td class="headerCovTableEntry">267</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -651,25 +651,37 @@
 <span id="L548"><span class="lineNum">     548</span>                 :<span class="tlaGNC tlaBgGNC">           6 :   return *this;</span></span>
 <span id="L549"><span class="lineNum">     549</span>                 :<span class="tlaGNC">           6 : }</span></span>
 <span id="L550"><span class="lineNum">     550</span>                 :             : </span>
-<span id="L551"><span class="lineNum">     551</span>                 :<span class="tlaGNC">           6 : UdpClient&amp; UdpClient::manage_external_context(bool m) {</span></span>
-<span id="L552"><span class="lineNum">     552</span>                 :<span class="tlaGNC">           6 :   impl_-&gt;manage_external_context.store(m);</span></span>
-<span id="L553"><span class="lineNum">     553</span>                 :<span class="tlaGNC">           6 :   return *this;</span></span>
-<span id="L554"><span class="lineNum">     554</span>                 :             : }</span>
-<span id="L555"><span class="lineNum">     555</span>                 :             : </span>
-<span id="L556"><span class="lineNum">     556</span>                 :<span class="tlaGNC">           2 : UdpClient&amp; UdpClient::batch_size(size_t size) {</span></span>
-<span id="L557"><span class="lineNum">     557</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L558"><span class="lineNum">     558</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;max_batch_size_ = size;</span></span>
-<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
-<span id="L560"><span class="lineNum">     560</span>                 :<span class="tlaGNC">           2 : }</span></span>
-<span id="L561"><span class="lineNum">     561</span>                 :             : </span>
-<span id="L562"><span class="lineNum">     562</span>                 :<span class="tlaGNC">           2 : UdpClient&amp; UdpClient::batch_latency(std::chrono::milliseconds latency) {</span></span>
-<span id="L563"><span class="lineNum">     563</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;max_batch_latency_ = latency;</span></span>
-<span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
-<span id="L566"><span class="lineNum">     566</span>                 :<span class="tlaGNC">           2 : }</span></span>
+<span id="L551"><span class="lineNum">     551</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdpClient&amp; UdpClient::send_buffer_size(size_t bytes) {</span></span>
+<span id="L552"><span class="lineNum">     552</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L553"><span class="lineNum">     553</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;cfg.send_buffer_size = bytes;</span></span>
+<span id="L554"><span class="lineNum">     554</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L555"><span class="lineNum">     555</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L556"><span class="lineNum">     556</span>                 :             : </span>
+<span id="L557"><span class="lineNum">     557</span>                 :<span class="tlaUNC">           0 : UdpClient&amp; UdpClient::receive_buffer_size(size_t bytes) {</span></span>
+<span id="L558"><span class="lineNum">     558</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaUNC">           0 :   impl_-&gt;cfg.receive_buffer_size = bytes;</span></span>
+<span id="L560"><span class="lineNum">     560</span>                 :<span class="tlaUNC">           0 :   return *this;</span></span>
+<span id="L561"><span class="lineNum">     561</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L562"><span class="lineNum">     562</span>                 :             : </span>
+<span id="L563"><span class="lineNum">     563</span>                 :<span class="tlaGNC tlaBgGNC">           6 : UdpClient&amp; UdpClient::manage_external_context(bool m) {</span></span>
+<span id="L564"><span class="lineNum">     564</span>                 :<span class="tlaGNC">           6 :   impl_-&gt;manage_external_context.store(m);</span></span>
+<span id="L565"><span class="lineNum">     565</span>                 :<span class="tlaGNC">           6 :   return *this;</span></span>
+<span id="L566"><span class="lineNum">     566</span>                 :             : }</span>
 <span id="L567"><span class="lineNum">     567</span>                 :             : </span>
-<span id="L568"><span class="lineNum">     568</span>                 :             : }  // namespace wrapper</span>
-<span id="L569"><span class="lineNum">     569</span>                 :             : }  // namespace unilink</span>
+<span id="L568"><span class="lineNum">     568</span>                 :<span class="tlaGNC">           2 : UdpClient&amp; UdpClient::batch_size(size_t size) {</span></span>
+<span id="L569"><span class="lineNum">     569</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L570"><span class="lineNum">     570</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;max_batch_size_ = size;</span></span>
+<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
+<span id="L572"><span class="lineNum">     572</span>                 :<span class="tlaGNC">           2 : }</span></span>
+<span id="L573"><span class="lineNum">     573</span>                 :             : </span>
+<span id="L574"><span class="lineNum">     574</span>                 :<span class="tlaGNC">           2 : UdpClient&amp; UdpClient::batch_latency(std::chrono::milliseconds latency) {</span></span>
+<span id="L575"><span class="lineNum">     575</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L576"><span class="lineNum">     576</span>                 :<span class="tlaGNC">           2 :   impl_-&gt;max_batch_latency_ = latency;</span></span>
+<span id="L577"><span class="lineNum">     577</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
+<span id="L578"><span class="lineNum">     578</span>                 :<span class="tlaGNC">           2 : }</span></span>
+<span id="L579"><span class="lineNum">     579</span>                 :             : </span>
+<span id="L580"><span class="lineNum">     580</span>                 :             : }  // namespace wrapper</span>
+<span id="L581"><span class="lineNum">     581</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
