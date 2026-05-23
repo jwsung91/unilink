@@ -34,6 +34,8 @@
 #include "unilink/config/config_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/config/tcp_server_config.hpp"
+#include "unilink/config/udp_config.hpp"
 #include "unilink/config/uds_config.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
@@ -265,6 +267,51 @@ TEST_F(ConfigTest, TcpClientConfigDirectValidation) {
   // Restore valid host
   config.host = "localhost";
   EXPECT_TRUE(config.is_valid());
+}
+
+TEST(SocketTuningConfigTest, SocketBufferConfigValidationAndClamping) {
+  TcpClientConfig tcp_client;
+  EXPECT_FALSE(tcp_client.tcp_no_delay);
+  EXPECT_FALSE(tcp_client.keep_alive);
+  EXPECT_EQ(tcp_client.send_buffer_size, 0u);
+  EXPECT_EQ(tcp_client.receive_buffer_size, 0u);
+  EXPECT_TRUE(tcp_client.is_valid());
+
+  tcp_client.tcp_no_delay = true;
+  tcp_client.keep_alive = true;
+  tcp_client.send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+  tcp_client.receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
+  EXPECT_TRUE(tcp_client.is_valid());
+
+  tcp_client.send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE - 1;
+  tcp_client.receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE + 1;
+  EXPECT_FALSE(tcp_client.is_valid());
+  tcp_client.validate_and_clamp();
+  EXPECT_EQ(tcp_client.send_buffer_size, base::constants::MIN_SOCKET_BUFFER_SIZE);
+  EXPECT_EQ(tcp_client.receive_buffer_size, base::constants::MAX_SOCKET_BUFFER_SIZE);
+
+  TcpServerConfig tcp_server;
+  tcp_server.tcp_no_delay = true;
+  tcp_server.keep_alive = true;
+  tcp_server.send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE - 1;
+  tcp_server.receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE + 1;
+  EXPECT_FALSE(tcp_server.is_valid());
+  tcp_server.validate_and_clamp();
+  EXPECT_TRUE(tcp_server.is_valid());
+  EXPECT_EQ(tcp_server.send_buffer_size, base::constants::MIN_SOCKET_BUFFER_SIZE);
+  EXPECT_EQ(tcp_server.receive_buffer_size, base::constants::MAX_SOCKET_BUFFER_SIZE);
+
+  UdpConfig udp;
+  EXPECT_EQ(udp.send_buffer_size, 0u);
+  EXPECT_EQ(udp.receive_buffer_size, 0u);
+  EXPECT_TRUE(udp.is_valid());
+  udp.send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE - 1;
+  udp.receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE + 1;
+  EXPECT_FALSE(udp.is_valid());
+  udp.validate_and_clamp();
+  EXPECT_TRUE(udp.is_valid());
+  EXPECT_EQ(udp.send_buffer_size, base::constants::MIN_SOCKET_BUFFER_SIZE);
+  EXPECT_EQ(udp.receive_buffer_size, base::constants::MAX_SOCKET_BUFFER_SIZE);
 }
 
 TEST_F(ConfigTest, SerialConfigDirectValidationAndClamping) {

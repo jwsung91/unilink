@@ -78,6 +78,10 @@ struct TcpClient::Impl {
   std::chrono::milliseconds connection_timeout_{5000};
   size_t backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::Reliable};
+  bool tcp_no_delay_ = false;
+  bool keep_alive_ = false;
+  size_t send_buffer_size_ = 0;
+  size_t receive_buffer_size_ = 0;
 
   Impl(const std::string& host, uint16_t port) : host_(host), port_(port), started_(false) {}
 
@@ -175,6 +179,10 @@ struct TcpClient::Impl {
       config.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
       config.backpressure_threshold = backpressure_threshold_;
       config.backpressure_strategy = backpressure_strategy_;
+      config.tcp_no_delay = tcp_no_delay_;
+      config.keep_alive = keep_alive_;
+      config.send_buffer_size = send_buffer_size_;
+      config.receive_buffer_size = receive_buffer_size_;
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
@@ -613,6 +621,30 @@ TcpClient& TcpClient::backpressure_strategy(base::constants::BackpressureStrateg
     auto* tc = dynamic_cast<transport::TcpClient*>(impl_->channel_.get());
     if (tc) tc->set_backpressure_strategy(strategy);
   }
+  return *this;
+}
+
+TcpClient& TcpClient::tcp_no_delay(bool enable) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->tcp_no_delay_ = enable;
+  return *this;
+}
+
+TcpClient& TcpClient::keep_alive(bool enable) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->keep_alive_ = enable;
+  return *this;
+}
+
+TcpClient& TcpClient::send_buffer_size(size_t bytes) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->send_buffer_size_ = bytes;
+  return *this;
+}
+
+TcpClient& TcpClient::receive_buffer_size(size_t bytes) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->receive_buffer_size_ = bytes;
   return *this;
 }
 

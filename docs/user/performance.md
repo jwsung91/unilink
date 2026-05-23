@@ -119,7 +119,20 @@ client->send(batch);
 Reusing connections avoids repeated TCP handshake and connection setup overhead. For workloads with many short requests to the same peer, create the client once and reuse it across calls.
 
 ### 3. Socket Tuning
-For extremely high throughput, tune OS-level socket buffers:
+Use builder-level socket tuning first. Socket tuning is workload-dependent and does not guarantee higher throughput or lower latency for every application.
+
+```cpp
+auto client = unilink::tcp_client("127.0.0.1", 8080)
+    .tcp_no_delay(true)
+    .send_buffer_size(4 * 1024 * 1024)
+    .receive_buffer_size(4 * 1024 * 1024)
+    .build();
+```
+
+UDP builders also support `.send_buffer_size(bytes)` and `.receive_buffer_size(bytes)`. TCP servers apply these options to accepted client session sockets.
+
+OS-level limits may still cap the effective value:
+
 ```bash
 sudo sysctl -w net.core.rmem_max=16777216  # 16 MB (OS limit)
 sudo sysctl -w net.core.wmem_max=16777216  # 16 MB (OS limit)

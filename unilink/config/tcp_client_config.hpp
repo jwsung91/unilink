@@ -34,6 +34,10 @@ struct TcpClientConfig {
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
   bool enable_memory_pool = true;
+  bool tcp_no_delay = false;
+  bool keep_alive = false;
+  size_t send_buffer_size = 0;
+  size_t receive_buffer_size = 0;
 
   TcpClientConfig() = default;
   TcpClientConfig(const TcpClientConfig&) = default;
@@ -48,6 +52,10 @@ struct TcpClientConfig {
            retry_interval_ms <= base::constants::MAX_RETRY_INTERVAL_MS &&
            backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD &&
+           (send_buffer_size == 0 || (send_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+                                      send_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
+           (receive_buffer_size == 0 || (receive_buffer_size >= base::constants::MIN_SOCKET_BUFFER_SIZE &&
+                                         receive_buffer_size <= base::constants::MAX_SOCKET_BUFFER_SIZE)) &&
            (max_retries == -1 || (max_retries >= 0 && max_retries <= base::constants::MAX_RETRIES_LIMIT));
   }
 
@@ -67,6 +75,18 @@ struct TcpClientConfig {
 
     if (max_retries != -1 && max_retries > base::constants::MAX_RETRIES_LIMIT) {
       max_retries = base::constants::MAX_RETRIES_LIMIT;
+    }
+
+    if (send_buffer_size != 0 && send_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE) {
+      send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+    } else if (send_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE) {
+      send_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
+    }
+
+    if (receive_buffer_size != 0 && receive_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE) {
+      receive_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+    } else if (receive_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE) {
+      receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
     }
   }
 };

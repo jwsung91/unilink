@@ -111,3 +111,5 @@ Most applications should include:
 Direct builder or wrapper includes are supported for advanced users, but the umbrella header is the recommended stable entry point for application code.
 
 Move/shared buffer send APIs are user-facing advanced APIs intended for large binary payloads.
+
+Socket tuning builder options are user-facing advanced APIs intended for workload-specific latency, throughput, and tail-behavior tuning.

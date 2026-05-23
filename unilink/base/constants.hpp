@@ -62,6 +62,8 @@ constexpr size_t MAX_BUFFER_SIZE = 64 * 1024 * 1024;  // 64MB maximum buffer siz
 constexpr size_t MIN_BUFFER_SIZE = 1;                 // 1 byte minimum buffer size
 constexpr size_t DEFAULT_BUFFER_SIZE = 4096;          // 4KB default buffer size
 constexpr size_t LARGE_BUFFER_THRESHOLD = 65536;      // 64KB threshold for large buffers
+constexpr size_t MIN_SOCKET_BUFFER_SIZE = 1024;       // 1 KiB minimum requested socket buffer
+constexpr size_t MAX_SOCKET_BUFFER_SIZE = 256 << 20;  // 256 MiB maximum requested socket buffer
 
 // Performance and cleanup constants
 constexpr unsigned DEFAULT_CLEANUP_INTERVAL_MS = 100;        // 100ms default cleanup interval

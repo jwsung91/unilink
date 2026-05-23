@@ -101,6 +101,10 @@ class UNILINK_API TcpServer : public ServerInterface {
   TcpServer& max_clients(size_t max);
   TcpServer& backpressure_threshold(size_t threshold);
   TcpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
+  TcpServer& tcp_no_delay(bool enable = true);
+  TcpServer& keep_alive(bool enable = true);
+  TcpServer& send_buffer_size(size_t bytes);
+  TcpServer& receive_buffer_size(size_t bytes);
   TcpServer& manage_external_context(bool manage);
   TcpServer& batch_size(size_t size);
   TcpServer& batch_latency(std::chrono::milliseconds latency);

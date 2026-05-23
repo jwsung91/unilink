@@ -150,6 +150,24 @@ client->try_send_shared(payload);
 
 `send_move(...)` and `send_shared(...)` follow the same Reliable/BestEffort backpressure semantics as `send(...)`. The `try_send_move(...)` and `try_send_shared(...)` variants are non-blocking escape hatches like `try_send(...)`.
 
+### Socket Tuning Options
+
+TCP builders support socket tuning options:
+
+- `.tcp_no_delay(true)`
+- `.keep_alive(true)`
+- `.send_buffer_size(bytes)`
+- `.receive_buffer_size(bytes)`
+
+UDP builders support:
+
+- `.send_buffer_size(bytes)`
+- `.receive_buffer_size(bytes)`
+
+Configure socket tuning before `.build()` or before calling `start()` on a wrapper. TCP server tuning is applied to accepted client session sockets.
+
+These options request operating system socket settings. The operating system may clamp or ignore requested buffer sizes depending on system limits, so treat them as workload tuning controls rather than performance guarantees.
+
 **Builder Flow**
 
 ```

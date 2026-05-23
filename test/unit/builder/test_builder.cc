@@ -130,6 +130,10 @@ TEST_F(BuilderTest, TcpClientBuilderAdvancedOptions) {
                     .retry_interval(25ms)
                     .max_retries(2)
                     .connection_timeout(50ms)
+                    .tcp_no_delay(true)
+                    .keep_alive(true)
+                    .send_buffer_size(4 * 1024)
+                    .receive_buffer_size(8 * 1024)
                     .backpressure_strategy(base::constants::BackpressureStrategy::BestEffort)
                     .backpressure_threshold(512)
                     .on_backpressure([](size_t) {})
@@ -144,6 +148,20 @@ TEST_F(BuilderTest, TcpClientBuilderAdvancedOptions) {
 
   ASSERT_NE(client, nullptr);
   EXPECT_FALSE(client->connected());
+}
+
+TEST_F(BuilderTest, TcpServerBuilderSocketTuningOptions) {
+  auto server = tcp_server(test_port_)
+                    .tcp_no_delay(true)
+                    .keep_alive(true)
+                    .send_buffer_size(4 * 1024)
+                    .receive_buffer_size(8 * 1024)
+                    .on_data([](auto&&) {})
+                    .on_error([](auto&&) {})
+                    .build();
+
+  ASSERT_NE(server, nullptr);
+  EXPECT_FALSE(server->listening());
 }
 
 TEST_F(BuilderTest, TcpClientBuilderRejectsInvalidConfiguration) {

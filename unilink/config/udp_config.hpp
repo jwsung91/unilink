@@ -36,6 +36,8 @@ struct UdpConfig {
   bool reuse_address = false;
   bool enable_memory_pool = true;
   bool stop_on_callback_exception = false;
+  size_t send_buffer_size = 0;
+  size_t receive_buffer_size = 0;
 
   bool is_valid() const {
     if (backpressure_threshold < base::constants::MIN_BACKPRESSURE_THRESHOLD ||
@@ -44,6 +46,14 @@ struct UdpConfig {
     }
     if (remote_address.has_value() != remote_port.has_value()) return false;
     if (remote_port && *remote_port == 0) return false;
+    if (send_buffer_size != 0 && (send_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE ||
+                                  send_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE)) {
+      return false;
+    }
+    if (receive_buffer_size != 0 && (receive_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE ||
+                                     receive_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE)) {
+      return false;
+    }
     return true;
   }
 
@@ -52,6 +62,18 @@ struct UdpConfig {
       backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
     } else if (backpressure_threshold > base::constants::MAX_BACKPRESSURE_THRESHOLD) {
       backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD;
+    }
+
+    if (send_buffer_size != 0 && send_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE) {
+      send_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+    } else if (send_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE) {
+      send_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
+    }
+
+    if (receive_buffer_size != 0 && receive_buffer_size < base::constants::MIN_SOCKET_BUFFER_SIZE) {
+      receive_buffer_size = base::constants::MIN_SOCKET_BUFFER_SIZE;
+    } else if (receive_buffer_size > base::constants::MAX_SOCKET_BUFFER_SIZE) {
+      receive_buffer_size = base::constants::MAX_SOCKET_BUFFER_SIZE;
     }
   }
 };

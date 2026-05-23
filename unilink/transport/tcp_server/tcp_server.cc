@@ -85,6 +85,9 @@ struct TcpServer::Impl {
     } catch (const std::exception& e) {
       throw std::runtime_error("Failed to create TCP acceptor: " + std::string(e.what()));
     }
+    cfg_.validate_and_clamp();
+    max_clients_ = cfg_.max_connections > 0 ? static_cast<size_t>(cfg_.max_connections) : 0;
+    client_limit_enabled_ = cfg_.max_connections > 0;
   }
 
   Impl(const config::TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
@@ -99,6 +102,9 @@ struct TcpServer::Impl {
     if (!acceptor_) {
       throw std::runtime_error("Failed to create TCP acceptor");
     }
+    cfg_.validate_and_clamp();
+    max_clients_ = cfg_.max_connections > 0 ? static_cast<size_t>(cfg_.max_connections) : 0;
+    client_limit_enabled_ = cfg_.max_connections > 0;
   }
 
   ~Impl() {
@@ -129,6 +135,44 @@ struct TcpServer::Impl {
         cb(state_.state());
       }
     } catch (...) {
+    }
+  }
+
+  void apply_accepted_socket_options(tcp::socket& sock) {
+    boost::system::error_code ec;
+
+    if (cfg_.tcp_no_delay) {
+      sock.set_option(tcp::no_delay(true), ec);
+      if (ec) {
+        UNILINK_LOG_WARNING("tcp_server", "socket_options", fmt::format("Failed to set TCP_NODELAY: {}", ec.message()));
+        ec.clear();
+      }
+    }
+
+    if (cfg_.keep_alive) {
+      sock.set_option(net::socket_base::keep_alive(true), ec);
+      if (ec) {
+        UNILINK_LOG_WARNING("tcp_server", "socket_options", fmt::format("Failed to set keep_alive: {}", ec.message()));
+        ec.clear();
+      }
+    }
+
+    if (cfg_.send_buffer_size > 0) {
+      sock.set_option(net::socket_base::send_buffer_size(static_cast<int>(cfg_.send_buffer_size)), ec);
+      if (ec) {
+        UNILINK_LOG_WARNING("tcp_server", "socket_options",
+                            fmt::format("Failed to set send buffer size: {}", ec.message()));
+        ec.clear();
+      }
+    }
+
+    if (cfg_.receive_buffer_size > 0) {
+      sock.set_option(net::socket_base::receive_buffer_size(static_cast<int>(cfg_.receive_buffer_size)), ec);
+      if (ec) {
+        UNILINK_LOG_WARNING("tcp_server", "socket_options",
+                            fmt::format("Failed to set receive buffer size: {}", ec.message()));
+        ec.clear();
+      }
     }
   }
 
@@ -233,6 +277,8 @@ struct TcpServer::Impl {
           return;
         }
       }
+
+      accept_impl->apply_accepted_socket_options(sock);
 
       auto new_session = std::make_shared<TcpServerSession>(
           accept_impl->ioc_, std::move(sock), accept_impl->cfg_.backpressure_threshold,

@@ -17,6 +17,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 
@@ -56,7 +57,11 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
         max_port_retries_(other.max_port_retries_),
         port_retry_interval_ms_(other.port_retry_interval_ms_),
         idle_timeout_(other.idle_timeout_),
-        idle_timeout_set_(other.idle_timeout_set_) {
+        idle_timeout_set_(other.idle_timeout_set_),
+        tcp_no_delay_(other.tcp_no_delay_),
+        keep_alive_(other.keep_alive_),
+        send_buffer_size_(other.send_buffer_size_),
+        receive_buffer_size_(other.receive_buffer_size_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -85,6 +90,10 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder<State>& enable_port_retry(bool enable = true);
   TcpServerBuilder<State>& max_port_retries(uint32_t max_retries);
   TcpServerBuilder<State>& port_retry_interval(std::chrono::milliseconds interval);
+  TcpServerBuilder<State>& tcp_no_delay(bool enable = true);
+  TcpServerBuilder<State>& keep_alive(bool enable = true);
+  TcpServerBuilder<State>& send_buffer_size(size_t bytes);
+  TcpServerBuilder<State>& receive_buffer_size(size_t bytes);
 
   // Backward compatibility methods
   TcpServerBuilder<State>& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
@@ -111,6 +120,10 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   uint32_t port_retry_interval_ms_;
   std::chrono::milliseconds idle_timeout_;
   bool idle_timeout_set_;
+  bool tcp_no_delay_;
+  bool keep_alive_;
+  size_t send_buffer_size_;
+  size_t receive_buffer_size_;
 };
 
 using TcpServerBuilderDefault = TcpServerBuilder<BuilderState::None>;
