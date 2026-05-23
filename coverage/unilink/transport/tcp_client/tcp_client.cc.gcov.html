@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-23 14:34:17</td>
+            <td class="headerValue">2026-05-23 15:35:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">90.0&nbsp;%</td>
@@ -361,7 +361,7 @@
 <span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 110 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         110 :   impl_-&gt;join_ioc_thread(false);</span></span>
 <span id="L269"><span class="lineNum">     269</span>         [<span class="tlaGBC" title="Branch 0 was taken 110 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         110 : }</span></span>
 <span id="L270"><span class="lineNum">     270</span>                 :             : </span>
-<span id="L271"><span class="lineNum">     271</span>                 :<span class="tlaGNC">        1183 : bool TcpClient::is_connected() const { return get_impl()-&gt;connected_.load(); }</span></span>
+<span id="L271"><span class="lineNum">     271</span>                 :<span class="tlaGNC">        1184 : bool TcpClient::is_connected() const { return get_impl()-&gt;connected_.load(); }</span></span>
 <span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">        1129 : bool TcpClient::is_backpressure_active() const { return get_impl()-&gt;backpressure_active_.load(); }</span></span>
 <span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaUNC tlaBgUNC">           0 : wrapper::RuntimeStats TcpClient::stats() const {</span></span>
 <span id="L274"><span class="lineNum">     274</span>                 :<span class="tlaUNC">           0 :   return impl_-&gt;stats_.snapshot(impl_-&gt;queue_bytes_.load(std::memory_order_relaxed),</span></span>
