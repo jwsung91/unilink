@@ -53,6 +53,7 @@ You are developing or extending unilink itself.
 | [Implementation Status](contributor/implementation_status.md) | Verified scope and known gaps |
 | [Test Structure](contributor/test_structure.md) | Test organization and coverage |
 | [Architecture Overview](contributor/architecture/README.md) | Layers, responsibilities, design patterns |
+| [Design Notes](contributor/design/README.md) | Proposed APIs and runtime semantics before implementation |
 | [Runtime Behavior](contributor/architecture/runtime_behavior.md) | Lifecycle, retries, callback behavior |
 | [Memory Safety](contributor/architecture/memory_safety.md) | Ownership and buffer handling rules |
 | [Channel Contract](contributor/architecture/channel_contract.md) | Transport-layer contract and stop semantics |
