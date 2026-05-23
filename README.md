@@ -66,6 +66,7 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 * [Requirements](docs/user/requirements.md) – Supported platforms and dependencies
 * [API Reference](docs/user/api_guide.md) – Public API overview
 * [API Stability](docs/user/api_stability.md) – Public API and compatibility policy
+* [Transport Matrix](docs/user/transport_matrix.md) – Feature support by transport
 * [Python Bindings](https://github.com/unilink-lab/unilink-python) – External repository
 * [Troubleshooting](docs/user/troubleshooting.md) – Common issues and resolutions
 * [Tutorials](docs/user/tutorials/)

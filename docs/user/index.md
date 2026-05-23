@@ -38,6 +38,7 @@ Step-by-step guides for each transport family:
 | Document | What it covers |
 |----------|----------------|
 | [Troubleshooting](troubleshooting.md) | Common failures and how to resolve them |
+| [Transport Feature Matrix](transport_matrix.md) | Feature support across TCP, UDP, Serial, and UDS |
 | [Python Bindings](python_bindings.md) | Moved to unilink-python |
 | [Performance](performance.md) | Build and runtime tuning considerations |
 

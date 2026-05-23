@@ -2,6 +2,8 @@
 
 Comprehensive API reference for the unilink library.
 
+For a transport-by-transport support overview, see [Transport Feature Matrix](transport_matrix.md).
+
 ---
 
 ## Table of Contents
