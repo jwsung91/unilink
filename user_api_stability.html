@@ -175,7 +175,7 @@ $(document).ready(function(){initNavTree('user_api_stability.html',''); initResi
 <div class="contents">
 <div class="textblock"><p>This document defines which parts of unilink are considered user-facing public API, which parts are supported but advanced, and which parts are internal implementation details.</p>
 <p>Before v1.0, unilink aims to preserve source compatibility within the same minor release line where practical, but minor releases may still refine APIs when needed to improve clarity, safety, or runtime predictability.</p>
-<h1><a class="anchor" id="autotoc_md590"></a>
+<h1><a class="anchor" id="autotoc_md591"></a>
 Stable Public Surface</h1>
 <p>The primary public entry point is:</p>
 <ul>
@@ -211,7 +211,7 @@ Stable Public Surface</h1>
 <ul>
 <li><code><a class="el" href="namespaceunilink.html#a2878267339d2617c995bb323bc0a6ddc">unilink::RuntimeStats</a></code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md591"></a>
+<h1><a class="anchor" id="autotoc_md592"></a>
 Supported But Advanced Headers</h1>
 <p>These headers are supported, but most users should prefer including <code>&lt;<a class="el" href="unilink_8hpp.html">unilink/unilink.hpp</a>&gt;</code>:</p>
 <ul>
@@ -220,7 +220,7 @@ Supported But Advanced Headers</h1>
 <li><code><a class="el" href="context_8hpp.html">unilink/wrapper/context.hpp</a></code></li>
 </ul>
 <p>Use these headers directly only when you need narrower includes or lower-level wrapper control.</p>
-<h1><a class="anchor" id="autotoc_md592"></a>
+<h1><a class="anchor" id="autotoc_md593"></a>
 Internal Or Not Source-Stable Before v1.0</h1>
 <p>The following areas are implementation details or advanced internals and may change before v1.0:</p>
 <ul>
@@ -233,7 +233,7 @@ Internal Or Not Source-Stable Before v1.0</h1>
 <li>Boost adapter headers</li>
 </ul>
 <p>Some memory utilities are documented to explain callback data ownership and safety rules. They should still be treated as advanced APIs unless they are exposed through the public facade or callback context types.</p>
-<h1><a class="anchor" id="autotoc_md593"></a>
+<h1><a class="anchor" id="autotoc_md594"></a>
 Source Compatibility</h1>
 <p>Before v1.0, unilink aims to preserve source compatibility within the same minor release line where practical.</p>
 <p>However, minor releases may still refine APIs when needed to improve:</p>
@@ -244,11 +244,11 @@ Source Compatibility</h1>
 <li>packaging correctness</li>
 <li>cross-platform behavior</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md594"></a>
+<h1><a class="anchor" id="autotoc_md595"></a>
 ABI Compatibility</h1>
 <p>C++ ABI compatibility is not guaranteed before v1.0.</p>
 <p>Applications and binary packages should be rebuilt against the exact unilink version they consume. Source compatibility is the primary compatibility goal before v1.0.</p>
-<h1><a class="anchor" id="autotoc_md595"></a>
+<h1><a class="anchor" id="autotoc_md596"></a>
 Deprecation Policy</h1>
 <p>Deprecated APIs should normally remain available for at least one minor release before removal.</p>
 <p>Exceptions may be made when an API is:</p>
@@ -259,24 +259,25 @@ Deprecation Policy</h1>
 <li>preventing correct runtime behavior</li>
 <li>incompatible with the documented public API contract</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md596"></a>
+<h1><a class="anchor" id="autotoc_md597"></a>
 Python Bindings</h1>
 <p>Python bindings are maintained separately in <code>unilink-python</code>.</p>
 <p>This API stability policy applies to the C++ core repository. Python package compatibility is documented in the <code>unilink-python</code> repository.</p>
-<h1><a class="anchor" id="autotoc_md597"></a>
+<h1><a class="anchor" id="autotoc_md598"></a>
 Recommended Include Policy</h1>
 <p>Most applications should include:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&gt;</span></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><p>Direct builder or wrapper includes are supported for advanced users, but the umbrella header is the recommended stable entry point for application code.</p>
-<p>Move/shared buffer send APIs are user-facing advanced APIs intended for large binary payloads. </p>
+<p>Move/shared buffer send APIs are user-facing advanced APIs intended for large binary payloads.</p>
+<p>Socket tuning builder options are user-facing advanced APIs intended for workload-specific latency, throughput, and tail-behavior tuning. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 14:26:59 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

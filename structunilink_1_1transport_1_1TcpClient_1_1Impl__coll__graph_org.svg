@@ -56,7 +56,7 @@
 <text text-anchor="start" x="92.5" y="-37" font-family="Helvetica,sans-Serif" font-size="10.00">perform_stop_cleanup()</text>
 <text text-anchor="start" x="79.5" y="-22" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="92.5" y="-22" font-family="Helvetica,sans-Serif" font-size="10.00">reset_start_state()</text>
-<text text-anchor="start" x="92.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">and 9 more...</text>
+<text text-anchor="start" x="92.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">and 10 more...</text>
 <polygon fill="#666666" stroke="#666666" points="75.5,-332 75.5,-332 213.5,-332 213.5,-332 75.5,-332"/>
 <polygon fill="#666666" stroke="#666666" points="75.5,-167 75.5,-167 90.5,-167 90.5,-167 75.5,-167"/>
 <polygon fill="#666666" stroke="#666666" points="90.5,-167 90.5,-167 213.5,-167 213.5,-167 90.5,-167"/>
@@ -68,43 +68,51 @@
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="structunilink_1_1config_1_1TcpClientConfig.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="transparent" points="139,-705 0,-705 0,-450 139,-450 139,-705"/>
-<text text-anchor="start" x="10.5" y="-692.5" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::config::TcpClient</text>
-<text text-anchor="start" x="54.5" y="-681.5" font-family="Helvetica,sans-Serif" font-size="10.00">Config</text>
+<polygon fill="white" stroke="transparent" points="139,-735 0,-735 0,-420 139,-420 139,-735"/>
+<text text-anchor="start" x="10.5" y="-722.5" font-family="Helvetica,sans-Serif" font-size="10.00">unilink::config::TcpClient</text>
+<text text-anchor="start" x="54.5" y="-711.5" font-family="Helvetica,sans-Serif" font-size="10.00">Config</text>
+<text text-anchor="start" x="4.5" y="-696.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="17.5" y="-696.5" font-family="Helvetica,sans-Serif" font-size="10.00">host</text>
+<text text-anchor="start" x="4.5" y="-681.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="17.5" y="-681.5" font-family="Helvetica,sans-Serif" font-size="10.00">port</text>
 <text text-anchor="start" x="4.5" y="-666.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-666.5" font-family="Helvetica,sans-Serif" font-size="10.00">host</text>
+<text text-anchor="start" x="17.5" y="-666.5" font-family="Helvetica,sans-Serif" font-size="10.00">retry_interval_ms</text>
 <text text-anchor="start" x="4.5" y="-651.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-651.5" font-family="Helvetica,sans-Serif" font-size="10.00">port</text>
+<text text-anchor="start" x="17.5" y="-651.5" font-family="Helvetica,sans-Serif" font-size="10.00">connection_timeout_ms</text>
 <text text-anchor="start" x="4.5" y="-636.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-636.5" font-family="Helvetica,sans-Serif" font-size="10.00">retry_interval_ms</text>
+<text text-anchor="start" x="17.5" y="-636.5" font-family="Helvetica,sans-Serif" font-size="10.00">max_retries</text>
 <text text-anchor="start" x="4.5" y="-621.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-621.5" font-family="Helvetica,sans-Serif" font-size="10.00">connection_timeout_ms</text>
+<text text-anchor="start" x="17.5" y="-621.5" font-family="Helvetica,sans-Serif" font-size="10.00">backpressure_threshold</text>
 <text text-anchor="start" x="4.5" y="-606.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-606.5" font-family="Helvetica,sans-Serif" font-size="10.00">max_retries</text>
+<text text-anchor="start" x="17.5" y="-606.5" font-family="Helvetica,sans-Serif" font-size="10.00">backpressure_strategy</text>
 <text text-anchor="start" x="4.5" y="-591.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-591.5" font-family="Helvetica,sans-Serif" font-size="10.00">backpressure_threshold</text>
+<text text-anchor="start" x="17.5" y="-591.5" font-family="Helvetica,sans-Serif" font-size="10.00">enable_memory_pool</text>
 <text text-anchor="start" x="4.5" y="-576.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-576.5" font-family="Helvetica,sans-Serif" font-size="10.00">backpressure_strategy</text>
+<text text-anchor="start" x="17.5" y="-576.5" font-family="Helvetica,sans-Serif" font-size="10.00">tcp_no_delay</text>
 <text text-anchor="start" x="4.5" y="-561.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-561.5" font-family="Helvetica,sans-Serif" font-size="10.00">enable_memory_pool</text>
+<text text-anchor="start" x="17.5" y="-561.5" font-family="Helvetica,sans-Serif" font-size="10.00">keep_alive</text>
 <text text-anchor="start" x="4.5" y="-546.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-546.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpClientConfig()</text>
+<text text-anchor="start" x="17.5" y="-546.5" font-family="Helvetica,sans-Serif" font-size="10.00">send_buffer_size</text>
 <text text-anchor="start" x="4.5" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpClientConfig()</text>
+<text text-anchor="start" x="17.5" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00">receive_buffer_size</text>
 <text text-anchor="start" x="4.5" y="-516.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-516.5" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
+<text text-anchor="start" x="17.5" y="-516.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpClientConfig()</text>
 <text text-anchor="start" x="4.5" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="17.5" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpClientConfig()</text>
 <text text-anchor="start" x="4.5" y="-486.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="17.5" y="-486.5" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
 <text text-anchor="start" x="4.5" y="-471.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-471.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_valid()</text>
+<text text-anchor="start" x="17.5" y="-471.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpClientConfig()</text>
 <text text-anchor="start" x="4.5" y="-456.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="17.5" y="-456.5" font-family="Helvetica,sans-Serif" font-size="10.00">validate_and_clamp()</text>
-<polygon fill="#666666" stroke="#666666" points="0.5,-676.5 0.5,-676.5 139.5,-676.5 139.5,-676.5 0.5,-676.5"/>
-<polygon fill="#666666" stroke="#666666" points="0.5,-556.5 0.5,-556.5 15.5,-556.5 15.5,-556.5 0.5,-556.5"/>
-<polygon fill="#666666" stroke="#666666" points="15.5,-556.5 15.5,-556.5 139.5,-556.5 139.5,-556.5 15.5,-556.5"/>
-<polygon fill="none" stroke="#666666" points="0,-450 0,-705 139,-705 139,-450 0,-450"/>
+<text text-anchor="start" x="17.5" y="-456.5" font-family="Helvetica,sans-Serif" font-size="10.00">operator=()</text>
+<text text-anchor="start" x="4.5" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="17.5" y="-441.5" font-family="Helvetica,sans-Serif" font-size="10.00">is_valid()</text>
+<text text-anchor="start" x="4.5" y="-426.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="17.5" y="-426.5" font-family="Helvetica,sans-Serif" font-size="10.00">validate_and_clamp()</text>
+<polygon fill="#666666" stroke="#666666" points="0.5,-706.5 0.5,-706.5 139.5,-706.5 139.5,-706.5 0.5,-706.5"/>
+<polygon fill="#666666" stroke="#666666" points="0.5,-526.5 0.5,-526.5 15.5,-526.5 15.5,-526.5 0.5,-526.5"/>
+<polygon fill="#666666" stroke="#666666" points="15.5,-526.5 15.5,-526.5 139.5,-526.5 139.5,-526.5 15.5,-526.5"/>
+<polygon fill="none" stroke="#666666" points="0,-420 0,-735 139,-735 139,-420 0,-420"/>
 </a>
 </g>
 </g>
@@ -112,8 +120,8 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M93.54,-449.73C98.24,-424.94 103.27,-398.44 108.26,-372.1"/>
-<polygon fill="none" stroke="#63b8ff" points="108.32,-371.8 105.51,-365.16 110.55,-360.01 113.37,-366.65 108.32,-371.8"/>
+<path fill="none" stroke="#63b8ff" d="M99.2,-419.9C102.16,-404.26 105.2,-388.25 108.22,-372.3"/>
+<polygon fill="none" stroke="#63b8ff" points="108.3,-371.9 105.49,-365.26 110.53,-360.12 113.35,-366.76 108.3,-371.9"/>
 </a>
 </g>
 <text text-anchor="middle" x="123.5" y="-381" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> +cfg_</text>

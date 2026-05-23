@@ -47,6 +47,7 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "external_thread_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aca836a0248e26560a6f2ee6630f831bd", null ],
     [ "framer_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aa6993edc2e50126f800e2254739ccd03", null ],
     [ "host_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aca0a60cb12164a233457b830bc2d2fb5", null ],
+    [ "keep_alive_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ab578f011cce8b7efeb68cf8f676b5910", null ],
     [ "manage_external_context_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aeedd6f0db8dc4e156f799899a6a9e98f", null ],
     [ "max_batch_latency_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a85d7013a1faeaf96cd83b524742b74f1", null ],
     [ "max_batch_size_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a1d6d60c57af36e5ec0071aac61973eb9", null ],
@@ -57,8 +58,11 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "mutex_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af815d60beae58de0eda44a67b105e4b2", null ],
     [ "pending_promises_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4d535a9787a4cd21f66952384e988c4c", null ],
     [ "port_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ac340a7423e8b0e2d4010066223195502", null ],
+    [ "receive_buffer_size_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a70ebbc9cb3b793347e654d4dc4280e65", null ],
     [ "retry_interval_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a9e5636c1b147b1873e6344de49f02e68", null ],
+    [ "send_buffer_size_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ad7d6ddf59da4594464b6d99cd8045fff", null ],
     [ "started_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4a6e680884be456d06504f701b5ae56b", null ],
+    [ "tcp_no_delay_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a11b65380506534b0f99de3dbd2fb4762", null ],
     [ "use_external_context_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af682520b1e468e8c10299c9ff780097e", null ],
     [ "work_guard_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a7b84601d48135259467fc5fed8467e43", null ]
 ];

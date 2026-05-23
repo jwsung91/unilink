@@ -10,12 +10,16 @@ var classunilink_1_1builder_1_1TcpServerBuilder =
     [ "enable_port_retry", "classunilink_1_1builder_1_1TcpServerBuilder.html#a2c2a0f459ee2d225872925488de94e21", null ],
     [ "idle_timeout", "classunilink_1_1builder_1_1TcpServerBuilder.html#aa9ffee3f3e45da61a01c4bacc24f65d3", null ],
     [ "independent_context", "classunilink_1_1builder_1_1TcpServerBuilder.html#ae2ff50d686894128a88a70f63fcd2884", null ],
+    [ "keep_alive", "classunilink_1_1builder_1_1TcpServerBuilder.html#a058f7cc30f40643629227c13f66b9aa6", null ],
     [ "max_clients", "classunilink_1_1builder_1_1TcpServerBuilder.html#a328f6fa452c61d63356a541fc5b5f0e8", null ],
     [ "max_port_retries", "classunilink_1_1builder_1_1TcpServerBuilder.html#a88940cbc066c3444e112e33326226280", null ],
     [ "multi_client", "classunilink_1_1builder_1_1TcpServerBuilder.html#a012e09f172fb4836b7246a2fa0d1d70f", null ],
     [ "operator=", "classunilink_1_1builder_1_1TcpServerBuilder.html#a5cc3d177b034e0d92260dd6033fdbe15", null ],
     [ "port_retry", "classunilink_1_1builder_1_1TcpServerBuilder.html#a40e2d5173a8dd92c7ed8d4fcc79995e7", null ],
     [ "port_retry_interval", "classunilink_1_1builder_1_1TcpServerBuilder.html#a2b7fc243a3f6c10fbf44c8837c8b2665", null ],
+    [ "receive_buffer_size", "classunilink_1_1builder_1_1TcpServerBuilder.html#a937dcc25e9c21311b56b47a3dd27c137", null ],
+    [ "send_buffer_size", "classunilink_1_1builder_1_1TcpServerBuilder.html#a1674b7be8b641aed294c41847ca25a02", null ],
     [ "single_client", "classunilink_1_1builder_1_1TcpServerBuilder.html#afa58555b554c99636c1348f99ad477a8", null ],
+    [ "tcp_no_delay", "classunilink_1_1builder_1_1TcpServerBuilder.html#a3aa330bbf49834a21635129e8f7aff33", null ],
     [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html#a7e26bbd98d99e99fcde9e4cdfd0d6a45", null ]
 ];

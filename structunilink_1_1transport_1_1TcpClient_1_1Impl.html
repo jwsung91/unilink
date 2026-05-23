@@ -223,6 +223,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7c5bc03cb20fd92362989a765be3cb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e7ef20651e41907a00781407b10ecea" id="r_a8e7ef20651e41907a00781407b10ecea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a8e7ef20651e41907a00781407b10ecea">reset_io_objects</a> ()</td></tr>
 <tr class="separator:a8e7ef20651e41907a00781407b10ecea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2e61f4d5f347e1ac1ee75857893df0b" id="r_ad2e61f4d5f347e1ac1ee75857893df0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ad2e61f4d5f347e1ac1ee75857893df0b">apply_socket_options</a> ()</td></tr>
+<tr class="separator:ad2e61f4d5f347e1ac1ee75857893df0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0717bc9eb7976b754e41a562418035e4" id="r_a0717bc9eb7976b754e41a562418035e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a0717bc9eb7976b754e41a562418035e4">record_error</a> (<a class="el" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="el" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat, std::string_view operation, const boost::system::error_code &amp;ec, std::string_view msg, bool retryable, uint32_t retry_count)</td></tr>
 <tr class="separator:a0717bc9eb7976b754e41a562418035e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -365,6 +367,25 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad2e61f4d5f347e1ac1ee75857893df0b" name="ad2e61f4d5f347e1ac1ee75857893df0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2e61f4d5f347e1ac1ee75857893df0b">&#9670;&#160;</a></span>apply_socket_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::transport::TcpClient::Impl::apply_socket_options </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00574">574</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
 <a id="a2bf9054f0c8fd27463f96a29998e8e72" name="a2bf9054f0c8fd27463f96a29998e8e72"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2bf9054f0c8fd27463f96a29998e8e72">&#9670;&#160;</a></span>close_socket()</h2>
 
@@ -380,7 +401,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00877">877</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00917">917</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -410,7 +431,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00573">573</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00612">612</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -440,7 +461,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00763">763</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00803">803</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -476,7 +497,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00852">852</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00892">892</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -537,7 +558,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01034">1034</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01074">1074</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -557,7 +578,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00897">897</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00937">937</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -583,7 +604,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01055">1055</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01095">1095</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -602,7 +623,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00903">903</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00943">943</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -628,7 +649,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00986">986</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01026">1026</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -647,7 +668,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00883">883</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00923">923</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
@@ -714,7 +735,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01074">1074</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01114">1114</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -744,7 +765,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00907">907</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00947">947</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
@@ -770,7 +791,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01083">1083</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01123">1123</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -789,7 +810,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01018">1018</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01058">1058</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -819,7 +840,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00658">658</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00698">698</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -849,7 +870,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00723">723</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00763">763</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -879,7 +900,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00962">962</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l01002">1002</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -1597,7 +1618,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 14:26:59 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

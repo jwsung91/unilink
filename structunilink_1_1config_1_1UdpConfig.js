@@ -8,8 +8,10 @@ var structunilink_1_1config_1_1UdpConfig =
     [ "enable_broadcast", "structunilink_1_1config_1_1UdpConfig.html#a9156cdab33c4f40cb488d0824e628ef6", null ],
     [ "enable_memory_pool", "structunilink_1_1config_1_1UdpConfig.html#ab93ae1c28796650ab9ceebcb57be3447", null ],
     [ "local_port", "structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71", null ],
+    [ "receive_buffer_size", "structunilink_1_1config_1_1UdpConfig.html#ac6b5bf99b0bbd579c875b5fd9084a290", null ],
     [ "remote_address", "structunilink_1_1config_1_1UdpConfig.html#a8f48eb6ccf26e799e0b8fb408cfb1ad5", null ],
     [ "remote_port", "structunilink_1_1config_1_1UdpConfig.html#af8909d030ce8eda3215dd5c7a8e40340", null ],
     [ "reuse_address", "structunilink_1_1config_1_1UdpConfig.html#a5653b9fe4e53f093b376d02e671390b3", null ],
+    [ "send_buffer_size", "structunilink_1_1config_1_1UdpConfig.html#a4f453a0bfdc2f7faa420759775667394", null ],
     [ "stop_on_callback_exception", "structunilink_1_1config_1_1UdpConfig.html#ab327ddb43d604ec5b21f119fd868493f", null ]
 ];

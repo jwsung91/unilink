@@ -13,8 +13,10 @@ var classunilink_1_1builder_1_1UdpClientBuilder =
     [ "local_address", "classunilink_1_1builder_1_1UdpClientBuilder.html#a1f9addcb2c5b033ef6d1dbc4c7338ed3", null ],
     [ "local_port", "classunilink_1_1builder_1_1UdpClientBuilder.html#a9381b8a20220656d7975b1b341783d85", null ],
     [ "operator=", "classunilink_1_1builder_1_1UdpClientBuilder.html#ac6641553034810e87aeb0863daa4aa43", null ],
+    [ "receive_buffer_size", "classunilink_1_1builder_1_1UdpClientBuilder.html#af8cda8387c78f86fffbcb5d03d4a8955", null ],
     [ "remote", "classunilink_1_1builder_1_1UdpClientBuilder.html#a20e852fc56d2d43b8e124280f34c9ce7", null ],
     [ "remote_endpoint", "classunilink_1_1builder_1_1UdpClientBuilder.html#acc58425fd05251781b86bd4424132814", null ],
     [ "reuse_address", "classunilink_1_1builder_1_1UdpClientBuilder.html#aa2a5d3c94890c936f174bff3d0a9982f", null ],
+    [ "send_buffer_size", "classunilink_1_1builder_1_1UdpClientBuilder.html#a07259fc6987dfc4306be807efce04989", null ],
     [ "UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html#a168a445050dba774ad3c573ecc9ff436", null ]
 ];

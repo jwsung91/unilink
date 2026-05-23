@@ -15,6 +15,8 @@ var classunilink_1_1builder_1_1UdpServerBuilder =
     [ "local_port", "classunilink_1_1builder_1_1UdpServerBuilder.html#ad04d47029d094f4cbd3927e8c35e9991", null ],
     [ "max_clients", "classunilink_1_1builder_1_1UdpServerBuilder.html#a95edba4262af92620a323e5e9e20cf9a", null ],
     [ "operator=", "classunilink_1_1builder_1_1UdpServerBuilder.html#a3d2dfb8663dda9e62059338723b65f65", null ],
+    [ "receive_buffer_size", "classunilink_1_1builder_1_1UdpServerBuilder.html#a001f1e1e2a74e9fdeecc7cecc2efa4b8", null ],
     [ "reuse_address", "classunilink_1_1builder_1_1UdpServerBuilder.html#a4776fdf799026384d80eecf4ad46945f", null ],
+    [ "send_buffer_size", "classunilink_1_1builder_1_1UdpServerBuilder.html#a224a4e67567840fd6dc398738e906633", null ],
     [ "UdpServerBuilder", "classunilink_1_1builder_1_1UdpServerBuilder.html#a63b6645e40dc3fbaa3df944d1432d595", null ]
 ];

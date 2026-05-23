@@ -1,6 +1,7 @@
 var structunilink_1_1transport_1_1TcpClient_1_1Impl =
 [
     [ "Impl", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a80bd87441726672a4f5cfad5d9168f39", null ],
+    [ "apply_socket_options", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ad2e61f4d5f347e1ac1ee75857893df0b", null ],
     [ "close_socket", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a2bf9054f0c8fd27463f96a29998e8e72", null ],
     [ "do_resolve_connect", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a411b306f1809d56a01cace0713d43d9b", null ],
     [ "do_write", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#af816ace7f6413a6b45edf639e58af853", null ],

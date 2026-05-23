@@ -3,6 +3,7 @@ var structunilink_1_1transport_1_1TcpServer_1_1Impl =
     [ "Impl", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ab1b23ec612681d3fe375c16a38446de5", null ],
     [ "Impl", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ab8138dc970ce6f43a2cf355ed1c8f072", null ],
     [ "~Impl", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ae08b2dd5a639a9ff3381af21467fa74f", null ],
+    [ "apply_accepted_socket_options", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#aa38582157377b895545a7a957ee528bd", null ],
     [ "attempt_port_binding", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ac8aca380483984d5cae0051a917bd490", null ],
     [ "do_accept", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ae1d2c5d2c18ff3b3abe00c0d36dc1437", null ],
     [ "notify_state", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html#af4beb0dda19d26bf15940bf4d34ec5a5", null ],

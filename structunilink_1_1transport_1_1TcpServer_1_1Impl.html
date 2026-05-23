@@ -195,6 +195,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae08b2dd5a639a9ff3381af21467fa74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4beb0dda19d26bf15940bf4d34ec5a5" id="r_af4beb0dda19d26bf15940bf4d34ec5a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#af4beb0dda19d26bf15940bf4d34ec5a5">notify_state</a> ()</td></tr>
 <tr class="separator:af4beb0dda19d26bf15940bf4d34ec5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa38582157377b895545a7a957ee528bd" id="r_aa38582157377b895545a7a957ee528bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#aa38582157377b895545a7a957ee528bd">apply_accepted_socket_options</a> (tcp::socket &amp;sock)</td></tr>
+<tr class="separator:aa38582157377b895545a7a957ee528bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8aca380483984d5cae0051a917bd490" id="r_ac8aca380483984d5cae0051a917bd490"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ac8aca380483984d5cae0051a917bd490">attempt_port_binding</a> (std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1TcpServer.html">TcpServer</a> &gt; self, int retry_count)</td></tr>
 <tr class="separator:ac8aca380483984d5cae0051a917bd490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1d2c5d2c18ff3b3abe00c0d36dc1437" id="r_ae1d2c5d2c18ff3b3abe00c0d36dc1437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ae1d2c5d2c18ff3b3abe00c0d36dc1437">do_accept</a> (std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1TcpServer.html">TcpServer</a> &gt; self)</td></tr>
@@ -282,6 +284,13 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00076">76</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_ab1b23ec612681d3fe375c16a38446de5_cgraph.svg" width="428" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -325,7 +334,14 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00090">90</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00093">93</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_ab8138dc970ce6f43a2cf355ed1c8f072_cgraph.svg" width="428" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -352,18 +368,46 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00104">104</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00110">110</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_ae08b2dd5a639a9ff3381af21467fa74f_cgraph.svg" width="428" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa38582157377b895545a7a957ee528bd" name="aa38582157377b895545a7a957ee528bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa38582157377b895545a7a957ee528bd">&#9670;&#160;</a></span>apply_accepted_socket_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::transport::TcpServer::Impl::apply_accepted_socket_options </td>
+          <td>(</td>
+          <td class="paramtype">tcp::socket &amp;&#160;</td>
+          <td class="paramname"><em>sock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00141">141</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
+</div>
+</div>
 <a id="ac8aca380483984d5cae0051a917bd490" name="ac8aca380483984d5cae0051a917bd490"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac8aca380483984d5cae0051a917bd490">&#9670;&#160;</a></span>attempt_port_binding()</h2>
 
@@ -398,12 +442,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00135">135</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00179">179</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_ac8aca380483984d5cae0051a917bd490_cgraph.svg" width="100%" height="446"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -433,12 +477,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00194">194</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00238">238</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_ae1d2c5d2c18ff3b3abe00c0d36dc1437_icgraph.svg" width="404" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -467,19 +511,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00120">120</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00126">126</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_af4beb0dda19d26bf15940bf4d34ec5a5_cgraph.svg" width="452" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_af4beb0dda19d26bf15940bf4d34ec5a5_icgraph.svg" width="464" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -508,12 +552,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00321">321</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00367">367</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_afb7d58f6340069e668b52756be0800ea_icgraph.svg" width="428" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -543,12 +587,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00351">351</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00397">397</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1transport_1_1TcpServer_1_1Impl_aacb7f54c77c8656225cc4004f2c29cbe_cgraph.svg" width="100%" height="416"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -940,7 +984,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html">TcpServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 14:26:59 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -176,7 +176,7 @@ $(document).ready(function(){initNavTree('tutorial_01.html',''); initResizable()
 <div class="textblock"><p>This tutorial shows the current builder-based C++ API for creating a simple TCP client with connection, data, disconnect, and error callbacks.</p>
 <p><b>Duration</b>: 10 minutes <b>Difficulty</b>: Beginner <b>Prerequisites</b>: Basic C++ and CMake familiarity</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md786"></a>
+<h1><a class="anchor" id="autotoc_md787"></a>
 What You'll Build</h1>
 <p>A small TCP client that:</p>
 <ol type="1">
@@ -186,7 +186,7 @@ What You'll Build</h1>
 <li>sends user input until <code>/quit</code></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md788"></a>
+<h1><a class="anchor" id="autotoc_md789"></a>
 Step 1: Create The Client</h1>
 <p>Create <code>my_first_client.cpp</code>:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -235,7 +235,7 @@ Step 1: Create The Client</h1>
 <div class="line">    client-&gt;stop();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a60eed69944010bf2b5efd5d2991264a5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a60eed69944010bf2b5efd5d2991264a5">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder&lt; State &gt; &amp; retry_interval(std::chrono::milliseconds interval)</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00091">tcp_client_builder.cc:91</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a60eed69944010bf2b5efd5d2991264a5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a60eed69944010bf2b5efd5d2991264a5">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder&lt; State &gt; &amp; retry_interval(std::chrono::milliseconds interval)</div><div class="ttdef"><b>Definition</b> <a href="tcp__client__builder_8cc_source.html#l00099">tcp_client_builder.cc:99</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00075">context.hpp:75</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00094">context.hpp:94</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a75baa0901a7b5c261e5f0f5615a13059"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a75baa0901a7b5c261e5f0f5615a13059">unilink::wrapper::ErrorContext::code</a></div><div class="ttdeci">ErrorCode code() const</div><div class="ttdoc">Get the error code.</div><div class="ttdef"><b>Definition</b> <a href="context_8hpp_source.html#l00100">context.hpp:100</a></div></div>
@@ -245,7 +245,7 @@ Step 1: Create The Client</h1>
 <div class="ttc" id="anamespaceunilink_html_a3a4bdb4df1849be592d03452cb48278c"><div class="ttname"><a href="namespaceunilink.html#a3a4bdb4df1849be592d03452cb48278c">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilderDefault tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00095">unilink.hpp:95</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md790"></a>
+<h1><a class="anchor" id="autotoc_md791"></a>
 Step 2: Build With CMake</h1>
 <p>Create <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.12)</div>
@@ -260,7 +260,7 @@ Step 2: Build With CMake</h1>
 <div class="fragment"><div class="line">cmake -S . -B build</div>
 <div class="line">cmake --build build</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md792"></a>
+<h1><a class="anchor" id="autotoc_md793"></a>
 Step 3: Run Against A Test Server</h1>
 <p>Start a simple server in another terminal:</p>
 <div class="fragment"><div class="line">nc -l 8080</div>
@@ -268,7 +268,7 @@ Step 3: Run Against A Test Server</h1>
 <div class="fragment"><div class="line">./build/my_first_client</div>
 </div><!-- fragment --><p>Type a message in the client, then type a reply in the <code>nc</code> terminal.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md794"></a>
+<h1><a class="anchor" id="autotoc_md795"></a>
 API Patterns Used In This Tutorial</h1>
 <p>The tutorial code uses context-based callbacks consistently:</p>
 <ul>
@@ -289,7 +289,7 @@ API Patterns Used In This Tutorial</h1>
 <li><code>client-&gt;stop()</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md796"></a>
+<h1><a class="anchor" id="autotoc_md797"></a>
 Use The Full Example If You Want More</h1>
 <p>Ready-to-build examples are maintained in the external examples repository:</p>
 <ul>
@@ -297,7 +297,7 @@ Use The Full Example If You Want More</h1>
 </ul>
 <p>This tutorial stays smaller than the example sources on purpose.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md798"></a>
+<h1><a class="anchor" id="autotoc_md799"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="02__tcp__server_8md.html">Building a TCP Server</a></li>
@@ -314,7 +314,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 10:16:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 14:26:59 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -35,6 +35,7 @@ var constants_8hpp =
     [ "MAX_MEMORY_POOL_SIZE", "constants_8hpp.html#a52275e9d620c41ac5c4dc932b38173c6", null ],
     [ "MAX_RETRIES_LIMIT", "constants_8hpp.html#a07d04eea5aced81131e71db03199b8f6", null ],
     [ "MAX_RETRY_INTERVAL_MS", "constants_8hpp.html#a5ef1d7dd489b6331a51f44b8494865af", null ],
+    [ "MAX_SOCKET_BUFFER_SIZE", "constants_8hpp.html#adb77bd19444206398cba4170cab4dff0", null ],
     [ "MAX_STOP_BITS", "constants_8hpp.html#a630d0f50312403602cb2384308cfc8c1", null ],
     [ "MAX_THREAD_POOL_SIZE", "constants_8hpp.html#a30925e14f6dbd8a43a6d009eb1678f23", null ],
     [ "MAX_UDS_PATH_LENGTH", "constants_8hpp.html#a21de7cb998803824e515385917b82477", null ],
@@ -47,6 +48,7 @@ var constants_8hpp =
     [ "MIN_IDLE_TIMEOUT_MS", "constants_8hpp.html#a0b56032ba82a54c221dc67c4521aaf02", null ],
     [ "MIN_MEMORY_POOL_SIZE", "constants_8hpp.html#aa09a917cdd7f238dcf5f207bafd97a00", null ],
     [ "MIN_RETRY_INTERVAL_MS", "constants_8hpp.html#a54d5c3d5b3d6f4d864cad0c39c658903", null ],
+    [ "MIN_SOCKET_BUFFER_SIZE", "constants_8hpp.html#afe87f35e9bdc33486e46e17e9cc80ac5", null ],
     [ "MIN_STOP_BITS", "constants_8hpp.html#a04e5af0e6b8b196e759da97e06e33442", null ],
     [ "MIN_THREAD_POOL_SIZE", "constants_8hpp.html#af5d5b6a4d196e506acf63b9863d51a4c", null ]
 ];
