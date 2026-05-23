@@ -105,6 +105,13 @@ foreach(
   )
 endforeach()
 
+unilink_add_integration_gtest(
+  run_integration_udp_large_payload
+  ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_udp_large_payload.cc
+  "integration_udp_large_payload"
+  60 "tcp_port_allocation"
+)
+
 # Transport real-I/O integration tests
 foreach(
   test_file
