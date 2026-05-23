@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>unilink: unilink/builder -&gt; framer Relation</title>
+<title>unilink: unilink/base -&gt; diagnostics Relation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -80,6 +80,19 @@
         DoxygenAwesomeFragmentCopyButton.init()
         DoxygenAwesomeParagraphLink.init()
         DoxygenAwesomeInteractiveToc.init()
+        const updateProjectLogo = () => {
+            const logo = document.querySelector("#projectlogo img[data-dark-src]");
+            if (!logo) {
+                return;
+            }
+            const darkMode = document.documentElement.classList.contains("dark-mode");
+            logo.src = darkMode ? logo.dataset.darkSrc : logo.dataset.lightSrc;
+        };
+        updateProjectLogo();
+        new MutationObserver(updateProjectLogo).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
     });
 </script>
 </head>
@@ -89,8 +102,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="unilink-logo-horizontal-readme-light.png" data-light-src="unilink-logo-horizontal-readme-light.png" data-dark-src="unilink-logo-horizontal-readme-dark.png"/></td>
   <td id="projectalign">
-   <div id="projectname">unilink<span id="projectnumber">&#160;0.6.1</span>
+   <div id="projectname">unilink<span id="projectnumber">&#160;0.7.4</span>
    </div>
    <div id="projectbrief">A simple C++ library for unified async communication</div>
   </td>
@@ -130,7 +144,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('dir_e4a9c84f290adef67ceee075c03178ea.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('dir_1b267b6cbe170e06255a29a9b0340896.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -156,13 +170,13 @@ $(document).ready(function(){initNavTree('dir_e4a9c84f290adef67ceee075c03178ea.h
 </div>
 
 <div class="contents">
-<h3>builder &rarr; framer Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in unilink/builder</th><th class="dirtab">Includes file in unilink/framer</th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="ibuilder_8hpp.html">ibuilder.hpp</a></td><td class="dirtab"><a class="el" href="iframer_8hpp.html">iframer.hpp</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="ibuilder_8hpp.html">ibuilder.hpp</a></td><td class="dirtab"><a class="el" href="line__framer_8hpp.html">line_framer.hpp</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="ibuilder_8hpp.html">ibuilder.hpp</a></td><td class="dirtab"><a class="el" href="packet__framer_8hpp.html">packet_framer.hpp</a></td></tr></table></div><!-- contents -->
+<h3>base &rarr; diagnostics Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in unilink/base</th><th class="dirtab">Includes file in unilink/diagnostics</th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="common_8hpp.html">common.hpp</a></td><td class="dirtab"><a class="el" href="logger_8hpp.html">logger.hpp</a></td></tr></table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li>
-    <li class="footer">Generated on Fri May 1 2026 14:43:27 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_1b267b6cbe170e06255a29a9b0340896.html">base</a></li>
+    <li class="footer">Generated on Sat May 23 2026 14:34:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

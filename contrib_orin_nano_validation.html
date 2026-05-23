@@ -175,7 +175,7 @@ $(document).ready(function(){initNavTree('contrib_orin_nano_validation.html','')
 <div class="contents">
 <div class="textblock"><p>Step-by-step validation runbook for <code>unilink</code> on NVIDIA Jetson Orin Nano and similar Ubuntu <code>aarch64</code> systems.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md349"></a>
+<h1><a class="anchor" id="autotoc_md370"></a>
 Scope</h1>
 <p>Use this guide when you want to answer one of these questions:</p>
 <ul>
@@ -192,7 +192,7 @@ Scope</h1>
 <li>Ubuntu 24.04 ARM64 is a secondary validation target</li>
 <li>You are building from a local checkout of this repository</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md350"></a>
+<h1><a class="anchor" id="autotoc_md371"></a>
 Latest Validation Snapshot</h1>
 <p>Most recent reported Jetson Orin Nano result:</p>
 <ul>
@@ -210,7 +210,7 @@ Latest Validation Snapshot</h1>
 <li>It does not by itself prove every other Linux ARM64 distribution or userspace combination</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md352"></a>
+<h1><a class="anchor" id="autotoc_md373"></a>
 Prerequisites</h1>
 <p>Install the baseline packages:</p>
 <div class="fragment"><div class="line">sudo apt update</div>
@@ -232,7 +232,7 @@ Prerequisites</h1>
 <li>Ubuntu 22.04 is preferred on Orin Nano</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md354"></a>
+<h1><a class="anchor" id="autotoc_md375"></a>
 Configure And Build</h1>
 <p>From the repository root:</p>
 <div class="fragment"><div class="line">cmake -S . -B build-orin \</div>
@@ -243,7 +243,7 @@ Configure And Build</h1>
 <div class="line">  -DVCPKG_TARGET_TRIPLET=arm64-linux</div>
 </div><!-- fragment --><div class="fragment"><div class="line">cmake --build build-orin -j&quot;$(nproc)&quot;</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md356"></a>
+<h1><a class="anchor" id="autotoc_md377"></a>
 Run C++ Tests</h1>
 <p>Run the fast unit-style suite first:</p>
 <div class="fragment"><div class="line">ctest --test-dir build-orin \</div>
@@ -267,13 +267,13 @@ Run C++ Tests</h1>
 <div class="line">  --parallel 2 \</div>
 <div class="line">  -LE docs</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md358"></a>
+<h1><a class="anchor" id="autotoc_md379"></a>
 Serial Validation</h1>
-<h2><a class="anchor" id="autotoc_md359"></a>
+<h2><a class="anchor" id="autotoc_md380"></a>
 Automated Integration Coverage</h2>
 <p>The ARM64 integration command above already includes serial integration tests.</p>
 <p><code>test_serial_timeout.cc</code> creates a virtual serial pair with <code>socat</code> when it is available, so <code>socat</code> should be installed before running the integration suite.</p>
-<h2><a class="anchor" id="autotoc_md360"></a>
+<h2><a class="anchor" id="autotoc_md381"></a>
 Manual Virtual Serial Pair</h2>
 <p>If you want to do manual bring-up without hardware:</p>
 <div class="fragment"><div class="line">socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB</div>
@@ -283,7 +283,7 @@ Manual Virtual Serial Pair</h2>
 <li><code>/tmp/ttyB</code></li>
 </ul>
 <p>You can then use your own local smoke test against those endpoints. Runnable sample programs are maintained separately: <a href="https://github.com/unilink-lab/unilink-examples">unilink-lab/unilink-examples</a>.</p>
-<h2><a class="anchor" id="autotoc_md361"></a>
+<h2><a class="anchor" id="autotoc_md382"></a>
 Physical Loopback</h2>
 <p>If your Orin Nano testbed includes UART hardware, you can validate a real loopback path:</p>
 <ol type="1">
@@ -292,7 +292,7 @@ Physical Loopback</h2>
 <li>Run your smoke test with that path.</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md363"></a>
+<h1><a class="anchor" id="autotoc_md384"></a>
 Pass Criteria</h1>
 <p>For a practical "supported on Orin Nano" claim, use this minimum bar:</p>
 <ol type="1">
@@ -313,16 +313,16 @@ Pass Criteria</h1>
 <li>unilink-python ARM64 validation if the Python package is part of your release claim: <a href="https://github.com/unilink-lab/unilink-python">https://github.com/unilink-lab/unilink-python</a></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md365"></a>
+<h1><a class="anchor" id="autotoc_md386"></a>
 Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md366"></a>
+<h2><a class="anchor" id="autotoc_md387"></a>
 Boost Not Found</h2>
 <p>Check that vcpkg installed the ARM64 Boost ports:</p>
 <div class="fragment"><div class="line">vcpkg list | grep boost</div>
 </div><!-- fragment --><p>If CMake still fails, clear the build directory and reconfigure:</p>
 <div class="fragment"><div class="line">rm -rf build-orin</div>
 <div class="line">cmake -S . -B build-orin ...</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md367"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md388"></a>
 Serial Tests Skip</h2>
 <p>If the serial integration tests skip on ARM64:</p>
 <ul>
@@ -330,7 +330,7 @@ Serial Tests Skip</h2>
 <li>confirm <code>/tmp</code> is writable</li>
 <li>check that no stale <code>socat</code> process is holding the test symlinks</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md368"></a>
+<h2><a class="anchor" id="autotoc_md389"></a>
 Port-Binding Failures</h2>
 <p>If TCP or UDS tests fail intermittently:</p>
 <ul>
@@ -339,7 +339,7 @@ Port-Binding Failures</h2>
 <li>reduce test parallelism from <code>2</code> to <code>1</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md370"></a>
+<h1><a class="anchor" id="autotoc_md391"></a>
 Related Docs</h1>
 <ul>
 <li><a class="el" href="testing_8md.html">Testing</a></li>
@@ -355,7 +355,7 @@ Related Docs</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 14:26:59 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 14:34:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

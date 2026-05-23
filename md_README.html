@@ -173,16 +173,16 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
   <div class="headertitle"><div class="title">unilink</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md880"></a> <img src="docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only" alt="unilink logo" class="inline"/> <img src="docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only" alt="unilink logo" class="inline"/></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md901"></a> <img src="docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only" alt="unilink logo" class="inline"/> <img src="docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only" alt="unilink logo" class="inline"/></p>
 <p><b>Unified async communication for modern C++20.</b></p>
 <p>Serial · TCP · UDP · UDS</p>
 <p><img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-informational" alt="Platform" class="inline"/> <img src="https://img.shields.io/badge/vcpkg-jwsung91--unilink-0078D6" alt="vcpkg" class="inline"/> <a href="https://jwsung91.github.io/unilink/coverage/"><img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json" alt="Coverage" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md881"></a>
+<h1><a class="anchor" id="autotoc_md902"></a>
 Description</h1>
 <p>Simple async C++ communication library for Serial, TCP, UDP, and Unix Domain Sockets</p>
 <p><code>unilink</code> provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families.</p>
 <p>The project prioritizes <b>API clarity, predictable runtime behavior, and stability</b> over rapid feature expansion.</p>
-<h1><a class="anchor" id="autotoc_md882"></a>
+<h1><a class="anchor" id="autotoc_md903"></a>
 Feature Highlights</h1>
 <ul>
 <li><b>Unified transport surface</b>: Consistent builders and wrappers for TCP client/server, UDP, Serial, and UDS.</li>
@@ -190,29 +190,29 @@ Feature Highlights</h1>
 <li><b>Fluent API with CRTP Builders</b>: Type-safe configuration with improved method chaining.</li>
 <li><b>Tested runtime behavior</b>: Unit, integration, and end-to-end test suites are part of the repository and documented in <code>test/</code>.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md883"></a>
+<h1><a class="anchor" id="autotoc_md904"></a>
 Requirements</h1>
 <ul>
 <li><b>C++20 compiler and standard library</b>: GCC 10+, recent Clang/libc++, or MSVC 2022 (required)</li>
 <li>CMake 3.12 or later for plain builds; CMake 3.21 or later for the repository presets</li>
 <li>Boost 1.83.0 or later. vcpkg is the recommended dependency supplier; OS package manager Boost versions are supported only when they meet this minimum.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md884"></a>
+<h1><a class="anchor" id="autotoc_md905"></a>
 📦 Installation</h1>
-<h2><a class="anchor" id="autotoc_md885"></a>
+<h2><a class="anchor" id="autotoc_md906"></a>
 vcpkg (recommended)</h2>
 <div class="fragment"><div class="line">vcpkg install jwsung91-unilink</div>
 </div><!-- fragment --><p>For CMake usage, source builds, and other installation options, see the <a class="el" href="installation_8md.html">Installation Guide</a>. Container images are maintained separately in <a href="https://github.com/unilink-lab/unilink-containers">unilink-lab/unilink-containers</a>.</p>
-<h2><a class="anchor" id="autotoc_md886"></a>
+<h2><a class="anchor" id="autotoc_md907"></a>
 Contributor Development Setup</h2>
 <div class="fragment"><div class="line">./scripts/setup_dev_env.sh</div>
 <div class="line">cmake --preset dev-linux-x64</div>
 <div class="line">cmake --build --preset dev-linux-x64</div>
 </div><!-- fragment --><p>The setup script installs Boost and spdlog through an untracked, repository-local <code>vcpkg/</code> checkout by default. Delete that directory any time to reclaim space; rerun the setup script to recreate it. Set <code>VCPKG_ROOT</code> before running the script if you want to reuse an external vcpkg checkout. CMake remains the version gate and rejects Boost versions older than 1.83.0. The preset-based contributor workflow uses <code>CMakePresets.json</code> schema version 3, so those <code>cmake --preset ...</code> commands require CMake 3.21+.</p>
-<h1><a class="anchor" id="autotoc_md887"></a>
+<h1><a class="anchor" id="autotoc_md908"></a>
 📚 Documentation</h1>
 <p>Documentation is split by audience. Visit our <b><a href="https://jwsung91.github.io/unilink/">Online Documentation</a></b> for the full experience.</p>
-<h2><a class="anchor" id="autotoc_md888"></a>
+<h2><a class="anchor" id="autotoc_md909"></a>
 📖 For Library Users</h2>
 <ul>
 <li><a class="el" href="quickstart_8md.html">Quick Start Guide</a> – Get up and running in minutes</li>
@@ -224,7 +224,7 @@ Contributor Development Setup</h2>
 <li><a class="el" href="troubleshooting_8md.html">Troubleshooting</a> – Common issues and resolutions</li>
 <li><a href="docs/user/tutorials/">Tutorials</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md889"></a>
+<h2><a class="anchor" id="autotoc_md910"></a>
 🔧 For Contributors</h2>
 <ul>
 <li><a class="el" href="build__guide_8md.html">Build Guide</a> – Build configurations, CMake flags, sanitizers</li>
@@ -236,14 +236,14 @@ Contributor Development Setup</h2>
 <li><a class="el" href="runtime__behavior_8md.html">Runtime Behavior</a> – Threading model, reconnection, backpressure</li>
 <li><a class="el" href="memory__safety_8md.html">Memory Safety</a> – Ownership rules and safety guarantees</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md890"></a>
+<h2><a class="anchor" id="autotoc_md911"></a>
 💡 Examples</h2>
 <ul>
 <li><a href="https://github.com/unilink-lab/unilink-examples">External examples repository</a></li>
 <li><a class="el" href="index_8md.html">Documentation Index</a></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md892"></a>
+<h1><a class="anchor" id="autotoc_md913"></a>
 📄 License</h1>
 <p><b>unilink</b> is released under the Apache License, Version 2.0.</p>
 <p>Commercial use, modification, and redistribution are permitted. For details, see the <a href="./LICENSE">LICENSE</a> and <a href="./NOTICE">NOTICE</a> files.</p>
@@ -254,7 +254,7 @@ Contributor Development Setup</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat May 23 2026 14:26:59 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat May 23 2026 14:34:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
