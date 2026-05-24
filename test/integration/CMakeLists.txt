@@ -108,8 +108,7 @@ endforeach()
 unilink_add_integration_gtest(
   run_integration_udp_large_payload_receive
   ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_udp_large_payload_receive.cc
-  "integration_udp_large_payload_diagnostic" 60
-  "tcp_port_allocation"
+  "integration_udp_large_payload_diagnostic" 60 "tcp_port_allocation"
 )
 
 # Transport real-I/O integration tests
@@ -152,8 +151,7 @@ endforeach()
 unilink_add_integration_gtest(
   run_integration_udp_large_payload_transport
   ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_udp_large_payload_transport.cc
-  "integration_udp_large_payload_diagnostic" 60
-  "tcp_port_allocation"
+  "integration_udp_large_payload_diagnostic" 60 "tcp_port_allocation"
 )
 
 unilink_add_integration_gtest(
