@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-23 15:35:59</td>
+            <td class="headerValue">2026-05-24 06:17:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">71.4&nbsp;%</td>
@@ -102,10 +102,10 @@
 <span id="L24"><span class="lineNum">      24</span>                 :             : </span>
 <span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC tlaBgGNC">          25 : BoostUdsSocket::BoostUdsSocket(uds::socket sock) : socket_(std::move(sock)) {}</span></span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
-<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">          41 : void BoostUdsSocket::async_read_some(const net::mutable_buffer&amp; buffer,</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">          42 : void BoostUdsSocket::async_read_some(const net::mutable_buffer&amp; buffer,</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             :                                      std::function&lt;void(const boost::system::error_code&amp;, std::size_t)&gt; handler) {</span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          41 :   socket_.async_read_some(buffer, std::move(handler));</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">          41 : }</span></span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          42 :   socket_.async_read_some(buffer, std::move(handler));</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">          42 : }</span></span>
 <span id="L31"><span class="lineNum">      31</span>                 :             : </span>
 <span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC">          12 : void BoostUdsSocket::async_write(const net::const_buffer&amp; buffer,</span></span>
 <span id="L33"><span class="lineNum">      33</span>                 :             :                                  std::function&lt;void(const boost::system::error_code&amp;, std::size_t)&gt; handler) {</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-05-23 15:35:59</td>
+            <td class="headerValue">2026-05-24 06:17:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">90.0&nbsp;%</td>
@@ -750,13 +750,13 @@
 <span id="L612"><span class="lineNum">     612</span>                 :<span class="tlaGNC">         148 : void TcpClient::Impl::do_resolve_connect(std::shared_ptr&lt;TcpClient&gt; self, uint64_t seq) {</span></span>
 <span id="L613"><span class="lineNum">     613</span>         [<span class="tlaGBC" title="Branch 0 was taken 148 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         148 :   resolver_.async_resolve(</span></span>
 <span id="L614"><span class="lineNum">     614</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         444 :       cfg_.host, fmt::format(&quot;{}&quot;, cfg_.port), [self, seq](auto ec, tcp::resolver::results_type results) {</span></span>
-<span id="L615"><span class="lineNum">     615</span>   [<span class="tlaGBC" title="Branch 0 was taken 146 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 146 times"> + </span> :<span class="tlaGNC">         292 :         if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 146 times"> + </span>]
+<span id="L615"><span class="lineNum">     615</span>   [<span class="tlaGBC" title="Branch 0 was taken 147 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 147 times"> + </span> :<span class="tlaGNC">         294 :         if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) {</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 147 times"> + </span>]
 <span id="L616"><span class="lineNum">     616</span>                 :<span class="tlaUNC tlaBgUNC">           0 :           return;</span></span>
 <span id="L617"><span class="lineNum">     617</span>                 :             :         }</span>
-<span id="L618"><span class="lineNum">     618</span>   [<span class="tlaGBC" title="Branch 0 was taken 145 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 145 times"> + </span> :<span class="tlaGNC tlaBgGNC">         146 :         if (self-&gt;impl_-&gt;stop_requested_.load() || self-&gt;impl_-&gt;stopping_.load()) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 145 times"> + </span>]
-<span id="L619"><span class="lineNum">     619</span>                 :<span class="tlaGNC">           1 :           return;</span></span>
+<span id="L618"><span class="lineNum">     618</span>   [<span class="tlaGBC" title="Branch 0 was taken 145 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 145 times"> + </span> :<span class="tlaGNC tlaBgGNC">         147 :         if (self-&gt;impl_-&gt;stop_requested_.load() || self-&gt;impl_-&gt;stopping_.load()) {</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 145 times"> + </span>]
+<span id="L619"><span class="lineNum">     619</span>                 :<span class="tlaGNC">           2 :           return;</span></span>
 <span id="L620"><span class="lineNum">     620</span>                 :             :         }</span>
 <span id="L621"><span class="lineNum">     621</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 141 times"> + </span>]:<span class="tlaGNC">         145 :         if (ec) {</span></span>
 <span id="L622"><span class="lineNum">     622</span>                 :<span class="tlaGNC">           4 :           uint32_t current_attempts = self-&gt;impl_-&gt;reconnect_policy_</span></span>
@@ -887,8 +887,8 @@
 <span id="L737"><span class="lineNum">     737</span>                 :             :   } else {</span>
 <span id="L738"><span class="lineNum">     738</span>                 :             :     // Preserve existing &quot;fast first retry&quot; behavior for non-policy mode.</span>
 <span id="L739"><span class="lineNum">     739</span>                 :<span class="tlaGNC">          36 :     ++retry_attempts_;</span></span>
-<span id="L740"><span class="lineNum">     740</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 20 times"> + </span>]:<span class="tlaGNC">          36 :     if (retry_attempts_ == 1) {</span></span>
-<span id="L741"><span class="lineNum">     741</span>                 :<span class="tlaGNC">          16 :       delay = std::chrono::milliseconds(first_retry_interval_ms_);</span></span>
+<span id="L740"><span class="lineNum">     740</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          36 :     if (retry_attempts_ == 1) {</span></span>
+<span id="L741"><span class="lineNum">     741</span>                 :<span class="tlaGNC">          15 :       delay = std::chrono::milliseconds(first_retry_interval_ms_);</span></span>
 <span id="L742"><span class="lineNum">     742</span>                 :             :     }</span>
 <span id="L743"><span class="lineNum">     743</span>                 :             :   }</span>
 <span id="L744"><span class="lineNum">     744</span>                 :             : </span>
@@ -902,11 +902,11 @@
 <span id="L750"><span class="lineNum">     750</span>   [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          61 :   retry_timer_.expires_after(delay);</span></span>
 <span id="L751"><span class="lineNum">     751</span>   [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          61 :   retry_timer_.async_wait([self, seq](const boost::system::error_code&amp; ec) {</span></span>
 <span id="L752"><span class="lineNum">     752</span>                 :             :     // Clear pending flag regardless of result (fired or aborted)</span>
-<span id="L753"><span class="lineNum">     753</span>                 :<span class="tlaGNC">          57 :     self-&gt;impl_-&gt;reconnect_pending_.store(false);</span></span>
+<span id="L753"><span class="lineNum">     753</span>                 :<span class="tlaGNC">          56 :     self-&gt;impl_-&gt;reconnect_pending_.store(false);</span></span>
 <span id="L754"><span class="lineNum">     754</span>                 :             : </span>
-<span id="L755"><span class="lineNum">     755</span>   [<span class="tlaGBC" title="Branch 0 was taken 49 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 49 times"> + </span> :<span class="tlaGNC">         106 :     if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 49 times"> + </span>]
-<span id="L756"><span class="lineNum">     756</span>                 :<span class="tlaGNC">           8 :       return;</span></span>
+<span id="L755"><span class="lineNum">     755</span>   [<span class="tlaGBC" title="Branch 0 was taken 49 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 49 times"> + </span> :<span class="tlaGNC">         105 :     if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) {</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 49 times"> + </span>]
+<span id="L756"><span class="lineNum">     756</span>                 :<span class="tlaGNC">           7 :       return;</span></span>
 <span id="L757"><span class="lineNum">     757</span>                 :             :     }</span>
 <span id="L758"><span class="lineNum">     758</span>   [<span class="tlaGBC" title="Branch 0 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          49 :     if (!ec &amp;&amp; !self-&gt;impl_-&gt;stop_requested_.load() &amp;&amp; !self-&gt;impl_-&gt;stopping_.load())</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
