@@ -61,6 +61,13 @@ Full documentation is maintained in the unilink documentation repository:
 
 https://github.com/unilink-lab/unilink-docs
 
+Core repository entrypoints:
+
+* [Quick Start](docs/quickstart.md)
+* [Installation](docs/installation.md)
+* [API Stability Summary](docs/api_stability.md)
+* [Release Checklist](docs/release_checklist.md)
+
 Useful external repositories:
 
 * [Python bindings](https://github.com/unilink-lab/unilink-python)
