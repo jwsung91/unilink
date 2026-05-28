@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo/unilink-logo-dark.png">
+    <img alt="unilink" src="assets/logo/unilink-logo-light.png" width="420">
+  </picture>
+</p>
+
 # unilink
 
 **Unified async communication for modern C++20.**
