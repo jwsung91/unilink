@@ -45,7 +45,7 @@ jobs:
     - name: Run formatting style check
       run: |
         find . -regex '.*\.\(cpp\|hpp\|cu\|c\|h\|cc\|hh\)' -not -path "./build/*" -not -path "./_deps/*" -exec clang-format -style=file -i {} \;
-        find . -type f \( -name "CMakeLists.txt" -o -name "*.cmake" -o -name "*.cmake.in" \) -not -path "*/build/*" -not -path "*/.git/*" -not -path "*/.vscode/*" -not -path "*/docs/html/*" -exec cmake-format -i {} \;
+        find . -type f \( -name "CMakeLists.txt" -o -name "*.cmake" -o -name "*.cmake.in" \) -not -path "*/build/*" -not -path "*/.git/*" -not -path "*/.vscode/*" -exec cmake-format -i {} \;
         git diff --exit-code
 
   # Quality Summary

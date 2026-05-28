@@ -54,7 +54,6 @@ integration_transport_tcp_medium
 integration_transport_uds_medium
 integration_wrapper_udp_medium
 e2e_scenario_slow
-docs_snippets
 ```
 
 Place tests that open localhost sockets, UDS socket paths, or real ports under

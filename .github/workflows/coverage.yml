@@ -72,7 +72,7 @@ jobs:
       - name: Run tests
         run: |
           cd build-coverage
-          ctest --output-on-failure --parallel 2 -LE "docs_snippets|performance|benchmark|optional"
+          ctest --output-on-failure --parallel 2 -LE "performance|benchmark|optional"
 
       - name: Generate coverage report
         run: |

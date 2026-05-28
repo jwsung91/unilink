@@ -5,7 +5,11 @@
 option(UNILINK_BUILD_SHARED "Build shared library" ON)
 option(UNILINK_BUILD_STATIC "Build static library" ON)
 option(UNILINK_BUILD_TESTS "Build tests" ON)
-option(UNILINK_BUILD_DOCS "Build documentation" ON)
+option(
+  UNILINK_BUILD_DOCS
+  "Compatibility option for legacy docs builds. Full docs live in unilink-docs."
+  OFF
+)
 
 if(DEFINED BUILD_PYTHON_BINDINGS AND BUILD_PYTHON_BINDINGS)
   message(

@@ -225,22 +225,6 @@ if(UNILINK_BUILD_TESTS)
   endif()
 endif()
 
-# Doxygen for documentation
-if(UNILINK_BUILD_DOCS)
-  find_package(Doxygen QUIET)
-  if(DOXYGEN_FOUND)
-    set(UNILINK_DOXYGEN_AVAILABLE ON)
-    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
-  else()
-    message(WARNING "Doxygen not found. Documentation will not be generated.")
-    message(STATUS "Install Doxygen to enable documentation generation:")
-    message(STATUS "  Ubuntu/Debian: sudo apt install doxygen")
-    message(STATUS "  CentOS/RHEL: sudo yum install doxygen")
-    message(STATUS "  macOS: brew install doxygen")
-    message(STATUS "  Windows: choco install doxygen")
-  endif()
-endif()
-
 # Create interface library for dependencies
 add_library(unilink_dependencies INTERFACE)
 
