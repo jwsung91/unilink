@@ -221,9 +221,9 @@ jobs:
         if: runner.os == 'Windows'
         working-directory: build
         shell: pwsh
-        run: ctest -C "${env:BUILD_TYPE}" --output-on-failure -LE docs_snippets
+        run: ctest -C "${env:BUILD_TYPE}" --output-on-failure
 
       - name: Test (Linux/macOS, Full C++)
         if: runner.os != 'Windows'
         working-directory: build
-        run: ctest --output-on-failure --parallel 2 -LE docs_snippets
+        run: ctest --output-on-failure --parallel 2

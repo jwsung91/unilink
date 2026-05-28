@@ -277,61 +277,6 @@ jobs:
           retention-days: 7
           overwrite: true
 
-  # ── DOCS SNIPPETS ─────────────────────────────────────────────────────────────
-  docs-snippets:
-    name: Docs Snippets (ubuntu-24.04, gcc)
-    runs-on: ubuntu-24.04
-    needs: [compile]
-    timeout-minutes: 30
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Cache ccache
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/ccache
-          key: ccache-${{ runner.os }}-docs-snippets-${{ hashFiles('**/CMakeLists.txt', 'docs/**/*.md', 'docs/scripts/*.py') }}
-          restore-keys: ccache-${{ runner.os }}-docs-snippets-
-
-      - name: Install dependencies
-        uses: ./.github/actions/apt-install
-        with:
-          packages: "build-essential cmake ccache python3"
-
-      - name: Install dependencies with vcpkg
-        uses: ./.github/actions/setup-vcpkg
-        with:
-          triplet: x64-linux
-
-      - name: Configure CMake
-        run: |
-          cmake -S . -B build-docs-snippets \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_CXX_STANDARD=$CXX_STANDARD \
-            -DUNILINK_ENABLE_CONFIG=ON \
-            -DUNILINK_BUILD_DOCS=OFF \
-            -DUNILINK_BUILD_TESTS=ON \
-            -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
-            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-      - name: Build doc snippet smoke target
-        run: cmake --build build-docs-snippets --target doc_snippets_smoke -j $(nproc)
-
-      - name: Run doc snippet tests
-        run: ctest --test-dir build-docs-snippets --output-on-failure -L docs_snippets
-
-      - name: Upload results
-        uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: docs-snippet-test-results
-          path: build-docs-snippets/Testing/
-          retention-days: 7
-          overwrite: true
-
   # ── INTEGRATION TESTS ─────────────────────────────────────────────────────────
   integration-tests:
     name: Integration Tests (ubuntu-24.04, gcc)
@@ -560,7 +505,7 @@ jobs:
   summary:
     name: CI Summary
     runs-on: ubuntu-24.04
-    needs: [compile, unit-tests, windows, docs-snippets, integration-tests, integration-tests-arm64, memory-safety-tests, e2e-tests]
+    needs: [compile, unit-tests, windows, integration-tests, integration-tests-arm64, memory-safety-tests, e2e-tests]
     if: always()
 
     steps:
@@ -572,7 +517,6 @@ jobs:
           echo "| Compile | ${{ needs.compile.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Unit Tests | ${{ needs.unit-tests.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Windows | ${{ needs.windows.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Docs Snippets | ${{ needs.docs-snippets.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Integration Tests ARM64 | ${{ needs.integration-tests-arm64.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Memory Safety Tests | ${{ needs.memory-safety-tests.result == 'success' && '✅' || needs.memory-safety-tests.result == 'skipped' && '⏭️' || '❌' }} |" >> $GITHUB_STEP_SUMMARY

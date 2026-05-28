@@ -74,47 +74,13 @@ if(UNILINK_BUILD_TESTS)
   add_subdirectory(test)
 endif()
 
-# Documentation generation with Doxygen
-if(UNILINK_BUILD_DOCS AND UNILINK_DOXYGEN_AVAILABLE)
-  # Create docs directory
-  file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs)
-  file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/config)
-
-  # Generate Doxyfile if it doesn't exist
-  set(DOXYFILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/docs/config/Doxyfile)
-  if(NOT EXISTS ${DOXYFILE_PATH})
-    message(STATUS "Generating Doxyfile...")
-    execute_process(
-      COMMAND ${DOXYGEN_EXECUTABLE} -g ${DOXYFILE_PATH}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/config
-      RESULT_VARIABLE DOXYGEN_GEN_RESULT
-    )
-    if(NOT DOXYGEN_GEN_RESULT EQUAL 0)
-      message(WARNING "Failed to generate Doxyfile")
-    endif()
-  endif()
-
-  # Add custom target for documentation
-  add_custom_target(
-    docs
-    COMMAND ${CMAKE_COMMAND} -E env PROJECT_NUMBER=${PROJECT_VERSION}
-            ${DOXYGEN_EXECUTABLE} ${DOXYFILE_PATH}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Generating API documentation with Doxygen"
-    VERBATIM
-  )
-
-  message(STATUS "Documentation target 'docs' available")
-else()
-  # Create a dummy docs target to prevent build failures
-  add_custom_target(
-    docs
-    COMMAND
-      echo
-      "Documentation generation skipped - Doxygen not available or disabled"
-    COMMENT "Documentation generation skipped"
-  )
-endif()
+add_custom_target(
+  docs
+  COMMAND
+    ${CMAKE_COMMAND} -E echo
+    "Documentation generation moved to https://github.com/unilink-lab/unilink-docs"
+  COMMENT "Documentation generation moved to unilink-docs"
+)
 
 # Include packaging configuration
 include(cmake/UnilinkPackaging.cmake)

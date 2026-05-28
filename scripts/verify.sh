@@ -43,7 +43,7 @@ for arg in "$@"; do
       echo "Options:"
       echo "  --tests-only, -t   Skip formatting and doc snippets; run build + tests only"
       echo "  --skip-format      Skip clang-format / cmake-format step"
-      echo "  --skip-docs        Skip documentation snippet compilation"
+      echo "  --skip-docs        Accepted for compatibility; docs validation moved to unilink-docs"
       echo "  --help, -h         Show this help message"
       exit 0
       ;;
@@ -152,14 +152,9 @@ fi
 cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
 
 # ---------------------------------------------------------------------------
-# Step 3: Compile documentation snippets
+# Step 3: Documentation snippets
 # ---------------------------------------------------------------------------
-if [[ "${SKIP_DOCS}" -eq 0 ]]; then
-  section "Step 3: Compiling documentation snippets"
-  cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --target doc_snippets_smoke
-else
-  section "Step 3: Compiling documentation snippets [SKIPPED]"
-fi
+section "Step 3: Documentation snippets moved to unilink-docs"
 
 # ---------------------------------------------------------------------------
 # Step 4: Full test suite

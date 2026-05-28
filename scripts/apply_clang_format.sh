@@ -24,7 +24,6 @@ find . -type f \( -name "*.h" -o -name "*.hpp" -o -name "*.c" -o -name "*.cpp" -
     -not -path "*/vcpkg/*" \
     -not -path "*/.git/*" \
     -not -path "*/.vscode/*" \
-    -not -path "*/docs/html/*" \
     -not -path "*/cmake/*.cmake.in" \
     -not -path "*/cmake/*.pc.in" \
     -print0 | xargs -0 -P "${JOBS:-2}" -n 20 clang-format -i -style=file

@@ -26,6 +26,5 @@ find . -type f \( -name "CMakeLists.txt" -o -name "*.cmake" -o -name "*.cmake.in
     -not -path "*/vcpkg/*" \
     -not -path "*/.git/*" \
     -not -path "*/.vscode/*" \
-    -not -path "*/docs/html/*" \
     -print0 | xargs -0 -P "${JOBS:-2}" -n 20 cmake-format -i
 echo "CMake formatting complete."

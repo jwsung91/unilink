@@ -133,7 +133,6 @@ set(CPACK_SOURCE_IGNORE_FILES
     "*.swp"
     "*.swo"
     "*~"
-    "/docs/html/"
     "/Testing/"
     "/test/"
     "CMakeCache.txt"
@@ -171,7 +170,7 @@ set(CPACK_COMPONENT_PKGCONFIG_DEPENDS libraries)
 
 set(CPACK_COMPONENT_DOCUMENTATION_DISPLAY_NAME "Documentation")
 set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION
-    "API documentation and user guides"
+    "Minimal project documentation, license, and notices"
 )
 set(CPACK_COMPONENT_DOCUMENTATION_DEPENDS headers)
 
@@ -292,17 +291,6 @@ if(UNILINK_ENABLE_INSTALL)
     COMPONENT documentation
     DESTINATION ${CMAKE_INSTALL_DOCDIR}
   )
-
-  if(UNILINK_BUILD_DOCS
-     AND UNILINK_DOXYGEN_AVAILABLE
-     AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/docs/html/"
-  )
-    install(
-      DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/html/
-      COMPONENT documentation
-      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/unilink/html
-    )
-  endif()
 
 endif()
 

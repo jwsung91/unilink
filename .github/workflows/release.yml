@@ -191,7 +191,7 @@ jobs:
 
       - name: Test
         shell: bash
-        run: ctest --test-dir build --output-on-failure -C Release -LE docs_snippets
+        run: ctest --test-dir build --output-on-failure -C Release
 
       - name: Package
         shell: bash

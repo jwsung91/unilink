@@ -1,8 +1,5 @@
 # unilink
 
-![unilink logo](docs/assets/logo/light/unilink-logo-horizontal-readme-light.png#gh-light-mode-only)
-![unilink logo](docs/assets/logo/dark/unilink-logo-horizontal-readme-dark.png#gh-dark-mode-only)
-
 **Unified async communication for modern C++20.**
 
 Serial · TCP · UDP · UDS
@@ -40,7 +37,10 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 vcpkg install jwsung91-unilink
 ```
 
-For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/user/installation.md).
+For CMake usage, source builds, and other installation options, see the
+documentation repository:
+https://github.com/unilink-lab/unilink-docs
+
 Container images are maintained separately in [unilink-lab/unilink-containers](https://github.com/unilink-lab/unilink-containers).
 
 ### Contributor Development Setup
@@ -57,35 +57,14 @@ The preset-based contributor workflow uses `CMakePresets.json` schema version 3,
 
 ## 📚 Documentation
 
-Documentation is split by audience. Visit our **[Online Documentation](https://jwsung91.github.io/unilink/)** for the full experience.
+Full documentation is maintained in the unilink documentation repository:
 
-### 📖 For Library Users
+https://github.com/unilink-lab/unilink-docs
 
-* [Quick Start Guide](docs/user/quickstart.md) – Get up and running in minutes
-* [Installation Guide](docs/user/installation.md) – Package, source, and build options
-* [Requirements](docs/user/requirements.md) – Supported platforms and dependencies
-* [API Reference](docs/user/api_guide.md) – Public API overview
-* [API Stability](docs/user/api_stability.md) – Public API and compatibility policy
-* [Transport Matrix](docs/user/transport_matrix.md) – Feature support by transport
-* [Python Bindings](https://github.com/unilink-lab/unilink-python) – External repository
-* [Troubleshooting](docs/user/troubleshooting.md) – Common issues and resolutions
-* [Tutorials](docs/user/tutorials/)
+Useful external repositories:
 
-### 🔧 For Contributors
-
-* [Build Guide](docs/contributor/build_guide.md) – Build configurations, CMake flags, sanitizers
-* [Testing Guide](docs/contributor/testing.md) – Running tests and CI integration
-* [Orin Nano Validation](docs/contributor/orin_nano_validation.md) – Ubuntu 22.04 ARM64 bring-up and test runbook
-* [Release Checklist](docs/contributor/release_checklist.md) – Release validation checklist
-* [Implementation Status](docs/contributor/implementation_status.md) – Verified scope and known gaps
-* [Architecture Overview](docs/contributor/architecture/README.md) – High-level structure and layer responsibilities
-* [Runtime Behavior](docs/contributor/architecture/runtime_behavior.md) – Threading model, reconnection, backpressure
-* [Memory Safety](docs/contributor/architecture/memory_safety.md) – Ownership rules and safety guarantees
-
-### 💡 Examples
-
-* [External examples repository](https://github.com/unilink-lab/unilink-examples)
-* [Documentation Index](docs/index.md)
+* [Python bindings](https://github.com/unilink-lab/unilink-python)
+* [Examples](https://github.com/unilink-lab/unilink-examples)
 
 ---
 
