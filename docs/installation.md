@@ -42,6 +42,20 @@ target_compile_features(my_app PRIVATE cxx_std_20)
 
 ## Source build example
 
+Source builds require Boost 1.83.0+. Ubuntu 22.04 and 24.04 system Boost
+packages may be older than this baseline, so prefer the repository development
+setup or provide Boost through vcpkg/custom CMake prefixes before configuring.
+
+For contributor/source builds with the repository-managed vcpkg checkout:
+
+```bash
+./scripts/setup_dev_env.sh
+cmake --preset dev-linux-x64
+cmake --build --preset dev-linux-x64 --parallel 1
+```
+
+For a plain source install with an existing dependency setup:
+
 ```bash
 git clone https://github.com/jwsung91/unilink.git
 cd unilink
@@ -49,7 +63,3 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel 1
 sudo cmake --install build
 ```
-
-For Ubuntu 22.04 or other platforms where system Boost is older than the
-required minimum, use vcpkg or provide a newer Boost installation through the
-CMake prefix/toolchain.

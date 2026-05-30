@@ -4,7 +4,26 @@ Full quickstart and tutorials:
 
 https://github.com/unilink-lab/unilink-docs
 
+## Minimal CMake
+
+Create `CMakeLists.txt` next to `main.cpp`:
+
+```cmake
+cmake_minimum_required(VERSION 3.12)
+project(unilink_quickstart LANGUAGES CXX)
+
+find_package(unilink CONFIG REQUIRED)
+
+add_executable(unilink_quickstart main.cpp)
+target_link_libraries(unilink_quickstart PRIVATE unilink::unilink)
+target_compile_features(unilink_quickstart PRIVATE cxx_std_20)
+```
+
 ## Minimal TCP client
+
+This client expects a TCP server to be listening on `127.0.0.1:8080`.
+For a runnable client/server pair, see the full tutorials in
+`unilink-docs`.
 
 ```cpp
 #include <iostream>
