@@ -66,10 +66,10 @@ https://github.com/unilink-lab/unilink-docs
 
 Core repository entrypoints:
 
-- [Quick Start](docs/quickstart.md)
-- [Installation](docs/installation.md)
-- [API Stability Summary](docs/api_stability.md)
-- [Release Checklist](docs/release_checklist.md)
+- [Quick Start](https://github.com/jwsung91/unilink/blob/main/docs/quickstart.md)
+- [Installation](https://github.com/jwsung91/unilink/blob/main/docs/installation.md)
+- [API Stability Summary](https://github.com/jwsung91/unilink/blob/main/docs/api_stability.md)
+- [Release Checklist](https://github.com/jwsung91/unilink/blob/main/docs/release_checklist.md)
 
 Useful external repositories:
 
