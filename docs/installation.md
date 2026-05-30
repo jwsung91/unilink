@@ -21,7 +21,7 @@ gate and rejects Boost versions older than the configured minimum.
 vcpkg install jwsung91-unilink
 ```
 
-## Minimal CMake consumer
+## Minimal CMake find_package consumer
 
 ```cmake
 cmake_minimum_required(VERSION 3.12)
@@ -40,13 +40,13 @@ target_compile_features(my_app PRIVATE cxx_std_20)
 #include <unilink/unilink.hpp>
 ```
 
-## Source build
+## Source build example
 
 ```bash
 git clone https://github.com/jwsung91/unilink.git
 cd unilink
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel
+cmake --build build --parallel 1
 sudo cmake --install build
 ```
 

@@ -41,5 +41,6 @@ release. It is not part of the runtime API in the current release line.
 
 ## Internal headers
 
-Headers under implementation/internal namespaces may change without
-compatibility guarantees before v1.0.
+Internal headers are not part of the compatibility guarantee before v1.0.
+Prefer the public facade and documented wrapper/builder APIs for application
+code.

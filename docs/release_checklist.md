@@ -32,6 +32,7 @@ CI, CPack, and consumer smoke workflows live here.
 ## Documentation
 
 - [ ] Core README links to `unilink-docs`.
+- [ ] Core README and docs repo links were checked.
 - [ ] Core minimal docs are present:
   - [ ] `docs/installation.md`
   - [ ] `docs/quickstart.md`
@@ -43,6 +44,7 @@ CI, CPack, and consumer smoke workflows live here.
 ## Benchmark / validation
 
 - [ ] Latest relevant benchmark result is preserved in `unilink-benchmarks`.
+- [ ] Benchmark result links were checked.
 - [ ] Known benchmark/environment limitations are documented.
 - [ ] UDP large-payload classification is current.
 - [ ] Orin/WSL2 validation notes are current when relevant.
