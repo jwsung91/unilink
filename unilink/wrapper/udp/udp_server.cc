@@ -475,9 +475,7 @@ struct UdpServer::Impl {
     return sent;
   }
 
-  bool broadcast(std::string_view data) {
-    return try_broadcast(data);
-  }
+  bool broadcast(std::string_view data) { return try_broadcast(data); }
 
   bool send_to_blocking(ClientId client_id, std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
