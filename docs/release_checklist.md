@@ -45,6 +45,9 @@ CI, CPack, and consumer smoke workflows live here.
 
 - [ ] Latest relevant benchmark result is preserved in `unilink-benchmarks`.
 - [ ] Latest benchmark artifact or `unilink-benchmarks` result is linked from the release notes.
+- [ ] `.github/workflows/benchmark.yml` was run manually or by the latest nightly schedule.
+- [ ] Installed consumer runtime smoke passed for the release candidate package.
+- [ ] Optional TSAN workflow was reviewed or run for concurrency-sensitive changes.
 - [ ] Benchmark result links were checked.
 - [ ] Known benchmark/environment limitations are documented.
 - [ ] UDP large-payload classification is current.

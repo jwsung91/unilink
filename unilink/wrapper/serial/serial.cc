@@ -154,6 +154,7 @@ struct Serial::Impl {
   std::future<bool> start() {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
+      started_.store(true);
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
@@ -276,11 +277,15 @@ struct Serial::Impl {
         }
         bp_cv_.wait(bp_lock);
       }
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.load() || !channel || !channel->is_connected()) return false;
+      return channel->async_write_move(std::move(data));
     }
     return try_send_move(std::move(data));
   }
 
   bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (!data || data->empty()) return false;
     if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
       std::unique_lock<std::mutex> bp_lock(bp_mutex_);
       while (true) {
@@ -291,6 +296,9 @@ struct Serial::Impl {
         }
         bp_cv_.wait(bp_lock);
       }
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.load() || !channel || !channel->is_connected()) return false;
+      return channel->async_write_shared(std::move(data));
     }
     return try_send_shared(std::move(data));
   }

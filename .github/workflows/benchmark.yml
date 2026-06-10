@@ -33,37 +33,24 @@ jobs:
           cmake -S . -B build-benchmark -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_ENABLE_INSTALL=ON \
             -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
             -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
 
       - name: Build benchmark inputs
         run: cmake --build build-benchmark --parallel
 
+      - name: Install benchmark package
+        run: cmake --install build-benchmark --prefix build-benchmark-install
+
       - name: Run benchmark soft gate
         run: |
           set -euo pipefail
           mkdir -p benchmark-artifacts
-
-          if [ -x scripts/run_benchmarks.sh ]; then
-            scripts/run_benchmarks.sh \
-              --output-json benchmark-artifacts/benchmark-result.json \
-              --output-summary benchmark-artifacts/benchmark-summary.md
-          else
-            cat > benchmark-artifacts/benchmark-result.json <<EOF
-          {
-            "status": "not_configured",
-            "message": "No scripts/run_benchmarks.sh harness is present in the core repository.",
-            "soft_gate": true
-          }
-          EOF
-            cat > benchmark-artifacts/benchmark-summary.md <<'EOF'
-          # Benchmark Summary
-
-          Benchmark workflow ran successfully, but no core benchmark harness was
-          found. Add `scripts/run_benchmarks.sh` to produce release-comparable
-          latency, throughput, queue, and allocation metrics.
-          EOF
-          fi
+          bash scripts/run_benchmarks.sh \
+            --cmake-prefix "$PWD/build-benchmark-install" \
+            --output-json benchmark-artifacts/benchmark-result.json \
+            --output-summary benchmark-artifacts/benchmark-summary.md
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v7

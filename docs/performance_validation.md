@@ -38,3 +38,10 @@ Benchmark runs should preserve:
 
 Release notes and `docs/release_checklist.md` should link the latest relevant
 benchmark artifact or the corresponding `unilink-benchmarks` result.
+
+`scripts/run_benchmarks.sh` is the core repository's manual/nightly harness. It
+consumes an installed `unilink` package via `--cmake-prefix`, builds a small
+external benchmark consumer, and records TCP loopback latency, payload-size
+throughput, send variant acceptance, and queue snapshot metrics. The benchmark
+workflow runs this harness as a soft gate; compare the generated JSON against
+the current release baseline before promoting any metric to a hard gate.

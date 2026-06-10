@@ -60,6 +60,18 @@ hierarchy. Some lower-level utility APIs intentionally preserve standard C++
 exception behavior, such as `std::out_of_range` for bounds-checked access or
 `std::invalid_argument` for invalid memory helper arguments.
 
+Known standard-exception APIs:
+
+- `memory::SafeDataBuffer::operator[]` and `at(...)` throw
+  `std::out_of_range` for invalid indexes.
+- `memory::SafeDataBuffer` raw-pointer constructors throw
+  `std::invalid_argument` for null data with non-zero size or oversize input.
+- `memory::SafeDataBuffer::validate()` throws `std::runtime_error` when the
+  buffer exceeds the configured safety limit.
+- `config::ConfigManager::get(...)` and `get_type(...)` throw
+  `std::runtime_error` when a required key is missing. Use `has(...)`,
+  `get(key, default_value)`, or `validate(key)` when absence is expected.
+
 ## Callback exceptions
 
 Callbacks should not throw. When a callback throws, transports catch the

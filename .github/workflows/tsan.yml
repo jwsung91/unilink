@@ -1,0 +1,62 @@
+name: ThreadSanitizer
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 19 * * *"
+
+jobs:
+  tsan:
+    name: TSAN focused contract tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install tools
+        uses: ./.github/actions/apt-install
+        with:
+          packages: "build-essential cmake ninja-build clang"
+
+      - name: Install dependencies with vcpkg
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: x64-linux
+
+      - name: Configure TSAN build
+        run: |
+          cmake -S . -B build-tsan -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_ENABLE_SANITIZERS=ON \
+            -DUNILINK_ENABLE_TSAN=ON \
+            -DUNILINK_ENABLE_ASAN=OFF \
+            -DUNILINK_ENABLE_UBSAN=OFF \
+            -DCMAKE_C_COMPILER=clang \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
+
+      - name: Build TSAN targets
+        run: cmake --build build-tsan --parallel
+
+      - name: Run focused TSAN tests
+        env:
+          TSAN_OPTIONS: halt_on_error=1 second_deadlock_stack=1 history_size=7
+        run: |
+          ctest --test-dir build-tsan --output-on-failure --parallel 2 \
+            -R "StopContract|StopFromCallback|TcpClientLifecycle|TcpServerWrapperLifecycle|UdsClientWrapperLifecycle|UdsServerWrapperLifecycle|BackpressureStrategyTest|WrapperSendContractTest|ServerBroadcastContractTest"
+
+      - name: Upload TSAN test logs
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: tsan-test-results
+          path: build-tsan/Testing/
+          retention-days: 14
+          overwrite: true

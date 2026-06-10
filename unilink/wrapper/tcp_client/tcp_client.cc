@@ -157,6 +157,7 @@ struct TcpClient::Impl {
   std::future<bool> start() {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
+      started_.store(true);
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
@@ -295,17 +296,24 @@ struct TcpClient::Impl {
         std::shared_lock<std::shared_mutex> lock(mutex_);
         return !started_.load() || !channel_ || !channel_->is_backpressure_active();
       });
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.load() || !channel_ || !channel_->is_connected()) return false;
+      return channel_->async_write_move(std::move(data));
     }
     return try_send_move(std::move(data));
   }
 
   bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (!data || data->empty()) return false;
     if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) {
       std::unique_lock<std::mutex> bp_lock(bp_mutex_);
       bp_cv_.wait(bp_lock, [this] {
         std::shared_lock<std::shared_mutex> lock(mutex_);
         return !started_.load() || !channel_ || !channel_->is_backpressure_active();
       });
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.load() || !channel_ || !channel_->is_connected()) return false;
+      return channel_->async_write_shared(std::move(data));
     }
     return try_send_shared(std::move(data));
   }

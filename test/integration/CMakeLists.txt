@@ -81,6 +81,8 @@ foreach(
   test_udp_server_wrapper_lifecycle.cc
   test_udp_client_wrapper_lifecycle.cc
   test_uds_wrapper_lifecycle.cc
+  test_send_contract.cc
+  test_server_broadcast_contract.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
