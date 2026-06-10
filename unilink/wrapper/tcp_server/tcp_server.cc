@@ -300,7 +300,7 @@ struct TcpServer::Impl {
   bool try_send_to(ClientId client_id, std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     const auto& ts = transport_cache_;
-    return ts ? ts->send_to_client(client_id, data) : false;
+    return ts ? ts->try_send_to_client(client_id, data) : false;
   }
 
   bool try_broadcast(std::string_view data) {
@@ -329,7 +329,9 @@ struct TcpServer::Impl {
       const auto& ts = transport_cache_;
       return !started_.load() || !ts || !ts->is_backpressure_active(client_id);
     });
-    return try_send_to(client_id, data);
+    std::shared_lock<std::shared_mutex> rlock(mutex_);
+    const auto& ts = transport_cache_;
+    return ts ? ts->send_to_client(client_id, data) : false;
   }
 
   void setup_internal_handlers() {

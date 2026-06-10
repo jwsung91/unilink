@@ -69,6 +69,9 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   bool async_write_copy(memory::ConstByteSpan data);
   bool async_write_move(std::vector<uint8_t>&& data);
   bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
+  bool async_try_write_copy(memory::ConstByteSpan data);
+  bool async_try_write_move(std::vector<uint8_t>&& data);
+  bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
   void on_bytes(OnBytes cb);
   void on_backpressure(OnBackpressure cb);
   void on_close(OnClose cb);

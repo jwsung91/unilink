@@ -354,6 +354,78 @@ TEST(BackpressureStrategyTest, Reliable_PendingQueue_AccumulatesWhenBackpressure
   drain_and_stop(sock, session, ioc);
 }
 
+TEST(BackpressureStrategyTest, Reliable_TryWriteRejectsWhenBackpressureActiveWithoutPending) {
+  constexpr size_t kBpHigh = 1024;
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
+
+  session->on_backpressure([](size_t) {});
+  session->start();
+  ioc.poll();
+
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAA)));
+  ioc.poll();
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(600, 0xAB)));
+  ioc.poll();
+  ASSERT_TRUE(session->is_backpressure_active());
+
+  auto before_try = session->stats();
+  EXPECT_EQ(before_try.pending_bytes, 0u);
+
+  std::vector<uint8_t> copy_payload(300, 0xAC);
+  EXPECT_FALSE(session->async_try_write_copy(memory::ConstByteSpan(copy_payload.data(), copy_payload.size())));
+  EXPECT_FALSE(session->async_try_write_move(std::vector<uint8_t>(300, 0xAD)));
+  EXPECT_FALSE(session->async_try_write_shared(std::make_shared<const std::vector<uint8_t>>(300, 0xAE)));
+  ioc.poll();
+
+  auto after_try = session->stats();
+  EXPECT_EQ(after_try.pending_bytes, before_try.pending_bytes);
+  EXPECT_EQ(after_try.failed_sends, before_try.failed_sends + 3);
+
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(300, 0xAF)));
+  ioc.poll();
+  EXPECT_EQ(session->stats().pending_bytes, before_try.pending_bytes + 300);
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
+}
+
+TEST(BackpressureStrategyTest, BestEffort_TryWriteRejectsWhenBackpressureActiveAndCountsDrop) {
+  constexpr size_t kBpHigh = 1024;
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session = std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0,
+                                                               BackpressureStrategy::BestEffort);
+
+  session->on_backpressure([](size_t) {});
+  session->start();
+  ioc.poll();
+
+  EXPECT_TRUE(session->async_write_move(std::vector<uint8_t>(kBpHigh, 0xAA)));
+  ioc.poll();
+  ASSERT_TRUE(session->is_backpressure_active());
+
+  auto before_try = session->stats();
+  EXPECT_FALSE(session->async_try_write_move(std::vector<uint8_t>(1, 0xAB)));
+  ioc.poll();
+
+  auto after_try = session->stats();
+  EXPECT_EQ(after_try.pending_bytes, before_try.pending_bytes);
+  EXPECT_EQ(after_try.dropped_messages, before_try.dropped_messages + 1);
+  EXPECT_EQ(after_try.dropped_bytes, before_try.dropped_bytes + 1);
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
+}
+
 // All bytes written to pending_ during backpressure are eventually delivered.
 TEST(BackpressureStrategyTest, Reliable_PendingQueue_DeliveredAfterBackpressureClears) {
   constexpr size_t kBpHigh = 1024;

@@ -470,24 +470,12 @@ struct UdpServer::Impl {
     bool sent = false;
     auto bytes = base::safe_convert::string_to_bytes(data);
     for (const auto& [id, entry] : sessions) {
-      sent |= channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
+      sent |= channel->async_try_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
     }
     return sent;
   }
 
   bool broadcast(std::string_view data) {
-    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
-      std::vector<ClientId> clients;
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex);
-        for (const auto& [id, _] : sessions) clients.push_back(id);
-      }
-      bool any_sent = false;
-      for (auto id : clients) {
-        if (send_to_blocking(id, data)) any_sent = true;
-      }
-      return any_sent;
-    }
     return try_broadcast(data);
   }
 
@@ -506,7 +494,7 @@ struct UdpServer::Impl {
     if (it == sessions.end() || !channel) return false;
 
     auto bytes = base::safe_convert::string_to_bytes(data);
-    return channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
+    return channel->async_try_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
   }
 
   RuntimeStats stats() const {

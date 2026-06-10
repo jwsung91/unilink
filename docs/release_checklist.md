@@ -44,6 +44,7 @@ CI, CPack, and consumer smoke workflows live here.
 ## Benchmark / validation
 
 - [ ] Latest relevant benchmark result is preserved in `unilink-benchmarks`.
+- [ ] Latest benchmark artifact or `unilink-benchmarks` result is linked from the release notes.
 - [ ] Benchmark result links were checked.
 - [ ] Known benchmark/environment limitations are documented.
 - [ ] UDP large-payload classification is current.

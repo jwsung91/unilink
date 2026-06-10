@@ -56,3 +56,8 @@ int main() {
 - `ctx.data()` is a callback-scoped view. Copy data if it must outlive the callback.
 - Use `try_send(...)` for non-blocking producer loops.
 - Use `RuntimeStats` for diagnostics and queue/drop visibility.
+
+Related docs:
+
+- [Callback data lifetime](callbacks.md)
+- [Error model](error_model.md)

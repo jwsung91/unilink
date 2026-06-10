@@ -238,7 +238,7 @@ struct Serial::Impl {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
-      return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+      return channel->async_try_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
     return false;
   }
@@ -246,7 +246,7 @@ struct Serial::Impl {
   bool try_send_move(std::vector<uint8_t>&& data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
-      return channel->async_write_move(std::move(data));
+      return channel->async_try_write_move(std::move(data));
     }
     return false;
   }
@@ -255,7 +255,7 @@ struct Serial::Impl {
     if (!data || data->empty()) return false;
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
-      return channel->async_write_shared(std::move(data));
+      return channel->async_try_write_shared(std::move(data));
     }
     return false;
   }

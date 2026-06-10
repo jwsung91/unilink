@@ -292,13 +292,16 @@ struct UdsClient::Impl {
       std::shared_lock<std::shared_mutex> lock(mutex_);
       return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
     });
-    return try_send(data);
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (!started_.load() || !channel_ || !channel_->is_connected()) return false;
+    return channel_->async_write_copy(
+        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
   }
 
   bool try_send(std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
-      return channel_->async_write_copy(
+      return channel_->async_try_write_copy(
           memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
     }
     return false;
@@ -307,7 +310,7 @@ struct UdsClient::Impl {
   bool try_send_move(std::vector<uint8_t>&& data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
-      return channel_->async_write_move(std::move(data));
+      return channel_->async_try_write_move(std::move(data));
     }
     return false;
   }
@@ -316,7 +319,7 @@ struct UdsClient::Impl {
     if (!data || data->empty()) return false;
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
-      return channel_->async_write_shared(std::move(data));
+      return channel_->async_try_write_shared(std::move(data));
     }
     return false;
   }

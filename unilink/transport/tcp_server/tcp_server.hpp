@@ -68,6 +68,9 @@ class UNILINK_API TcpServer : public interface::Channel, public std::enable_shar
   bool async_write_copy(memory::ConstByteSpan data) override;
   bool async_write_move(std::vector<uint8_t>&& data) override;
   bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
+  bool async_try_write_copy(memory::ConstByteSpan data) override;
+  bool async_try_write_move(std::vector<uint8_t>&& data) override;
+  bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
@@ -79,6 +82,8 @@ class UNILINK_API TcpServer : public interface::Channel, public std::enable_shar
   bool broadcast(memory::ConstByteSpan data);
   bool send_to_client(ClientId client_id, std::string_view message);
   bool send_to_client(ClientId client_id, memory::ConstByteSpan data);
+  bool try_send_to_client(ClientId client_id, std::string_view message);
+  bool try_send_to_client(ClientId client_id, memory::ConstByteSpan data);
   size_t client_count() const;
   std::vector<ClientId> connected_clients() const;
 

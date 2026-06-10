@@ -361,6 +361,110 @@ bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   return true;
 }
 
+bool UdsClient::async_try_write_copy(memory::ConstByteSpan data) {
+  if (data.empty() || data.size() > base::constants::MAX_BUFFER_SIZE) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  return async_try_write_move(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+bool UdsClient::async_try_write_move(std::vector<uint8_t>&& data) {
+  if (!impl_->connected_.load() || impl_->stop_requested_.load()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data.size();
+  if (added == 0 || added > base::constants::MAX_BUFFER_SIZE) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      impl_->stats_.record_dropped(1, added);
+    } else {
+      impl_->stats_.record_failed_send();
+    }
+  };
+  if (impl_->backpressure_active_.load() || impl_->queue_bytes_ + added > impl_->bp_high_ ||
+      impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data), added]() mutable {
+    if (!impl_->connected_.load() || impl_->stop_requested_.load()) {
+      impl_->stats_.record_failed_send();
+      return;
+    }
+    if (impl_->backpressure_active_.load() || impl_->queue_bytes_ + added > impl_->bp_high_ ||
+        impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
+      if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        impl_->stats_.record_dropped(1, added);
+      } else {
+        impl_->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    impl_->stats_.record_accepted(added);
+    impl_->queue_bytes_ += added;
+    impl_->tx_.emplace_back(std::move(data));
+    impl_->observe_queue();
+    impl_->report_backpressure(self, impl_->queue_bytes_);
+    if (!impl_->writing_) impl_->do_write(self, impl_->current_seq_.load());
+  });
+  return true;
+}
+
+bool UdsClient::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!impl_->connected_.load() || impl_->stop_requested_.load() || !data || data->empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data->size();
+  if (added > base::constants::MAX_BUFFER_SIZE) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      impl_->stats_.record_dropped(1, added);
+    } else {
+      impl_->stats_.record_failed_send();
+    }
+  };
+  if (impl_->backpressure_active_.load() || impl_->queue_bytes_ + added > impl_->bp_high_ ||
+      impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data), added]() mutable {
+    if (!impl_->connected_.load() || impl_->stop_requested_.load()) {
+      impl_->stats_.record_failed_send();
+      return;
+    }
+    if (impl_->backpressure_active_.load() || impl_->queue_bytes_ + added > impl_->bp_high_ ||
+        impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
+      if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        impl_->stats_.record_dropped(1, added);
+      } else {
+        impl_->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    impl_->stats_.record_accepted(added);
+    impl_->queue_bytes_ += added;
+    impl_->tx_.emplace_back(std::move(data));
+    impl_->observe_queue();
+    impl_->report_backpressure(self, impl_->queue_bytes_);
+    if (!impl_->writing_) impl_->do_write(self, impl_->current_seq_.load());
+  });
+  return true;
+}
+
 void UdsClient::on_bytes(OnBytes cb) {
   std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
   impl_->on_bytes_ = std::move(cb);

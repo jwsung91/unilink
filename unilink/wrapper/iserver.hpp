@@ -70,8 +70,9 @@ class UNILINK_API ServerInterface {
   //     Behaviour depends on the configured backpressure strategy:
   //       BestEffort — non-blocking; drops data when the target client's queue is full.
   //       Reliable   — blocks the calling thread until queue pressure is relieved,
-  //                    then enqueues. For broadcast(), each client is waited on
-  //                    sequentially.
+  //                    then enqueues for send_to().
+  //     broadcast() always performs non-blocking fan-out to connected clients.
+  //     It does not wait for one slow client to relieve backpressure.
   //
   // Explicit API (escape hatch):
   //
@@ -92,7 +93,11 @@ class UNILINK_API ServerInterface {
   virtual bool send_to(ClientId client_id, std::string_view data) = 0;
 
   /**
-   * @brief Send to all connected clients, honouring the backpressure strategy.
+   * @brief Send to all connected clients using non-blocking fan-out.
+   *
+   * Does not wait for slow clients to relieve backpressure. Use send_to_blocking()
+   * for strict per-client blocking delivery.
+   *
    * @return true At least one client accepted the data.
    */
   virtual bool broadcast(std::string_view data) = 0;

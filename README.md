@@ -69,6 +69,9 @@ Core repository entrypoints:
 - [Quick Start](https://github.com/jwsung91/unilink/blob/main/docs/quickstart.md)
 - [Installation](https://github.com/jwsung91/unilink/blob/main/docs/installation.md)
 - [API Stability Summary](https://github.com/jwsung91/unilink/blob/main/docs/api_stability.md)
+- [Error Model](https://github.com/jwsung91/unilink/blob/main/docs/error_model.md)
+- [Callback Data Lifetime](https://github.com/jwsung91/unilink/blob/main/docs/callbacks.md)
+- [Performance Validation](https://github.com/jwsung91/unilink/blob/main/docs/performance_validation.md)
 - [Release Checklist](https://github.com/jwsung91/unilink/blob/main/docs/release_checklist.md)
 
 Useful external repositories:

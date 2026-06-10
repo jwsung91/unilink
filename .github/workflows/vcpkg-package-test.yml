@@ -172,17 +172,18 @@ jobs:
           EOF
 
           cat > "${WORKDIR}/main.cpp" <<'EOF'
-          #include <unilink/wrapper/tcp_client/tcp_client.hpp>
+          #include <unilink/unilink.hpp>
           #include <chrono>
           #include <iostream>
 
           int main() {
-            unilink::wrapper::TcpClient client("127.0.0.1", 9000);
-            client.retry_interval(std::chrono::milliseconds(250));
-            client.max_retries(1);
-            client.auto_manage(false);
+            auto client = unilink::tcp_client("127.0.0.1", 9000)
+                .retry_interval(std::chrono::milliseconds(250))
+                .max_retries(1)
+                .auto_start(false)
+                .build();
             std::cout << "unilink vcpkg package loaded" << std::endl;
-            return 0;
+            return client ? 0 : 1;
           }
           EOF
 
@@ -215,17 +216,18 @@ jobs:
           "@ | Set-Content -Path (Join-Path $workDir "CMakeLists.txt")
 
           @"
-          #include <unilink/wrapper/tcp_client/tcp_client.hpp>
+          #include <unilink/unilink.hpp>
           #include <chrono>
           #include <iostream>
 
           int main() {
-            unilink::wrapper::TcpClient client("127.0.0.1", 9000);
-            client.retry_interval(std::chrono::milliseconds(250));
-            client.max_retries(1);
-            client.auto_manage(false);
+            auto client = unilink::tcp_client("127.0.0.1", 9000)
+                .retry_interval(std::chrono::milliseconds(250))
+                .max_retries(1)
+                .auto_start(false)
+                .build();
             std::cout << "unilink vcpkg package loaded" << std::endl;
-            return 0;
+            return client ? 0 : 1;
           }
           "@ | Set-Content -Path (Join-Path $workDir "main.cpp")
 

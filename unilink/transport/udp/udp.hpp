@@ -66,9 +66,13 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   bool async_write_copy(memory::ConstByteSpan data) override;
   bool async_write_move(std::vector<uint8_t>&& data) override;
   bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
+  bool async_try_write_copy(memory::ConstByteSpan data) override;
+  bool async_try_write_move(std::vector<uint8_t>&& data) override;
+  bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
   // 1:N writes (explicit destination)
   virtual bool async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination);
+  virtual bool async_try_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination);
 
   // Callbacks
   void on_bytes(OnBytes cb) override;

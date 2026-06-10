@@ -70,6 +70,9 @@ class UNILINK_API Serial : public interface::Channel, public std::enable_shared_
   bool async_write_copy(memory::ConstByteSpan data) override;
   bool async_write_move(std::vector<uint8_t>&& data) override;
   bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
+  bool async_try_write_copy(memory::ConstByteSpan data) override;
+  bool async_try_write_move(std::vector<uint8_t>&& data) override;
+  bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;

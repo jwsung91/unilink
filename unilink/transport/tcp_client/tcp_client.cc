@@ -542,6 +542,124 @@ bool TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   return true;
 }
 
+bool TcpClient::async_try_write_copy(memory::ConstByteSpan data) {
+  if (data.empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  if (data.size() > base::constants::MAX_BUFFER_SIZE) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  return async_try_write_move(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+bool TcpClient::async_try_write_move(std::vector<uint8_t>&& data) {
+  if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
+      impl_->state_.is_state(LinkState::Error) || !impl_->ioc_) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data.size();
+  if (added == 0 || added > base::constants::MAX_BUFFER_SIZE) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      impl_->stats_.record_dropped(1, added);
+    } else {
+      impl_->stats_.record_failed_send();
+    }
+  };
+  if (impl_->backpressure_active_.load() || impl_->queue_bytes_ + added > impl_->bp_high_ ||
+      impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    auto impl = self->impl_.get();
+    if (impl->stop_requested_.load() || impl->state_.is_state(LinkState::Closed) ||
+        impl->state_.is_state(LinkState::Error)) {
+      impl->stats_.record_failed_send();
+      return;
+    }
+    if (impl->backpressure_active_.load() || impl->queue_bytes_ + added > impl->bp_high_ ||
+        impl->queue_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
+      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        impl->stats_.record_dropped(1, added);
+      } else {
+        impl->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    impl->stats_.record_accepted(added);
+    impl->queue_bytes_ += added;
+    impl->tx_.emplace_back(std::move(buf));
+    impl->observe_queue();
+    impl->report_backpressure(self, impl->queue_bytes_);
+    if (!impl->writing_) impl->do_write(self, impl->current_seq_.load());
+  });
+  return true;
+}
+
+bool TcpClient::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!data || data->empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  if (data->size() > base::constants::MAX_BUFFER_SIZE) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data->size();
+  const auto reject_for_pressure = [this, added]() {
+    if (impl_->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      impl_->stats_.record_dropped(1, added);
+    } else {
+      impl_->stats_.record_failed_send();
+    }
+  };
+  if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
+      impl_->state_.is_state(LinkState::Error) || !impl_->ioc_) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  if (impl_->backpressure_active_.load() || impl_->queue_bytes_ + added > impl_->bp_high_ ||
+      impl_->queue_bytes_ + impl_->pending_bytes_ + added > impl_->bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    auto impl = self->impl_.get();
+    if (impl->stop_requested_.load() || impl->state_.is_state(LinkState::Closed) ||
+        impl->state_.is_state(LinkState::Error)) {
+      impl->stats_.record_failed_send();
+      return;
+    }
+    if (impl->backpressure_active_.load() || impl->queue_bytes_ + added > impl->bp_high_ ||
+        impl->queue_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
+      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        impl->stats_.record_dropped(1, added);
+      } else {
+        impl->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    impl->stats_.record_accepted(added);
+    impl->queue_bytes_ += added;
+    impl->tx_.emplace_back(std::move(buf));
+    impl->observe_queue();
+    impl->report_backpressure(self, impl->queue_bytes_);
+    if (!impl->writing_) impl->do_write(self, impl->current_seq_.load());
+  });
+  return true;
+}
+
 void TcpClient::on_bytes(OnBytes cb) {
   std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
   impl_->on_bytes_ = std::move(cb);

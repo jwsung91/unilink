@@ -270,6 +270,110 @@ bool TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   return true;
 }
 
+bool TcpServerSession::async_try_write_copy(memory::ConstByteSpan data) {
+  if (data.empty() || data.size() > base::constants::MAX_BUFFER_SIZE) {
+    stats_.record_failed_send();
+    return false;
+  }
+  return async_try_write_move(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+bool TcpServerSession::async_try_write_move(std::vector<uint8_t>&& data) {
+  if (!alive_ || closing_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data.size();
+  if (added == 0 || added > base::constants::MAX_BUFFER_SIZE) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      stats_.record_dropped(1, added);
+    } else {
+      stats_.record_failed_send();
+    }
+  };
+  if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
+      queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (!self->alive_ || self->closing_) {
+      self->stats_.record_failed_send();
+      return;
+    }
+    if (self->backpressure_active_.load() || self->queue_bytes_ + added > self->bp_high_ ||
+        self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
+      if (self->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        self->stats_.record_dropped(1, added);
+      } else {
+        self->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    self->stats_.record_accepted(added);
+    self->queue_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    self->observe_queue();
+    self->report_backpressure(self->queue_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+  return true;
+}
+
+bool TcpServerSession::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!alive_ || closing_ || !data || data->empty()) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data->size();
+  if (added > base::constants::MAX_BUFFER_SIZE) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      stats_.record_dropped(1, added);
+    } else {
+      stats_.record_failed_send();
+    }
+  };
+  if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
+      queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (!self->alive_ || self->closing_) {
+      self->stats_.record_failed_send();
+      return;
+    }
+    if (self->backpressure_active_.load() || self->queue_bytes_ + added > self->bp_high_ ||
+        self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
+      if (self->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        self->stats_.record_dropped(1, added);
+      } else {
+        self->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    self->stats_.record_accepted(added);
+    self->queue_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    self->observe_queue();
+    self->report_backpressure(self->queue_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+  return true;
+}
+
 void TcpServerSession::on_bytes(OnBytes cb) {
   auto self = shared_from_this();
   net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
