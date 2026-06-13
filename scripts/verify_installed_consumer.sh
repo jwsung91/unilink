@@ -165,26 +165,160 @@ target_compile_features(unilink_consumer_smoke PRIVATE cxx_std_20)
 EOF
 
 cat > "$CONSUMER_DIR/main.cpp" <<'EOF'
+#include <atomic>
 #include <cstdint>
+#include <chrono>
+#include <cstdlib>
+#include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
+
+#ifndef _WIN32
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#endif
 
 #include <unilink/unilink.hpp>
 
+#ifndef _WIN32
+uint16_t reserve_tcp_port() {
+    int fd = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0) return 0;
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    addr.sin_port = 0;
+
+    if (::bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
+        ::close(fd);
+        return 0;
+    }
+
+    socklen_t len = sizeof(addr);
+    if (::getsockname(fd, reinterpret_cast<sockaddr*>(&addr), &len) != 0) {
+        ::close(fd);
+        return 0;
+    }
+
+    const auto port = ntohs(addr.sin_port);
+    ::close(fd);
+    return port;
+}
+#else
+uint16_t reserve_tcp_port() {
+    return static_cast<uint16_t>(42000 + (::GetCurrentProcessId() % 10000));
+}
+#endif
+
+template <typename Predicate>
+bool wait_until(Predicate&& predicate, std::chrono::milliseconds timeout) {
+    const auto deadline = std::chrono::steady_clock::now() + timeout;
+    while (std::chrono::steady_clock::now() < deadline) {
+        if (predicate()) return true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    return false;
+}
+
 int main() {
-    auto tcp_client = unilink::tcp_client("127.0.0.1", 8080).build();
-    auto tcp_server = unilink::tcp_server(8080).build();
+    const auto port = reserve_tcp_port();
+    if (port == 0) {
+        std::cerr << "failed to reserve a TCP loopback port\n";
+        return 2;
+    }
+
+    std::atomic<int> server_received{0};
+    std::atomic<int> client_received{0};
+
+    std::shared_ptr<unilink::TcpServer> tcp_server;
+    tcp_server = unilink::tcp_server(port)
+        .auto_start(false)
+        .on_data([&](const unilink::MessageContext& ctx) {
+            server_received.fetch_add(1);
+            if (tcp_server) tcp_server->send_to(ctx.client_id(), "pong");
+        })
+        .on_error([](const unilink::ErrorContext&) {})
+        .build();
+    if (!tcp_server || !tcp_server->start_sync()) {
+        std::cerr << "failed to start installed TCP server\n";
+        return 3;
+    }
+
+    auto tcp_client = unilink::tcp_client("127.0.0.1", port)
+        .auto_start(false)
+        .on_data([&](const unilink::MessageContext&) { client_received.fetch_add(1); })
+        .on_error([](const unilink::ErrorContext&) {})
+        .build();
+    if (!tcp_client || !tcp_client->start_sync()) {
+        std::cerr << "failed to start installed TCP client\n";
+        tcp_server->stop();
+        return 4;
+    }
+
+    if (!wait_until([&]() { return tcp_client->connected() && tcp_server->client_count() >= 1; },
+                    std::chrono::seconds(5))) {
+        std::cerr << "installed TCP loopback did not connect\n";
+        tcp_client->stop();
+        tcp_server->stop();
+        return 5;
+    }
+
+    if (!tcp_client->send("ping")) {
+        std::cerr << "installed TCP client send failed\n";
+        tcp_client->stop();
+        tcp_server->stop();
+        return 6;
+    }
+
+    if (!wait_until([&]() { return server_received.load() >= 1 && client_received.load() >= 1; },
+                    std::chrono::seconds(5))) {
+        std::cerr << "installed TCP request/reply did not complete\n";
+        tcp_client->stop();
+        tcp_server->stop();
+        return 7;
+    }
+
+    if (!tcp_server->broadcast("broadcast")) {
+        std::cerr << "installed TCP broadcast failed\n";
+        tcp_client->stop();
+        tcp_server->stop();
+        return 8;
+    }
+
+    if (!wait_until([&]() { return client_received.load() >= 2; }, std::chrono::seconds(5))) {
+        std::cerr << "installed TCP broadcast was not received\n";
+        tcp_client->stop();
+        tcp_server->stop();
+        return 9;
+    }
+
+    const int server_before_stop = server_received.load();
+    const int client_before_stop = client_received.load();
+    tcp_client->stop();
+    tcp_server->stop();
+    tcp_client->send("late-client-send");
+    tcp_server->broadcast("late-server-broadcast");
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    if (server_received.load() != server_before_stop || client_received.load() != client_before_stop) {
+        std::cerr << "callback fired after stop\n";
+        return 10;
+    }
 
     auto udp_client = unilink::udp_client(0)
         .remote("127.0.0.1", 9000)
+        .auto_start(false)
         .build();
 
-    auto udp_server = unilink::udp_server(9000).build();
+    auto udp_server = unilink::udp_server(9000).auto_start(false).build();
 
 #ifndef _WIN32
-    auto serial = unilink::serial("/dev/null", 115200).build();
-    auto uds_client = unilink::uds_client("/tmp/unilink-consumer-smoke.sock").build();
-    auto uds_server = unilink::uds_server("/tmp/unilink-consumer-smoke.sock").build();
+    auto serial = unilink::serial("/dev/null", 115200).auto_start(false).build();
+    auto uds_client = unilink::uds_client("/tmp/unilink-consumer-smoke.sock").auto_start(false).build();
+    auto uds_server = unilink::uds_server("/tmp/unilink-consumer-smoke.sock").auto_start(false).build();
 
     return (tcp_client && tcp_server && udp_client && udp_server &&
             serial && uds_client && uds_server) ? 0 : 1;
@@ -217,6 +351,14 @@ cmake "${consumer_args[@]}"
 
 log_step "Building external consumer"
 cmake --build "$consumer_build_dir" --parallel
+
+log_step "Running external consumer runtime smoke"
+if [[ -n "${LD_LIBRARY_PATH:-}" ]]; then
+  export LD_LIBRARY_PATH="$INSTALL_PREFIX/lib:$LD_LIBRARY_PATH"
+else
+  export LD_LIBRARY_PATH="$INSTALL_PREFIX/lib"
+fi
+"$consumer_build_dir/unilink_consumer_smoke"
 
 echo
 echo "Installed consumer smoke passed for library mode: $LIBRARY_MODE"

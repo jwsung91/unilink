@@ -170,6 +170,110 @@ bool UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   return true;
 }
 
+bool UdsServerSession::async_try_write_copy(memory::ConstByteSpan data) {
+  if (data.empty() || data.size() > base::constants::MAX_BUFFER_SIZE) {
+    stats_.record_failed_send();
+    return false;
+  }
+  return async_try_write_move(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+bool UdsServerSession::async_try_write_move(std::vector<uint8_t>&& data) {
+  if (!alive_ || closing_) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data.size();
+  if (added == 0 || added > base::constants::MAX_BUFFER_SIZE) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      stats_.record_dropped(1, added);
+    } else {
+      stats_.record_failed_send();
+    }
+  };
+  if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
+      queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(strand_, [this, self = shared_from_this(), data = std::move(data), added]() mutable {
+    if (!alive_ || closing_) {
+      stats_.record_failed_send();
+      return;
+    }
+    if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
+        queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+      if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        stats_.record_dropped(1, added);
+      } else {
+        stats_.record_failed_send();
+      }
+      return;
+    }
+
+    stats_.record_accepted(added);
+    queue_bytes_ += added;
+    tx_.emplace_back(std::move(data));
+    observe_queue();
+    report_backpressure(queue_bytes_);
+    if (!writing_) do_write();
+  });
+  return true;
+}
+
+bool UdsServerSession::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!alive_ || closing_ || !data || data->empty()) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data->size();
+  if (added > base::constants::MAX_BUFFER_SIZE) {
+    stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [this, added]() {
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      stats_.record_dropped(1, added);
+    } else {
+      stats_.record_failed_send();
+    }
+  };
+  if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
+      queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(strand_, [this, self = shared_from_this(), data = std::move(data), added]() mutable {
+    if (!alive_ || closing_) {
+      stats_.record_failed_send();
+      return;
+    }
+    if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
+        queue_bytes_ + pending_bytes_ + added > bp_limit_) {
+      if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        stats_.record_dropped(1, added);
+      } else {
+        stats_.record_failed_send();
+      }
+      return;
+    }
+
+    stats_.record_accepted(added);
+    queue_bytes_ += added;
+    tx_.emplace_back(std::move(data));
+    observe_queue();
+    report_backpressure(queue_bytes_);
+    if (!writing_) do_write();
+  });
+  return true;
+}
+
 void UdsServerSession::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
 void UdsServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 void UdsServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }

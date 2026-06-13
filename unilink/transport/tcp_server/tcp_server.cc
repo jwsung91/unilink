@@ -640,6 +640,63 @@ bool TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   return false;
 }
 
+bool TcpServer::async_try_write_copy(memory::ConstByteSpan data) {
+  auto impl = get_impl();
+  if (impl->stopping_.load()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+    session = impl->current_session_;
+  }
+
+  if (session && session->alive()) {
+    return session->async_try_write_copy(data);
+  }
+  impl->stats_.record_failed_send();
+  return false;
+}
+
+bool TcpServer::async_try_write_move(std::vector<uint8_t>&& data) {
+  auto impl = get_impl();
+  if (impl->stopping_.load()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+    session = impl->current_session_;
+  }
+
+  if (session && session->alive()) {
+    return session->async_try_write_move(std::move(data));
+  }
+  impl->stats_.record_failed_send();
+  return false;
+}
+
+bool TcpServer::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  auto impl = get_impl();
+  if (impl->stopping_.load() || !data || data->empty()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+    session = impl->current_session_;
+  }
+
+  if (session && session->alive()) {
+    return session->async_try_write_shared(std::move(data));
+  }
+  impl->stats_.record_failed_send();
+  return false;
+}
+
 void TcpServer::on_bytes(OnBytes cb) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   impl_->on_bytes_ = std::move(cb);
@@ -673,7 +730,7 @@ bool TcpServer::broadcast(std::string_view message) {
     auto& session = entry.second;
     if (session && session->alive()) {
       attempted = true;
-      if (session->async_write_shared(shared_data)) sent = true;
+      if (session->async_try_write_shared(shared_data)) sent = true;
     }
   }
   if (!attempted) impl->stats_.record_failed_send();
@@ -690,7 +747,7 @@ bool TcpServer::broadcast(memory::ConstByteSpan data) {
     auto& session = entry.second;
     if (session && session->alive()) {
       attempted = true;
-      if (session->async_write_shared(shared_data)) sent = true;
+      if (session->async_try_write_shared(shared_data)) sent = true;
     }
   }
   if (!attempted) impl->stats_.record_failed_send();
@@ -708,6 +765,22 @@ bool TcpServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   auto it = impl->sessions_.find(client_id);
   if (it != impl->sessions_.end() && it->second && it->second->alive()) {
     return it->second->async_write_copy(data);
+  }
+  impl->stats_.record_failed_send();
+  return false;
+}
+
+bool TcpServer::try_send_to_client(ClientId client_id, std::string_view message) {
+  return try_send_to_client(client_id,
+                            memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(message.data()), message.size()));
+}
+
+bool TcpServer::try_send_to_client(ClientId client_id, memory::ConstByteSpan data) {
+  auto impl = get_impl();
+  std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+  auto it = impl->sessions_.find(client_id);
+  if (it != impl->sessions_.end() && it->second && it->second->alive()) {
+    return it->second->async_try_write_copy(data);
   }
   impl->stats_.record_failed_send();
   return false;

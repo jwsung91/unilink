@@ -87,7 +87,9 @@ class UNILINK_API ChannelInterface {
   // Explicit API (escape hatch):
   //
   //   try_send() / try_send_line()
-  //     Always non-blocking and always drops on full queue, regardless of strategy.
+  //     Always non-blocking and always rejects a full/backpressured queue,
+  //     regardless of strategy. Reliable channels do not enqueue into pending_
+  //     for try_send().
   //     Use when you need BestEffort behaviour on a Reliable channel for a specific
   //     call (e.g. fire-and-forget heartbeat).
   //

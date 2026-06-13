@@ -1,0 +1,61 @@
+name: Benchmark
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 18 * * *"
+
+jobs:
+  benchmark:
+    name: Benchmark soft gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install tools
+        uses: ./.github/actions/apt-install
+        with:
+          packages: "build-essential cmake ninja-build"
+
+      - name: Install dependencies with vcpkg
+        uses: ./.github/actions/setup-vcpkg
+        with:
+          triplet: x64-linux
+
+      - name: Configure release build
+        run: |
+          cmake -S . -B build-benchmark -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_ENABLE_INSTALL=ON \
+            -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+            -DVCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET
+
+      - name: Build benchmark inputs
+        run: cmake --build build-benchmark --parallel
+
+      - name: Install benchmark package
+        run: cmake --install build-benchmark --prefix build-benchmark-install
+
+      - name: Run benchmark soft gate
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-artifacts
+          bash scripts/run_benchmarks.sh \
+            --cmake-prefix "$PWD/build-benchmark-install" \
+            --output-json benchmark-artifacts/benchmark-result.json \
+            --output-summary benchmark-artifacts/benchmark-summary.md
+
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-artifacts
+          path: benchmark-artifacts/
+          retention-days: 30
+          overwrite: true

@@ -323,6 +323,34 @@ bool UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   return sent;
 }
 
+bool UdsServer::async_try_write_copy(memory::ConstByteSpan data) {
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
+  return async_try_write_shared(shared_data);
+}
+
+bool UdsServer::async_try_write_move(std::vector<uint8_t>&& data) {
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(std::move(data));
+  return async_try_write_shared(shared_data);
+}
+
+bool UdsServer::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (impl_->stopping_.load() || !data || data->empty()) {
+    impl_->stats_.record_failed_send();
+    return false;
+  }
+  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  bool sent = false;
+  bool attempted = false;
+  for (auto& pair : impl_->sessions_) {
+    if (pair.second && pair.second->alive()) {
+      attempted = true;
+      if (pair.second->async_try_write_shared(data)) sent = true;
+    }
+  }
+  if (!attempted) impl_->stats_.record_failed_send();
+  return sent;
+}
+
 void UdsServer::on_bytes(OnBytes cb) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   impl_->on_bytes_ = std::move(cb);
@@ -342,12 +370,12 @@ bool UdsServer::broadcast(std::string_view message) {
   auto data =
       std::make_shared<const std::vector<uint8_t>>(reinterpret_cast<const uint8_t*>(message.data()),
                                                    reinterpret_cast<const uint8_t*>(message.data()) + message.size());
-  return async_write_shared(data);
+  return async_try_write_shared(data);
 }
 
 bool UdsServer::broadcast(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
-  return async_write_shared(shared_data);
+  return async_try_write_shared(shared_data);
 }
 
 bool UdsServer::send_to_client(ClientId client_id, std::string_view message) {
@@ -364,6 +392,25 @@ bool UdsServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   }
   if (session) {
     return session->async_write_copy(data);
+  }
+  impl_->stats_.record_failed_send();
+  return false;
+}
+
+bool UdsServer::try_send_to_client(ClientId client_id, std::string_view message) {
+  return try_send_to_client(client_id,
+                            memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(message.data()), message.size()));
+}
+
+bool UdsServer::try_send_to_client(ClientId client_id, memory::ConstByteSpan data) {
+  std::shared_ptr<UdsServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+    auto it = impl_->sessions_.find(client_id);
+    if (it != impl_->sessions_.end()) session = it->second;
+  }
+  if (session) {
+    return session->async_try_write_copy(data);
   }
   impl_->stats_.record_failed_send();
   return false;

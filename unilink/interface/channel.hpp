@@ -18,6 +18,7 @@
 #include <boost/asio/any_io_executor.hpp>
 #include <functional>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "unilink/base/common.hpp"
@@ -49,6 +50,14 @@ class UNILINK_API Channel {
   // Zero-copy APIs (ownership transfer or shared ownership)
   virtual bool async_write_move(std::vector<uint8_t>&& data) = 0;
   virtual bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) = 0;
+
+  // Explicit non-blocking drop-if-full send APIs. These must not enqueue into
+  // Reliable pending queues when backpressure is already active.
+  virtual bool async_try_write_copy(memory::ConstByteSpan data) { return async_write_copy(data); }
+  virtual bool async_try_write_move(std::vector<uint8_t>&& data) { return async_write_move(std::move(data)); }
+  virtual bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    return async_write_shared(std::move(data));
+  }
 
   // Callbacks
   virtual void on_bytes(OnBytes cb) = 0;

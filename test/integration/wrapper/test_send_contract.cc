@@ -1,0 +1,212 @@
+/*
+ * Copyright 2025 Jinwoo Sung
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <gtest/gtest.h>
+
+#include <boost/asio/io_context.hpp>
+#include <memory>
+#include <mutex>
+#include <string_view>
+#include <vector>
+
+#include "unilink/interface/channel.hpp"
+#include "unilink/unilink.hpp"
+
+namespace {
+
+class ContractChannel : public unilink::interface::Channel {
+ public:
+  void start() override { connected_ = true; }
+  void stop() override { connected_ = false; }
+  bool is_connected() const override { return connected_; }
+  bool is_backpressure_active() const override { return backpressure_active_; }
+  boost::asio::any_io_executor get_executor() override { return ioc_.get_executor(); }
+
+  bool async_write_copy(unilink::memory::ConstByteSpan data) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++write_copy_count_;
+    stats_.messages_accepted += 1;
+    stats_.bytes_accepted += data.size();
+    return true;
+  }
+
+  bool async_write_move(std::vector<uint8_t>&& data) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++write_move_count_;
+    stats_.messages_accepted += 1;
+    stats_.bytes_accepted += data.size();
+    return true;
+  }
+
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override {
+    if (!data) return false;
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++write_shared_count_;
+    stats_.messages_accepted += 1;
+    stats_.bytes_accepted += data->size();
+    return true;
+  }
+
+  bool async_try_write_copy(unilink::memory::ConstByteSpan data) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++try_copy_count_;
+    return record_try_result(data.size());
+  }
+
+  bool async_try_write_move(std::vector<uint8_t>&& data) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++try_move_count_;
+    return record_try_result(data.size());
+  }
+
+  bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override {
+    if (!data) return false;
+    std::lock_guard<std::mutex> lock(mutex_);
+    ++try_shared_count_;
+    return record_try_result(data->size());
+  }
+
+  void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
+  void on_state(OnState cb) override { on_state_ = std::move(cb); }
+  void on_backpressure(OnBackpressure cb) override { on_backpressure_ = std::move(cb); }
+
+  unilink::wrapper::RuntimeStats stats() const override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return stats_;
+  }
+
+  void reset_stats() override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    stats_ = {};
+  }
+
+  void set_try_accepts(bool accepts) { try_accepts_ = accepts; }
+  void set_backpressure_active(bool active) { backpressure_active_ = active; }
+
+  int write_copy_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return write_copy_count_;
+  }
+  int write_move_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return write_move_count_;
+  }
+  int write_shared_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return write_shared_count_;
+  }
+  int try_copy_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return try_copy_count_;
+  }
+  int try_move_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return try_move_count_;
+  }
+  int try_shared_count() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return try_shared_count_;
+  }
+
+ private:
+  bool record_try_result(size_t bytes) {
+    if (try_accepts_ && !backpressure_active_) {
+      stats_.messages_accepted += 1;
+      stats_.bytes_accepted += bytes;
+      return true;
+    }
+    stats_.failed_sends += 1;
+    return false;
+  }
+
+  mutable std::mutex mutex_;
+  boost::asio::io_context ioc_;
+  bool connected_{true};
+  bool backpressure_active_{false};
+  bool try_accepts_{false};
+  int write_copy_count_{0};
+  int write_move_count_{0};
+  int write_shared_count_{0};
+  int try_copy_count_{0};
+  int try_move_count_{0};
+  int try_shared_count_{0};
+  unilink::wrapper::RuntimeStats stats_{};
+  OnBytes on_bytes_;
+  OnState on_state_;
+  OnBackpressure on_backpressure_;
+};
+
+template <typename Wrapper>
+void verify_try_send_is_drop_if_full_escape_hatch(std::string_view name) {
+  SCOPED_TRACE(std::string(name));
+  auto channel = std::make_shared<ContractChannel>();
+  channel->set_try_accepts(false);
+
+  Wrapper wrapper(channel);
+  ASSERT_TRUE(wrapper.start().get());
+
+  const auto before = wrapper.stats();
+  EXPECT_FALSE(wrapper.try_send("copy"));
+  EXPECT_FALSE(wrapper.try_send_move(std::vector<uint8_t>{1, 2, 3}));
+  EXPECT_FALSE(wrapper.try_send_shared(std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{4, 5, 6})));
+
+  const auto after = wrapper.stats();
+  EXPECT_EQ(channel->try_copy_count(), 1);
+  EXPECT_EQ(channel->try_move_count(), 1);
+  EXPECT_EQ(channel->try_shared_count(), 1);
+  EXPECT_EQ(channel->write_copy_count(), 0);
+  EXPECT_EQ(channel->write_move_count(), 0);
+  EXPECT_EQ(channel->write_shared_count(), 0);
+  EXPECT_EQ(after.pending_bytes, before.pending_bytes);
+  EXPECT_EQ(after.failed_sends, before.failed_sends + 3);
+}
+
+template <typename Wrapper>
+void verify_reliable_send_uses_strategy_aware_write(std::string_view name) {
+  SCOPED_TRACE(std::string(name));
+  auto channel = std::make_shared<ContractChannel>();
+  channel->set_try_accepts(false);
+
+  Wrapper wrapper(channel);
+  ASSERT_TRUE(wrapper.start().get());
+
+  EXPECT_TRUE(wrapper.send("copy"));
+  EXPECT_TRUE(wrapper.send_move(std::vector<uint8_t>{1, 2, 3}));
+  EXPECT_TRUE(wrapper.send_shared(std::make_shared<const std::vector<uint8_t>>(std::vector<uint8_t>{4, 5, 6})));
+
+  EXPECT_EQ(channel->write_copy_count(), 1);
+  EXPECT_EQ(channel->write_move_count(), 1);
+  EXPECT_EQ(channel->write_shared_count(), 1);
+  EXPECT_EQ(channel->try_copy_count(), 0);
+  EXPECT_EQ(channel->try_move_count(), 0);
+  EXPECT_EQ(channel->try_shared_count(), 0);
+}
+
+}  // namespace
+
+TEST(WrapperSendContractTest, TrySendVariantsUseExplicitTryWritePath) {
+  verify_try_send_is_drop_if_full_escape_hatch<unilink::wrapper::TcpClient>("TcpClient");
+  verify_try_send_is_drop_if_full_escape_hatch<unilink::wrapper::UdpClient>("UdpClient");
+  verify_try_send_is_drop_if_full_escape_hatch<unilink::wrapper::UdsClient>("UdsClient");
+  verify_try_send_is_drop_if_full_escape_hatch<unilink::wrapper::Serial>("Serial");
+}
+
+TEST(WrapperSendContractTest, ReliableSendVariantsDoNotUseTryWritePath) {
+  verify_reliable_send_uses_strategy_aware_write<unilink::wrapper::TcpClient>("TcpClient");
+  verify_reliable_send_uses_strategy_aware_write<unilink::wrapper::UdpClient>("UdpClient");
+  verify_reliable_send_uses_strategy_aware_write<unilink::wrapper::UdsClient>("UdsClient");
+  verify_reliable_send_uses_strategy_aware_write<unilink::wrapper::Serial>("Serial");
+}

@@ -154,6 +154,7 @@ struct Serial::Impl {
   std::future<bool> start() {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
+      started_.store(true);
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
@@ -238,7 +239,7 @@ struct Serial::Impl {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
-      return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+      return channel->async_try_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
     return false;
   }
@@ -246,7 +247,7 @@ struct Serial::Impl {
   bool try_send_move(std::vector<uint8_t>&& data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
-      return channel->async_write_move(std::move(data));
+      return channel->async_try_write_move(std::move(data));
     }
     return false;
   }
@@ -255,7 +256,7 @@ struct Serial::Impl {
     if (!data || data->empty()) return false;
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
-      return channel->async_write_shared(std::move(data));
+      return channel->async_try_write_shared(std::move(data));
     }
     return false;
   }
@@ -276,11 +277,15 @@ struct Serial::Impl {
         }
         bp_cv_.wait(bp_lock);
       }
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.load() || !channel || !channel->is_connected()) return false;
+      return channel->async_write_move(std::move(data));
     }
     return try_send_move(std::move(data));
   }
 
   bool send_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+    if (!data || data->empty()) return false;
     if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
       std::unique_lock<std::mutex> bp_lock(bp_mutex_);
       while (true) {
@@ -291,6 +296,9 @@ struct Serial::Impl {
         }
         bp_cv_.wait(bp_lock);
       }
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.load() || !channel || !channel->is_connected()) return false;
+      return channel->async_write_shared(std::move(data));
     }
     return try_send_shared(std::move(data));
   }

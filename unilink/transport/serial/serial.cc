@@ -752,6 +752,115 @@ bool Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
   return true;
 }
 
+bool Serial::async_try_write_copy(memory::ConstByteSpan data) {
+  if (data.empty() || data.size() > base::constants::MAX_BUFFER_SIZE) {
+    get_impl()->stats_.record_failed_send();
+    return false;
+  }
+  return async_try_write_move(std::vector<uint8_t>(data.begin(), data.end()));
+}
+
+bool Serial::async_try_write_move(std::vector<uint8_t>&& data) {
+  auto impl = get_impl();
+  if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error)) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data.size();
+  if (added == 0 || added > base::constants::MAX_BUFFER_SIZE) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [impl, added]() {
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      impl->stats_.record_dropped(1, added);
+    } else {
+      impl->stats_.record_failed_send();
+    }
+  };
+  if (impl->backpressure_active_.load() || impl->queued_bytes_ + added > impl->bp_high_ ||
+      impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    auto impl = self->get_impl();
+    if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error)) {
+      impl->stats_.record_failed_send();
+      return;
+    }
+    if (impl->backpressure_active_.load() || impl->queued_bytes_ + added > impl->bp_high_ ||
+        impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
+      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        impl->stats_.record_dropped(1, added);
+      } else {
+        impl->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    impl->stats_.record_accepted(added);
+    impl->queued_bytes_ += added;
+    impl->tx_.emplace_back(std::move(buf));
+    impl->observe_queue();
+    impl->report_backpressure(impl->queued_bytes_);
+    if (!impl->writing_) impl->do_write(self);
+  });
+  return true;
+}
+
+bool Serial::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  auto impl = get_impl();
+  if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error) ||
+      !data || data->empty()) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  const auto added = data->size();
+  if (added > base::constants::MAX_BUFFER_SIZE) {
+    impl->stats_.record_failed_send();
+    return false;
+  }
+  const auto reject_for_pressure = [impl, added]() {
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      impl->stats_.record_dropped(1, added);
+    } else {
+      impl->stats_.record_failed_send();
+    }
+  };
+  if (impl->backpressure_active_.load() || impl->queued_bytes_ + added > impl->bp_high_ ||
+      impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
+    reject_for_pressure();
+    return false;
+  }
+
+  net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    auto impl = self->get_impl();
+    if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error)) {
+      impl->stats_.record_failed_send();
+      return;
+    }
+    if (impl->backpressure_active_.load() || impl->queued_bytes_ + added > impl->bp_high_ ||
+        impl->queued_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
+      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+        impl->stats_.record_dropped(1, added);
+      } else {
+        impl->stats_.record_failed_send();
+      }
+      return;
+    }
+
+    impl->stats_.record_accepted(added);
+    impl->queued_bytes_ += added;
+    impl->tx_.emplace_back(std::move(buf));
+    impl->observe_queue();
+    impl->report_backpressure(impl->queued_bytes_);
+    if (!impl->writing_) impl->do_write(self);
+  });
+  return true;
+}
+
 void Serial::on_bytes(OnBytes cb) { impl_->on_bytes_ = std::move(cb); }
 void Serial::on_state(OnState cb) { impl_->on_state_ = std::move(cb); }
 void Serial::on_backpressure(OnBackpressure cb) { impl_->on_bp_ = std::move(cb); }
