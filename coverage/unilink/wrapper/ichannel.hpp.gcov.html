@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-13 11:07:52</td>
+            <td class="headerValue">2026-06-13 12:40:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">25.0&nbsp;%</td>
@@ -119,7 +119,7 @@
 <span id="L41"><span class="lineNum">      41</span>                 :             :   using ConnectionHandler = std::function&lt;void(const ConnectionContext&amp;)&gt;;</span>
 <span id="L42"><span class="lineNum">      42</span>                 :             :   using ErrorHandler = std::function&lt;void(const ErrorContext&amp;)&gt;;</span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : </span>
-<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC tlaBgGNC">         186 :   virtual ~ChannelInterface() = default;</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC tlaBgGNC">         190 :   virtual ~ChannelInterface() = default;</span></span>
 <span id="L45"><span class="lineNum">      45</span>                 :             : </span>
 <span id="L46"><span class="lineNum">      46</span>                 :             :   // Lifecycle</span>
 <span id="L47"><span class="lineNum">      47</span>                 :             : </span>
@@ -168,142 +168,167 @@
 <span id="L90"><span class="lineNum">      90</span>                 :             :   //     Always non-blocking and always rejects a full/backpressured queue,</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :   //     regardless of strategy. Reliable channels do not enqueue into pending_</span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :   //     for try_send().</span>
-<span id="L93"><span class="lineNum">      93</span>                 :             :   //     Use when you need BestEffort behaviour on a Reliable channel for a specific</span>
-<span id="L94"><span class="lineNum">      94</span>                 :             :   //     call (e.g. fire-and-forget heartbeat).</span>
-<span id="L95"><span class="lineNum">      95</span>                 :             :   //</span>
-<span id="L96"><span class="lineNum">      96</span>                 :             :   //   send_blocking() / send_line_blocking()</span>
-<span id="L97"><span class="lineNum">      97</span>                 :             :   //     Always blocks until queue pressure is relieved, regardless of strategy.</span>
-<span id="L98"><span class="lineNum">      98</span>                 :             : </span>
-<span id="L99"><span class="lineNum">      99</span>                 :             :   /**</span>
-<span id="L100"><span class="lineNum">     100</span>                 :             :    * @brief Enqueue data for transmission, honouring the backpressure strategy.</span>
-<span id="L101"><span class="lineNum">     101</span>                 :             :    *</span>
-<span id="L102"><span class="lineNum">     102</span>                 :             :    * BestEffort: non-blocking, drops if the send queue is full.</span>
-<span id="L103"><span class="lineNum">     103</span>                 :             :    * Reliable:   blocks until queue pressure is relieved, then enqueues.</span>
-<span id="L104"><span class="lineNum">     104</span>                 :             :    *</span>
-<span id="L105"><span class="lineNum">     105</span>                 :             :    * @return true  Data was accepted into the send queue.</span>
-<span id="L106"><span class="lineNum">     106</span>                 :             :    * @return false Data was dropped (not connected, or BestEffort queue full).</span>
-<span id="L107"><span class="lineNum">     107</span>                 :             :    */</span>
-<span id="L108"><span class="lineNum">     108</span>                 :             :   virtual bool send(std::string_view data) = 0;</span>
-<span id="L109"><span class="lineNum">     109</span>                 :             : </span>
-<span id="L110"><span class="lineNum">     110</span>                 :             :   /**</span>
-<span id="L111"><span class="lineNum">     111</span>                 :             :    * @brief Enqueue a line (data + &quot;\n&quot;) for transmission, honouring the backpressure strategy.</span>
-<span id="L112"><span class="lineNum">     112</span>                 :             :    * @return true  Data was accepted. @return false Data was dropped.</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :   //     Rejects payloads that would exceed the current non-blocking queue</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :   //     threshold; payloads below MAX_BUFFER_SIZE can still be rejected when</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :   //     they exceed the current backpressure high-water budget.</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :   //     Use when you need BestEffort behaviour on a Reliable channel for a specific</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :   //     call (e.g. fire-and-forget heartbeat).</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :   //</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :   //   send_blocking() / send_line_blocking()</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :   //     Always blocks until queue pressure is relieved, regardless of strategy.</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :   //     This call may block indefinitely while the channel remains active and</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :   //     backpressure does not clear. stop() from another thread is expected to</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :   //     unblock waiting senders.</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : </span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :   /**</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :    * @brief Enqueue data for transmission, honouring the backpressure strategy.</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :    *</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :    * BestEffort: non-blocking, drops if the send queue is full.</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :    * Reliable:   blocks until queue pressure is relieved, then enqueues.</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :    *</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :    * @return true  Data was accepted into the send queue.</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :    * @return false Data was dropped (not connected, or BestEffort queue full).</span>
 <span id="L113"><span class="lineNum">     113</span>                 :             :    */</span>
-<span id="L114"><span class="lineNum">     114</span>                 :             :   virtual bool send_line(std::string_view line) = 0;</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :   virtual bool send(std::string_view data) = 0;</span>
 <span id="L115"><span class="lineNum">     115</span>                 :             : </span>
 <span id="L116"><span class="lineNum">     116</span>                 :             :   /**</span>
-<span id="L117"><span class="lineNum">     117</span>                 :             :    * @brief Block the calling thread until queue pressure is relieved, then enqueue.</span>
-<span id="L118"><span class="lineNum">     118</span>                 :             :    *</span>
-<span id="L119"><span class="lineNum">     119</span>                 :             :    * Ignores the configured strategy — always blocks. Prefer send() unless you need</span>
-<span id="L120"><span class="lineNum">     120</span>                 :             :    * to override BestEffort behaviour for a specific call.</span>
-<span id="L121"><span class="lineNum">     121</span>                 :             :    *</span>
-<span id="L122"><span class="lineNum">     122</span>                 :             :    * @return true Data was accepted. @return false Channel stopped while waiting.</span>
-<span id="L123"><span class="lineNum">     123</span>                 :             :    */</span>
-<span id="L124"><span class="lineNum">     124</span>                 :             :   virtual bool send_blocking(std::string_view data) = 0;</span>
-<span id="L125"><span class="lineNum">     125</span>                 :             : </span>
-<span id="L126"><span class="lineNum">     126</span>                 :             :   /**</span>
-<span id="L127"><span class="lineNum">     127</span>                 :             :    * @brief Blocking variant of send_line(). Always blocks regardless of strategy.</span>
-<span id="L128"><span class="lineNum">     128</span>                 :             :    * @return true Data was accepted. @return false Channel stopped while waiting.</span>
-<span id="L129"><span class="lineNum">     129</span>                 :             :    */</span>
-<span id="L130"><span class="lineNum">     130</span>                 :             :   virtual bool send_line_blocking(std::string_view line) = 0;</span>
-<span id="L131"><span class="lineNum">     131</span>                 :             : </span>
-<span id="L132"><span class="lineNum">     132</span>                 :             :   /**</span>
-<span id="L133"><span class="lineNum">     133</span>                 :             :    * @brief Non-blocking send that always drops on a full queue, ignoring strategy.</span>
-<span id="L134"><span class="lineNum">     134</span>                 :             :    *</span>
-<span id="L135"><span class="lineNum">     135</span>                 :             :    * Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.</span>
-<span id="L136"><span class="lineNum">     136</span>                 :             :    *</span>
-<span id="L137"><span class="lineNum">     137</span>                 :             :    * @return true Data was accepted. @return false Dropped (not connected or queue full).</span>
-<span id="L138"><span class="lineNum">     138</span>                 :             :    */</span>
-<span id="L139"><span class="lineNum">     139</span>                 :             :   virtual bool try_send(std::string_view data) = 0;</span>
-<span id="L140"><span class="lineNum">     140</span>                 :             : </span>
-<span id="L141"><span class="lineNum">     141</span>                 :             :   /**</span>
-<span id="L142"><span class="lineNum">     142</span>                 :             :    * @brief Non-blocking send_line that always drops on a full queue, ignoring strategy.</span>
-<span id="L143"><span class="lineNum">     143</span>                 :             :    * @return true Data was accepted. @return false Dropped.</span>
-<span id="L144"><span class="lineNum">     144</span>                 :             :    */</span>
-<span id="L145"><span class="lineNum">     145</span>                 :             :   virtual bool try_send_line(std::string_view line) = 0;</span>
-<span id="L146"><span class="lineNum">     146</span>                 :             : </span>
-<span id="L147"><span class="lineNum">     147</span>                 :             :   /**</span>
-<span id="L148"><span class="lineNum">     148</span>                 :             :    * @brief Enqueue a vector payload by transferring ownership, honouring the backpressure strategy.</span>
-<span id="L149"><span class="lineNum">     149</span>                 :             :    *</span>
-<span id="L150"><span class="lineNum">     150</span>                 :             :    * After this call, the caller must treat the moved-from vector as consumed regardless</span>
-<span id="L151"><span class="lineNum">     151</span>                 :             :    * of the return value. Existing string_view send APIs remain available for borrowed data.</span>
-<span id="L152"><span class="lineNum">     152</span>                 :             :    *</span>
-<span id="L153"><span class="lineNum">     153</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
-<span id="L154"><span class="lineNum">     154</span>                 :             :    */</span>
-<span id="L155"><span class="lineNum">     155</span>                 :             :   virtual bool send_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) = 0;</span>
-<span id="L156"><span class="lineNum">     156</span>                 :             : </span>
-<span id="L157"><span class="lineNum">     157</span>                 :             :   /**</span>
-<span id="L158"><span class="lineNum">     158</span>                 :             :    * @brief Non-blocking ownership-transfer send.</span>
-<span id="L159"><span class="lineNum">     159</span>                 :             :    *</span>
-<span id="L160"><span class="lineNum">     160</span>                 :             :    * Always returns without waiting for backpressure. The moved-from vector is consumed</span>
-<span id="L161"><span class="lineNum">     161</span>                 :             :    * regardless of the return value.</span>
-<span id="L162"><span class="lineNum">     162</span>                 :             :    *</span>
-<span id="L163"><span class="lineNum">     163</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
-<span id="L164"><span class="lineNum">     164</span>                 :             :    */</span>
-<span id="L165"><span class="lineNum">     165</span>                 :             :   virtual bool try_send_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) = 0;</span>
-<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
-<span id="L167"><span class="lineNum">     167</span>                 :             :   /**</span>
-<span id="L168"><span class="lineNum">     168</span>                 :             :    * @brief Enqueue an immutable shared vector payload, honouring the backpressure strategy.</span>
-<span id="L169"><span class="lineNum">     169</span>                 :             :    *</span>
-<span id="L170"><span class="lineNum">     170</span>                 :             :    * The shared buffer must be non-null and non-empty.</span>
-<span id="L171"><span class="lineNum">     171</span>                 :             :    *</span>
-<span id="L172"><span class="lineNum">     172</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
-<span id="L173"><span class="lineNum">     173</span>                 :             :    */</span>
-<span id="L174"><span class="lineNum">     174</span>                 :             :   virtual bool send_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) = 0;</span>
-<span id="L175"><span class="lineNum">     175</span>                 :             : </span>
-<span id="L176"><span class="lineNum">     176</span>                 :             :   /**</span>
-<span id="L177"><span class="lineNum">     177</span>                 :             :    * @brief Non-blocking shared-buffer send.</span>
-<span id="L178"><span class="lineNum">     178</span>                 :             :    *</span>
-<span id="L179"><span class="lineNum">     179</span>                 :             :    * The shared buffer must be non-null and non-empty.</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :    * @brief Enqueue a line (data + &quot;\n&quot;) for transmission, honouring the backpressure strategy.</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :    * @return true  Data was accepted. @return false Data was dropped.</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :    */</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :   virtual bool send_line(std::string_view line) = 0;</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             : </span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :   /**</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :    * @brief Block the calling thread until queue pressure is relieved, then enqueue.</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :    *</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :    * Ignores the configured strategy — always blocks. Prefer send() unless you need</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :    * to override BestEffort behaviour for a specific call.</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :    * This call may block indefinitely while the channel remains active and</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :    * backpressure does not clear. stop() from another thread is expected to unblock</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :    * waiting senders.</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :    *</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :    * @return true Data was accepted. @return false Channel stopped while waiting.</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :    */</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :   virtual bool send_blocking(std::string_view data) = 0;</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : </span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :   /**</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :    * @brief Blocking variant of send_line(). Always blocks regardless of strategy.</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :    *</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :    * This call may block indefinitely while the channel remains active and</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :    * backpressure does not clear. stop() from another thread is expected to unblock</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :    * waiting senders.</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :    *</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :    * @return true Data was accepted. @return false Channel stopped while waiting.</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :    */</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :   virtual bool send_line_blocking(std::string_view line) = 0;</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :   /**</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :    * @brief Non-blocking send that always drops on a full queue, ignoring strategy.</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :    *</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :    * Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :    * Rejects payloads that would exceed the current non-blocking queue threshold.</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :    * A payload may be rejected even if it is below MAX_BUFFER_SIZE when it is larger</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :    * than the current backpressure high-water budget. Use send() or send_blocking()</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :    * when Reliable enqueue semantics are required for large payloads.</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :    *</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :    * @return true Data was accepted. @return false Dropped (not connected or queue full).</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :    */</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :   virtual bool try_send(std::string_view data) = 0;</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :   /**</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :    * @brief Non-blocking send_line that always drops on a full queue, ignoring strategy.</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :    *</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :    * Uses the same non-blocking queue threshold policy as try_send().</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :    *</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :    * @return true Data was accepted. @return false Dropped.</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :    */</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :   virtual bool try_send_line(std::string_view line) = 0;</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : </span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :   /**</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :    * @brief Enqueue a vector payload by transferring ownership, honouring the backpressure strategy.</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :    *</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :    * After this call, the caller must treat the moved-from vector as consumed regardless</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :    * of the return value. Existing string_view send APIs remain available for borrowed data.</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :    *</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :    */</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :   virtual bool send_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) = 0;</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : </span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :   /**</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :    * @brief Non-blocking ownership-transfer send.</span>
 <span id="L180"><span class="lineNum">     180</span>                 :             :    *</span>
-<span id="L181"><span class="lineNum">     181</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
-<span id="L182"><span class="lineNum">     182</span>                 :             :    */</span>
-<span id="L183"><span class="lineNum">     183</span>                 :             :   virtual bool try_send_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) = 0;</span>
-<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
-<span id="L185"><span class="lineNum">     185</span>                 :             :   // Event handlers</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             :   virtual ChannelInterface&amp; on_data(MessageHandler handler) = 0;</span>
-<span id="L187"><span class="lineNum">     187</span>                 :             : </span>
-<span id="L188"><span class="lineNum">     188</span>                 :             :   /** @brief Register a callback for batched data reception */</span>
-<span id="L189"><span class="lineNum">     189</span>                 :             :   virtual ChannelInterface&amp; on_data_batch(BatchMessageHandler handler) = 0;</span>
-<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :   virtual ChannelInterface&amp; on_connect(ConnectionHandler handler) = 0;</span>
-<span id="L192"><span class="lineNum">     192</span>                 :             :   virtual ChannelInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</span>
-<span id="L193"><span class="lineNum">     193</span>                 :             :   virtual ChannelInterface&amp; on_error(ErrorHandler handler) = 0;</span>
-<span id="L194"><span class="lineNum">     194</span>                 :             : </span>
-<span id="L195"><span class="lineNum">     195</span>                 :             :   /**</span>
-<span id="L196"><span class="lineNum">     196</span>                 :             :    * @brief Register a callback to be notified when send queue congestion changes.</span>
-<span id="L197"><span class="lineNum">     197</span>                 :             :    * @param handler Callback receiving the current number of queued bytes.</span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :    *</span>
-<span id="L199"><span class="lineNum">     199</span>                 :             :    * Default implementation is a no-op. Concrete implementations that support</span>
-<span id="L200"><span class="lineNum">     200</span>                 :             :    * backpressure reporting must override this method; otherwise the handler</span>
-<span id="L201"><span class="lineNum">     201</span>                 :             :    * is silently discarded.</span>
-<span id="L202"><span class="lineNum">     202</span>                 :             :    */</span>
-<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaUNC">           0 :   virtual ChannelInterface&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) {</span></span>
-<span id="L204"><span class="lineNum">     204</span>                 :             :     (void)handler;</span>
-<span id="L205"><span class="lineNum">     205</span>                 :<span class="tlaUNC">           0 :     return *this;</span></span>
-<span id="L206"><span class="lineNum">     206</span>                 :             :   }</span>
-<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
-<span id="L208"><span class="lineNum">     208</span>                 :             :   /**</span>
-<span id="L209"><span class="lineNum">     209</span>                 :             :    * @brief Set a message framer for this channel.</span>
-<span id="L210"><span class="lineNum">     210</span>                 :             :    * @param framer The framer instance to use.</span>
-<span id="L211"><span class="lineNum">     211</span>                 :             :    */</span>
-<span id="L212"><span class="lineNum">     212</span>                 :             :   virtual ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</span>
-<span id="L213"><span class="lineNum">     213</span>                 :             : </span>
-<span id="L214"><span class="lineNum">     214</span>                 :             :   /**</span>
-<span id="L215"><span class="lineNum">     215</span>                 :             :    * @brief Set a handler for complete messages extracted by the framer.</span>
-<span id="L216"><span class="lineNum">     216</span>                 :             :    * @param handler The callback for framed messages.</span>
-<span id="L217"><span class="lineNum">     217</span>                 :             :    */</span>
-<span id="L218"><span class="lineNum">     218</span>                 :             :   virtual ChannelInterface&amp; on_message(MessageHandler handler) = 0;</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :    * Always returns without waiting for backpressure. The moved-from vector is consumed</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :    * regardless of the return value.</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :    * Rejects payloads that would exceed the current non-blocking queue threshold,</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :    * even below MAX_BUFFER_SIZE when they exceed the current high-water budget.</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :    *</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :    */</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :   virtual bool try_send_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) = 0;</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : </span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :   /**</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :    * @brief Enqueue an immutable shared vector payload, honouring the backpressure strategy.</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :    *</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :    * The shared buffer must be non-null and non-empty.</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :    *</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :    */</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :   virtual bool send_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) = 0;</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : </span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :   /**</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :    * @brief Non-blocking shared-buffer send.</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :    *</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :    * The shared buffer must be non-null and non-empty.</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :    * Rejects payloads that would exceed the current non-blocking queue threshold,</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :    * even below MAX_BUFFER_SIZE when they exceed the current high-water budget.</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :    *</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :    * @return true Data was accepted. @return false Data was dropped or rejected.</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :    */</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :   virtual bool try_send_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) = 0;</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             : </span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :   // Event handlers</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :   virtual ChannelInterface&amp; on_data(MessageHandler handler) = 0;</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             : </span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :   /** @brief Register a callback for batched data reception */</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :   virtual ChannelInterface&amp; on_data_batch(BatchMessageHandler handler) = 0;</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :   virtual ChannelInterface&amp; on_connect(ConnectionHandler handler) = 0;</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :   virtual ChannelInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :   virtual ChannelInterface&amp; on_error(ErrorHandler handler) = 0;</span>
 <span id="L219"><span class="lineNum">     219</span>                 :             : </span>
-<span id="L220"><span class="lineNum">     220</span>                 :             :   /** @brief Register a callback for batched framed message reception */</span>
-<span id="L221"><span class="lineNum">     221</span>                 :             :   virtual ChannelInterface&amp; on_message_batch(BatchMessageHandler handler) = 0;</span>
-<span id="L222"><span class="lineNum">     222</span>                 :             : </span>
-<span id="L223"><span class="lineNum">     223</span>                 :             :   // Management</span>
-<span id="L224"><span class="lineNum">     224</span>                 :             :   virtual ChannelInterface&amp; auto_start(bool manage = true) = 0;</span>
-<span id="L225"><span class="lineNum">     225</span>                 :             : };</span>
-<span id="L226"><span class="lineNum">     226</span>                 :             : </span>
-<span id="L227"><span class="lineNum">     227</span>                 :             : }  // namespace wrapper</span>
-<span id="L228"><span class="lineNum">     228</span>                 :             : }  // namespace unilink</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :   /**</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :    * @brief Register a callback to be notified when send queue congestion changes.</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :    * @param handler Callback receiving the current number of queued bytes.</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :    *</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :    * Default implementation is a no-op. Concrete implementations that support</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :    * backpressure reporting must override this method; otherwise the handler</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :    * is silently discarded.</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :    */</span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaUNC">           0 :   virtual ChannelInterface&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) {</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :     (void)handler;</span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaUNC">           0 :     return *this;</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :   }</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             : </span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :   /**</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :    * @brief Set a message framer for this channel.</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :    * @param framer The framer instance to use.</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :    */</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :   virtual ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             : </span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :   /**</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :    * @brief Set a handler for complete messages extracted by the framer.</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :    * @param handler The callback for framed messages.</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :    */</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :   virtual ChannelInterface&amp; on_message(MessageHandler handler) = 0;</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             : </span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :   /** @brief Register a callback for batched framed message reception */</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :   virtual ChannelInterface&amp; on_message_batch(BatchMessageHandler handler) = 0;</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             : </span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :   // Management</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :   virtual ChannelInterface&amp; auto_start(bool manage = true) = 0;</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             : };</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             : </span>
+<span id="L252"><span class="lineNum">     252</span>                 :             : }  // namespace wrapper</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>

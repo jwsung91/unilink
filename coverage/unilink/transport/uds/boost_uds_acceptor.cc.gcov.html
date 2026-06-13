@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-13 11:07:52</td>
+            <td class="headerValue">2026-06-13 12:40:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -100,23 +100,23 @@
 <span id="L22"><span class="lineNum">      22</span>                 :             : namespace net = boost::asio;</span>
 <span id="L23"><span class="lineNum">      23</span>                 :             : using uds = net::local::stream_protocol;</span>
 <span id="L24"><span class="lineNum">      24</span>                 :             : </span>
-<span id="L25"><span class="lineNum">      25</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          25 : BoostUdsAcceptor::BoostUdsAcceptor(boost::asio::io_context&amp; ioc) : acceptor_(ioc) {}</span></span>
+<span id="L25"><span class="lineNum">      25</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          26 : BoostUdsAcceptor::BoostUdsAcceptor(boost::asio::io_context&amp; ioc) : acceptor_(ioc) {}</span></span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
-<span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 : void BoostUdsAcceptor::open(const uds&amp; protocol, boost::system::error_code&amp; ec) { acceptor_.open(protocol, ec); }</span></span>
+<span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 : void BoostUdsAcceptor::open(const uds&amp; protocol, boost::system::error_code&amp; ec) { acceptor_.open(protocol, ec); }</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             : </span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          15 : void BoostUdsAcceptor::bind(const uds::endpoint&amp; endpoint, boost::system::error_code&amp; ec) {</span></span>
-<span id="L30"><span class="lineNum">      30</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :   acceptor_.bind(endpoint, ec);</span></span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          15 : }</span></span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          16 : void BoostUdsAcceptor::bind(const uds::endpoint&amp; endpoint, boost::system::error_code&amp; ec) {</span></span>
+<span id="L30"><span class="lineNum">      30</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 :   acceptor_.bind(endpoint, ec);</span></span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          16 : }</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :             : </span>
-<span id="L33"><span class="lineNum">      33</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 : void BoostUdsAcceptor::listen(int backlog, boost::system::error_code&amp; ec) { acceptor_.listen(backlog, ec); }</span></span>
+<span id="L33"><span class="lineNum">      33</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 : void BoostUdsAcceptor::listen(int backlog, boost::system::error_code&amp; ec) { acceptor_.listen(backlog, ec); }</span></span>
 <span id="L34"><span class="lineNum">      34</span>                 :             : </span>
 <span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaUNC tlaBgUNC">           0 : bool BoostUdsAcceptor::is_open() const { return acceptor_.is_open(); }</span></span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : </span>
-<span id="L37"><span class="lineNum">      37</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          16 : void BoostUdsAcceptor::close(boost::system::error_code&amp; ec) { acceptor_.close(ec); }</span></span>
+<span id="L37"><span class="lineNum">      37</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          17 : void BoostUdsAcceptor::close(boost::system::error_code&amp; ec) { acceptor_.close(ec); }</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : </span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          28 : void BoostUdsAcceptor::async_accept(std::function&lt;void(const boost::system::error_code&amp;, uds::socket)&gt; handler) {</span></span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">          28 :   acceptor_.async_accept(std::move(handler));</span></span>
-<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC">          28 : }</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          31 : void BoostUdsAcceptor::async_accept(std::function&lt;void(const boost::system::error_code&amp;, uds::socket)&gt; handler) {</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">          31 :   acceptor_.async_accept(std::move(handler));</span></span>
+<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC">          31 : }</span></span>
 <span id="L42"><span class="lineNum">      42</span>                 :             : </span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : }  // namespace transport</span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : }  // namespace unilink</span>
