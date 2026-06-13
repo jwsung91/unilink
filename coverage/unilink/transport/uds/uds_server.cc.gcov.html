@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-13 09:06:28</td>
+            <td class="headerValue">2026-06-13 11:07:52</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
@@ -153,13 +153,13 @@
 <span id="L75"><span class="lineNum">      75</span>   [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          22 :         cfg_(cfg) {</span></span>
 <span id="L76"><span class="lineNum">      76</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :     acceptor_ = std::make_unique&lt;BoostUdsAcceptor&gt;(*ioc_);</span></span>
 <span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">          22 :   }</span></span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          21 :   ~Impl() {</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          21 :     stopping_ = true;</span></span>
-<span id="L80"><span class="lineNum">      80</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          21 :     if (work_guard_) {</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          22 :   ~Impl() {</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          22 :     stopping_ = true;</span></span>
+<span id="L80"><span class="lineNum">      80</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          22 :     if (work_guard_) {</span></span>
 <span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaUNC tlaBgUNC">           0 :       work_guard_.reset();</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :     }</span>
-<span id="L83"><span class="lineNum">      83</span>   [<span class="tlaGBC" title="Branch 0 was taken 21 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 9 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          21 :     if (ioc_ &amp;&amp; owns_ioc_) {</span></span>
-<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          12 :       if (ioc_thread_.joinable()) {</span></span>
+<span id="L83"><span class="lineNum">      83</span>   [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 9 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          22 :     if (ioc_ &amp;&amp; owns_ioc_) {</span></span>
+<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          13 :       if (ioc_thread_.joinable()) {</span></span>
 <span id="L85"><span class="lineNum">      85</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :         if (std::this_thread::get_id() == ioc_thread_.get_id()) {</span></span>
 <span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaUNC">           0 :           ioc_thread_.detach();</span></span>
 <span id="L87"><span class="lineNum">      87</span>                 :             :         } else {</span>
@@ -169,8 +169,8 @@
 <span id="L91"><span class="lineNum">      91</span>                 :             :       }</span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :     }</span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :     // UDS Cleanup: socket file should be removed.</span>
-<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC tlaBgGNC">          21 :     std::remove(cfg_.socket_path.c_str());</span></span>
-<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">          21 :   }</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC tlaBgGNC">          22 :     std::remove(cfg_.socket_path.c_str());</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">          22 :   }</span></span>
 <span id="L96"><span class="lineNum">      96</span>                 :             :   void do_accept(std::shared_ptr&lt;UdsServer&gt; self);</span>
 <span id="L97"><span class="lineNum">      97</span>                 :             :   void notify_state();</span>
 <span id="L98"><span class="lineNum">      98</span>                 :             : };</span>
@@ -194,7 +194,7 @@
 <span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">           9 :   impl_-&gt;acceptor_ = std::move(acceptor);</span></span>
 <span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">           9 : }</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :             : </span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">          42 : UdsServer::~UdsServer() { stop(); }</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">          44 : UdsServer::~UdsServer() { stop(); }</span></span>
 <span id="L118"><span class="lineNum">     118</span>                 :             : </span>
 <span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UdsServer::UdsServer(UdsServer&amp;&amp;) noexcept = default;</span></span>
 <span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaUNC">           0 : UdsServer&amp; UdsServer::operator=(UdsServer&amp;&amp;) noexcept = default;</span></span>
@@ -283,9 +283,9 @@
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L192"><span class="lineNum">     192</span>                 :             : }</span>
 <span id="L193"><span class="lineNum">     193</span>                 :             : </span>
-<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">          43 : void UdsServer::stop() {</span></span>
-<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          43 :   bool already_stopping = impl_-&gt;stopping_.exchange(true);</span></span>
-<span id="L196"><span class="lineNum">     196</span>         [<span class="tlaGBC" title="Branch 0 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          43 :   if (already_stopping) return;</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">          44 : void UdsServer::stop() {</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          44 :   bool already_stopping = impl_-&gt;stopping_.exchange(true);</span></span>
+<span id="L196"><span class="lineNum">     196</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          44 :   if (already_stopping) return;</span></span>
 <span id="L197"><span class="lineNum">     197</span>                 :             : </span>
 <span id="L198"><span class="lineNum">     198</span>                 :             :   // 1. Close acceptor first to prevent new connections</span>
 <span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">          22 :   boost::system::error_code ec;</span></span>
@@ -554,8 +554,8 @@
 <span id="L453"><span class="lineNum">     453</span>                 :             : </span>
 <span id="L454"><span class="lineNum">     454</span>                 :<span class="tlaGNC">          32 : void UdsServer::Impl::do_accept(std::shared_ptr&lt;UdsServer&gt; self) {</span></span>
 <span id="L455"><span class="lineNum">     455</span>   [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          32 :   acceptor_-&gt;async_accept([self](const boost::system::error_code&amp; ec, uds::socket socket) {</span></span>
-<span id="L456"><span class="lineNum">     456</span>   [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 15 times"> + </span> :<span class="tlaGNC">          27 :     if (!self || self-&gt;impl_-&gt;stopping_) return;</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 15 times"> + </span>]
+<span id="L456"><span class="lineNum">     456</span>   [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 15 times"> + </span> :<span class="tlaGNC">          28 :     if (!self || self-&gt;impl_-&gt;stopping_) return;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 15 times"> + </span>]
 <span id="L457"><span class="lineNum">     457</span>                 :             : </span>
 <span id="L458"><span class="lineNum">     458</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :     if (!ec) {</span></span>
 <span id="L459"><span class="lineNum">     459</span>                 :             :       ClientId client_id;</span>
