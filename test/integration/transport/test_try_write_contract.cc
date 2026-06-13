@@ -179,8 +179,7 @@ void expect_reliable_try_write_rejects_without_pending(Transport& transport, siz
 
   EXPECT_FALSE(transport.async_try_write_copy(memory::ConstByteSpan(copy_payload.data(), copy_payload.size())));
   EXPECT_FALSE(transport.async_try_write_move(std::vector<uint8_t>(payload_size, 0xA2)));
-  EXPECT_FALSE(
-      transport.async_try_write_shared(std::make_shared<const std::vector<uint8_t>>(payload_size, 0xA3)));
+  EXPECT_FALSE(transport.async_try_write_shared(std::make_shared<const std::vector<uint8_t>>(payload_size, 0xA3)));
 
   auto after = transport.stats();
   EXPECT_EQ(after.pending_bytes, before.pending_bytes);
@@ -202,8 +201,8 @@ void expect_best_effort_try_write_counts_drop(Transport& transport, size_t paylo
 }
 
 template <typename Transport>
-void expect_try_write_true_return_remains_accepted(Transport& transport, net::io_context& ioc,
-                                                   size_t normal_size = 900, size_t try_size = 200) {
+void expect_try_write_true_return_remains_accepted(Transport& transport, net::io_context& ioc, size_t normal_size = 900,
+                                                   size_t try_size = 200) {
   ASSERT_TRUE(transport.async_write_move(std::vector<uint8_t>(normal_size, 0xC1)));
   ASSERT_TRUE(transport.async_try_write_move(std::vector<uint8_t>(try_size, 0xC2)));
 
@@ -306,8 +305,7 @@ config::SerialConfig serial_config(BackpressureStrategy strategy) {
   return cfg;
 }
 
-std::shared_ptr<Serial> started_serial(net::io_context& ioc, StallingSerialPort** port,
-                                       BackpressureStrategy strategy) {
+std::shared_ptr<Serial> started_serial(net::io_context& ioc, StallingSerialPort** port, BackpressureStrategy strategy) {
   auto fake = std::make_unique<StallingSerialPort>(ioc);
   *port = fake.get();
   auto serial = Serial::create(serial_config(strategy), std::move(fake), ioc);
