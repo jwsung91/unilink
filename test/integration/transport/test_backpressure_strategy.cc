@@ -426,6 +426,43 @@ TEST(BackpressureStrategyTest, BestEffort_TryWriteRejectsWhenBackpressureActiveA
   drain_and_stop(sock, session, ioc);
 }
 
+TEST(BackpressureStrategyTest, TryWritePressureRaceTrueReturnRemainsAccepted) {
+  constexpr size_t kBpHigh = 1024;
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+
+  auto socket = std::make_unique<StallingTcpSocket>(ioc);
+  auto* sock = socket.get();
+  auto session =
+      std::make_shared<transport::TcpServerSession>(ioc, std::move(socket), kBpHigh, 0, BackpressureStrategy::Reliable);
+
+  session->on_backpressure([](size_t) {});
+  session->start();
+  ioc.poll();
+
+  ASSERT_TRUE(session->async_write_move(std::vector<uint8_t>(900, 0xAA)));
+  ASSERT_TRUE(session->async_try_write_move(std::vector<uint8_t>(200, 0xAB)));
+
+  auto reserved = session->stats();
+  EXPECT_EQ(reserved.pending_bytes, 0u);
+  EXPECT_EQ(reserved.failed_sends, 0u);
+  EXPECT_EQ(reserved.messages_accepted, 2u);
+
+  ioc.poll();
+
+  auto accepted = session->stats();
+  EXPECT_TRUE(session->is_backpressure_active());
+  EXPECT_EQ(accepted.pending_bytes, 0u);
+  EXPECT_EQ(accepted.failed_sends, 0u);
+  EXPECT_EQ(accepted.dropped_messages, 0u);
+  EXPECT_EQ(accepted.messages_accepted, 2u);
+  EXPECT_EQ(accepted.bytes_accepted, 1100u);
+  EXPECT_EQ(accepted.queued_bytes, 1100u);
+
+  work.reset();
+  drain_and_stop(sock, session, ioc);
+}
+
 // All bytes written to pending_ during backpressure are eventually delivered.
 TEST(BackpressureStrategyTest, Reliable_PendingQueue_DeliveredAfterBackpressureClears) {
   constexpr size_t kBpHigh = 1024;

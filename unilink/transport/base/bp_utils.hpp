@@ -36,6 +36,32 @@ struct DropAccounting {
   bool any() const { return messages > 0 || bytes > 0; }
 };
 
+inline bool try_reserve_write_bytes(std::atomic<size_t>& queue_bytes, const std::atomic<size_t>& pending_bytes,
+                                    const std::atomic<bool>& backpressure_active, size_t bytes, size_t bp_high,
+                                    size_t bp_limit) {
+  if (bytes == 0 || bytes > bp_limit || backpressure_active.load(std::memory_order_relaxed)) return false;
+
+  size_t current = queue_bytes.load(std::memory_order_relaxed);
+  for (;;) {
+    const size_t pending = pending_bytes.load(std::memory_order_relaxed);
+    if (current > bp_high || bytes > bp_high - current) return false;
+    if (current > bp_limit || pending > bp_limit - current || bytes > bp_limit - current - pending) return false;
+
+    if (queue_bytes.compare_exchange_weak(current, current + bytes, std::memory_order_acq_rel,
+                                          std::memory_order_relaxed)) {
+      return true;
+    }
+  }
+}
+
+inline void release_reserved_write_bytes(std::atomic<size_t>& queue_bytes, size_t bytes) {
+  size_t current = queue_bytes.load(std::memory_order_relaxed);
+  for (;;) {
+    const size_t next = current > bytes ? current - bytes : 0;
+    if (queue_bytes.compare_exchange_weak(current, next, std::memory_order_acq_rel, std::memory_order_relaxed)) return;
+  }
+}
+
 // Returns the byte size of a buffer held in a transport BufferVariant alternative.
 // shared_ptr<const vector<uint8_t>> goes through ->size(); everything else via .size().
 template <typename T>

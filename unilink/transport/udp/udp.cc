@@ -893,26 +893,22 @@ bool UdpChannel::async_try_write_move(std::vector<uint8_t>&& data) {
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(impl->queue_bytes_, impl->pending_bytes_, impl->backpressure_active_, size,
+                                           impl->bp_high_, impl->bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  impl->stats_.record_accepted(size);
 
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
     auto impl = self->get_impl();
     if (impl->stop_requested_.load() || impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) ||
         impl->state_.is_state(LinkState::Error) || !impl->remote_endpoint_) {
+      queue_util::release_reserved_write_bytes(impl->queue_bytes_, size);
       impl->stats_.record_failed_send();
       return;
     }
-    if (impl->backpressure_active_.load() || impl->queue_bytes_ + size > impl->bp_high_ ||
-        impl->queue_bytes_ + impl->pending_bytes_ + size > impl->bp_limit_) {
-      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        impl->stats_.record_dropped(1, size);
-      } else {
-        impl->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    impl->stats_.record_accepted(size);
-    impl->queue_bytes_ += size;
     impl->tx_.push_back({std::move(buf), std::nullopt});
     impl->observe_queue();
     impl->report_backpressure(self, impl->queue_bytes_);
@@ -945,26 +941,22 @@ bool UdpChannel::async_try_write_shared(std::shared_ptr<const std::vector<uint8_
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(impl->queue_bytes_, impl->pending_bytes_, impl->backpressure_active_, size,
+                                           impl->bp_high_, impl->bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  impl->stats_.record_accepted(size);
 
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
     auto impl = self->get_impl();
     if (impl->stop_requested_.load() || impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) ||
         impl->state_.is_state(LinkState::Error) || !impl->remote_endpoint_) {
+      queue_util::release_reserved_write_bytes(impl->queue_bytes_, size);
       impl->stats_.record_failed_send();
       return;
     }
-    if (impl->backpressure_active_.load() || impl->queue_bytes_ + size > impl->bp_high_ ||
-        impl->queue_bytes_ + impl->pending_bytes_ + size > impl->bp_limit_) {
-      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        impl->stats_.record_dropped(1, size);
-      } else {
-        impl->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    impl->stats_.record_accepted(size);
-    impl->queue_bytes_ += size;
     impl->tx_.push_back({std::move(buf), std::nullopt});
     impl->observe_queue();
     impl->report_backpressure(self, impl->queue_bytes_);
@@ -1056,27 +1048,23 @@ bool UdpChannel::async_try_write_to(memory::ConstByteSpan data, const boost::asi
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(impl->queue_bytes_, impl->pending_bytes_, impl->backpressure_active_, size,
+                                           impl->bp_high_, impl->bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
 
   std::vector<uint8_t> copy(data.begin(), data.end());
+  impl->stats_.record_accepted(size);
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(copy), size, destination]() mutable {
     auto impl = self->get_impl();
     if (impl->stop_requested_.load() || impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) ||
         impl->state_.is_state(LinkState::Error)) {
+      queue_util::release_reserved_write_bytes(impl->queue_bytes_, size);
       impl->stats_.record_failed_send();
       return;
     }
-    if (impl->backpressure_active_.load() || impl->queue_bytes_ + size > impl->bp_high_ ||
-        impl->queue_bytes_ + impl->pending_bytes_ + size > impl->bp_limit_) {
-      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        impl->stats_.record_dropped(1, size);
-      } else {
-        impl->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    impl->stats_.record_accepted(size);
-    impl->queue_bytes_ += size;
     impl->tx_.push_back({std::move(buf), destination});
     impl->observe_queue();
     impl->report_backpressure(self, impl->queue_bytes_);

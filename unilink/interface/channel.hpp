@@ -53,11 +53,9 @@ class UNILINK_API Channel {
 
   // Explicit non-blocking drop-if-full send APIs. These must not enqueue into
   // Reliable pending queues when backpressure is already active.
-  virtual bool async_try_write_copy(memory::ConstByteSpan data) { return async_write_copy(data); }
-  virtual bool async_try_write_move(std::vector<uint8_t>&& data) { return async_write_move(std::move(data)); }
-  virtual bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-    return async_write_shared(std::move(data));
-  }
+  virtual bool async_try_write_copy(memory::ConstByteSpan data) = 0;
+  virtual bool async_try_write_move(std::vector<uint8_t>&& data) = 0;
+  virtual bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) = 0;
 
   // Callbacks
   virtual void on_bytes(OnBytes cb) = 0;

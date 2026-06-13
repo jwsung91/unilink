@@ -200,24 +200,20 @@ bool UdsServerSession::async_try_write_move(std::vector<uint8_t>&& data) {
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(queue_bytes_, pending_bytes_, backpressure_active_, added, bp_high_,
+                                           bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  stats_.record_accepted(added);
 
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data), added]() mutable {
     if (!alive_ || closing_) {
+      queue_util::release_reserved_write_bytes(queue_bytes_, added);
       stats_.record_failed_send();
       return;
     }
-    if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
-        queue_bytes_ + pending_bytes_ + added > bp_limit_) {
-      if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        stats_.record_dropped(1, added);
-      } else {
-        stats_.record_failed_send();
-      }
-      return;
-    }
 
-    stats_.record_accepted(added);
-    queue_bytes_ += added;
     tx_.emplace_back(std::move(data));
     observe_queue();
     report_backpressure(queue_bytes_);
@@ -248,24 +244,20 @@ bool UdsServerSession::async_try_write_shared(std::shared_ptr<const std::vector<
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(queue_bytes_, pending_bytes_, backpressure_active_, added, bp_high_,
+                                           bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  stats_.record_accepted(added);
 
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data), added]() mutable {
     if (!alive_ || closing_) {
+      queue_util::release_reserved_write_bytes(queue_bytes_, added);
       stats_.record_failed_send();
       return;
     }
-    if (backpressure_active_.load() || queue_bytes_ + added > bp_high_ ||
-        queue_bytes_ + pending_bytes_ + added > bp_limit_) {
-      if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        stats_.record_dropped(1, added);
-      } else {
-        stats_.record_failed_send();
-      }
-      return;
-    }
 
-    stats_.record_accepted(added);
-    queue_bytes_ += added;
     tx_.emplace_back(std::move(data));
     observe_queue();
     report_backpressure(queue_bytes_);

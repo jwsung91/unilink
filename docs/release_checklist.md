@@ -46,6 +46,7 @@ CI, CPack, and consumer smoke workflows live here.
 - [ ] Latest relevant benchmark result is preserved in `unilink-benchmarks`.
 - [ ] Latest benchmark artifact or `unilink-benchmarks` result is linked from the release notes.
 - [ ] `.github/workflows/benchmark.yml` was run manually or by the latest nightly schedule.
+- [ ] Contract-changing PRs link CI, Consumer Smoke, Benchmark, and TSAN run results in the PR or release notes.
 - [ ] Installed consumer runtime smoke passed for the release candidate package.
 - [ ] Optional TSAN workflow was reviewed or run for concurrency-sensitive changes.
 - [ ] Benchmark result links were checked.
