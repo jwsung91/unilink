@@ -31,6 +31,12 @@ must not later be rejected only because queue pressure changed before the
 transport strand processed the enqueue. A concurrent `stop()` or close can still
 cancel already accepted asynchronous work.
 
+`try_send*` rejects payloads that would exceed the current non-blocking queue
+threshold. A payload may be rejected even if it is below `MAX_BUFFER_SIZE` when
+it is larger than the current backpressure high-water budget. Use `send()` or
+`send_blocking()` when Reliable enqueue semantics are required for large
+payloads.
+
 `send_blocking(...)` waits until queue pressure is relieved, then enqueues using
 the normal strategy-aware write path. It returns `false` if the channel stops
 while waiting or cannot accept the write. It can block indefinitely while the

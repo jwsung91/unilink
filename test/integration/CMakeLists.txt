@@ -83,6 +83,7 @@ foreach(
   test_uds_wrapper_lifecycle.cc
   test_send_contract.cc
   test_server_broadcast_contract.cc
+  test_server_broadcast_slow_consumer_contract.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
@@ -124,6 +125,7 @@ foreach(
   transport_uds_error_test.cc
   test_tcp_client_lifecycle.cc
   test_backpressure_strategy.cc
+  test_try_write_contract.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 
