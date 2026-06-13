@@ -90,11 +90,17 @@ class UNILINK_API ChannelInterface {
   //     Always non-blocking and always rejects a full/backpressured queue,
   //     regardless of strategy. Reliable channels do not enqueue into pending_
   //     for try_send().
+  //     Rejects payloads that would exceed the current non-blocking queue
+  //     threshold; payloads below MAX_BUFFER_SIZE can still be rejected when
+  //     they exceed the current backpressure high-water budget.
   //     Use when you need BestEffort behaviour on a Reliable channel for a specific
   //     call (e.g. fire-and-forget heartbeat).
   //
   //   send_blocking() / send_line_blocking()
   //     Always blocks until queue pressure is relieved, regardless of strategy.
+  //     This call may block indefinitely while the channel remains active and
+  //     backpressure does not clear. stop() from another thread is expected to
+  //     unblock waiting senders.
 
   /**
    * @brief Enqueue data for transmission, honouring the backpressure strategy.
@@ -118,6 +124,9 @@ class UNILINK_API ChannelInterface {
    *
    * Ignores the configured strategy — always blocks. Prefer send() unless you need
    * to override BestEffort behaviour for a specific call.
+   * This call may block indefinitely while the channel remains active and
+   * backpressure does not clear. stop() from another thread is expected to unblock
+   * waiting senders.
    *
    * @return true Data was accepted. @return false Channel stopped while waiting.
    */
@@ -125,6 +134,11 @@ class UNILINK_API ChannelInterface {
 
   /**
    * @brief Blocking variant of send_line(). Always blocks regardless of strategy.
+   *
+   * This call may block indefinitely while the channel remains active and
+   * backpressure does not clear. stop() from another thread is expected to unblock
+   * waiting senders.
+   *
    * @return true Data was accepted. @return false Channel stopped while waiting.
    */
   virtual bool send_line_blocking(std::string_view line) = 0;
@@ -133,6 +147,10 @@ class UNILINK_API ChannelInterface {
    * @brief Non-blocking send that always drops on a full queue, ignoring strategy.
    *
    * Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.
+   * Rejects payloads that would exceed the current non-blocking queue threshold.
+   * A payload may be rejected even if it is below MAX_BUFFER_SIZE when it is larger
+   * than the current backpressure high-water budget. Use send() or send_blocking()
+   * when Reliable enqueue semantics are required for large payloads.
    *
    * @return true Data was accepted. @return false Dropped (not connected or queue full).
    */
@@ -140,6 +158,9 @@ class UNILINK_API ChannelInterface {
 
   /**
    * @brief Non-blocking send_line that always drops on a full queue, ignoring strategy.
+   *
+   * Uses the same non-blocking queue threshold policy as try_send().
+   *
    * @return true Data was accepted. @return false Dropped.
    */
   virtual bool try_send_line(std::string_view line) = 0;
@@ -159,6 +180,8 @@ class UNILINK_API ChannelInterface {
    *
    * Always returns without waiting for backpressure. The moved-from vector is consumed
    * regardless of the return value.
+   * Rejects payloads that would exceed the current non-blocking queue threshold,
+   * even below MAX_BUFFER_SIZE when they exceed the current high-water budget.
    *
    * @return true Data was accepted. @return false Data was dropped or rejected.
    */
@@ -177,6 +200,8 @@ class UNILINK_API ChannelInterface {
    * @brief Non-blocking shared-buffer send.
    *
    * The shared buffer must be non-null and non-empty.
+   * Rejects payloads that would exceed the current non-blocking queue threshold,
+   * even below MAX_BUFFER_SIZE when they exceed the current high-water budget.
    *
    * @return true Data was accepted. @return false Data was dropped or rejected.
    */

@@ -78,9 +78,15 @@ class UNILINK_API ServerInterface {
   //
   //   try_send_to() / try_broadcast()
   //     Always non-blocking and always drops on full queue, regardless of strategy.
+  //     Rejects payloads that would exceed the current non-blocking queue
+  //     threshold; payloads below MAX_BUFFER_SIZE can still be rejected when
+  //     they exceed the current backpressure high-water budget.
   //
   //   send_to_blocking()
   //     Always blocks until queue pressure is relieved, regardless of strategy.
+  //     This call may block indefinitely while the server remains active and
+  //     backpressure does not clear. stop() from another thread is expected to
+  //     unblock waiting senders.
 
   /**
    * @brief Send to a specific client, honouring the backpressure strategy.
@@ -104,6 +110,11 @@ class UNILINK_API ServerInterface {
 
   /**
    * @brief Block until queue pressure is relieved, then send to a client. Ignores strategy.
+   *
+   * This call may block indefinitely while the server remains active and
+   * backpressure does not clear. stop() from another thread is expected to unblock
+   * waiting senders.
+   *
    * @return true Data was accepted. @return false Server stopped while waiting.
    */
   virtual bool send_to_blocking(ClientId client_id, std::string_view data) = 0;
@@ -112,6 +123,11 @@ class UNILINK_API ServerInterface {
    * @brief Non-blocking send_to that always drops on a full queue, ignoring strategy.
    *
    * Use as an escape hatch when you need drop-on-full behaviour on a Reliable channel.
+   * Rejects payloads that would exceed the current non-blocking queue threshold.
+   * A payload may be rejected even if it is below MAX_BUFFER_SIZE when it is larger
+   * than the current backpressure high-water budget. Use send_to() or
+   * send_to_blocking() when Reliable enqueue semantics are required for large
+   * payloads.
    *
    * @return true Data was accepted. @return false Dropped or client not found.
    */
@@ -119,6 +135,9 @@ class UNILINK_API ServerInterface {
 
   /**
    * @brief Non-blocking broadcast that always drops on full queues, ignoring strategy.
+   *
+   * Uses the same non-blocking queue threshold policy as try_send_to().
+   *
    * @return true At least one client accepted the data.
    */
   virtual bool try_broadcast(std::string_view data) = 0;
