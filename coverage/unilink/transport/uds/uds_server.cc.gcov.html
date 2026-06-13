@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-13 12:40:16</td>
+            <td class="headerValue">2026-06-13 13:09:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">77.1&nbsp;%</td>
@@ -517,10 +517,10 @@
 <span id="L416"><span class="lineNum">     416</span>                 :<span class="tlaUNC">           0 :   return false;</span></span>
 <span id="L417"><span class="lineNum">     417</span>                 :<span class="tlaGNC tlaBgGNC">           2 : }</span></span>
 <span id="L418"><span class="lineNum">     418</span>                 :             : </span>
-<span id="L419"><span class="lineNum">     419</span>                 :<span class="tlaGNC">          14 : size_t UdsServer::client_count() const {</span></span>
-<span id="L420"><span class="lineNum">     420</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</span></span>
-<span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">          28 :   return impl_-&gt;sessions_.size();</span></span>
-<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">          14 : }</span></span>
+<span id="L419"><span class="lineNum">     419</span>                 :<span class="tlaGNC">          12 : size_t UdsServer::client_count() const {</span></span>
+<span id="L420"><span class="lineNum">     420</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</span></span>
+<span id="L421"><span class="lineNum">     421</span>                 :<span class="tlaGNC">          24 :   return impl_-&gt;sessions_.size();</span></span>
+<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">          12 : }</span></span>
 <span id="L423"><span class="lineNum">     423</span>                 :             : </span>
 <span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaGNC">           1 : std::vector&lt;ClientId&gt; UdsServer::connected_clients() const {</span></span>
 <span id="L425"><span class="lineNum">     425</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</span></span>
@@ -620,8 +620,8 @@
 <span id="L515"><span class="lineNum">     515</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :         std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;sessions_mutex_);</span></span>
 <span id="L516"><span class="lineNum">     516</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :         connect_handler = self-&gt;impl_-&gt;on_multi_connect_;</span></span>
 <span id="L517"><span class="lineNum">     517</span>                 :<span class="tlaGNC">          17 :       }</span></span>
-<span id="L518"><span class="lineNum">     518</span>   [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          39 :       if (connect_handler) connect_handler(client_id, &quot;UDS Client&quot;);</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L518"><span class="lineNum">     518</span>   [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          41 :       if (connect_handler) connect_handler(client_id, &quot;UDS Client&quot;);</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L519"><span class="lineNum">     519</span>                 :             : </span>
 <span id="L520"><span class="lineNum">     520</span>                 :             :       // Continue accepting</span>
 <span id="L521"><span class="lineNum">     521</span>                 :<span class="tlaGNC">          17 :       auto* impl = self-&gt;impl_.get();</span></span>
