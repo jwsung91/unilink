@@ -577,26 +577,22 @@ bool TcpClient::async_try_write_move(std::vector<uint8_t>&& data) {
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(impl_->queue_bytes_, impl_->pending_bytes_, impl_->backpressure_active_,
+                                           added, impl_->bp_high_, impl_->bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  impl_->stats_.record_accepted(added);
 
   net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->impl_.get();
     if (impl->stop_requested_.load() || impl->state_.is_state(LinkState::Closed) ||
         impl->state_.is_state(LinkState::Error)) {
+      queue_util::release_reserved_write_bytes(impl->queue_bytes_, added);
       impl->stats_.record_failed_send();
       return;
     }
-    if (impl->backpressure_active_.load() || impl->queue_bytes_ + added > impl->bp_high_ ||
-        impl->queue_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
-      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        impl->stats_.record_dropped(1, added);
-      } else {
-        impl->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    impl->stats_.record_accepted(added);
-    impl->queue_bytes_ += added;
     impl->tx_.emplace_back(std::move(buf));
     impl->observe_queue();
     impl->report_backpressure(self, impl->queue_bytes_);
@@ -632,26 +628,22 @@ bool TcpClient::async_try_write_shared(std::shared_ptr<const std::vector<uint8_t
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(impl_->queue_bytes_, impl_->pending_bytes_, impl_->backpressure_active_,
+                                           added, impl_->bp_high_, impl_->bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  impl_->stats_.record_accepted(added);
 
   net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->impl_.get();
     if (impl->stop_requested_.load() || impl->state_.is_state(LinkState::Closed) ||
         impl->state_.is_state(LinkState::Error)) {
+      queue_util::release_reserved_write_bytes(impl->queue_bytes_, added);
       impl->stats_.record_failed_send();
       return;
     }
-    if (impl->backpressure_active_.load() || impl->queue_bytes_ + added > impl->bp_high_ ||
-        impl->queue_bytes_ + impl->pending_bytes_ + added > impl->bp_limit_) {
-      if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        impl->stats_.record_dropped(1, added);
-      } else {
-        impl->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    impl->stats_.record_accepted(added);
-    impl->queue_bytes_ += added;
     impl->tx_.emplace_back(std::move(buf));
     impl->observe_queue();
     impl->report_backpressure(self, impl->queue_bytes_);

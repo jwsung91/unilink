@@ -300,24 +300,20 @@ bool TcpServerSession::async_try_write_move(std::vector<uint8_t>&& data) {
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(queue_bytes_, pending_bytes_, backpressure_active_, added, bp_high_,
+                                           bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  stats_.record_accepted(added);
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) {
+      queue_util::release_reserved_write_bytes(self->queue_bytes_, added);
       self->stats_.record_failed_send();
       return;
     }
-    if (self->backpressure_active_.load() || self->queue_bytes_ + added > self->bp_high_ ||
-        self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
-      if (self->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        self->stats_.record_dropped(1, added);
-      } else {
-        self->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    self->stats_.record_accepted(added);
-    self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
     self->observe_queue();
     self->report_backpressure(self->queue_bytes_);
@@ -348,24 +344,20 @@ bool TcpServerSession::async_try_write_shared(std::shared_ptr<const std::vector<
     reject_for_pressure();
     return false;
   }
+  if (!queue_util::try_reserve_write_bytes(queue_bytes_, pending_bytes_, backpressure_active_, added, bp_high_,
+                                           bp_limit_)) {
+    reject_for_pressure();
+    return false;
+  }
+  stats_.record_accepted(added);
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) {
+      queue_util::release_reserved_write_bytes(self->queue_bytes_, added);
       self->stats_.record_failed_send();
       return;
     }
-    if (self->backpressure_active_.load() || self->queue_bytes_ + added > self->bp_high_ ||
-        self->queue_bytes_ + self->pending_bytes_ + added > self->bp_limit_) {
-      if (self->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
-        self->stats_.record_dropped(1, added);
-      } else {
-        self->stats_.record_failed_send();
-      }
-      return;
-    }
 
-    self->stats_.record_accepted(added);
-    self->queue_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
     self->observe_queue();
     self->report_backpressure(self->queue_bytes_);

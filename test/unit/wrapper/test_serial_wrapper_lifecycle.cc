@@ -125,6 +125,14 @@ class ControlledChannel : public interface::Channel {
     return async_write_copy(memory::ConstByteSpan(data->data(), data->size()));
   }
 
+  bool async_try_write_copy(memory::ConstByteSpan data) override { return async_write_copy(data); }
+
+  bool async_try_write_move(std::vector<uint8_t>&& data) override { return async_write_move(std::move(data)); }
+
+  bool async_try_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override {
+    return async_write_shared(std::move(data));
+  }
+
   void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
 
   void on_state(OnState cb) override { on_state_ = std::move(cb); }

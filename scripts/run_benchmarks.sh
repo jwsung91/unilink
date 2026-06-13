@@ -161,6 +161,7 @@ int main(int argc, char** argv) {
   }
 
   std::atomic<uint64_t> server_received{0};
+  std::atomic<uint64_t> server_received_bytes{0};
   std::atomic<uint64_t> client_received{0};
   std::shared_ptr<unilink::TcpServer> server;
 
@@ -168,6 +169,7 @@ int main(int argc, char** argv) {
                .auto_start(false)
                .on_data([&](const unilink::MessageContext& ctx) {
                  server_received.fetch_add(1, std::memory_order_relaxed);
+                 server_received_bytes.fetch_add(ctx.data().size(), std::memory_order_relaxed);
                  if (server) server->send_to(ctx.client_id(), "ack");
                })
                .on_error([](const unilink::ErrorContext&) {})
@@ -207,12 +209,13 @@ int main(int argc, char** argv) {
   for (size_t payload_size : {size_t{64}, size_t{1024}, size_t{16 * 1024}, size_t{64 * 1024}, size_t{1024 * 1024}}) {
     const int iterations = payload_size >= 1024 * 1024 ? 4 : (payload_size >= 64 * 1024 ? 16 : 100);
     const std::string payload(payload_size, 'x');
-    const auto target = server_received.load(std::memory_order_relaxed) + static_cast<uint64_t>(iterations);
+    const auto target = server_received_bytes.load(std::memory_order_relaxed) +
+                        static_cast<uint64_t>(payload_size * iterations);
     const auto start = Clock::now();
     for (int i = 0; i < iterations; ++i) {
       if (!client->send(payload)) return 8;
     }
-    if (!wait_until([&]() { return server_received.load(std::memory_order_relaxed) >= target; },
+    if (!wait_until([&]() { return server_received_bytes.load(std::memory_order_relaxed) >= target; },
                     std::chrono::seconds(10))) {
       return 9;
     }

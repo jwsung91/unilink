@@ -25,14 +25,48 @@ After `stop()` returns, no further callbacks should fire.
 `try_send(...)`, `try_send_move(...)`, and `try_send_shared(...)` are always
 non-blocking. They return `false` when the channel is stopped, disconnected,
 backpressured, or full. Reliable `try_send*` calls do not enqueue into pending
-queues.
+queues. A `true` return means the payload was accepted or reserved for send
+queue insertion according to the pressure state observed by the transport. It
+must not later be rejected only because queue pressure changed before the
+transport strand processed the enqueue. A concurrent `stop()` or close can still
+cancel already accepted asynchronous work.
 
 `send_blocking(...)` waits until queue pressure is relieved, then enqueues using
 the normal strategy-aware write path. It returns `false` if the channel stops
-while waiting or cannot accept the write.
+while waiting or cannot accept the write. It can block indefinitely while the
+channel remains active and pressure does not clear. Use `try_send(...)` for
+producer loops, or call `stop()` from another thread to unblock a blocking
+sender.
 
 Use `RuntimeStats` to inspect accepted bytes, sent bytes, failed sends, drops,
 queued bytes, pending bytes, and backpressure state.
+
+## RuntimeStats send accounting
+
+Send counters distinguish rejected Reliable sends from intentional BestEffort
+drops.
+
+- `send*` or `try_send*` rejected because the channel is stopped, disconnected,
+  closed, in error, or the payload is invalid: `failed_sends` increases.
+- Reliable `try_send*` rejected because the queue is backpressured or full:
+  `failed_sends` increases and `pending_bytes` must not increase.
+- BestEffort `try_send*` rejected because the queue is backpressured or full:
+  `dropped_messages` and `dropped_bytes` increase and `pending_bytes` must not
+  increase.
+- Reliable `send*` accepted while backpressure is active may enter the Reliable
+  pending queue. `pending_bytes` reflects those bytes until pressure clears and
+  the transport flushes them into the active send queue.
+- `messages_accepted` and `bytes_accepted` increase when a payload is accepted
+  or reserved for asynchronous queue insertion. A later lifecycle cancellation
+  after acceptance is reported as a failed send when the transport can observe
+  it.
+
+`broadcast(...)` and `try_broadcast(...)` are non-blocking fanout operations.
+They return success when at least one recipient accepts the payload. Recipients
+that are stopped, disconnected, full, or backpressured are reflected in the
+corresponding per-transport `RuntimeStats` counters: Reliable fanout rejects
+increase `failed_sends`, while BestEffort fanout drops increase
+`dropped_messages` and `dropped_bytes`.
 
 ## Async runtime errors
 
