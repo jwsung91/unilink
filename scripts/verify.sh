@@ -24,6 +24,7 @@ export JOBS
 # ---------------------------------------------------------------------------
 SKIP_FORMAT=0
 SKIP_DOCS=0
+ENABLE_TSAN=0
 
 for arg in "$@"; do
   case "$arg" in
@@ -37,6 +38,9 @@ for arg in "$@"; do
     --skip-docs)
       SKIP_DOCS=1
       ;;
+    --tsan)
+      ENABLE_TSAN=1
+      ;;
     --help|-h)
       echo "Usage: $0 [options]"
       echo ""
@@ -44,6 +48,7 @@ for arg in "$@"; do
       echo "  --tests-only, -t   Skip formatting and doc snippets; run build + tests only"
       echo "  --skip-format      Skip clang-format / cmake-format step"
       echo "  --skip-docs        Accepted for compatibility; docs validation moved to unilink-docs"
+      echo "  --tsan             Enable ThreadSanitizer (TSAN) for compilation and contract testing (matches CI)"
       echo "  --help, -h         Show this help message"
       exit 0
       ;;
@@ -124,9 +129,14 @@ fi
 # Step 2: Build library
 # ---------------------------------------------------------------------------
 section "Step 2: Building project (Debug)"
+EXTRA_CMAKE_ARGS=()
+if [[ "${ENABLE_TSAN}" -eq 1 ]]; then
+  EXTRA_CMAKE_ARGS+=("-DUNILINK_ENABLE_SANITIZERS=ON" "-DUNILINK_ENABLE_TSAN=ON" "-DUNILINK_ENABLE_ASAN=OFF" "-DUNILINK_ENABLE_UBSAN=OFF")
+fi
+
 if [[ -n "${UNILINK_VERIFY_PRESET:-}" ]]; then
   echo "Using preset: ${UNILINK_VERIFY_PRESET}"
-  cmake --preset "${UNILINK_VERIFY_PRESET}"
+  cmake --preset "${UNILINK_VERIFY_PRESET}" "${EXTRA_CMAKE_ARGS[@]}"
 else
   mkdir -p "${UNILINK_VERIFY_BUILD_DIR}"
   # Check if local vcpkg toolchain exists and use it as fallback
@@ -139,17 +149,24 @@ else
       -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
       -DUNILINK_BUILD_TESTS=ON \
       -DUNILINK_ENABLE_CONFIG=ON \
-      -DCMAKE_TOOLCHAIN_FILE="${VCPKG_TOOLCHAIN}"
+      -DCMAKE_TOOLCHAIN_FILE="${VCPKG_TOOLCHAIN}" \
+      "${EXTRA_CMAKE_ARGS[@]}"
   else
     cmake -S . -B "${UNILINK_VERIFY_BUILD_DIR}" \
       -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_CXX_STANDARD=20 \
       -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
       -DUNILINK_BUILD_TESTS=ON \
-      -DUNILINK_ENABLE_CONFIG=ON
+      -DUNILINK_ENABLE_CONFIG=ON \
+      "${EXTRA_CMAKE_ARGS[@]}"
   fi
 fi
-cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
+
+if [[ "${ENABLE_TSAN}" -eq 1 ]]; then
+  setarch $(uname -m) -R cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
+else
+  cmake --build "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}"
+fi
 
 # ---------------------------------------------------------------------------
 # Step 3: Documentation snippets
@@ -160,7 +177,14 @@ section "Step 3: Documentation snippets moved to unilink-docs"
 # Step 4: Full test suite
 # ---------------------------------------------------------------------------
 section "Step 4: Running full test suite"
-ctest --test-dir "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --output-on-failure
+if [[ "${ENABLE_TSAN}" -eq 1 ]]; then
+  export TSAN_OPTIONS="halt_on_error=1 second_deadlock_stack=1 history_size=7"
+  # Run the focused TSAN tests that are run in CI to avoid known races in other components.
+  FOCUSED_TESTS="StopContract|StopFromCallback|TcpClientLifecycle|TcpServerWrapperLifecycle|UdsClientWrapperLifecycle|UdsServerWrapperLifecycle|BackpressureStrategyTest|WrapperSendContractTest|ServerBroadcastContractTest"
+  setarch $(uname -m) -R ctest --test-dir "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --output-on-failure -R "${FOCUSED_TESTS}"
+else
+  ctest --test-dir "${UNILINK_VERIFY_BUILD_DIR}" -j"${JOBS}" --output-on-failure
+fi
 
 echo ""
 echo "===== [SUCCESS] All checks passed! ====="

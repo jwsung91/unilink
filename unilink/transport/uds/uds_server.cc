@@ -22,6 +22,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <cstdio>
+#include <future>
 #include <mutex>
 #include <stop_token>
 #include <string_view>
@@ -95,6 +96,97 @@ struct UdsServer::Impl {
   }
   void do_accept(std::shared_ptr<UdsServer> self);
   void notify_state();
+
+  void perform_cleanup() {
+    try {
+      boost::system::error_code ec;
+      if (acceptor_) {
+        acceptor_->close(ec);
+      }
+
+      std::vector<std::shared_ptr<UdsServerSession>> sessions_to_stop;
+      {
+        std::lock_guard<std::mutex> lock(sessions_mutex_);
+        for (auto& pair : sessions_) {
+          sessions_to_stop.push_back(pair.second);
+        }
+        sessions_.clear();
+      }
+
+      for (auto& session : sessions_to_stop) {
+        if (session) {
+          session->stop();
+        }
+      }
+
+      std::remove(cfg_.socket_path.c_str());
+
+      state_.set_state(base::LinkState::Idle);
+      notify_state();
+    } catch (...) {
+    }
+  }
+
+  void stop(std::shared_ptr<UdsServer> self) {
+    if (stopping_.exchange(true)) {
+      return;
+    }
+
+    {
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
+      on_bytes_ = nullptr;
+      on_state_ = nullptr;
+      on_bp_ = nullptr;
+      on_multi_connect_ = nullptr;
+      on_multi_data_ = nullptr;
+      on_multi_disconnect_ = nullptr;
+    }
+
+    if (ioc_->get_executor().running_in_this_thread()) {
+      perform_cleanup();
+      if (owns_ioc_) {
+        work_guard_.reset();
+        ioc_->stop();
+      }
+      return;
+    }
+
+    bool has_active_ioc = owns_ioc_ || !ioc_->stopped();
+
+    if (has_active_ioc && self) {
+      auto cleanup_promise = std::make_shared<std::promise<void>>();
+      auto cleanup_future = cleanup_promise->get_future();
+
+      std::weak_ptr<UdsServer> weak_self = self;
+      net::dispatch(*ioc_, [weak_self, cleanup_promise]() {
+        if (auto shared_self = weak_self.lock()) {
+          auto* cleanup_impl = shared_self->get_impl();
+          cleanup_impl->perform_cleanup();
+        }
+        cleanup_promise->set_value();
+      });
+
+      if (cleanup_future.wait_for(std::chrono::seconds(2)) == std::future_status::timeout) {
+        perform_cleanup();
+      }
+    } else {
+      perform_cleanup();
+    }
+
+    if (owns_ioc_) {
+      work_guard_.reset();
+      ioc_->stop();
+    }
+
+    if (owns_ioc_ && ioc_thread_.joinable()) {
+      if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+        ioc_thread_.join();
+      } else {
+        ioc_thread_.detach();
+      }
+      ioc_->restart();
+    }
+  }
 };
 
 std::shared_ptr<UdsServer> UdsServer::create(const config::UdsServerConfig& cfg) {
@@ -114,7 +206,11 @@ UdsServer::UdsServer(const config::UdsServerConfig& cfg, std::unique_ptr<interfa
   impl_->acceptor_ = std::move(acceptor);
 }
 
-UdsServer::~UdsServer() { stop(); }
+UdsServer::~UdsServer() {
+  if (impl_ && impl_->state_.state() != base::LinkState::Idle) {
+    impl_->stop(nullptr);
+  }
+}
 
 UdsServer::UdsServer(UdsServer&&) noexcept = default;
 UdsServer& UdsServer::operator=(UdsServer&&) noexcept = default;
@@ -191,61 +287,7 @@ void UdsServer::start() {
   net::post(impl_->ioc_->get_executor(), [self = shared_from_this()]() { self->impl_->do_accept(self); });
 }
 
-void UdsServer::stop() {
-  bool already_stopping = impl_->stopping_.exchange(true);
-  if (already_stopping) return;
-
-  // 1. Close acceptor first to prevent new connections
-  boost::system::error_code ec;
-  impl_->acceptor_->close(ec);
-
-  // 2. Clear callbacks to prevent new user-level events
-  {
-    std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
-    impl_->on_bytes_ = nullptr;
-    impl_->on_state_ = nullptr;
-    impl_->on_bp_ = nullptr;
-    impl_->on_multi_connect_ = nullptr;
-    impl_->on_multi_data_ = nullptr;
-    impl_->on_multi_disconnect_ = nullptr;
-  }
-
-  // 3. Stop all active sessions and clear the map
-  std::vector<std::shared_ptr<UdsServerSession>> sessions_to_stop;
-  {
-    std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
-    for (auto& pair : impl_->sessions_) {
-      sessions_to_stop.push_back(pair.second);
-    }
-    impl_->sessions_.clear();
-  }
-
-  for (auto& session : sessions_to_stop) {
-    session->stop();
-  }
-
-  // 4. Cleanup UDS socket file
-  std::remove(impl_->cfg_.socket_path.c_str());
-
-  // 5. Release work guard and stop IO context if owned
-  if (impl_->owns_ioc_) {
-    impl_->work_guard_.reset();
-    if (impl_->ioc_) {
-      impl_->ioc_->stop();
-    }
-  }
-
-  if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
-    if (std::this_thread::get_id() != impl_->ioc_thread_.get_id()) {
-      impl_->ioc_thread_.join();
-    } else {
-      impl_->ioc_thread_.detach();
-    }
-  }
-
-  impl_->state_.set_state(base::LinkState::Idle);
-  impl_->notify_state();
-}
+void UdsServer::stop() { impl_->stop(shared_from_this()); }
 
 bool UdsServer::is_connected() const { return impl_->state_.state() == base::LinkState::Listening; }
 bool UdsServer::is_backpressure_active() const { return false; }
