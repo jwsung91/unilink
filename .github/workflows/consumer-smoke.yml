@@ -46,7 +46,7 @@ jobs:
             library_mode: static
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install tools
         uses: ./.github/actions/apt-install

@@ -45,7 +45,7 @@ jobs:
           - { os: macos-15,         label: clang,         cc: clang,      cxx: clang++,    triplet: arm64-osx,   enable_config: "ON"  }
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install tools (Linux)
         if: runner.os == 'Linux'
@@ -112,7 +112,7 @@ jobs:
           - { os: macos-15,         compiler: clang, cc: /opt/homebrew/opt/llvm/bin/clang, cxx: /opt/homebrew/opt/llvm/bin/clang++, triplet: arm64-osx }
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Compute CMakeLists hash
         id: cmake-hash
@@ -226,7 +226,7 @@ jobs:
           - { os: windows-11-arm, cmake_arch: ARM64,  triplet: arm64-windows }
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up vcpkg (x64)
         if: matrix.cmake_arch == 'x64'
@@ -285,7 +285,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Cache ccache
         uses: actions/cache@v5
@@ -346,7 +346,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Cache ccache
         uses: actions/cache@v5
@@ -409,7 +409,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install dependencies
         uses: ./.github/actions/apt-install
@@ -461,7 +461,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install dependencies
         uses: ./.github/actions/apt-install
