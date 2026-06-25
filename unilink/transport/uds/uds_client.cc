@@ -129,6 +129,7 @@ struct UdsClient::Impl {
   void do_write(std::shared_ptr<UdsClient> self, uint64_t seq);
   void handle_close(std::shared_ptr<UdsClient> self, uint64_t seq, const boost::system::error_code& ec = {});
   void transition_to(LinkState next, const boost::system::error_code& ec = {});
+  void perform_stop_cleanup(uint64_t seq);
   void close_socket();
   void recalculate_backpressure_bounds();
   void maybe_flush_for_keep_latest(size_t added);
@@ -235,16 +236,25 @@ void UdsClient::stop() {
   if (already_stopping) return;
 
   impl_->stop_requested_ = true;
-
-  // Immediate cancellation of operations
-  impl_->retry_timer_.cancel();
-  impl_->connect_timer_.cancel();
-  impl_->close_socket();
+  impl_->connected_ = false;
+  const auto seq = impl_->current_seq_.fetch_add(1) + 1;
 
   // Release work guard and allow io_context to run out of work
   if (impl_->ioc_) {
-    if (impl_->owns_ioc_) {
-      impl_->work_guard_.reset();
+    if (auto self = weak_from_this().lock()) {
+      net::post(impl_->strand_, [self, seq]() { self->impl_->perform_stop_cleanup(seq); });
+    } else {
+      impl_->perform_stop_cleanup(seq);
+    }
+  } else {
+    impl_->perform_stop_cleanup(seq);
+  }
+
+  if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
+    if (std::this_thread::get_id() == impl_->ioc_thread_.get_id()) {
+      impl_->ioc_thread_.detach();
+    } else {
+      impl_->ioc_thread_.join();
     }
   }
 
@@ -487,6 +497,10 @@ void UdsClient::set_reconnect_policy(ReconnectPolicy policy) {
 std::optional<diagnostics::ErrorInfo> UdsClient::last_error_info() const { return impl_->last_error_info_; }
 
 void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) {
+  if (stop_requested_.load() || stopping_.load() || seq != current_seq_.load()) {
+    return;
+  }
+
   if (!cfg_.is_valid()) {
     self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONFIGURATION, "connect",
                               make_error_code(boost::system::errc::invalid_argument), "Invalid UDS socket path", false,
@@ -522,6 +536,10 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
                                                                  endpoint](const boost::system::error_code& ec) {
     self->impl_->connect_timer_.cancel();
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+    if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
+      self->impl_->close_socket();
+      return;
+    }
     if (ec) {
       self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect", ec,
                                 "Connect failed: " + ec.message(), diagnostics::is_retryable_uds_connect_error(ec),
@@ -547,7 +565,7 @@ void UdsClient::Impl::schedule_retry(std::shared_ptr<UdsClient> self, uint64_t s
                                    "connect", "Retry pending", boost::system::error_code(), true);
   auto decision = detail::decide_reconnect_uds(cfg_, dummy_err, reconnect_attempt_count_, reconnect_policy_);
 
-  if (!decision.should_retry || stop_requested_.load()) {
+  if (!decision.should_retry || stop_requested_.load() || stopping_.load()) {
     transition_to(LinkState::Idle);
     return;
   }
@@ -561,9 +579,14 @@ void UdsClient::Impl::schedule_retry(std::shared_ptr<UdsClient> self, uint64_t s
 }
 
 void UdsClient::Impl::start_read(std::shared_ptr<UdsClient> self, uint64_t seq) {
+  if (stop_requested_.load() || stopping_.load() || seq != current_seq_.load()) {
+    return;
+  }
+
   socket_->async_read_some(net::buffer(rx_),
                            net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec, size_t bytes) {
                              if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+                             if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) return;
                              if (ec) {
                                self->impl_->handle_close(self, seq, ec);
                                return;
@@ -581,6 +604,16 @@ void UdsClient::Impl::start_read(std::shared_ptr<UdsClient> self, uint64_t seq) 
 }
 
 void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
+  if (stop_requested_.load() || stopping_.load() || seq != current_seq_.load()) {
+    tx_.clear();
+    pending_.clear();
+    queue_bytes_ = 0;
+    pending_bytes_ = 0;
+    current_write_buffer_ = std::nullopt;
+    writing_ = false;
+    return;
+  }
+
   if (tx_.empty() || writing_) return;
   writing_ = true;
   current_write_buffer_ = std::move(tx_.front());
@@ -604,6 +637,11 @@ void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
       buffer,
       net::bind_executor(strand_, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t written) {
         if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+        if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
+          self->impl_->current_write_buffer_ = std::nullopt;
+          self->impl_->writing_ = false;
+          return;
+        }
         self->impl_->writing_ = false;
         self->impl_->current_write_buffer_ = std::nullopt;
         self->impl_->queue_bytes_ =
@@ -640,6 +678,30 @@ void UdsClient::Impl::transition_to(LinkState next, const boost::system::error_c
     cb = on_state_;
   }
   if (cb) cb(next);
+}
+
+void UdsClient::Impl::perform_stop_cleanup(uint64_t seq) {
+  if (seq != current_seq_.load()) {
+    return;
+  }
+
+  retry_timer_.cancel();
+  connect_timer_.cancel();
+  close_socket();
+  tx_.clear();
+  queue_bytes_ = 0;
+  pending_.clear();
+  pending_bytes_ = 0;
+  current_write_buffer_ = std::nullopt;
+  writing_ = false;
+  connected_.store(false);
+  backpressure_active_.store(false);
+
+  if (owns_ioc_ && work_guard_) {
+    work_guard_.reset();
+  }
+
+  state_.set_state(LinkState::Idle);
 }
 
 void UdsClient::Impl::close_socket() {
