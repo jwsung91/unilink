@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-15 21:53:17</td>
+            <td class="headerValue">2026-06-25 22:13:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">92.6&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">55.2&nbsp;%</td>
-            <td class="headerCovTableEntry">58</td>
-            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntryLo">55.0&nbsp;%</td>
+            <td class="headerCovTableEntry">60</td>
+            <td class="headerCovTableEntry">33</td>
           </tr>
                   <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -129,22 +129,22 @@
 <span id="L51"><span class="lineNum">      51</span>                 :             :   }</span>
 <span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">           2 : }</span></span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">        3109 : SafeDataBuffer::SafeDataBuffer(ConstByteSpan span) {</span></span>
-<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 3109 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        3109 :   validate_construction(span.data(), span.size());</span></span>
-<span id="L56"><span class="lineNum">      56</span>   [<span class="tlaGBC" title="Branch 0 was taken 3109 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3109 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        3109 :   if (span.data() &amp;&amp; span.size() &gt; 0) {</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3109 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L57"><span class="lineNum">      57</span>         [<span class="tlaGBC" title="Branch 0 was taken 3109 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        3109 :     data_.assign(span.begin(), span.end());</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">        3123 : SafeDataBuffer::SafeDataBuffer(ConstByteSpan span) {</span></span>
+<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 3123 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        3123 :   validate_construction(span.data(), span.size());</span></span>
+<span id="L56"><span class="lineNum">      56</span>   [<span class="tlaGBC" title="Branch 0 was taken 3123 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3123 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">        3123 :   if (span.data() &amp;&amp; span.size() &gt; 0) {</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 3123 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L57"><span class="lineNum">      57</span>         [<span class="tlaGBC" title="Branch 0 was taken 3123 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        3123 :     data_.assign(span.begin(), span.end());</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :   }</span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">        3109 : }</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">        3123 : }</span></span>
 <span id="L60"><span class="lineNum">      60</span>                 :             : </span>
 <span id="L61"><span class="lineNum">      61</span>                 :             : // Access methods</span>
 <span id="L62"><span class="lineNum">      62</span>         [<span class="tlaGBC" title="Branch 0 was taken 1039 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        3117 : std::string SafeDataBuffer::as_string() const { return std::string(data_.begin(), data_.end()); }</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : </span>
 <span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaUNC tlaBgUNC">           0 : ConstByteSpan SafeDataBuffer::as_span() const noexcept { return ConstByteSpan(data_.data(), data_.size()); }</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             : </span>
-<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC tlaBgGNC">         905 : const uint8_t* SafeDataBuffer::data() const noexcept { return data_.data(); }</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC tlaBgGNC">         914 : const uint8_t* SafeDataBuffer::data() const noexcept { return data_.data(); }</span></span>
 <span id="L67"><span class="lineNum">      67</span>                 :             : </span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">         912 : size_t SafeDataBuffer::size() const noexcept { return data_.size(); }</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">         921 : size_t SafeDataBuffer::size() const noexcept { return data_.size(); }</span></span>
 <span id="L69"><span class="lineNum">      69</span>                 :             : </span>
 <span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">           3 : bool SafeDataBuffer::empty() const noexcept { return data_.empty(); }</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :             : </span>
@@ -186,18 +186,18 @@
 <span id="L107"><span class="lineNum">     107</span>                 :             : // Private helper methods</span>
 <span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">        1031 : void SafeDataBuffer::validate_index(size_t index) const {</span></span>
 <span id="L109"><span class="lineNum">     109</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1028 times"> + </span>]:<span class="tlaGNC">        1031 :   if (index &gt;= data_.size()) {</span></span>
-<span id="L110"><span class="lineNum">     110</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :     throw std::out_of_range(fmt::format(&quot;Index {} is out of range for buffer of size {}&quot;, index, data_.size()));</span></span>
+<span id="L110"><span class="lineNum">     110</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           3 :     throw std::out_of_range(fmt::format(&quot;Index {} is out of range for buffer of size {}&quot;, index, data_.size()));</span></span>
 <span id="L111"><span class="lineNum">     111</span>                 :             :   }</span>
 <span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">        1028 : }</span></span>
 <span id="L113"><span class="lineNum">     113</span>                 :             : </span>
-<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">        3118 : void SafeDataBuffer::validate_construction(const void* ptr, size_t size) const {</span></span>
-<span id="L115"><span class="lineNum">     115</span>   [<span class="tlaGBC" title="Branch 0 was taken 3118 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3116 times"> + </span>]:<span class="tlaGNC">        3118 :   if (size &gt; 0 &amp;&amp; !ptr) {</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">        3132 : void SafeDataBuffer::validate_construction(const void* ptr, size_t size) const {</span></span>
+<span id="L115"><span class="lineNum">     115</span>   [<span class="tlaGBC" title="Branch 0 was taken 3132 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3130 times"> + </span>]:<span class="tlaGNC">        3132 :   if (size &gt; 0 &amp;&amp; !ptr) {</span></span>
 <span id="L116"><span class="lineNum">     116</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :     throw std::invalid_argument(&quot;Cannot construct buffer from null pointer with non-zero size&quot;);</span></span>
 <span id="L117"><span class="lineNum">     117</span>                 :             :   }</span>
-<span id="L118"><span class="lineNum">     118</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 3115 times"> + </span>]:<span class="tlaGNC">        3116 :   if (size &gt; 1024 * 1024 * 100) {  // 100MB limit</span></span>
+<span id="L118"><span class="lineNum">     118</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 3129 times"> + </span>]:<span class="tlaGNC">        3130 :   if (size &gt; 1024 * 1024 * 100) {  // 100MB limit</span></span>
 <span id="L119"><span class="lineNum">     119</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     throw std::invalid_argument(&quot;Buffer size exceeds maximum allowed size&quot;);</span></span>
 <span id="L120"><span class="lineNum">     120</span>                 :             :   }</span>
-<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">        3115 : }</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">        3129 : }</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :             : </span>
 <span id="L123"><span class="lineNum">     123</span>                 :             : // Factory functions</span>
 <span id="L124"><span class="lineNum">     124</span>                 :             : namespace safe_buffer_factory {</span>
