@@ -1324,10 +1324,7 @@ void TcpClient::Impl::reset_idle_timer(std::shared_ptr<TcpClient> self, uint64_t
   });
 }
 
-void TcpClient::Impl::cancel_idle_timer() {
-  boost::system::error_code ignored;
-  idle_timer_.cancel(ignored);
-}
+void TcpClient::Impl::cancel_idle_timer() { idle_timer_.cancel(); }
 
 }  // namespace transport
 }  // namespace unilink
