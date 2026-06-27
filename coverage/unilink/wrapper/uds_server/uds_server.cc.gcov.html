@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-25 22:13:30</td>
+            <td class="headerValue">2026-06-27 02:36:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">92.5&nbsp;%</td>
@@ -591,11 +591,11 @@
 <span id="L498"><span class="lineNum">     498</span>                 :<span class="tlaGNC">           2 :   return *this;</span></span>
 <span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">           2 : }</span></span>
 <span id="L500"><span class="lineNum">     500</span>                 :             : </span>
-<span id="L501"><span class="lineNum">     501</span>                 :<span class="tlaGNC">          13 : size_t UdsServer::client_count() const {</span></span>
-<span id="L502"><span class="lineNum">     502</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L503"><span class="lineNum">     503</span>                 :<span class="tlaGNC">          13 :   auto ts = std::dynamic_pointer_cast&lt;transport::UdsServer&gt;(impl_-&gt;server_);</span></span>
-<span id="L504"><span class="lineNum">     504</span>   [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          26 :   return ts ? ts-&gt;client_count() : 0;</span></span>
-<span id="L505"><span class="lineNum">     505</span>                 :<span class="tlaGNC">          13 : }</span></span>
+<span id="L501"><span class="lineNum">     501</span>                 :<span class="tlaGNC">          12 : size_t UdsServer::client_count() const {</span></span>
+<span id="L502"><span class="lineNum">     502</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L503"><span class="lineNum">     503</span>                 :<span class="tlaGNC">          12 :   auto ts = std::dynamic_pointer_cast&lt;transport::UdsServer&gt;(impl_-&gt;server_);</span></span>
+<span id="L504"><span class="lineNum">     504</span>   [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          24 :   return ts ? ts-&gt;client_count() : 0;</span></span>
+<span id="L505"><span class="lineNum">     505</span>                 :<span class="tlaGNC">          12 : }</span></span>
 <span id="L506"><span class="lineNum">     506</span>                 :             : </span>
 <span id="L507"><span class="lineNum">     507</span>                 :<span class="tlaGNC">           2 : std::vector&lt;ClientId&gt; UdsServer::connected_clients() const {</span></span>
 <span id="L508"><span class="lineNum">     508</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :   std::shared_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>

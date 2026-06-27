@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-25 22:13:30</td>
+            <td class="headerValue">2026-06-27 02:36:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">58.3&nbsp;%</td>
@@ -251,36 +251,43 @@
 <span id="L173"><span class="lineNum">     173</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; broadcast(bool enable = true);</span>
 <span id="L174"><span class="lineNum">     174</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; reuse_address(bool enable = true);</span>
 <span id="L175"><span class="lineNum">     175</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; independent_context(bool use_independent = true);</span>
-<span id="L176"><span class="lineNum">     176</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; idle_timeout(std::chrono::milliseconds timeout);</span>
-<span id="L177"><span class="lineNum">     177</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; send_buffer_size(size_t bytes);</span>
-<span id="L178"><span class="lineNum">     178</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; receive_buffer_size(size_t bytes);</span>
-<span id="L179"><span class="lineNum">     179</span>                 :             : </span>
-<span id="L180"><span class="lineNum">     180</span>                 :             :  private:</span>
-<span id="L181"><span class="lineNum">     181</span>                 :             :   template &lt;uint32_t S&gt;</span>
-<span id="L182"><span class="lineNum">     182</span>                 :             :   friend class UdpServerBuilder;</span>
-<span id="L183"><span class="lineNum">     183</span>                 :             : </span>
-<span id="L184"><span class="lineNum">     184</span>                 :             :   uint16_t local_port_;</span>
-<span id="L185"><span class="lineNum">     185</span>                 :             :   std::string bind_address_;</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             :   bool auto_start_;</span>
-<span id="L187"><span class="lineNum">     187</span>                 :             :   bool independent_context_;</span>
-<span id="L188"><span class="lineNum">     188</span>                 :             :   bool enable_broadcast_;</span>
-<span id="L189"><span class="lineNum">     189</span>                 :             :   bool reuse_address_;</span>
-<span id="L190"><span class="lineNum">     190</span>                 :             :   uint32_t max_clients_ = 0;</span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :   bool client_limit_enabled_ = false;</span>
-<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC tlaBgGNC">           5 :   std::chrono::milliseconds idle_timeout_{0};</span></span>
-<span id="L193"><span class="lineNum">     193</span>                 :             :   bool idle_timeout_set_ = false;</span>
-<span id="L194"><span class="lineNum">     194</span>                 :             :   size_t send_buffer_size_;</span>
-<span id="L195"><span class="lineNum">     195</span>                 :             :   size_t receive_buffer_size_;</span>
-<span id="L196"><span class="lineNum">     196</span>                 :             : };</span>
-<span id="L197"><span class="lineNum">     197</span>                 :             : </span>
-<span id="L198"><span class="lineNum">     198</span>                 :             : using UdpServerBuilderDefault = UdpServerBuilder&lt;BuilderState::None&gt;;</span>
-<span id="L199"><span class="lineNum">     199</span>                 :             : </span>
-<span id="L200"><span class="lineNum">     200</span>                 :             : #ifdef _MSC_VER</span>
-<span id="L201"><span class="lineNum">     201</span>                 :             : #pragma warning(pop)</span>
-<span id="L202"><span class="lineNum">     202</span>                 :             : #endif</span>
-<span id="L203"><span class="lineNum">     203</span>                 :             : </span>
-<span id="L204"><span class="lineNum">     204</span>                 :             : }  // namespace builder</span>
-<span id="L205"><span class="lineNum">     205</span>                 :             : }  // namespace unilink</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :   /**</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :    * @brief Configure application-level idle timeout for virtual sessions.</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :    *</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :    * A value of 0ms disables idle timeout. When enabled, stale UDP virtual</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :    * sessions are removed and a later datagram from the same endpoint creates a</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :    * new virtual session.</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :    */</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; idle_timeout(std::chrono::milliseconds timeout);</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; send_buffer_size(size_t bytes);</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :   UdpServerBuilder&lt;State&gt;&amp; receive_buffer_size(size_t bytes);</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :  private:</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :   template &lt;uint32_t S&gt;</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :   friend class UdpServerBuilder;</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :   uint16_t local_port_;</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :   std::string bind_address_;</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :   bool auto_start_;</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :   bool independent_context_;</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :   bool enable_broadcast_;</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :   bool reuse_address_;</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :   uint32_t max_clients_ = 0;</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :   bool client_limit_enabled_ = false;</span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC tlaBgGNC">           5 :   std::chrono::milliseconds idle_timeout_{0};</span></span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :   bool idle_timeout_set_ = false;</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :   size_t send_buffer_size_;</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :   size_t receive_buffer_size_;</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             : };</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             : </span>
+<span id="L205"><span class="lineNum">     205</span>                 :             : using UdpServerBuilderDefault = UdpServerBuilder&lt;BuilderState::None&gt;;</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             : </span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : #ifdef _MSC_VER</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             : #pragma warning(pop)</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             : #endif</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             : </span>
+<span id="L211"><span class="lineNum">     211</span>                 :             : }  // namespace builder</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             : }  // namespace unilink</span>
         </pre>
               </td>
             </tr>
