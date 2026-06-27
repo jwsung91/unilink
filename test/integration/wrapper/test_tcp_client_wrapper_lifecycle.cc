@@ -272,6 +272,36 @@ TEST_F(TcpClientWrapperLifecycleTest, IdleTimeoutCloseActionClosesWithoutReconne
   EXPECT_FALSE(client_->connected());
 }
 
+TEST_F(TcpClientWrapperLifecycleTest, IdleTimeoutResetsOnInboundData) {
+  constexpr std::string_view payload = "tick";
+  std::atomic<int> connected{0};
+  std::atomic<int> disconnected{0};
+  std::atomic<size_t> received_bytes{0};
+
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
+                .idle_timeout(150ms)
+                .idle_timeout_action(IdleTimeoutAction::Close)
+                .on_connect([&](const wrapper::ConnectionContext&) { connected++; })
+                .on_disconnect([&](const wrapper::ConnectionContext&) { disconnected++; })
+                .on_data([&](const wrapper::MessageContext& ctx) { received_bytes += ctx.data().size(); })
+                .on_error([](auto&&) {})
+                .build();
+
+  auto started = client_->start();
+  ASSERT_TRUE(started.get());
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return connected.load() == 1; }, 1000));
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() == 1; }, 1000));
+
+  for (int i = 1; i <= 4; ++i) {
+    std::this_thread::sleep_for(75ms);
+    ASSERT_TRUE(server_->broadcast(payload));
+    ASSERT_TRUE(TestUtils::waitForCondition(
+        [&]() { return received_bytes.load() >= payload.size() * static_cast<size_t>(i); }, 1000));
+    EXPECT_EQ(disconnected.load(), 0);
+    EXPECT_TRUE(client_->connected());
+  }
+}
+
 TEST(TcpClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {
   auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
   wrapper::TcpClient client(fake_channel);
