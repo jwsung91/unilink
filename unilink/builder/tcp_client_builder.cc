@@ -33,6 +33,8 @@ TcpClientBuilder<State>::TcpClientBuilder(const std::string& host, uint16_t port
       retry_interval_(3000),
       max_retries_(-1),
       connection_timeout_(5000),
+      idle_timeout_(0),
+      idle_timeout_action_(IdleTimeoutAction::Reconnect),
       tcp_no_delay_(false),
       keep_alive_(false),
       send_buffer_size_(0),
@@ -64,6 +66,8 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder<State>::build() {
   client->retry_interval(retry_interval_);
   client->max_retries(max_retries_);
   client->connection_timeout(connection_timeout_);
+  client->idle_timeout(idle_timeout_);
+  client->idle_timeout_action(idle_timeout_action_);
   client->tcp_no_delay(tcp_no_delay_);
   client->keep_alive(keep_alive_);
   client->send_buffer_size(send_buffer_size_);
@@ -110,6 +114,18 @@ TcpClientBuilder<State>& TcpClientBuilder<State>::max_retries(int max_retries) {
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::connection_timeout(std::chrono::milliseconds timeout) {
   connection_timeout_ = timeout;
+  return *this;
+}
+
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
+  idle_timeout_ = timeout;
+  return *this;
+}
+
+template <uint32_t State>
+TcpClientBuilder<State>& TcpClientBuilder<State>::idle_timeout_action(IdleTimeoutAction action) {
+  idle_timeout_action_ = action;
   return *this;
 }
 

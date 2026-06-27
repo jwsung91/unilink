@@ -83,7 +83,7 @@ struct UdpServer::Impl {
   ClientId next_client_id{1};
   std::unordered_map<boost::asio::ip::udp::endpoint, ClientId, UdpEndpointHash> endpoint_to_id;
   std::unordered_map<ClientId, SessionEntry> sessions;
-  std::chrono::milliseconds session_timeout{30000};  // Default 30s
+  std::chrono::milliseconds session_timeout{0};  // 0 = disabled
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
   std::atomic<bool> auto_start{false};
   std::atomic<bool> client_limit_enabled{false};
@@ -175,7 +175,7 @@ struct UdpServer::Impl {
   }
 
   void schedule_reaper() {
-    if (!started.load() || !reaper_timer) return;
+    if (!started.load() || !reaper_timer || session_timeout.count() <= 0) return;
 
     // Run reaper at interval proportional to timeout (min 100ms, max 5s)
     auto interval =
@@ -194,6 +194,8 @@ struct UdpServer::Impl {
   }
 
   void run_reaper() {
+    if (session_timeout.count() <= 0) return;
+
     std::vector<std::pair<ClientId, std::string>> to_remove_with_info;
     auto now = std::chrono::steady_clock::now();
 
@@ -394,7 +396,7 @@ struct UdpServer::Impl {
       });
     }
 
-    if (channel) {
+    if (channel && session_timeout.count() > 0) {
       reaper_timer = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
       schedule_reaper();
     }
@@ -628,6 +630,17 @@ UdpServer& UdpServer::bind_address(const std::string& address) {
 UdpServer& UdpServer::idle_timeout(std::chrono::milliseconds timeout) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
+  if (impl_->session_timeout.count() <= 0) {
+    if (impl_->reaper_timer) {
+      impl_->reaper_timer->cancel();
+      impl_->reaper_timer.reset();
+    }
+    return *this;
+  }
+  if (impl_->started.load() && impl_->channel && !impl_->reaper_timer) {
+    impl_->reaper_timer = std::make_unique<boost::asio::steady_timer>(impl_->channel->get_executor());
+    impl_->schedule_reaper();
+  }
   return *this;
 }
 

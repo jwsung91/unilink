@@ -30,6 +30,8 @@ struct TcpClientConfig {
   uint16_t port = 9000;
   unsigned retry_interval_ms = base::constants::DEFAULT_RETRY_INTERVAL_MS;
   unsigned connection_timeout_ms = base::constants::DEFAULT_CONNECTION_TIMEOUT_MS;
+  unsigned idle_timeout_ms = 0;  // Idle connection timeout in milliseconds (0 = disabled)
+  IdleTimeoutAction idle_timeout_action = IdleTimeoutAction::Reconnect;
   int max_retries = base::constants::DEFAULT_MAX_RETRIES;
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;

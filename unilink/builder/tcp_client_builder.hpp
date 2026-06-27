@@ -54,6 +54,8 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
         retry_interval_(other.retry_interval_),
         max_retries_(other.max_retries_),
         connection_timeout_(other.connection_timeout_),
+        idle_timeout_(other.idle_timeout_),
+        idle_timeout_action_(other.idle_timeout_action_),
         tcp_no_delay_(other.tcp_no_delay_),
         keep_alive_(other.keep_alive_),
         send_buffer_size_(other.send_buffer_size_),
@@ -84,6 +86,8 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   TcpClientBuilder<State>& retry_interval(std::chrono::milliseconds interval);
   TcpClientBuilder<State>& max_retries(int max_retries);
   TcpClientBuilder<State>& connection_timeout(std::chrono::milliseconds timeout);
+  TcpClientBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
+  TcpClientBuilder<State>& idle_timeout_action(IdleTimeoutAction action);
   TcpClientBuilder<State>& independent_context(bool use_independent = true);
   TcpClientBuilder<State>& tcp_no_delay(bool enable = true);
   TcpClientBuilder<State>& keep_alive(bool enable = true);
@@ -102,6 +106,8 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
+  std::chrono::milliseconds idle_timeout_;
+  IdleTimeoutAction idle_timeout_action_;
   bool tcp_no_delay_;
   bool keep_alive_;
   size_t send_buffer_size_;

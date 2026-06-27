@@ -47,6 +47,26 @@ sender.
 Use `RuntimeStats` to inspect accepted bytes, sent bytes, failed sends, drops,
 queued bytes, pending bytes, and backpressure state.
 
+## Liveness and idle timeout
+
+`idle_timeout(...)` is an application-level stale-session policy, not a
+heartbeat protocol.
+
+- `0ms` disables idle timeout.
+- TCP client idle timeout closes the current socket. By default it uses
+  `IdleTimeoutAction::Reconnect`, so the client follows the existing retry
+  interval, max retries, and reconnect policy. `IdleTimeoutAction::Close`
+  closes without reconnecting.
+- TCP server idle timeout closes only the idle client session. The server keeps
+  listening, and a peer that connects again is accepted as a new session.
+- UDP server idle timeout removes the virtual session and invokes
+  `on_disconnect(...)`. If the endpoint sends another datagram later, it is
+  discovered as a new virtual session.
+
+`keep_alive(true)` enables the operating system's TCP keepalive option. Its
+detection interval and failure behavior are OS-dependent and should not be used
+as the only mechanism for predictable stale-session cleanup.
+
 ## RuntimeStats send accounting
 
 Send counters distinguish rejected Reliable sends from intentional BestEffort

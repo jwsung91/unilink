@@ -81,6 +81,7 @@ struct TcpClient::Impl {
   TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
   net::steady_timer connect_timer_;
+  net::steady_timer idle_timer_;
   bool owns_ioc_ = true;
   std::atomic<bool> stop_requested_{false};
   std::atomic<bool> stopping_{false};
@@ -124,6 +125,7 @@ struct TcpClient::Impl {
         cfg_(cfg),
         retry_timer_(strand_),
         connect_timer_(strand_),
+        idle_timer_(strand_),
         owns_ioc_(!ioc_ptr),
         bp_strategy_(cfg.backpressure_strategy),
         bp_high_(cfg.backpressure_threshold) {
@@ -145,6 +147,7 @@ struct TcpClient::Impl {
   void start_read(std::shared_ptr<TcpClient> self, uint64_t seq);
   void do_write(std::shared_ptr<TcpClient> self, uint64_t seq);
   void handle_close(std::shared_ptr<TcpClient> self, uint64_t seq, const boost::system::error_code& ec = {});
+  void handle_idle_timeout(std::shared_ptr<TcpClient> self, uint64_t seq);
   void transition_to(LinkState next, const boost::system::error_code& ec = {});
   void perform_stop_cleanup();
   void reset_start_state();
@@ -157,6 +160,8 @@ struct TcpClient::Impl {
   void notify_state();
   void reset_io_objects();
   void apply_socket_options();
+  void reset_idle_timer(std::shared_ptr<TcpClient> self, uint64_t seq);
+  void cancel_idle_timer();
   void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
                     const boost::system::error_code& ec, std::string_view msg, bool retryable, uint32_t retry_count);
 };
@@ -671,6 +676,8 @@ void TcpClient::set_backpressure_strategy(base::constants::BackpressureStrategy 
 void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
 void TcpClient::set_max_retries(int max_retries) { impl_->cfg_.max_retries = max_retries; }
 void TcpClient::set_connection_timeout(unsigned timeout_ms) { impl_->cfg_.connection_timeout_ms = timeout_ms; }
+void TcpClient::set_idle_timeout(unsigned timeout_ms) { impl_->cfg_.idle_timeout_ms = timeout_ms; }
+void TcpClient::set_idle_timeout_action(IdleTimeoutAction action) { impl_->cfg_.idle_timeout_action = action; }
 void TcpClient::set_reconnect_policy(ReconnectPolicy policy) {
   if (policy) {
     impl_->reconnect_policy_ = std::move(policy);
@@ -797,6 +804,7 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                              fmt::format("Connected to {}:{}", rep.address().to_string(), rep.port()));
           }
           self->impl_->start_read(self, seq);
+          self->impl_->reset_idle_timer(self, seq);
           net::post(self->impl_->strand_, [self, seq]() {
             self->impl_->writing_ = false;
             self->impl_->do_write(self, seq);
@@ -881,6 +889,9 @@ void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self, uint64_t seq) 
     if (ec) {
       self->impl_->handle_close(self, seq, ec);
       return;
+    }
+    if (n > 0) {
+      self->impl_->reset_idle_timer(self, seq);
     }
     OnBytes on_bytes;
     {
@@ -974,6 +985,9 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self, uint64_t seq) {
 
     self->impl_->current_write_buffer_.reset();
     self->impl_->stats_.record_sent(bytes_written);
+    if (bytes_written > 0) {
+      self->impl_->reset_idle_timer(self, seq);
+    }
     self->impl_->queue_bytes_ =
         (self->impl_->queue_bytes_ > queued_bytes) ? (self->impl_->queue_bytes_ - queued_bytes) : 0;
     self->impl_->report_backpressure(self, self->impl_->queue_bytes_);
@@ -1014,12 +1028,44 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq
   }
   connected_.store(false);
   writing_ = false;
+  cancel_idle_timer();
   connect_timer_.cancel();
   close_socket();
   if (stop_requested_.load() || stopping_.load() || state_.is_state(LinkState::Closed)) {
     transition_to(LinkState::Closed, ec);
     return;
   }
+  transition_to(LinkState::Connecting, ec);
+  schedule_retry(self, seq);
+}
+
+void TcpClient::Impl::handle_idle_timeout(std::shared_ptr<TcpClient> self, uint64_t seq) {
+  if (seq != current_seq_.load() || stop_requested_.load() || stopping_.load() || !connected_.load()) {
+    return;
+  }
+
+  const auto ec = make_error_code(boost::asio::error::timed_out);
+  const bool should_reconnect = cfg_.idle_timeout_action == IdleTimeoutAction::Reconnect;
+  const uint32_t current_attempts =
+      reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
+
+  UNILINK_LOG_WARNING("tcp_client", "idle_timeout",
+                      fmt::format("Idle timeout expired after {}ms; {}", cfg_.idle_timeout_ms,
+                                  should_reconnect ? "scheduling reconnect" : "closing connection"));
+  record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "idle_timeout", ec,
+               "Idle timeout expired", should_reconnect, current_attempts);
+
+  connected_.store(false);
+  writing_ = false;
+  cancel_idle_timer();
+  connect_timer_.cancel();
+  close_socket();
+
+  if (!should_reconnect) {
+    transition_to(LinkState::Closed, ec);
+    return;
+  }
+
   transition_to(LinkState::Connecting, ec);
   schedule_retry(self, seq);
 }
@@ -1137,6 +1183,7 @@ void TcpClient::Impl::perform_stop_cleanup() {
   try {
     retry_timer_.cancel();
     connect_timer_.cancel();
+    cancel_idle_timer();
     resolver_.cancel();
     boost::system::error_code ec_cancel;
     socket_.cancel(ec_cancel);
@@ -1240,6 +1287,7 @@ void TcpClient::Impl::reset_io_objects() {
     resolver_ = tcp::resolver(strand_);
     retry_timer_ = net::steady_timer(strand_);
     connect_timer_ = net::steady_timer(strand_);
+    idle_timer_ = net::steady_timer(strand_);
     tx_.clear();
     queue_bytes_ = 0;
     pending_.clear();
@@ -1257,6 +1305,28 @@ void TcpClient::Impl::reset_io_objects() {
     diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
                                                       "Unknown error while resetting io objects");
   }
+}
+
+void TcpClient::Impl::reset_idle_timer(std::shared_ptr<TcpClient> self, uint64_t seq) {
+  if (cfg_.idle_timeout_ms == 0 || !connected_.load() || stop_requested_.load() || stopping_.load()) {
+    return;
+  }
+
+  idle_timer_.cancel();
+  idle_timer_.expires_after(std::chrono::milliseconds(cfg_.idle_timeout_ms));
+  idle_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
+    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+      return;
+    }
+    if (!ec) {
+      self->impl_->handle_idle_timeout(self, seq);
+    }
+  });
+}
+
+void TcpClient::Impl::cancel_idle_timer() {
+  boost::system::error_code ignored;
+  idle_timer_.cancel(ignored);
 }
 
 }  // namespace transport

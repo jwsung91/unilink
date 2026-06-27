@@ -90,6 +90,8 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void set_retry_interval(unsigned interval_ms);
   void set_max_retries(int max_retries);
   void set_connection_timeout(unsigned timeout_ms);
+  void set_idle_timeout(unsigned timeout_ms);
+  void set_idle_timeout_action(IdleTimeoutAction action);
   void set_reconnect_policy(ReconnectPolicy policy);
 
  private:

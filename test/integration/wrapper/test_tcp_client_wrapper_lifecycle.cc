@@ -36,6 +36,7 @@ namespace {
 
 using namespace unilink;
 using namespace unilink::test;
+using namespace std::chrono_literals;
 
 class ControlledChannel : public interface::Channel {
  public:
@@ -232,6 +233,43 @@ TEST_F(TcpClientWrapperLifecycleTest, SendMultipleMessages) {
   }
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return received.load() >= 5; }, 5000));
+}
+
+TEST_F(TcpClientWrapperLifecycleTest, IdleTimeoutReconnectsByDefault) {
+  std::atomic<int> connected{0};
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
+                .retry_interval(100ms)
+                .idle_timeout(100ms)
+                .on_connect([&](const wrapper::ConnectionContext&) { connected++; })
+                .on_data([](auto&&) {})
+                .on_error([](auto&&) {})
+                .build();
+
+  auto started = client_->start();
+  ASSERT_TRUE(started.get());
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load() >= 2; }, 3000));
+  EXPECT_TRUE(client_->connected());
+}
+
+TEST_F(TcpClientWrapperLifecycleTest, IdleTimeoutCloseActionClosesWithoutReconnect) {
+  std::atomic<int> connected{0};
+  std::atomic<int> disconnected{0};
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
+                .idle_timeout(100ms)
+                .idle_timeout_action(IdleTimeoutAction::Close)
+                .on_connect([&](const wrapper::ConnectionContext&) { connected++; })
+                .on_disconnect([&](const wrapper::ConnectionContext&) { disconnected++; })
+                .on_data([](auto&&) {})
+                .on_error([](auto&&) {})
+                .build();
+
+  auto started = client_->start();
+  ASSERT_TRUE(started.get());
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return connected.load() == 1; }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return disconnected.load() == 1; }, 3000));
+  std::this_thread::sleep_for(300ms);
+  EXPECT_EQ(connected.load(), 1);
+  EXPECT_FALSE(client_->connected());
 }
 
 TEST(TcpClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {

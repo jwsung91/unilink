@@ -86,6 +86,32 @@ TEST(UdpServerWrapperLifecycleTest, SessionReaping) {
   server.stop();
 }
 
+TEST(UdpServerWrapperLifecycleTest, DefaultIdleTimeoutDisabledKeepsVirtualSession) {
+  auto port = TestUtils::getAvailableTestPort();
+  config::UdpConfig cfg;
+  cfg.bind_address = "127.0.0.1";
+  cfg.local_port = port;
+
+  wrapper::UdpServer server(cfg);
+  std::atomic<int> disconnects{0};
+  server.on_disconnect([&](const wrapper::ConnectionContext&) { disconnects++; });
+
+  auto started = server.start();
+  ASSERT_TRUE(started.get());
+
+  boost::asio::io_context ioc;
+  boost::asio::ip::udp::socket sock(ioc, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
+  sock.send_to(boost::asio::buffer("hello", 5),
+               boost::asio::ip::udp::endpoint(boost::asio::ip::make_address("127.0.0.1"), port));
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server.client_count() == 1; }, 1000));
+  std::this_thread::sleep_for(300ms);
+  EXPECT_EQ(disconnects.load(), 0);
+  EXPECT_EQ(server.client_count(), 1u);
+
+  server.stop();
+}
+
 TEST(UdpServerWrapperLifecycleTest, BatchAndClientLimitHandling) {
   auto port = TestUtils::getAvailableTestPort();
   config::UdpConfig cfg;
