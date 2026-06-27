@@ -88,6 +88,13 @@ class UNILINK_API UdpServer : public ServerInterface {
   // Configuration (Fluent API)
   UdpServer& auto_start(bool manage = true) override;
   UdpServer& bind_address(const std::string& address);
+  /**
+   * @brief Configure application-level idle timeout for virtual sessions.
+   *
+   * A value of 0ms disables idle timeout. When enabled, stale UDP virtual
+   * sessions are removed and a later datagram from the same endpoint creates a
+   * new virtual session.
+   */
   UdpServer& idle_timeout(std::chrono::milliseconds timeout);
   UdpServer& max_clients(size_t max);
   UdpServer& backpressure_threshold(size_t threshold);

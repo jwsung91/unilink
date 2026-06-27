@@ -96,7 +96,19 @@ class UNILINK_API TcpClient : public ChannelInterface {
   TcpClient& retry_interval(std::chrono::milliseconds interval);
   TcpClient& max_retries(int max_retries);
   TcpClient& connection_timeout(std::chrono::milliseconds timeout);
+  /**
+   * @brief Configure application-level idle timeout.
+   *
+   * A value of 0ms disables idle timeout. When enabled, inbound or outbound
+   * activity resets the timer.
+   */
   TcpClient& idle_timeout(std::chrono::milliseconds timeout);
+  /**
+   * @brief Configure what happens when an enabled idle timeout expires.
+   *
+   * The default is IdleTimeoutAction::Reconnect. This setting has no effect
+   * while idle_timeout is 0ms.
+   */
   TcpClient& idle_timeout_action(IdleTimeoutAction action);
   TcpClient& backpressure_threshold(size_t threshold);
   TcpClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);

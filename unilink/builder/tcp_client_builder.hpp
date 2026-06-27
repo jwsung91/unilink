@@ -86,7 +86,19 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   TcpClientBuilder<State>& retry_interval(std::chrono::milliseconds interval);
   TcpClientBuilder<State>& max_retries(int max_retries);
   TcpClientBuilder<State>& connection_timeout(std::chrono::milliseconds timeout);
+  /**
+   * @brief Configure application-level idle timeout.
+   *
+   * A value of 0ms disables idle timeout. When enabled, inbound or outbound
+   * activity resets the timer.
+   */
   TcpClientBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
+  /**
+   * @brief Configure what happens when an enabled idle timeout expires.
+   *
+   * The default is IdleTimeoutAction::Reconnect. This setting has no effect
+   * while idle_timeout is 0ms.
+   */
   TcpClientBuilder<State>& idle_timeout_action(IdleTimeoutAction action);
   TcpClientBuilder<State>& independent_context(bool use_independent = true);
   TcpClientBuilder<State>& tcp_no_delay(bool enable = true);

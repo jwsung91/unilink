@@ -21,8 +21,16 @@
 
 namespace unilink {
 
+/**
+ * @brief Action taken by TCP clients when an enabled idle timeout expires.
+ *
+ * Idle timeout is disabled when the configured timeout is 0ms. This action is
+ * only consulted after a positive idle timeout has expired.
+ */
 enum class IdleTimeoutAction {
+  /// Close the stale socket and follow the existing reconnect policy.
   Reconnect,
+  /// Close the stale socket and leave the client closed.
   Close,
 };
 

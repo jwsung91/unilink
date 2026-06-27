@@ -97,6 +97,12 @@ class UNILINK_API TcpServer : public ServerInterface {
   TcpServer& auto_start(bool manage = true) override;
   TcpServer& bind_address(const std::string& address);
   TcpServer& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
+  /**
+   * @brief Configure application-level idle timeout for accepted sessions.
+   *
+   * A value of 0ms disables idle timeout. When enabled, only the idle client
+   * session is closed; the server keeps listening for new connections.
+   */
   TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& max_clients(size_t max);
   TcpServer& backpressure_threshold(size_t threshold);
