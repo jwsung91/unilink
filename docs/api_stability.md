@@ -25,6 +25,7 @@ User-facing APIs include:
 - `send_move(...)`, `try_send_move(...)`
 - `send_shared(...)`, `try_send_shared(...)`
 - TCP/UDP socket tuning builder options
+- TCP/UDP idle timeout builder options
 
 ## Supported but pre-1.0 unstable APIs
 

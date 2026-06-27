@@ -97,6 +97,12 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
 
   // Backward compatibility methods
   TcpServerBuilder<State>& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
+  /**
+   * @brief Configure application-level idle timeout for accepted sessions.
+   *
+   * A value of 0ms disables idle timeout. When enabled, only the idle client
+   * session is closed; the server keeps listening for new connections.
+   */
   TcpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
   [[deprecated("Use max_clients(1) instead")]]
   TcpServerBuilder<State>& single_client();

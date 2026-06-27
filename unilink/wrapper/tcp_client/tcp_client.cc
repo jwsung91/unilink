@@ -76,6 +76,8 @@ struct TcpClient::Impl {
   std::chrono::milliseconds retry_interval_{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
+  std::chrono::milliseconds idle_timeout_{0};
+  IdleTimeoutAction idle_timeout_action_{IdleTimeoutAction::Reconnect};
   size_t backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::Reliable};
   bool tcp_no_delay_ = false;
@@ -178,6 +180,8 @@ struct TcpClient::Impl {
       config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
       config.max_retries = max_retries_;
       config.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
+      config.idle_timeout_ms = static_cast<unsigned>(idle_timeout_.count());
+      config.idle_timeout_action = idle_timeout_action_;
       config.backpressure_threshold = backpressure_threshold_;
       config.backpressure_strategy = backpressure_strategy_;
       config.tcp_no_delay = tcp_no_delay_;
@@ -616,6 +620,27 @@ TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
   }
   return *this;
 }
+
+TcpClient& TcpClient::idle_timeout(std::chrono::milliseconds t) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->idle_timeout_ = t;
+  if (impl_->channel_) {
+    auto transport = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
+    if (transport) transport->set_idle_timeout(static_cast<unsigned>(t.count()));
+  }
+  return *this;
+}
+
+TcpClient& TcpClient::idle_timeout_action(IdleTimeoutAction action) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->idle_timeout_action_ = action;
+  if (impl_->channel_) {
+    auto transport = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
+    if (transport) transport->set_idle_timeout_action(action);
+  }
+  return *this;
+}
+
 TcpClient& TcpClient::manage_external_context(bool m) {
   impl_->manage_external_context_.store(m);
   return *this;

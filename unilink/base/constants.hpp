@@ -20,6 +20,20 @@
 #include <cstdint>
 
 namespace unilink {
+
+/**
+ * @brief Action taken by TCP clients when an enabled idle timeout expires.
+ *
+ * Idle timeout is disabled when the configured timeout is 0ms. This action is
+ * only consulted after a positive idle timeout has expired.
+ */
+enum class IdleTimeoutAction {
+  /// Close the stale socket and follow the existing reconnect policy.
+  Reconnect,
+  /// Close the stale socket and leave the client closed.
+  Close,
+};
+
 namespace base {
 
 // Network and I/O constants
@@ -72,10 +86,10 @@ constexpr unsigned MAX_CLEANUP_INTERVAL_MS = 1000;           // 1s maximum clean
 constexpr unsigned DEFAULT_HEALTH_CHECK_INTERVAL_MS = 1000;  // 1s health check interval
 
 // Connection and session constants
-constexpr size_t MAX_MAX_CONNECTIONS = 10000;      // Maximum allowed connections
-constexpr size_t DEFAULT_IDLE_TIMEOUT_MS = 30000;  // 30s default idle timeout
-constexpr size_t MIN_IDLE_TIMEOUT_MS = 1000;       // 1s minimum idle timeout
-constexpr size_t MAX_IDLE_TIMEOUT_MS = 300000;     // 5m maximum idle timeout
+constexpr size_t MAX_MAX_CONNECTIONS = 10000;   // Maximum allowed connections
+constexpr size_t DEFAULT_IDLE_TIMEOUT_MS = 0;   // Idle timeout disabled by default
+constexpr size_t MIN_IDLE_TIMEOUT_MS = 1;       // 1ms minimum idle timeout when enabled
+constexpr size_t MAX_IDLE_TIMEOUT_MS = 300000;  // 5m maximum idle timeout
 
 // Error handling constants
 constexpr size_t DEFAULT_MAX_RECENT_ERRORS = 1000;           // Default max recent errors to track

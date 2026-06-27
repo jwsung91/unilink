@@ -130,6 +130,8 @@ TEST_F(BuilderTest, TcpClientBuilderAdvancedOptions) {
                     .retry_interval(25ms)
                     .max_retries(2)
                     .connection_timeout(50ms)
+                    .idle_timeout(75ms)
+                    .idle_timeout_action(IdleTimeoutAction::Close)
                     .tcp_no_delay(true)
                     .keep_alive(true)
                     .send_buffer_size(4 * 1024)

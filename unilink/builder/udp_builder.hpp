@@ -173,6 +173,13 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   UdpServerBuilder<State>& broadcast(bool enable = true);
   UdpServerBuilder<State>& reuse_address(bool enable = true);
   UdpServerBuilder<State>& independent_context(bool use_independent = true);
+  /**
+   * @brief Configure application-level idle timeout for virtual sessions.
+   *
+   * A value of 0ms disables idle timeout. When enabled, stale UDP virtual
+   * sessions are removed and a later datagram from the same endpoint creates a
+   * new virtual session.
+   */
   UdpServerBuilder<State>& idle_timeout(std::chrono::milliseconds timeout);
   UdpServerBuilder<State>& send_buffer_size(size_t bytes);
   UdpServerBuilder<State>& receive_buffer_size(size_t bytes);
