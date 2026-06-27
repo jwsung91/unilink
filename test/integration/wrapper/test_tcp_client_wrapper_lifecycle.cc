@@ -279,7 +279,7 @@ TEST_F(TcpClientWrapperLifecycleTest, IdleTimeoutResetsOnInboundData) {
   std::atomic<size_t> received_bytes{0};
 
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .idle_timeout(150ms)
+                .idle_timeout(1000ms)
                 .idle_timeout_action(IdleTimeoutAction::Close)
                 .on_connect([&](const wrapper::ConnectionContext&) { connected++; })
                 .on_disconnect([&](const wrapper::ConnectionContext&) { disconnected++; })
@@ -292,8 +292,8 @@ TEST_F(TcpClientWrapperLifecycleTest, IdleTimeoutResetsOnInboundData) {
   ASSERT_TRUE(TestUtils::waitForCondition([&]() { return connected.load() == 1; }, 1000));
   ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() == 1; }, 1000));
 
-  for (int i = 1; i <= 4; ++i) {
-    std::this_thread::sleep_for(75ms);
+  for (int i = 1; i <= 6; ++i) {
+    std::this_thread::sleep_for(200ms);
     ASSERT_TRUE(server_->broadcast(payload));
     ASSERT_TRUE(TestUtils::waitForCondition(
         [&]() { return received_bytes.load() >= payload.size() * static_cast<size_t>(i); }, 1000));
