@@ -53,7 +53,7 @@ jobs:
 
       - name: Cache vcpkg
         id: cache-vcpkg
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.VCPKG_ROOT }}
           key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
