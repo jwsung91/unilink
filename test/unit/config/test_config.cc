@@ -271,7 +271,7 @@ TEST_F(ConfigTest, TcpClientConfigDirectValidation) {
 
 TEST(SocketTuningConfigTest, SocketBufferConfigValidationAndClamping) {
   TcpClientConfig tcp_client;
-  EXPECT_FALSE(tcp_client.tcp_no_delay);
+  EXPECT_TRUE(tcp_client.tcp_no_delay);
   EXPECT_FALSE(tcp_client.keep_alive);
   EXPECT_EQ(tcp_client.send_buffer_size, 0u);
   EXPECT_EQ(tcp_client.receive_buffer_size, 0u);

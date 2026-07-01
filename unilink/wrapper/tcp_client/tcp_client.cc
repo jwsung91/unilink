@@ -80,7 +80,7 @@ struct TcpClient::Impl {
   IdleTimeoutAction idle_timeout_action_{IdleTimeoutAction::Reconnect};
   size_t backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::Reliable};
-  bool tcp_no_delay_ = false;
+  bool tcp_no_delay_ = true;
   bool keep_alive_ = false;
   size_t send_buffer_size_ = 0;
   size_t receive_buffer_size_ = 0;

@@ -36,7 +36,7 @@ struct TcpClientConfig {
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
   bool enable_memory_pool = true;
-  bool tcp_no_delay = false;
+  bool tcp_no_delay = true;
   bool keep_alive = false;
   size_t send_buffer_size = 0;
   size_t receive_buffer_size = 0;
