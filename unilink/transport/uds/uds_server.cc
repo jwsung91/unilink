@@ -516,11 +516,6 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
           *self->impl_->ioc_, std::move(socket), self->impl_->cfg_.backpressure_threshold,
           self->impl_->cfg_.idle_timeout_ms, self->impl_->cfg_.backpressure_strategy);
 
-      {
-        std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
-        self->impl_->sessions_[client_id] = session;
-      }
-
       std::weak_ptr<UdsServer> weak_self = self;
       session->on_bytes([weak_self, client_id](memory::ConstByteSpan data) {
         auto s = weak_self.lock();
@@ -550,7 +545,15 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
         if (disconnect_handler) disconnect_handler(client_id);
       });
 
+      // alive_ must be true before the session enters sessions_, so that
+      // broadcast() callers who observe client_count() >= 1 are guaranteed
+      // to pass the alive() check inside async_try_write_shared().
       session->start();
+
+      {
+        std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
+        self->impl_->sessions_[client_id] = session;
+      }
 
       MultiClientConnectHandler connect_handler;
       {
