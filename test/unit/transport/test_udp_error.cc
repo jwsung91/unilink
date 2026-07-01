@@ -115,3 +115,54 @@ TEST(TransportUdpErrorTest, BackpressureClearsAfterWriteErrorWithQueuedWrites) {
 
   channel->stop();
 }
+
+TEST(TransportUdpErrorTest, BackpressureClearsAfterWriteErrorWithPendingOverflow) {
+  net::io_context ioc;
+
+  config::UdpConfig cfg;
+  cfg.bind_address = "127.0.0.1";
+  cfg.local_port = 0;  // Ephemeral
+  cfg.remote_address = "127.0.0.1";
+  cfg.remote_port = 12345;
+  cfg.backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
+  cfg.backpressure_threshold = 100000;  // Low enough that one oversized payload alone activates it
+
+  auto channel = UdpChannel::create(cfg, ioc);
+
+  std::atomic<bool> error_occurred{false};
+  channel->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_occurred = true;
+    }
+  });
+
+  channel->start();
+
+  // Enqueue many oversized (guaranteed EMSGSIZE) writes back-to-back before the io_context ever
+  // runs. The first activates backpressure and starts writing; in Reliable mode, all the rest
+  // route into the pending_ overflow queue (not tx_) while backpressure stays active. When the
+  // first write's failure is delivered, report_backpressure()'s internal cleanup path flushes
+  // pending_ back into tx_ and can re-arm backpressure_active_ on its own if that flush alone
+  // exceeds the high watermark again - reproducing the real-world hang seen on a Jetson Orin
+  // Nano Super (unilink#427), where enough Reliable-mode sends had queued up that the naive fix
+  // (clearing only tx_) still left backpressure stuck active.
+  std::vector<uint8_t> huge_packet(100000, 0xDD);
+  for (int i = 0; i < 20; ++i) {
+    channel->async_write_copy(memory::ConstByteSpan(huge_packet.data(), huge_packet.size()));
+  }
+
+  for (int i = 0; i < 20 && !error_occurred.load(); ++i) {
+    ioc.poll();
+    if (!error_occurred.load()) {
+      std::this_thread::sleep_for(10ms);
+    }
+  }
+
+  ASSERT_TRUE(error_occurred.load());
+
+  EXPECT_FALSE(channel->is_backpressure_active())
+      << "Backpressure must clear once the channel errors out even when many Reliable-mode "
+         "writes had overflowed into the pending_ queue (see unilink#427)";
+
+  channel->stop();
+}
