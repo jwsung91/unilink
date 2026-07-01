@@ -284,13 +284,7 @@ struct TcpServer::Impl {
           accept_impl->ioc_, std::move(sock), accept_impl->cfg_.backpressure_threshold,
           accept_impl->cfg_.idle_timeout_ms, accept_impl->cfg_.backpressure_strategy);
 
-      ClientId client_id;
-      {
-        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
-        client_id = accept_impl->next_client_id_.fetch_add(1);
-        accept_impl->sessions_.emplace(client_id, new_session);
-        accept_impl->current_session_ = new_session;
-      }
+      ClientId client_id = accept_impl->next_client_id_.fetch_add(1);
 
       std::weak_ptr<TcpServer> weak_self = self;
 
@@ -350,6 +344,17 @@ struct TcpServer::Impl {
         }
       });
 
+      // alive_ must be true before the session enters sessions_, so that
+      // broadcast() callers who observe client_count() >= 1 are guaranteed
+      // to pass the alive() check inside async_try_write_shared().
+      new_session->start();
+
+      {
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        accept_impl->sessions_.emplace(client_id, new_session);
+        accept_impl->current_session_ = new_session;
+      }
+
       MultiClientConnectHandler connect_cb;
       {
         std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
@@ -359,7 +364,6 @@ struct TcpServer::Impl {
 
       accept_impl->state_.set_state(base::LinkState::Connected);
       accept_impl->notify_state();
-      new_session->start();
       accept_impl->do_accept(self);
     });
   }
