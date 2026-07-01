@@ -65,7 +65,7 @@ struct TcpServer::Impl {
   std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
   std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
       base::constants::BackpressureStrategy::Reliable};
-  std::atomic<bool> tcp_no_delay_{false};
+  std::atomic<bool> tcp_no_delay_{true};
   std::atomic<bool> keep_alive_{false};
   std::atomic<size_t> send_buffer_size_{0};
   std::atomic<size_t> receive_buffer_size_{0};

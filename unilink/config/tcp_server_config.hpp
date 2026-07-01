@@ -39,7 +39,7 @@ struct TcpServerConfig {
   int port_retry_interval_ms = 1000;  // Retry interval in milliseconds
 
   int idle_timeout_ms = 0;  // Idle connection timeout in milliseconds (0 = disabled)
-  bool tcp_no_delay = false;
+  bool tcp_no_delay = true;
   bool keep_alive = false;
   size_t send_buffer_size = 0;
   size_t receive_buffer_size = 0;
