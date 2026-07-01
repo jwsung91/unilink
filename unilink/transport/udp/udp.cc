@@ -366,6 +366,12 @@ struct UdpChannel::Impl {
         UNILINK_LOG_ERROR("udp", "write", fmt::format("Send failed: {}", ec.message()));
         impl->transition_to(LinkState::Error, ec);
         impl->writing_ = false;
+        // Drop any remaining queued writes and clear backpressure now, since do_write() will
+        // never run again to reach the "already in Error" cleanup above — otherwise a
+        // Reliable-mode sender blocked in send_blocking()'s bp_cv_ wait would never wake up.
+        impl->tx_.clear();
+        impl->queue_bytes_ = 0;
+        impl->report_backpressure(self, impl->queue_bytes_);
         return;
       }
 
