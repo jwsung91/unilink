@@ -16,10 +16,14 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <boost/asio/io_context.hpp>
+#include <chrono>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <string_view>
+#include <thread>
 #include <vector>
 
 #include "unilink/interface/channel.hpp"
@@ -195,7 +199,60 @@ void verify_reliable_send_uses_strategy_aware_write(std::string_view name) {
   EXPECT_EQ(channel->try_shared_count(), 0);
 }
 
+// Regression test for jwsung91/unilink#431: the blocking Reliable-mode send
+// path used to wait on a condition variable unbounded. Since the transport
+// clears backpressure_active_ and calls notify_all() without holding the
+// wrapper's bp_mutex_, a notification can race a waiter that's mid-way
+// through checking the predicate and registering to wait, and get lost - an
+// unbounded wait() would then block forever (the same class of bug fixed
+// for UDP in #427/#428). Simulates a "lost" notification directly: the
+// channel's backpressure flips off with no on_backpressure()/notify_all()
+// call at all. A correct fix polls with a bounded timeout regardless of
+// notifications, so the blocked call must still return well within a few
+// poll intervals; the old unbounded wait() would hang this test forever.
+template <typename Wrapper>
+void verify_blocking_send_recovers_without_notify(std::string_view name) {
+  SCOPED_TRACE(std::string(name));
+  auto channel = std::make_shared<ContractChannel>();
+  channel->set_backpressure_active(true);
+
+  // Heap-allocated and captured by shared_ptr (not by reference) so that if
+  // this test fails - i.e. reproduces the #431 hang - the sender thread can
+  // be safely detached rather than joined, without leaving it referencing
+  // locals that are about to go out of scope. A permanently-stuck thread
+  // can't be joined without hanging the test binary itself.
+  auto wrapper = std::make_shared<Wrapper>(channel);
+  ASSERT_TRUE(wrapper->start().get());
+
+  auto sent_promise = std::make_shared<std::promise<bool>>();
+  auto sent_future = sent_promise->get_future();
+  std::thread sender([wrapper, sent_promise] { sent_promise->set_value(wrapper->send("blocked")); });
+
+  // Give the sender thread time to actually enter the wait loop before the
+  // "lost notification" state change below.
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  channel->set_backpressure_active(false);  // no notify_all() - simulates a missed wakeup
+
+  bool recovered = sent_future.wait_for(std::chrono::milliseconds(500)) == std::future_status::ready;
+  if (recovered) {
+    sender.join();
+  } else {
+    sender.detach();
+  }
+  ASSERT_TRUE(recovered) << "blocking send did not recover from a missed backpressure notification within a "
+                            "bounded number of poll intervals";
+  EXPECT_TRUE(sent_future.get());
+}
+
 }  // namespace
+
+TEST(WrapperSendContractTest, BlockingSendRecoversWithoutBackpressureNotification) {
+  verify_blocking_send_recovers_without_notify<unilink::wrapper::TcpClient>("TcpClient");
+  verify_blocking_send_recovers_without_notify<unilink::wrapper::UdpClient>("UdpClient");
+  verify_blocking_send_recovers_without_notify<unilink::wrapper::UdsClient>("UdsClient");
+  verify_blocking_send_recovers_without_notify<unilink::wrapper::Serial>("Serial");
+}
 
 TEST(WrapperSendContractTest, TrySendVariantsUseExplicitTryWritePath) {
   verify_try_send_is_drop_if_full_escape_hatch<unilink::wrapper::TcpClient>("TcpClient");
