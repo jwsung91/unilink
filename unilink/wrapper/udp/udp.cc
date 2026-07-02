@@ -234,10 +234,7 @@ struct UdpClient::Impl {
   bool send_move(std::vector<uint8_t>&& data) {
     if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
       std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-      bp_cv_.wait(bp_lock, [this] {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
-      });
+      wait_for_backpressure_clear(bp_lock);
       std::shared_lock<std::shared_mutex> lock(mutex_);
       if (!started_.load() || !channel || !channel->is_connected()) return false;
       return channel->async_write_move(std::move(data));
@@ -249,10 +246,7 @@ struct UdpClient::Impl {
     if (!data || data->empty()) return false;
     if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
       std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-      bp_cv_.wait(bp_lock, [this] {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
-      });
+      wait_for_backpressure_clear(bp_lock);
       std::shared_lock<std::shared_mutex> lock(mutex_);
       if (!started_.load() || !channel || !channel->is_connected()) return false;
       return channel->async_write_shared(std::move(data));
@@ -269,14 +263,27 @@ struct UdpClient::Impl {
 
   bool send_blocking(std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-    bp_cv_.wait(bp_lock, [this] {
-      std::shared_lock<std::shared_mutex> lock(mutex_);
-      return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
-    });
+    wait_for_backpressure_clear(bp_lock);
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (!started_.load() || !channel || !channel->is_connected()) return false;
     auto binary_view = base::safe_convert::string_to_bytes(data);
     return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+  }
+
+  // channel->on_backpressure() calls bp_cv_.notify_all() from the transport's io_context
+  // thread without holding bp_mutex_ (backpressure_active_ is a plain atomic on the transport
+  // side, not guarded by bp_mutex_ at all). That makes a classic lost-wakeup race possible: a
+  // waiter can check the predicate, find it still blocking, and be in the process of
+  // registering to wait when the notify fires - in the rare case that race is lost, an
+  // unbounded wait() would block forever. Poll with a bounded timeout instead so a missed
+  // notify only costs a short delay rather than a permanent hang (see #427).
+  void wait_for_backpressure_clear(std::unique_lock<std::mutex>& bp_lock) {
+    auto predicate = [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
+    };
+    while (!bp_cv_.wait_for(bp_lock, std::chrono::milliseconds(50), predicate)) {
+    }
   }
 
   bool try_send(std::string_view data) {

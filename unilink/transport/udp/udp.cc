@@ -306,15 +306,33 @@ struct UdpChannel::Impl {
     start_receive(self);
   }
 
+  // Drops all queued (tx_) and pending (pending_, reliable-mode overflow) writes and clears
+  // backpressure, notifying any waiter directly. Mirrors perform_stop_cleanup()'s approach
+  // rather than calling report_backpressure(), because report_backpressure() flushes pending_
+  // back into tx_ and can immediately re-arm backpressure_active_ if enough was queued there -
+  // which would leave a Reliable-mode sender blocked in send_blocking()'s bp_cv_ wait forever
+  // since nothing will ever call do_write() again once the channel has stopped/errored (#427).
+  void drain_queue_and_clear_backpressure() {
+    tx_.clear();
+    queue_bytes_ = 0;
+    pending_.clear();
+    pending_bytes_ = 0;
+    const bool had_backpressure = backpressure_active_;
+    backpressure_active_ = false;
+    if (had_backpressure && on_bp_) {
+      try {
+        on_bp_(queue_bytes_);
+      } catch (...) {
+      }
+    }
+  }
+
   void do_write(std::shared_ptr<UdpChannel> self) {
     if (writing_ || tx_.empty()) return;
     if (stop_requested_.load() || stopping_.load() || state_.is_state(LinkState::Closed) ||
         state_.is_state(LinkState::Error)) {
-      tx_.clear();
-      queue_bytes_ = 0;
       writing_ = false;
-      backpressure_active_ = false;
-      report_backpressure(self, queue_bytes_);
+      drain_queue_and_clear_backpressure();
       return;
     }
 
@@ -356,9 +374,7 @@ struct UdpChannel::Impl {
       if (impl->stop_requested_.load() || impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) ||
           impl->state_.is_state(LinkState::Error)) {
         impl->writing_ = false;
-        impl->tx_.clear();
-        impl->queue_bytes_ = 0;
-        impl->report_backpressure(self, impl->queue_bytes_);
+        impl->drain_queue_and_clear_backpressure();
         return;
       }
 
@@ -366,6 +382,9 @@ struct UdpChannel::Impl {
         UNILINK_LOG_ERROR("udp", "write", fmt::format("Send failed: {}", ec.message()));
         impl->transition_to(LinkState::Error, ec);
         impl->writing_ = false;
+        // do_write() will never run again to reach the "already in Error" cleanup above, so
+        // drain everything and clear backpressure here directly.
+        impl->drain_queue_and_clear_backpressure();
         return;
       }
 
