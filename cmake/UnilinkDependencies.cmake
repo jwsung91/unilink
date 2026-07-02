@@ -235,14 +235,29 @@ elseif(TARGET spdlog)
   set(_UNILINK_SPDLOG_BUILD_TARGET spdlog)
 endif()
 
+# System libraries a pkg-config consumer linking against unilink_static must
+# also pass to its linker. Built up alongside the corresponding
+# target_link_libraries(unilink_dependencies ...) calls below so the two never
+# drift apart the way they previously did (the .pc file used to hardcode its own
+# separate, incomplete copy of this list — see UnilinkPackaging.cmake).
+set(UNILINK_PKGCONFIG_LIBS_PRIVATE "")
+
 # Link common dependencies
 target_link_libraries(unilink_dependencies INTERFACE Threads::Threads)
+if(NOT WIN32)
+  list(APPEND UNILINK_PKGCONFIG_LIBS_PRIVATE "-lpthread")
+endif()
 if(_UNILINK_SPDLOG_BUILD_TARGET)
   target_link_libraries(
     unilink_dependencies
     INTERFACE $<BUILD_INTERFACE:${_UNILINK_SPDLOG_BUILD_TARGET}>
               $<INSTALL_INTERFACE:unilink_spdlog_proxy>
   )
+  if(UNILINK_SPDLOG_BUNDLED)
+    # A FetchContent-built spdlog is always a real compiled static library (not
+    # header-only), so static consumers need it explicitly.
+    list(APPEND UNILINK_PKGCONFIG_LIBS_PRIVATE "-lspdlog")
+  endif()
 endif()
 if(UNILINK_LINK_BOOST_SYSTEM)
   target_link_libraries(
@@ -250,6 +265,7 @@ if(UNILINK_LINK_BOOST_SYSTEM)
     INTERFACE $<BUILD_INTERFACE:Boost::system>
               $<INSTALL_INTERFACE:unilink_boost_system_proxy>
   )
+  list(APPEND UNILINK_PKGCONFIG_LIBS_PRIVATE "-lboost_system")
   if(TARGET Boost::asio)
     target_link_libraries(
       unilink_dependencies
@@ -271,6 +287,9 @@ elseif(UNILINK_BOOST_INCLUDE_DIR)
 endif()
 if(WIN32)
   target_link_libraries(unilink_dependencies INTERFACE ws2_32 mswsock iphlpapi)
+  list(APPEND UNILINK_PKGCONFIG_LIBS_PRIVATE "-lws2_32" "-lmswsock"
+       "-liphlpapi"
+  )
 endif()
 
 # Add include directories
