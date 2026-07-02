@@ -566,9 +566,25 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
       auto* impl = self->impl_.get();
       impl->do_accept(self);
     } else {
+      auto* impl = self->impl_.get();
+      if (impl->stopping_.load()) return;
+
       // Log only real errors, not operation_aborted
       if (ec != boost::asio::error::operation_aborted) {
         UNILINK_LOG_ERROR("uds_server", "accept", fmt::format("Accept failed: {}", ec.message()));
+        impl->state_.set_state(base::LinkState::Error);
+        impl->notify_state();
+      }
+
+      if (!impl->stopping_.load()) {
+        auto timer = std::make_shared<net::steady_timer>(*impl->ioc_);
+        timer->expires_after(std::chrono::milliseconds(100));
+        timer->async_wait([self, timer](const boost::system::error_code&) {
+          auto* retry_impl = self->impl_.get();
+          if (!retry_impl->stopping_.load()) {
+            retry_impl->do_accept(self);
+          }
+        });
       }
     }
   });
