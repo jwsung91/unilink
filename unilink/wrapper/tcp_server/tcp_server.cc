@@ -322,13 +322,21 @@ struct TcpServer::Impl {
     return try_broadcast(data);
   }
 
+  // channel_->on_backpressure()/session-level backpressure callbacks call bp_cv_.notify_all()
+  // from the transport's io_context thread without holding bp_mutex_ - a classic lost-wakeup
+  // race is possible: a waiter can check the predicate, find it still blocking, and be in the
+  // process of registering to wait when the notify fires. Poll with a bounded timeout instead
+  // of an unbounded wait() so a missed notify only costs a short delay rather than a
+  // permanent hang (see #427, #431).
   bool send_to_blocking(ClientId client_id, std::string_view data) {
     std::unique_lock<std::mutex> lock(bp_mutex_);
-    bp_cv_.wait(lock, [this, client_id]() {
+    auto predicate = [this, client_id]() {
       std::shared_lock<std::shared_mutex> rlock(mutex_);
       const auto& ts = transport_cache_;
       return !started_.load() || !ts || !ts->is_backpressure_active(client_id);
-    });
+    };
+    while (!bp_cv_.wait_for(lock, std::chrono::milliseconds(50), predicate)) {
+    }
     std::shared_lock<std::shared_mutex> rlock(mutex_);
     const auto& ts = transport_cache_;
     return ts ? ts->send_to_client(client_id, data) : false;

@@ -479,12 +479,21 @@ struct UdpServer::Impl {
 
   bool broadcast(std::string_view data) { return try_broadcast(data); }
 
+  // channel->on_backpressure() calls bp_cv_.notify_all() from the transport's io_context
+  // thread without holding bp_mutex_ (backpressure_active_ is a plain atomic on the transport
+  // side, not guarded by bp_mutex_ at all). That makes a classic lost-wakeup race possible: a
+  // waiter can check the predicate, find it still blocking, and be in the process of
+  // registering to wait when the notify fires - in the rare case that race is lost, an
+  // unbounded wait() would block forever. Poll with a bounded timeout instead so a missed
+  // notify only costs a short delay rather than a permanent hang (see #427, #431).
   bool send_to_blocking(ClientId client_id, std::string_view data) {
     std::unique_lock<std::mutex> bp_lock(bp_mutex_);
-    bp_cv_.wait(bp_lock, [this] {
+    auto predicate = [this] {
       std::shared_lock<std::shared_mutex> lock(mutex);
       return !started.load() || !channel || !channel->is_backpressure_active();
-    });
+    };
+    while (!bp_cv_.wait_for(bp_lock, std::chrono::milliseconds(50), predicate)) {
+    }
     return try_send_to(client_id, data);
   }
 
