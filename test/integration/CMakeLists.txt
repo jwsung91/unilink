@@ -53,6 +53,7 @@ foreach(
   test_tcp_flood.cc
   test_tcp_abort.cc
   test_tcp_cancel.cc
+  test_tcp_nodelay_default.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
 

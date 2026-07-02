@@ -37,7 +37,7 @@ TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
       port_retry_interval_ms_(1000),
       idle_timeout_(0),
       idle_timeout_set_(false),
-      tcp_no_delay_(false),
+      tcp_no_delay_(true),
       keep_alive_(false),
       send_buffer_size_(0),
       receive_buffer_size_(0) {

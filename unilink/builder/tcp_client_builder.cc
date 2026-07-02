@@ -35,7 +35,7 @@ TcpClientBuilder<State>::TcpClientBuilder(const std::string& host, uint16_t port
       connection_timeout_(5000),
       idle_timeout_(0),
       idle_timeout_action_(IdleTimeoutAction::Reconnect),
-      tcp_no_delay_(false),
+      tcp_no_delay_(true),
       keep_alive_(false),
       send_buffer_size_(0),
       receive_buffer_size_(0) {
