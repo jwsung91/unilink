@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-07-02 05:54:24</td>
+            <td class="headerValue">2026-07-02 13:59:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">85.7&nbsp;%</td>
@@ -100,7 +100,7 @@
 <span id="L22"><span class="lineNum">      22</span>                 :             : namespace net = boost::asio;</span>
 <span id="L23"><span class="lineNum">      23</span>                 :             : using uds = net::local::stream_protocol;</span>
 <span id="L24"><span class="lineNum">      24</span>                 :             : </span>
-<span id="L25"><span class="lineNum">      25</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          26 : BoostUdsAcceptor::BoostUdsAcceptor(boost::asio::io_context&amp; ioc) : acceptor_(ioc) {}</span></span>
+<span id="L25"><span class="lineNum">      25</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          27 : BoostUdsAcceptor::BoostUdsAcceptor(boost::asio::io_context&amp; ioc) : acceptor_(ioc) {}</span></span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
 <span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 : void BoostUdsAcceptor::open(const uds&amp; protocol, boost::system::error_code&amp; ec) { acceptor_.open(protocol, ec); }</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             : </span>

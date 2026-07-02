@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-07-02 05:54:24</td>
+            <td class="headerValue">2026-07-02 13:59:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">72.2&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">70.4&nbsp;%</td>
+            <td class="headerCovTableEntryLo">68.5&nbsp;%</td>
             <td class="headerCovTableEntry">54</td>
-            <td class="headerCovTableEntry">38</td>
+            <td class="headerCovTableEntry">37</td>
           </tr>
                   <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -111,34 +111,34 @@
 <span id="L33"><span class="lineNum">      33</span>                 :             :   size_t messages = 0;</span>
 <span id="L34"><span class="lineNum">      34</span>                 :             :   size_t bytes = 0;</span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : </span>
-<span id="L36"><span class="lineNum">      36</span>   [<span class="tlaGBC" title="Branch 0 was taken 1201 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1201 times"> + </span>]:<span class="tlaGNC tlaBgGNC">        1214 :   bool any() const { return messages &gt; 0 || bytes &gt; 0; }</span></span>
+<span id="L36"><span class="lineNum">      36</span>   [<span class="tlaGBC" title="Branch 0 was taken 1203 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 1203 times"> + </span>]:<span class="tlaGNC tlaBgGNC">        1216 :   bool any() const { return messages &gt; 0 || bytes &gt; 0; }</span></span>
 <span id="L37"><span class="lineNum">      37</span>                 :             : };</span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : </span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">         244 : inline bool try_reserve_write_bytes(std::atomic&lt;size_t&gt;&amp; queue_bytes, const std::atomic&lt;size_t&gt;&amp; pending_bytes,</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">         249 : inline bool try_reserve_write_bytes(std::atomic&lt;size_t&gt;&amp; queue_bytes, const std::atomic&lt;size_t&gt;&amp; pending_bytes,</span></span>
 <span id="L40"><span class="lineNum">      40</span>                 :             :                                     const std::atomic&lt;bool&gt;&amp; backpressure_active, size_t bytes, size_t bp_high,</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :                                     size_t bp_limit) {</span>
-<span id="L42"><span class="lineNum">      42</span>   [<span class="tlaGBC" title="Branch 0 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         244 :   if (bytes == 0 || bytes &gt; bp_limit || backpressure_active.load(std::memory_order_relaxed)) return false;</span></span>
-<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 244 times"> + </span>]
+<span id="L42"><span class="lineNum">      42</span>   [<span class="tlaGBC" title="Branch 0 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         249 :   if (bytes == 0 || bytes &gt; bp_limit || backpressure_active.load(std::memory_order_relaxed)) return false;</span></span>
+<span class="lineNum">        </span>    <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 249 times"> + </span>]
 <span id="L43"><span class="lineNum">      43</span>                 :             : </span>
-<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">         488 :   size_t current = queue_bytes.load(std::memory_order_relaxed);</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">         498 :   size_t current = queue_bytes.load(std::memory_order_relaxed);</span></span>
 <span id="L45"><span class="lineNum">      45</span>                 :             :   for (;;) {</span>
-<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">         244 :     const size_t pending = pending_bytes.load(std::memory_order_relaxed);</span></span>
-<span id="L47"><span class="lineNum">      47</span>   [<span class="tlaGBC" title="Branch 0 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 244 times"> + </span>]:<span class="tlaGNC">         244 :     if (current &gt; bp_high || bytes &gt; bp_high - current) return false;</span></span>
-<span id="L48"><span class="lineNum">      48</span>   [<span class="tlaGBC" title="Branch 0 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         244 :     if (current &gt; bp_limit || pending &gt; bp_limit - current || bytes &gt; bp_limit - current - pending) return false;</span></span>
-<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 244 times"> + </span>]
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">         249 :     const size_t pending = pending_bytes.load(std::memory_order_relaxed);</span></span>
+<span id="L47"><span class="lineNum">      47</span>   [<span class="tlaGBC" title="Branch 0 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 249 times"> + </span>]:<span class="tlaGNC">         249 :     if (current &gt; bp_high || bytes &gt; bp_high - current) return false;</span></span>
+<span id="L48"><span class="lineNum">      48</span>   [<span class="tlaGBC" title="Branch 0 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         249 :     if (current &gt; bp_limit || pending &gt; bp_limit - current || bytes &gt; bp_limit - current - pending) return false;</span></span>
+<span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 249 times"> + </span>]
 <span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaGBC" title="Branch 0 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         488 :     if (queue_bytes.compare_exchange_weak(current, current + bytes, std::memory_order_acq_rel,</span></span>
+<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaGBC" title="Branch 0 was taken 249 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         498 :     if (queue_bytes.compare_exchange_weak(current, current + bytes, std::memory_order_acq_rel,</span></span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :                                           std::memory_order_relaxed)) {</span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">         244 :       return true;</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">         249 :       return true;</span></span>
 <span id="L53"><span class="lineNum">      53</span>                 :             :     }</span>
 <span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaUNC tlaBgUNC">           0 :   }</span></span>
 <span id="L55"><span class="lineNum">      55</span>                 :             : }</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : </span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC tlaBgGNC">           4 : inline void release_reserved_write_bytes(std::atomic&lt;size_t&gt;&amp; queue_bytes, size_t bytes) {</span></span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">           8 :   size_t current = queue_bytes.load(std::memory_order_relaxed);</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC tlaBgGNC">           5 : inline void release_reserved_write_bytes(std::atomic&lt;size_t&gt;&amp; queue_bytes, size_t bytes) {</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          10 :   size_t current = queue_bytes.load(std::memory_order_relaxed);</span></span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :   for (;;) {</span>
-<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           4 :     const size_t next = current &gt; bytes ? current - bytes : 0;</span></span>
-<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :     if (queue_bytes.compare_exchange_weak(current, next, std::memory_order_acq_rel, std::memory_order_relaxed)) return;</span></span>
+<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span>]:<span class="tlaGNC">           5 :     const size_t next = current &gt; bytes ? current - bytes : 0;</span></span>
+<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :     if (queue_bytes.compare_exchange_weak(current, next, std::memory_order_acq_rel, std::memory_order_relaxed)) return;</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaUNC tlaBgUNC">           0 :   }</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : }</span>
 <span id="L64"><span class="lineNum">      64</span>                 :             : </span>
@@ -161,12 +161,12 @@
 <span id="L81"><span class="lineNum">      81</span>                 :             : //   added &gt;= bp_high  →  drop entire tx_ (full keep-latest replacement).</span>
 <span id="L82"><span class="lineNum">      82</span>                 :             : //   otherwise         →  pop oldest tx_ entries until queue_bytes + added &lt;= bp_high.</span>
 <span id="L83"><span class="lineNum">      83</span>                 :             : template &lt;typename Deque&gt;</span>
-<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">        1219 : inline DropAccounting maybe_flush_for_keep_latest(::unilink::base::constants::BackpressureStrategy bp_strategy,</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">        1221 : inline DropAccounting maybe_flush_for_keep_latest(::unilink::base::constants::BackpressureStrategy bp_strategy,</span></span>
 <span id="L85"><span class="lineNum">      85</span>                 :             :                                                   size_t added, size_t bp_high, Deque&amp; tx,</span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :                                                   std::atomic&lt;size_t&gt;&amp; queue_bytes,</span>
 <span id="L87"><span class="lineNum">      87</span>                 :             :                                                   const std::atomic&lt;bool&gt;&amp; backpressure_active) {</span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        1219 :   DropAccounting dropped;</span></span>
-<span id="L89"><span class="lineNum">      89</span>         [<span class="tlaGBC" title="Branch 0 was taken 1188 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span>]:<span class="tlaGNC">        1219 :   if (bp_strategy != ::unilink::base::constants::BackpressureStrategy::BestEffort) return dropped;</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        1221 :   DropAccounting dropped;</span></span>
+<span id="L89"><span class="lineNum">      89</span>         [<span class="tlaGBC" title="Branch 0 was taken 1190 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span>]:<span class="tlaGNC">        1221 :   if (bp_strategy != ::unilink::base::constants::BackpressureStrategy::BestEffort) return dropped;</span></span>
 <span id="L90"><span class="lineNum">      90</span>                 :             : </span>
 <span id="L91"><span class="lineNum">      91</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">          31 :   if (added &gt;= bp_high) {</span></span>
 <span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">          27 :     size_t removed_bytes = 0;</span></span>
