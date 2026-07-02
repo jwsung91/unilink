@@ -513,22 +513,35 @@ void TcpServerSession::do_close() {
   // Safely invoke on_close callback
   auto close_cb = std::move(on_close_);
 
-  // Clear all callbacks to prevent any further invocations
-  on_bytes_ = nullptr;
-  on_bp_ = nullptr;
-  on_close_ = nullptr;
-  idle_timer_.cancel();
-
   UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
   socket_->shutdown(tcp::socket::shutdown_both, ec);
   socket_->close(ec);
 
-  // Release memory immediately
+  // Drain queued/pending writes and unconditionally clear backpressure,
+  // notifying any waiter directly - mirrors UdpChannel's
+  // drain_queue_and_clear_backpressure(). Must run before on_bp_ is cleared
+  // below: otherwise a Reliable-mode caller blocked in send_to_blocking()
+  // for this client would never be woken up when the client disconnects via
+  // a read error or idle timeout (jwsung91/unilink#452).
   tx_.clear();
   queue_bytes_ = 0;
   pending_.clear();
   pending_bytes_ = 0;
+  const bool had_backpressure = backpressure_active_;
+  backpressure_active_ = false;
+  if (had_backpressure && on_bp_) {
+    try {
+      on_bp_(queue_bytes_);
+    } catch (...) {
+    }
+  }
+
+  // Clear all callbacks to prevent any further invocations
+  on_bytes_ = nullptr;
+  on_bp_ = nullptr;
+  on_close_ = nullptr;
+  idle_timer_.cancel();
 
   if (close_cb) {
     try {

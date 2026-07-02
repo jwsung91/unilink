@@ -172,6 +172,54 @@ TEST_F(UdsServerSessionLifecycleTest, SharedWritePendingFlushesAfterBackpressure
   ioc.run();
 }
 
+// Regression test for jwsung91/unilink#452: if a client disconnects (read
+// error) while backpressure is active for its session, do_close() must
+// unconditionally clear it and fire on_backpressure - otherwise a caller
+// blocked in send_to_blocking() for this client would never wake up, since
+// nothing else will ever call report_backpressure() again once the session
+// is gone. Uses a held (never-completing) write handler to model a client
+// that has stopped reading, so nothing but do_close() can ever clear
+// backpressure here.
+TEST_F(UdsServerSessionLifecycleTest, BackpressureClearsOnDisconnectWhileActive) {
+  auto mock_socket = std::make_unique<unilink::test::mocks::MockUdsSocket>();
+  std::function<void(const boost::system::error_code&, std::size_t)> read_handler;
+
+  EXPECT_CALL(*mock_socket, async_read_some(_, _))
+      .WillOnce(Invoke([&](const boost::asio::mutable_buffer&,
+                           std::function<void(const boost::system::error_code&, std::size_t)> handler) {
+        read_handler = std::move(handler);
+      }));
+  EXPECT_CALL(*mock_socket, async_write(_, _))
+      .WillOnce(Invoke(
+          [](const boost::asio::const_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {
+            // Never invoke: the write is permanently stuck in-flight.
+          }));
+  EXPECT_CALL(*mock_socket, close(_)).Times(1);
+
+  auto session = std::make_shared<UdsServerSession>(ioc, std::move(mock_socket), 1024, 0);
+  std::vector<size_t> events;
+  session->on_backpressure([&](size_t queued) { events.push_back(queued); });
+  session->start();
+
+  std::vector<uint8_t> payload(2048, 'p');
+  ASSERT_TRUE(session->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+  ioc.run_for(10ms);
+
+  ASSERT_GE(events.size(), 1u);
+  EXPECT_GE(events.back(), 1024u);
+  EXPECT_TRUE(session->is_backpressure_active());
+  ASSERT_TRUE(read_handler);
+
+  // Simulate an abrupt disconnect (client gone) while the write is still
+  // stuck and backpressure is still active.
+  read_handler(make_error_code(boost::asio::error::eof), 0);
+  ioc.restart();
+  ioc.run_for(20ms);
+
+  EXPECT_EQ(events.back(), 0u);
+  EXPECT_FALSE(session->alive());
+}
+
 TEST_F(UdsServerSessionLifecycleTest, SharedWriteRejectsNullAndClosedSession) {
   auto mock_socket = std::make_unique<unilink::test::mocks::MockUdsSocket>();
   EXPECT_CALL(*mock_socket, close(_)).Times(1);

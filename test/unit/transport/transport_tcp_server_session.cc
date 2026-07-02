@@ -35,6 +35,28 @@ namespace {
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
+// Unlike FakeTcpSocket, whose async_write always auto-completes immediately,
+// this stub withholds the write completion indefinitely - modeling a real
+// client that has stopped reading, so the outstanding write never finishes
+// on its own. This is required to reproduce jwsung91/unilink#452: without
+// it, the fake socket's own auto-completion would drain the queue through
+// the normal (already-correct) path, masking whether do_close() itself
+// clears backpressure on disconnect.
+class HangingWriteSocket : public FakeTcpSocket {
+ public:
+  explicit HangingWriteSocket(net::io_context& ioc) : FakeTcpSocket(ioc) {}
+
+  void async_write(const net::const_buffer&,
+                   std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
+    write_handler_ = std::move(handler);
+  }
+
+  bool has_write_handler() const { return !!write_handler_; }
+
+ private:
+  std::function<void(const boost::system::error_code&, std::size_t)> write_handler_;
+};
+
 }  // namespace
 
 TEST(TransportTcpServerSessionTest, QueueLimitDropsMessage) {
@@ -170,6 +192,51 @@ TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
   ASSERT_GE(events.size(), 2u);
   EXPECT_GE(events.front(), bp_threshold);
   EXPECT_LE(events.back(), bp_threshold / 2);
+}
+
+// Regression test for jwsung91/unilink#452: if a client disconnects (read
+// error) while backpressure is active for its session, do_close() must
+// unconditionally clear it and fire on_backpressure - otherwise a caller
+// blocked in send_to_blocking() for this client would never wake up, since
+// nothing else will ever call report_backpressure() again once the session
+// is gone.
+TEST(TransportTcpServerSessionTest, BackpressureClearsOnDisconnectWhileActive) {
+  net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
+  size_t bp_threshold = 1024;
+
+  // HangingWriteSocket never completes a write on its own, modeling a client
+  // that has stopped reading - the only way backpressure can ever clear is
+  // via do_close()'s drain, not via a write eventually finishing.
+  auto socket = std::make_unique<HangingWriteSocket>(ioc);
+  auto* socket_raw = socket.get();
+  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
+
+  std::vector<size_t> events;
+  session->on_backpressure([&](size_t queued) { events.push_back(queued); });
+
+  session->start();
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(std::chrono::milliseconds(1));
+  }
+
+  std::vector<uint8_t> payload(bp_threshold * 2, 0xEE);
+  ASSERT_TRUE(session->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size())));
+  ioc.run_for(50ms);
+
+  ASSERT_GE(events.size(), 1u);
+  EXPECT_GE(events.back(), bp_threshold);
+  ASSERT_TRUE(socket_raw->has_write_handler());  // write is stuck in-flight, never completed
+
+  // Simulate an abrupt disconnect (client gone) while the write is still
+  // stuck and backpressure is still active. Nothing but do_close() itself
+  // can ever clear it now.
+  socket_raw->emit_read(0, boost::asio::error::eof);
+  ioc.restart();
+  ioc.run_for(50ms);
+
+  EXPECT_EQ(events.back(), 0u);
+  EXPECT_FALSE(session->alive());
 }
 
 TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
