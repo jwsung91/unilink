@@ -76,10 +76,18 @@ struct UdpClient::Impl {
   std::atomic<bool> started_{false};
   std::shared_ptr<bool> alive_marker{std::make_shared<bool>(true)};
 
+  // False only for the dependency-injected-channel constructor below, where
+  // the caller owns the channel's identity and lifecycle (e.g. tests
+  // injecting a fake channel) - stop() must not discard and factory-rebuild
+  // a channel it didn't create itself.
+  bool factory_managed_channel_ = true;
+
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
   Impl(const config::UdpConfig& config, std::shared_ptr<boost::asio::io_context> ioc)
       : cfg(config), external_ioc(std::move(ioc)), use_external_context(external_ioc != nullptr) {}
-  explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)) { setup_internal_handlers(); }
+  explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)), factory_managed_channel_(false) {
+    setup_internal_handlers();
+  }
 
   ~Impl() {
     try {
@@ -160,10 +168,6 @@ struct UdpClient::Impl {
     }
     started_.store(true);
 
-    if (channel && !batch_timer_) {
-      batch_timer_ = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
-    }
-
     lock.unlock();
     channel->start();
     if (use_external_context && manage_external_context && !external_thread.joinable()) {
@@ -197,9 +201,21 @@ struct UdpClient::Impl {
     if (channel) {
       channel->on_bytes(nullptr);
       channel->on_state(nullptr);
+      channel->on_backpressure(nullptr);
       lock.unlock();
       channel->stop();
       lock.lock();
+      if (factory_managed_channel_) {
+        // Fully release the channel rather than reusing it: start()'s
+        // `if (!channel)` guard is what re-runs setup_internal_handlers() and
+        // rebuilds config from the (possibly changed) staged fields. Reusing
+        // a stopped channel left every handler nulled forever - including
+        // the one that fulfills the start() future - so a restart would
+        // hang (jwsung91/unilink#444). Injected channels (factory_managed_
+        // channel_ == false) are exempt: the caller owns that channel's
+        // identity, so we must not discard and factory-rebuild it.
+        channel.reset();
+      }
     }
 
     if (work_guard) {

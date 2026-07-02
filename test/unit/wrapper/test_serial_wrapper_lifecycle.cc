@@ -231,6 +231,34 @@ TEST_F(SerialWrapperLifecycleTest, ConfigurationSetters) {
   serial->stop();
 }
 
+// Regression test for jwsung91/unilink#444: Impl::stop() used to null the
+// channel's callbacks (including on_state, which is what fulfills the
+// start() future) without releasing the channel object itself. Since
+// start()'s `if (!channel)` guard is the only place that re-runs
+// setup_internal_handlers(), a restarted channel's handlers stayed null
+// forever, and the second start()'s future never resolved. Uses wait_for()
+// with a bounded timeout rather than a bare get(), so this test fails
+// loudly instead of hanging the suite if the fix regresses.
+TEST_F(SerialWrapperLifecycleTest, RestartAfterStopResolvesFutureAndReinstallsHandlers) {
+  auto serial = std::make_shared<wrapper::Serial>(device_, 9600);
+  // Fail fast instead of retrying forever: /dev/null (or NUL) doesn't
+  // support the serial ioctls, so open() always fails here - the point of
+  // this test is that the future resolves at all (worse-finding #1 from
+  // #444: it used to hang), not that the device actually connects.
+  serial->reopen_on_error(false);
+  serial->on_error([](const wrapper::ErrorContext&) {});
+
+  auto first = serial->start();
+  ASSERT_EQ(first.wait_for(1s), std::future_status::ready);
+
+  serial->stop();
+
+  auto second = serial->start();
+  ASSERT_EQ(second.wait_for(1s), std::future_status::ready);
+
+  serial->stop();
+}
+
 TEST_F(SerialWrapperLifecycleTest, AutoManageStartsInjectedTransport) {
   boost::asio::io_context ioc;
 

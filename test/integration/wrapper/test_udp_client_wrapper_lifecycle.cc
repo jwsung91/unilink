@@ -312,5 +312,36 @@ TEST(UdpClientWrapperLifecycleTest, StopWithoutStart) {
   client.stop();
 }
 
+// Regression test for jwsung91/unilink#444: Impl::stop() used to null the
+// channel's callbacks (including on_state, which is what fulfills the
+// start() future) without releasing the channel object itself. Since
+// start()'s `if (!channel)` guard is the only place that re-runs
+// setup_internal_handlers(), a restarted channel's handlers stayed null
+// forever, and the second start()'s future never resolved. Uses wait_for()
+// with a bounded timeout rather than a bare get(), so this test fails
+// loudly instead of hanging the suite if the fix regresses.
+TEST(UdpClientWrapperLifecycleTest, RestartAfterStopResolvesFutureAndReinstallsHandlers) {
+  config::UdpConfig cfg;
+  cfg.local_port = 0;
+  wrapper::UdpClient client(cfg);
+
+  std::atomic<int> connect_count{0};
+  client.on_connect([&](const wrapper::ConnectionContext&) { connect_count++; });
+
+  auto first = client.start();
+  ASSERT_EQ(first.wait_for(std::chrono::seconds(1)), std::future_status::ready);
+  EXPECT_TRUE(first.get());
+  EXPECT_EQ(connect_count.load(), 1);
+
+  client.stop();
+
+  auto second = client.start();
+  ASSERT_EQ(second.wait_for(std::chrono::seconds(1)), std::future_status::ready);
+  EXPECT_TRUE(second.get());
+  EXPECT_EQ(connect_count.load(), 2);
+
+  client.stop();
+}
+
 }  // namespace test
 }  // namespace unilink
