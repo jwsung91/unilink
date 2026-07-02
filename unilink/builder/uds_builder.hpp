@@ -53,8 +53,11 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         retry_interval_(other.retry_interval_),
+        retry_interval_set_(other.retry_interval_set_),
         max_retries_(other.max_retries_),
-        connection_timeout_(other.connection_timeout_) {
+        max_retries_set_(other.max_retries_set_),
+        connection_timeout_(other.connection_timeout_),
+        connection_timeout_set_(other.connection_timeout_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -91,8 +94,11 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
   bool independent_context_;
 
   std::chrono::milliseconds retry_interval_;
+  bool retry_interval_set_{false};
   int max_retries_;
+  bool max_retries_set_{false};
   std::chrono::milliseconds connection_timeout_;
+  bool connection_timeout_set_{false};
 };
 
 using UdsClientBuilderDefault = UdsClientBuilder<BuilderState::None>;

@@ -86,7 +86,7 @@ endforeach()
 
 # Builder tests (separate executables)
 foreach(test_file test_builder.cc test_udp_builder_options.cc
-                  test_uds_builder_options.cc
+                  test_uds_builder_options.cc test_builder_option_wiring.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   unilink_add_unit_gtest(

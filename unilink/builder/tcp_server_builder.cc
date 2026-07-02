@@ -33,7 +33,7 @@ TcpServerBuilder<State>::TcpServerBuilder(uint16_t port)
       max_clients_(0),
       client_limit_enabled_(false),
       port_retry_enabled_(false),
-      max_port_retries_(10),
+      max_port_retries_(3),
       port_retry_interval_ms_(1000),
       idle_timeout_(0),
       idle_timeout_set_(false),
@@ -68,14 +68,16 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder<State>::build() {
     server->max_clients(max_clients_);
   }
 
-  server->bind_address(bind_address_);
-  server->port_retry(port_retry_enabled_, static_cast<int>(max_port_retries_),
-                     static_cast<int>(port_retry_interval_ms_));
+  if (bind_address_set_) server->bind_address(bind_address_);
+  if (port_retry_enabled_set_ || max_port_retries_set_ || port_retry_interval_set_) {
+    server->port_retry(port_retry_enabled_, static_cast<int>(max_port_retries_),
+                       static_cast<int>(port_retry_interval_ms_));
+  }
   if (idle_timeout_set_) server->idle_timeout(idle_timeout_);
-  server->tcp_no_delay(tcp_no_delay_);
-  server->keep_alive(keep_alive_);
-  server->send_buffer_size(send_buffer_size_);
-  server->receive_buffer_size(receive_buffer_size_);
+  if (tcp_no_delay_set_) server->tcp_no_delay(tcp_no_delay_);
+  if (keep_alive_set_) server->keep_alive(keep_alive_);
+  if (send_buffer_size_set_) server->send_buffer_size(send_buffer_size_);
+  if (receive_buffer_size_set_) server->receive_buffer_size(receive_buffer_size_);
 
   if (this->bp_strategy_set_) server->backpressure_strategy(this->bp_strategy_);
   server->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -106,6 +108,7 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::auto_start(bool auto_start) {
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::bind_address(const std::string& address) {
   bind_address_ = address;
+  bind_address_set_ = true;
   return *this;
 }
 
@@ -125,42 +128,49 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::max_clients(uint32_t max_clien
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::enable_port_retry(bool enable) {
   port_retry_enabled_ = enable;
+  port_retry_enabled_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::max_port_retries(uint32_t max_retries) {
   max_port_retries_ = max_retries;
+  max_port_retries_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry_interval(std::chrono::milliseconds interval) {
   port_retry_interval_ms_ = static_cast<uint32_t>(interval.count());
+  port_retry_interval_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::tcp_no_delay(bool enable) {
   tcp_no_delay_ = enable;
+  tcp_no_delay_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::keep_alive(bool enable) {
   keep_alive_ = enable;
+  keep_alive_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::send_buffer_size(size_t bytes) {
   send_buffer_size_ = bytes;
+  send_buffer_size_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::receive_buffer_size(size_t bytes) {
   receive_buffer_size_ = bytes;
+  receive_buffer_size_set_ = true;
   return *this;
 }
 
@@ -168,8 +178,11 @@ TcpServerBuilder<State>& TcpServerBuilder<State>::receive_buffer_size(size_t byt
 template <uint32_t State>
 TcpServerBuilder<State>& TcpServerBuilder<State>::port_retry(bool enable, int max_retries, int retry_interval_ms) {
   port_retry_enabled_ = enable;
+  port_retry_enabled_set_ = true;
   max_port_retries_ = static_cast<uint32_t>(max_retries);
+  max_port_retries_set_ = true;
   port_retry_interval_ms_ = static_cast<uint32_t>(retry_interval_ms);
+  port_retry_interval_set_ = true;
   return *this;
 }
 

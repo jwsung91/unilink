@@ -35,6 +35,10 @@ class io_context;
 }
 }  // namespace boost
 
+// Forward declaration so Serial can grant it test-only access to
+// build_config() (see the friend declaration below).
+class SerialBuilderConfigTest;
+
 namespace unilink {
 namespace interface {
 class Channel;
@@ -96,6 +100,7 @@ class UNILINK_API Serial : public ChannelInterface {
   Serial& stop_bits(int stop_bits);
   Serial& parity(const std::string& parity);
   Serial& flow_control(const std::string& flow_control);
+  Serial& reopen_on_error(bool enable);
   Serial& retry_interval(std::chrono::milliseconds interval);
   Serial& backpressure_threshold(size_t threshold);
   Serial& backpressure_strategy(base::constants::BackpressureStrategy strategy);
@@ -105,6 +110,7 @@ class UNILINK_API Serial : public ChannelInterface {
 
  protected:
   // Exposed for testing only — not part of the public API.
+  friend class ::SerialBuilderConfigTest;
   config::SerialConfig build_config() const;
 
  private:

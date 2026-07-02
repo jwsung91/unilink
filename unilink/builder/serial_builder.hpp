@@ -51,11 +51,17 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         retry_interval_ms_(other.retry_interval_ms_),
+        retry_interval_set_(other.retry_interval_set_),
         char_size_(other.char_size_),
+        char_size_set_(other.char_size_set_),
         stop_bits_(other.stop_bits_),
+        stop_bits_set_(other.stop_bits_set_),
         parity_(other.parity_),
+        parity_set_(other.parity_set_),
         flow_(other.flow_),
-        reopen_on_error_(other.reopen_on_error_) {
+        flow_set_(other.flow_set_),
+        reopen_on_error_(other.reopen_on_error_),
+        reopen_on_error_set_(other.reopen_on_error_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -99,11 +105,17 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
   bool independent_context_;
 
   uint32_t retry_interval_ms_;
+  bool retry_interval_set_{false};
   unsigned int char_size_;
+  bool char_size_set_{false};
   unsigned int stop_bits_;
+  bool stop_bits_set_{false};
   config::SerialConfig::Parity parity_;
+  bool parity_set_{false};
   config::SerialConfig::Flow flow_;
+  bool flow_set_{false};
   bool reopen_on_error_;
+  bool reopen_on_error_set_{false};
 };
 
 using SerialBuilderDefault = SerialBuilder<BuilderState::None>;

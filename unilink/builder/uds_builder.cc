@@ -18,6 +18,7 @@
 
 #include <boost/asio/io_context.hpp>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
@@ -31,9 +32,9 @@ UdsClientBuilder<State>::UdsClientBuilder(const std::string& socket_path)
     : socket_path_(socket_path),
       auto_start_(false),
       independent_context_(false),
-      retry_interval_(3000),
-      max_retries_(-1),
-      connection_timeout_(5000) {
+      retry_interval_(base::constants::DEFAULT_RETRY_INTERVAL_MS),
+      max_retries_(base::constants::DEFAULT_MAX_RETRIES),
+      connection_timeout_(base::constants::DEFAULT_CONNECTION_TIMEOUT_MS) {
   if (socket_path.empty()) throw diagnostics::BuilderException("Socket path cannot be empty");
 
   // Ensure background IO service is running
@@ -57,9 +58,9 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder<State>::build() {
   if (this->on_error_) client->on_error(this->on_error_);
   if (this->on_backpressure_) client->on_backpressure(this->on_backpressure_);
 
-  client->retry_interval(retry_interval_);
-  client->max_retries(max_retries_);
-  client->connection_timeout(connection_timeout_);
+  if (retry_interval_set_) client->retry_interval(retry_interval_);
+  if (max_retries_set_) client->max_retries(max_retries_);
+  if (connection_timeout_set_) client->connection_timeout(connection_timeout_);
 
   if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
   client->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -90,18 +91,21 @@ UdsClientBuilder<State>& UdsClientBuilder<State>::auto_start(bool auto_start) {
 template <uint32_t State>
 UdsClientBuilder<State>& UdsClientBuilder<State>::retry_interval(std::chrono::milliseconds interval) {
   retry_interval_ = interval;
+  retry_interval_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 UdsClientBuilder<State>& UdsClientBuilder<State>::max_retries(int max_retries) {
   max_retries_ = max_retries;
+  max_retries_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 UdsClientBuilder<State>& UdsClientBuilder<State>::connection_timeout(std::chrono::milliseconds timeout) {
   connection_timeout_ = timeout;
+  connection_timeout_set_ = true;
   return *this;
 }
 

@@ -52,14 +52,23 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         retry_interval_(other.retry_interval_),
+        retry_interval_set_(other.retry_interval_set_),
         max_retries_(other.max_retries_),
+        max_retries_set_(other.max_retries_set_),
         connection_timeout_(other.connection_timeout_),
+        connection_timeout_set_(other.connection_timeout_set_),
         idle_timeout_(other.idle_timeout_),
+        idle_timeout_set_(other.idle_timeout_set_),
         idle_timeout_action_(other.idle_timeout_action_),
+        idle_timeout_action_set_(other.idle_timeout_action_set_),
         tcp_no_delay_(other.tcp_no_delay_),
+        tcp_no_delay_set_(other.tcp_no_delay_set_),
         keep_alive_(other.keep_alive_),
+        keep_alive_set_(other.keep_alive_set_),
         send_buffer_size_(other.send_buffer_size_),
-        receive_buffer_size_(other.receive_buffer_size_) {
+        send_buffer_size_set_(other.send_buffer_size_set_),
+        receive_buffer_size_(other.receive_buffer_size_),
+        receive_buffer_size_set_(other.receive_buffer_size_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -116,14 +125,23 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   bool independent_context_;
 
   std::chrono::milliseconds retry_interval_;
+  bool retry_interval_set_{false};
   int max_retries_;
+  bool max_retries_set_{false};
   std::chrono::milliseconds connection_timeout_;
+  bool connection_timeout_set_{false};
   std::chrono::milliseconds idle_timeout_;
+  bool idle_timeout_set_{false};
   IdleTimeoutAction idle_timeout_action_;
+  bool idle_timeout_action_set_{false};
   bool tcp_no_delay_;
+  bool tcp_no_delay_set_{false};
   bool keep_alive_;
+  bool keep_alive_set_{false};
   size_t send_buffer_size_;
+  bool send_buffer_size_set_{false};
   size_t receive_buffer_size_;
+  bool receive_buffer_size_set_{false};
 };
 
 using TcpClientBuilderDefault = TcpClientBuilder<BuilderState::None>;

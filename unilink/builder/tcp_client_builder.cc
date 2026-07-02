@@ -18,6 +18,7 @@
 
 #include <boost/asio/io_context.hpp>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
@@ -30,9 +31,9 @@ TcpClientBuilder<State>::TcpClientBuilder(const std::string& host, uint16_t port
       port_(port),
       auto_start_(false),
       independent_context_(false),
-      retry_interval_(3000),
-      max_retries_(-1),
-      connection_timeout_(5000),
+      retry_interval_(base::constants::DEFAULT_RETRY_INTERVAL_MS),
+      max_retries_(base::constants::DEFAULT_MAX_RETRIES),
+      connection_timeout_(base::constants::DEFAULT_CONNECTION_TIMEOUT_MS),
       idle_timeout_(0),
       idle_timeout_action_(IdleTimeoutAction::Reconnect),
       tcp_no_delay_(true),
@@ -63,15 +64,15 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder<State>::build() {
   if (this->on_error_) client->on_error(this->on_error_);
   if (this->on_backpressure_) client->on_backpressure(this->on_backpressure_);
 
-  client->retry_interval(retry_interval_);
-  client->max_retries(max_retries_);
-  client->connection_timeout(connection_timeout_);
-  client->idle_timeout(idle_timeout_);
-  client->idle_timeout_action(idle_timeout_action_);
-  client->tcp_no_delay(tcp_no_delay_);
-  client->keep_alive(keep_alive_);
-  client->send_buffer_size(send_buffer_size_);
-  client->receive_buffer_size(receive_buffer_size_);
+  if (retry_interval_set_) client->retry_interval(retry_interval_);
+  if (max_retries_set_) client->max_retries(max_retries_);
+  if (connection_timeout_set_) client->connection_timeout(connection_timeout_);
+  if (idle_timeout_set_) client->idle_timeout(idle_timeout_);
+  if (idle_timeout_action_set_) client->idle_timeout_action(idle_timeout_action_);
+  if (tcp_no_delay_set_) client->tcp_no_delay(tcp_no_delay_);
+  if (keep_alive_set_) client->keep_alive(keep_alive_);
+  if (send_buffer_size_set_) client->send_buffer_size(send_buffer_size_);
+  if (receive_buffer_size_set_) client->receive_buffer_size(receive_buffer_size_);
 
   if (this->bp_strategy_set_) client->backpressure_strategy(this->bp_strategy_);
   client->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -102,30 +103,35 @@ TcpClientBuilder<State>& TcpClientBuilder<State>::auto_start(bool auto_start) {
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::retry_interval(std::chrono::milliseconds interval) {
   retry_interval_ = interval;
+  retry_interval_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::max_retries(int max_retries) {
   max_retries_ = max_retries;
+  max_retries_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::connection_timeout(std::chrono::milliseconds timeout) {
   connection_timeout_ = timeout;
+  connection_timeout_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::idle_timeout(std::chrono::milliseconds timeout) {
   idle_timeout_ = timeout;
+  idle_timeout_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::idle_timeout_action(IdleTimeoutAction action) {
   idle_timeout_action_ = action;
+  idle_timeout_action_set_ = true;
   return *this;
 }
 
@@ -138,24 +144,28 @@ TcpClientBuilder<State>& TcpClientBuilder<State>::independent_context(bool use_i
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::tcp_no_delay(bool enable) {
   tcp_no_delay_ = enable;
+  tcp_no_delay_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::keep_alive(bool enable) {
   keep_alive_ = enable;
+  keep_alive_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::send_buffer_size(size_t bytes) {
   send_buffer_size_ = bytes;
+  send_buffer_size_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 TcpClientBuilder<State>& TcpClientBuilder<State>::receive_buffer_size(size_t bytes) {
   receive_buffer_size_ = bytes;
+  receive_buffer_size_set_ = true;
   return *this;
 }
 
