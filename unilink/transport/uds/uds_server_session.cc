@@ -327,17 +327,34 @@ void UdsServerSession::do_close() {
   if (!closing_.exchange(true) && !alive_) return;
   alive_ = false;
   auto close_cb = std::move(on_close_);
-  on_bytes_ = nullptr;
-  on_bp_ = nullptr;
-  on_close_ = nullptr;
+
+  boost::system::error_code ec;
+  socket_->close(ec);
+
+  // Drain queued/pending writes and unconditionally clear backpressure,
+  // notifying any waiter directly - mirrors UdpChannel's
+  // drain_queue_and_clear_backpressure(). Must run before on_bp_ is cleared
+  // below: otherwise a Reliable-mode caller blocked in send_to_blocking()
+  // for this client would never be woken up when the client disconnects via
+  // a read error or idle timeout (jwsung91/unilink#452).
   tx_.clear();
   current_write_buffer_ = std::nullopt;
   queue_bytes_ = 0;
   pending_.clear();
   pending_bytes_ = 0;
   writing_ = false;
-  boost::system::error_code ec;
-  socket_->close(ec);
+  const bool had_backpressure = backpressure_active_;
+  backpressure_active_ = false;
+  if (had_backpressure && on_bp_) {
+    try {
+      on_bp_(queue_bytes_);
+    } catch (...) {
+    }
+  }
+
+  on_bytes_ = nullptr;
+  on_bp_ = nullptr;
+  on_close_ = nullptr;
   if (close_cb) {
     try {
       close_cb();
