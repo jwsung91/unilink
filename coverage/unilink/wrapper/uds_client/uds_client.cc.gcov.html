@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-07-02 00:52:24</td>
+            <td class="headerValue">2026-07-02 05:01:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">89.3&nbsp;%</td>
@@ -501,12 +501,12 @@
 <span id="L400"><span class="lineNum">     400</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          31 :     });</span></span>
 <span id="L401"><span class="lineNum">     401</span>                 :             : </span>
 <span id="L402"><span class="lineNum">     402</span>   [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          23 :     channel_-&gt;on_bytes([this, weak_alive](memory::ConstByteSpan data) {</span></span>
-<span id="L403"><span class="lineNum">     403</span>                 :<span class="tlaGNC">          20 :       auto alive = weak_alive.lock();</span></span>
-<span id="L404"><span class="lineNum">     404</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 20 times"> + </span>]:<span class="tlaGNC">          20 :       if (!alive) return;</span></span>
+<span id="L403"><span class="lineNum">     403</span>                 :<span class="tlaGNC">          22 :       auto alive = weak_alive.lock();</span></span>
+<span id="L404"><span class="lineNum">     404</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          22 :       if (!alive) return;</span></span>
 <span id="L405"><span class="lineNum">     405</span>                 :             : </span>
-<span id="L406"><span class="lineNum">     406</span>                 :<span class="tlaGNC">          20 :       std::shared_ptr&lt;framer::IFramer&gt; framer_to_push;</span></span>
-<span id="L407"><span class="lineNum">     407</span>         [<span class="tlaGBC" title="Branch 0 was taken 20 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          20 :       std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
-<span id="L408"><span class="lineNum">     408</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span>]:<span class="tlaGNC">          20 :       if (data_batch_handler_) {</span></span>
+<span id="L406"><span class="lineNum">     406</span>                 :<span class="tlaGNC">          22 :       std::shared_ptr&lt;framer::IFramer&gt; framer_to_push;</span></span>
+<span id="L407"><span class="lineNum">     407</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :       std::unique_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></span>
+<span id="L408"><span class="lineNum">     408</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          22 :       if (data_batch_handler_) {</span></span>
 <span id="L409"><span class="lineNum">     409</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           3 :         data_batch_queue_.emplace_back(0, memory::SafeDataBuffer(data));</span></span>
 <span id="L410"><span class="lineNum">     410</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           3 :         if (data_batch_queue_.size() &gt;= max_batch_size_) {</span></span>
 <span id="L411"><span class="lineNum">     411</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :           auto handler = data_batch_handler_;</span></span>
@@ -519,21 +519,21 @@
 <span id="L418"><span class="lineNum">     418</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :           schedule_batch_timer();</span></span>
 <span id="L419"><span class="lineNum">     419</span>                 :             :         }</span>
 <span id="L420"><span class="lineNum">     420</span>                 :             :       } else {</span>
-<span id="L421"><span class="lineNum">     421</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :         MessageHandler handler = data_handler_;</span></span>
-<span id="L422"><span class="lineNum">     422</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :         if (handler) {</span></span>
-<span id="L423"><span class="lineNum">     423</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :           lock.unlock();</span></span>
-<span id="L424"><span class="lineNum">     424</span>   [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          17 :           handler(MessageContext(0, memory::SafeDataBuffer(data)));</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L425"><span class="lineNum">     425</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :           lock.lock();</span></span>
+<span id="L421"><span class="lineNum">     421</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          19 :         MessageHandler handler = data_handler_;</span></span>
+<span id="L422"><span class="lineNum">     422</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          19 :         if (handler) {</span></span>
+<span id="L423"><span class="lineNum">     423</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          19 :           lock.unlock();</span></span>
+<span id="L424"><span class="lineNum">     424</span>   [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          19 :           handler(MessageContext(0, memory::SafeDataBuffer(data)));</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L425"><span class="lineNum">     425</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          19 :           lock.lock();</span></span>
 <span id="L426"><span class="lineNum">     426</span>                 :             :         }</span>
-<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">          17 :       }</span></span>
+<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">          19 :       }</span></span>
 <span id="L428"><span class="lineNum">     428</span>                 :             : </span>
-<span id="L429"><span class="lineNum">     429</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          20 :       if (framer_) {</span></span>
+<span id="L429"><span class="lineNum">     429</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          22 :       if (framer_) {</span></span>
 <span id="L430"><span class="lineNum">     430</span>                 :<span class="tlaGNC">           1 :         framer_to_push = framer_;</span></span>
 <span id="L431"><span class="lineNum">     431</span>                 :             :       }</span>
-<span id="L432"><span class="lineNum">     432</span>         [<span class="tlaGBC" title="Branch 0 was taken 20 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          20 :       lock.unlock();</span></span>
-<span id="L433"><span class="lineNum">     433</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          20 :       if (framer_to_push) framer_to_push-&gt;push_bytes(data);</span></span>
-<span id="L434"><span class="lineNum">     434</span>         [<span class="tlaGBC" title="Branch 0 was taken 20 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          20 :     });</span></span>
+<span id="L432"><span class="lineNum">     432</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :       lock.unlock();</span></span>
+<span id="L433"><span class="lineNum">     433</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          22 :       if (framer_to_push) framer_to_push-&gt;push_bytes(data);</span></span>
+<span id="L434"><span class="lineNum">     434</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :     });</span></span>
 <span id="L435"><span class="lineNum">     435</span>                 :             : </span>
 <span id="L436"><span class="lineNum">     436</span>   [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          23 :     channel_-&gt;on_backpressure([this, weak_alive](size_t queued) {</span></span>
 <span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">           1 :       bp_cv_.notify_all();</span></span>
@@ -700,27 +700,27 @@
 <span id="L593"><span class="lineNum">     593</span>                 :<span class="tlaGNC">           1 :   return *this;</span></span>
 <span id="L594"><span class="lineNum">     594</span>                 :             : }</span>
 <span id="L595"><span class="lineNum">     595</span>                 :             : </span>
-<span id="L596"><span class="lineNum">     596</span>                 :<span class="tlaGNC">          10 : UdsClient&amp; UdsClient::retry_interval(std::chrono::milliseconds interval) {</span></span>
-<span id="L597"><span class="lineNum">     597</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L598"><span class="lineNum">     598</span>                 :<span class="tlaGNC">          10 :   impl_-&gt;retry_interval_ = interval;</span></span>
-<span id="L599"><span class="lineNum">     599</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          10 :   if (impl_-&gt;channel_) {</span></span>
+<span id="L596"><span class="lineNum">     596</span>                 :<span class="tlaGNC">           4 : UdsClient&amp; UdsClient::retry_interval(std::chrono::milliseconds interval) {</span></span>
+<span id="L597"><span class="lineNum">     597</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L598"><span class="lineNum">     598</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;retry_interval_ = interval;</span></span>
+<span id="L599"><span class="lineNum">     599</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">           4 :   if (impl_-&gt;channel_) {</span></span>
 <span id="L600"><span class="lineNum">     600</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     auto transport_client = std::dynamic_pointer_cast&lt;transport::UdsClient&gt;(impl_-&gt;channel_);</span></span>
 <span id="L601"><span class="lineNum">     601</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC">           0 :     if (transport_client) transport_client-&gt;set_retry_interval(static_cast&lt;unsigned int&gt;(interval.count()));</span></span>
 <span id="L602"><span class="lineNum">     602</span>                 :<span class="tlaUNC">           0 :   }</span></span>
-<span id="L603"><span class="lineNum">     603</span>                 :<span class="tlaGNC tlaBgGNC">          10 :   return *this;</span></span>
-<span id="L604"><span class="lineNum">     604</span>                 :<span class="tlaGNC">          10 : }</span></span>
+<span id="L603"><span class="lineNum">     603</span>                 :<span class="tlaGNC tlaBgGNC">           4 :   return *this;</span></span>
+<span id="L604"><span class="lineNum">     604</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L605"><span class="lineNum">     605</span>                 :             : </span>
-<span id="L606"><span class="lineNum">     606</span>                 :<span class="tlaGNC">          10 : UdsClient&amp; UdsClient::max_retries(int max_retries) {</span></span>
-<span id="L607"><span class="lineNum">     607</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L608"><span class="lineNum">     608</span>                 :<span class="tlaGNC">          10 :   impl_-&gt;max_retries_ = max_retries;</span></span>
-<span id="L609"><span class="lineNum">     609</span>                 :<span class="tlaGNC">          10 :   return *this;</span></span>
-<span id="L610"><span class="lineNum">     610</span>                 :<span class="tlaGNC">          10 : }</span></span>
+<span id="L606"><span class="lineNum">     606</span>                 :<span class="tlaGNC">           4 : UdsClient&amp; UdsClient::max_retries(int max_retries) {</span></span>
+<span id="L607"><span class="lineNum">     607</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L608"><span class="lineNum">     608</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;max_retries_ = max_retries;</span></span>
+<span id="L609"><span class="lineNum">     609</span>                 :<span class="tlaGNC">           4 :   return *this;</span></span>
+<span id="L610"><span class="lineNum">     610</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L611"><span class="lineNum">     611</span>                 :             : </span>
-<span id="L612"><span class="lineNum">     612</span>                 :<span class="tlaGNC">          10 : UdsClient&amp; UdsClient::connection_timeout(std::chrono::milliseconds timeout) {</span></span>
-<span id="L613"><span class="lineNum">     613</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
-<span id="L614"><span class="lineNum">     614</span>                 :<span class="tlaGNC">          10 :   impl_-&gt;connection_timeout_ = timeout;</span></span>
-<span id="L615"><span class="lineNum">     615</span>                 :<span class="tlaGNC">          10 :   return *this;</span></span>
-<span id="L616"><span class="lineNum">     616</span>                 :<span class="tlaGNC">          10 : }</span></span>
+<span id="L612"><span class="lineNum">     612</span>                 :<span class="tlaGNC">           4 : UdsClient&amp; UdsClient::connection_timeout(std::chrono::milliseconds timeout) {</span></span>
+<span id="L613"><span class="lineNum">     613</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
+<span id="L614"><span class="lineNum">     614</span>                 :<span class="tlaGNC">           4 :   impl_-&gt;connection_timeout_ = timeout;</span></span>
+<span id="L615"><span class="lineNum">     615</span>                 :<span class="tlaGNC">           4 :   return *this;</span></span>
+<span id="L616"><span class="lineNum">     616</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L617"><span class="lineNum">     617</span>                 :             : </span>
 <span id="L618"><span class="lineNum">     618</span>                 :<span class="tlaGNC">          10 : UdsClient&amp; UdsClient::backpressure_threshold(size_t threshold) {</span></span>
 <span id="L619"><span class="lineNum">     619</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :   std::unique_lock&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex_);</span></span>
