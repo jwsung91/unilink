@@ -20,6 +20,7 @@
 #include <boost/asio/io_context.hpp>
 #include <cctype>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
@@ -32,7 +33,7 @@ SerialBuilder<State>::SerialBuilder(const std::string& device, uint32_t baud_rat
       baud_rate_(baud_rate),
       auto_start_(false),
       independent_context_(false),
-      retry_interval_ms_(3000),
+      retry_interval_ms_(base::constants::DEFAULT_RETRY_INTERVAL_MS),
       char_size_(8),
       stop_bits_(1),
       parity_(config::SerialConfig::Parity::None),
@@ -61,22 +62,30 @@ std::unique_ptr<wrapper::Serial> SerialBuilder<State>::build() {
   if (this->on_error_) serial->on_error(this->on_error_);
   if (this->on_backpressure_) serial->on_backpressure(this->on_backpressure_);
 
+  if (char_size_set_) serial->data_bits(static_cast<int>(char_size_));
+  if (stop_bits_set_) serial->stop_bits(static_cast<int>(stop_bits_));
+
   // Note: wrapper::Serial setters use strings for enum types
-  std::string p_str = "none";
-  if (parity_ == config::SerialConfig::Parity::Even)
-    p_str = "even";
-  else if (parity_ == config::SerialConfig::Parity::Odd)
-    p_str = "odd";
-  serial->parity(p_str);
+  if (parity_set_) {
+    std::string p_str = "none";
+    if (parity_ == config::SerialConfig::Parity::Even)
+      p_str = "even";
+    else if (parity_ == config::SerialConfig::Parity::Odd)
+      p_str = "odd";
+    serial->parity(p_str);
+  }
 
-  std::string f_str = "none";
-  if (flow_ == config::SerialConfig::Flow::Software)
-    f_str = "software";
-  else if (flow_ == config::SerialConfig::Flow::Hardware)
-    f_str = "hardware";
-  serial->flow_control(f_str);
+  if (flow_set_) {
+    std::string f_str = "none";
+    if (flow_ == config::SerialConfig::Flow::Software)
+      f_str = "software";
+    else if (flow_ == config::SerialConfig::Flow::Hardware)
+      f_str = "hardware";
+    serial->flow_control(f_str);
+  }
 
-  serial->retry_interval(std::chrono::milliseconds(retry_interval_ms_));
+  if (reopen_on_error_set_) serial->reopen_on_error(reopen_on_error_);
+  if (retry_interval_set_) serial->retry_interval(std::chrono::milliseconds(retry_interval_ms_));
 
   if (this->bp_strategy_set_) serial->backpressure_strategy(this->bp_strategy_);
   serial->backpressure_threshold(this->get_effective_backpressure_threshold());
@@ -107,18 +116,21 @@ SerialBuilder<State>& SerialBuilder<State>::auto_start(bool auto_start) {
 template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::char_size(unsigned int size) {
   char_size_ = size;
+  char_size_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::stop_bits(unsigned int bits) {
   stop_bits_ = bits;
+  stop_bits_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::parity(config::SerialConfig::Parity p) {
   parity_ = p;
+  parity_set_ = true;
   return *this;
 }
 
@@ -135,12 +147,14 @@ SerialBuilder<State>& SerialBuilder<State>::parity(const std::string& p) {
   } else {
     parity_ = config::SerialConfig::Parity::None;
   }
+  parity_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::flow_control(config::SerialConfig::Flow f) {
   flow_ = f;
+  flow_set_ = true;
   return *this;
 }
 
@@ -157,18 +171,21 @@ SerialBuilder<State>& SerialBuilder<State>::flow_control(const std::string& f) {
   } else {
     flow_ = config::SerialConfig::Flow::None;
   }
+  flow_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::reopen_on_error(bool enable) {
   reopen_on_error_ = enable;
+  reopen_on_error_set_ = true;
   return *this;
 }
 
 template <uint32_t State>
 SerialBuilder<State>& SerialBuilder<State>::retry_interval(std::chrono::milliseconds interval) {
   retry_interval_ms_ = static_cast<uint32_t>(interval.count());
+  retry_interval_set_ = true;
   return *this;
 }
 

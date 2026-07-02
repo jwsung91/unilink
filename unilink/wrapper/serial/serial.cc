@@ -86,6 +86,7 @@ struct Serial::Impl {
   int stop_bits = 1;
   std::string parity = "none";
   std::string flow_control = "none";
+  bool reopen_on_error = true;
   std::chrono::milliseconds retry_interval{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
@@ -501,6 +502,7 @@ struct Serial::Impl {
       config.flow = config::SerialConfig::Flow::None;
 
     config.retry_interval_ms = static_cast<unsigned int>(retry_interval.count());
+    config.reopen_on_error = reopen_on_error;
     config.backpressure_threshold = backpressure_threshold;
     config.backpressure_strategy = backpressure_strategy;
     return config;
@@ -615,6 +617,11 @@ Serial& Serial::parity(const std::string& p) {
 Serial& Serial::flow_control(const std::string& f) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->flow_control = f;
+  return *this;
+}
+Serial& Serial::reopen_on_error(bool enable) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->reopen_on_error = enable;
   return *this;
 }
 Serial& Serial::retry_interval(std::chrono::milliseconds i) {

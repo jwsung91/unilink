@@ -49,19 +49,27 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder(TcpServerBuilder<OtherState>&& other) noexcept
       : port_(other.port_),
         bind_address_(std::move(other.bind_address_)),
+        bind_address_set_(other.bind_address_set_),
         auto_start_(other.auto_start_),
         independent_context_(other.independent_context_),
         max_clients_(other.max_clients_),
         client_limit_enabled_(other.client_limit_enabled_),
         port_retry_enabled_(other.port_retry_enabled_),
+        port_retry_enabled_set_(other.port_retry_enabled_set_),
         max_port_retries_(other.max_port_retries_),
+        max_port_retries_set_(other.max_port_retries_set_),
         port_retry_interval_ms_(other.port_retry_interval_ms_),
+        port_retry_interval_set_(other.port_retry_interval_set_),
         idle_timeout_(other.idle_timeout_),
         idle_timeout_set_(other.idle_timeout_set_),
         tcp_no_delay_(other.tcp_no_delay_),
+        tcp_no_delay_set_(other.tcp_no_delay_set_),
         keep_alive_(other.keep_alive_),
+        keep_alive_set_(other.keep_alive_set_),
         send_buffer_size_(other.send_buffer_size_),
-        receive_buffer_size_(other.receive_buffer_size_) {
+        send_buffer_size_set_(other.send_buffer_size_set_),
+        receive_buffer_size_(other.receive_buffer_size_),
+        receive_buffer_size_set_(other.receive_buffer_size_set_) {
     this->on_data_ = std::move(other.on_data_);
     this->on_error_ = std::move(other.on_error_);
     this->on_connect_ = std::move(other.on_connect_);
@@ -115,6 +123,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
 
   uint16_t port_;
   std::string bind_address_;
+  bool bind_address_set_{false};
   bool auto_start_;
   bool independent_context_;
 
@@ -122,14 +131,21 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   bool client_limit_enabled_;
 
   bool port_retry_enabled_;
+  bool port_retry_enabled_set_{false};
   uint32_t max_port_retries_;
+  bool max_port_retries_set_{false};
   uint32_t port_retry_interval_ms_;
+  bool port_retry_interval_set_{false};
   std::chrono::milliseconds idle_timeout_;
   bool idle_timeout_set_;
   bool tcp_no_delay_;
+  bool tcp_no_delay_set_{false};
   bool keep_alive_;
+  bool keep_alive_set_{false};
   size_t send_buffer_size_;
+  bool send_buffer_size_set_{false};
   size_t receive_buffer_size_;
+  bool receive_buffer_size_set_{false};
 };
 
 using TcpServerBuilderDefault = TcpServerBuilder<BuilderState::None>;
