@@ -125,3 +125,43 @@ TEST_F(TransportUdsServerTest, BindFailure) {
   EXPECT_FALSE(server->is_connected());
   EXPECT_TRUE(has_error);
 }
+
+// Regression test for jwsung91/unilink#453: a transient accept() failure
+// (e.g. EMFILE) used to be logged and silently swallowed, permanently
+// stopping the server from ever accepting again. It must now surface an
+// Error state transition and keep retrying do_accept().
+TEST_F(TransportUdsServerTest, AcceptFailureRetriesAndKeepsAccepting) {
+  EXPECT_CALL(*mock_acceptor, open(_, _)).WillOnce(Return());
+  EXPECT_CALL(*mock_acceptor, bind(_, _)).WillOnce(Return());
+  EXPECT_CALL(*mock_acceptor, listen(_, _)).WillOnce(Return());
+
+  bool retried = false;
+  EXPECT_CALL(*mock_acceptor, async_accept(_))
+      .WillOnce(Invoke(
+          [this](std::function<void(const boost::system::error_code&, net::local::stream_protocol::socket)> handler) {
+            handler(make_error_code(boost::asio::error::no_descriptors), net::local::stream_protocol::socket(ioc));
+          }))
+      .WillOnce(Invoke(
+          [&retried](std::function<void(const boost::system::error_code&, net::local::stream_protocol::socket)>) {
+            // Second call proves do_accept() was invoked again after the failure
+            // instead of the server silently giving up forever.
+            retried = true;
+          }));
+
+  std::atomic<bool> has_error{false};
+  server->on_state([&has_error](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      has_error = true;
+    }
+  });
+
+  server->start();
+
+  for (int i = 0; i < 50 && !(has_error && retried); ++i) {
+    ioc.poll();
+    TestUtils::waitFor(10);
+  }
+
+  EXPECT_TRUE(has_error);
+  EXPECT_TRUE(retried);
+}
