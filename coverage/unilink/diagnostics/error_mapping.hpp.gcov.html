@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-07-01 09:10:34</td>
+            <td class="headerValue">2026-07-02 00:52:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -148,12 +148,12 @@
 <span id="L69"><span class="lineNum">      69</span>                 :             : /**</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             :  * @brief Determines if a TCP connection error is retryable</span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :  */</span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          90 : inline bool is_retryable_tcp_connect_error(const boost::system::error_code&amp; ec) {</span></span>
-<span id="L73"><span class="lineNum">      73</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 88 times"> + </span>]:<span class="tlaGNC">          90 :   if (!ec) [[likely]]</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          91 : inline bool is_retryable_tcp_connect_error(const boost::system::error_code&amp; ec) {</span></span>
+<span id="L73"><span class="lineNum">      73</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 89 times"> + </span>]:<span class="tlaGNC">          91 :   if (!ec) [[likely]]</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">           2 :     return false;</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : </span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :   // Connection refused is temporary (server might be starting up)</span>
-<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 61 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          88 :   if (ec == boost::asio::error::connection_refused) return true;</span></span>
+<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 62 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          89 :   if (ec == boost::asio::error::connection_refused) return true;</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :   // Timeouts are temporary network glitches</span>
 <span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span>]:<span class="tlaGNC">          27 :   if (ec == boost::asio::error::timed_out) return true;</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :   // Reset connection might be temporary</span>
